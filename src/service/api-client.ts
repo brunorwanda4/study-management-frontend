@@ -22,7 +22,7 @@ async function apiRequest<TRequest = unknown, TResponse = unknown>(
   method: HttpMethod,
   url: string,
   data?: TRequest,
-  Authorization?: string
+  token?: string
 ): Promise<APIResponse<TResponse>> {
   try {
     if (data && typeof data !== 'object') {
@@ -31,11 +31,10 @@ async function apiRequest<TRequest = unknown, TResponse = unknown>(
 
     const config: AxiosRequestConfig = {
       method,
-    //   url: `${env.API_ENDPOINT}${url}`,
       url: `http://localhost:4666${url}`,
       headers: {
         'Content-Type': 'application/json',
-        ...(Authorization ? { Authorization } : {}),
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
       ...(method !== 'get' && data ? { data } : {}),
     };

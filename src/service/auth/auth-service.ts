@@ -6,6 +6,7 @@ export async function registerUserService(input: CreateUserDto) {
 
   if (res.data) {
     if (res.data.accessToken) {
+      localStorage.setItem('userId', res.data.id);
       sessionStorage.setItem('accessToken', res.data.accessToken);
     } else {
       return { error: "Access token is undefined" }
@@ -17,6 +18,11 @@ export async function registerUserService(input: CreateUserDto) {
 }
 
 export async function onboardingService(input: onboardingDto) {
-  const res = await apiRequest<onboardingDto, UserDto>("patch", "/user/67fbf10bb0445b138e64ddd4", input);
+  const userId = localStorage.getItem('userId')
+  const token = sessionStorage.getItem('accessToken')
+  if (!userId || !token) {
+    return { error: "You can no update account they are some data you are missing", message: "You are missing 'Token' & 'User Id', register  again or login again" }
+  }
+  const res = await apiRequest<onboardingDto, UserDto>("patch", `/user/${userId}`, input, token);
   return res
 }
