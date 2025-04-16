@@ -31,15 +31,18 @@ import { useTheme } from "next-themes";
 import MyImage from "@/components/myComponents/myImage";
 import { FormError, FormSuccess } from "@/components/myComponents/form-message";
 import { onboardingService } from "@/service/auth/auth-service";
+import { useRouter } from "next/navigation";
+import { redirectContents } from "@/lib/hooks/redirect";
 interface Props {
   lang: Locale;
 }
 
-const OnboardingForm = ({}: Props) => {
+const OnboardingForm = ({lang}: Props) => {
   const [error, setError] = useState<undefined | null | string>("");
   const [success, setSuccess] = useState<undefined | null | string>("");
   const [isPending, startTransition] = useTransition();
   const { theme } = useTheme();
+  const router = useRouter();
   const form = useForm<onboardingDto>({
     resolver: zodResolver(OnboardingSchema),
     defaultValues: {
@@ -97,9 +100,12 @@ const OnboardingForm = ({}: Props) => {
       const update = await onboardingService(value);
       if (update.data) {
         setSuccess(update.data.name);
+        if (update.data.role) {
+          router.push(redirectContents({lang , role : update.data.role}))
+        }
       } else if (update.error) {
         setError(`error :${update.error}, message : ${update.message}`);
-      }
+      } 
     });
   };
 
