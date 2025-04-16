@@ -1,6 +1,18 @@
 import z, { string } from "zod";
 
-export type UserRoleDto = "STUDENT" | "TEACHER" | "ADMIN" | "SCHOOLSTAFF"
+export const UserRoleEnum = z.enum(["STUDENT", "TEACHER", "ADMIN", "SCHOOLSTAFF"], {
+  required_error: "User role is required",
+  invalid_type_error: "Invalid user role",
+});
+
+export const GenderEnum = z.enum(["FEMALE", "MALE", "OTHER"], {
+  message: "Gender must be one of 'MALE', 'FEMALE', or 'OTHER'",
+  required_error: "Gender is required",
+  invalid_type_error: "Invalid gender",
+});
+
+
+export type UserRoleDto = z.infer<typeof UserRoleEnum>
 
 export const CreateUserSchema = z.object({
     name: z.string().min(1, {
@@ -58,7 +70,7 @@ export const AuthUserSchema = z.object({
     name: z.string().min(1, {
         message: " Minimum 1 character"
     }),
-    role: z.enum(["STUDENT", "TEACHER", "ADMIN", "SCHOOLSTAFF"]).optional(),
+    role: UserRoleEnum.optional(),
     accessToken: z.string().optional(),
 })
 
@@ -96,9 +108,7 @@ export const OnboardingSchema = z.object({
     role: z.enum(["STUDENT", "TEACHER", "ADMIN", "SCHOOLSTAFF"], {
       message: "Role must be one of 'STUDENT', 'TEACHER', or 'SCHOOL STAFF'",
     }),
-    gender: z.enum(["Male", "Female", "Other"], {
-      message: "Gender must be one of 'Male', 'Female', or 'Other'",
-    }),
+    gender: GenderEnum,
     location: z.object({
       country: z.string().optional(),
       province: z.string().optional(),
@@ -108,3 +118,58 @@ export const OnboardingSchema = z.object({
   });
   
   export type onboardingDto = z.infer<typeof OnboardingSchema>;
+
+// Nested types
+export const AgeSchema = z.object({
+    year: z.number({
+        required_error: "Year is required",
+        invalid_type_error: "Year must be a number",
+    }),
+    month: z.number({
+        required_error: "Month is required",
+        invalid_type_error: "Month must be a number",
+    }),
+    day: z.number({
+        required_error: "Day is required",
+        invalid_type_error: "Day must be a number",
+    }),
+});
+
+export const AddressSchema = z.object({
+    country: z.string().min(1, { message: "Country is required" }),
+    Province: z.string().optional(),
+    district: z.string().optional(),
+    sector: z.string().optional(),
+    cell: z.string().optional(),
+    village: z.string().optional(),
+    state: z.string().optional(),
+    postalCode: z.string().optional(),
+    googleMapUrl: z.string().url({ message: "Invalid URL" }).optional(),
+});
+
+
+  export const UserSchema = z.object({
+      name: z.string().min(1, { message: "Name is required" }).max(50, {
+          message: "Maximum characters allowed for name is 50",
+      }),
+      email: z.string().email({ message: "Invalid email address" }),
+      username: z.string().min(3, {
+          message: "Username must be at least 3 characters",
+      }),
+      password: z.string().min(6, {
+          message: "Password must be at least 6 characters",
+      }).optional(),
+      role: UserRoleEnum.optional(),
+      image: z.string().url({ message: "Image must be a valid URL" }).optional(),
+      phone: z.string().optional(),
+      gender: GenderEnum.optional(),
+      age: AgeSchema.optional(),
+      address: AddressSchema.optional(),
+      bio: z.string().max(500, {
+          message: "Bio cannot exceed 500 characters",
+      }).optional(),
+      createAt: z.string(),
+      updatedAt: z.string()
+  });
+  
+  export type UserDto = z.infer<typeof UserSchema>;

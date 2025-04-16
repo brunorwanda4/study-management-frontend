@@ -30,6 +30,7 @@ import { onboardingDto, OnboardingSchema } from "@/lib/schema/user.dto";
 import { useTheme } from "next-themes";
 import MyImage from "@/components/myComponents/myImage";
 import { FormError, FormSuccess } from "@/components/myComponents/form-message";
+import { onboardingService } from "@/service/auth/auth-service";
 interface Props {
   lang: Locale;
 }
@@ -101,6 +102,12 @@ const OnboardingForm = ({}: Props) => {
       //   } else if (update.error) {
       //     setTimeout(() => setError(update.error), 0);
       //   }
+      const update = await onboardingService(value);
+      if (update.data) {
+        setSuccess(update.data.name);
+      } else if (update.error) {
+        setError(`error :${update.error}, message : ${update.message}`);
+      }
       console.log(value);
     });
   };
@@ -337,19 +344,19 @@ const OnboardingForm = ({}: Props) => {
                     >
                       <FormItem className="flex items-center space-x-0 space-y-0">
                         <FormControl>
-                          <RadioGroupItem className=" size-6" value="Male" />
+                          <RadioGroupItem className=" size-6" value="MALE" />
                         </FormControl>
                         <FormLabel className="font-normal">Male</FormLabel>
                       </FormItem>
                       <FormItem className="flex items-center space-x-0 space-y-0">
                         <FormControl>
-                          <RadioGroupItem className=" size-6" value="Female" />
+                          <RadioGroupItem className=" size-6" value="FEMALE" />
                         </FormControl>
                         <FormLabel className="font-normal">Female</FormLabel>
                       </FormItem>
                       <FormItem className="flex items-center space-x-0 space-y-0">
                         <FormControl>
-                          <RadioGroupItem className=" size-6" value="Other" />
+                          <RadioGroupItem className=" size-6" value="OTHER" />
                         </FormControl>
                         <FormLabel className="font-normal">Other</FormLabel>
                       </FormItem>
