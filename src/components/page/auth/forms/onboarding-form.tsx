@@ -99,7 +99,7 @@ const OnboardingForm = ({lang}: Props) => {
     startTransition(async () => {
       const update = await onboardingService(value);
       if (update.data) {
-        setSuccess(update.data.name);
+        setSuccess("Thanks to help us to know you better! ☺️");
         if (update.data.role) {
           router.push(redirectContents({lang , role : update.data.role}))
         }
