@@ -1,0 +1,102 @@
+{
+  "auth": {
+    "setting": {
+      "dialog": {
+        "title": "Auth setting",
+        "description": "Change how website look",
+        "button": {
+          "save": "Save",
+          "cancel": "cancel"
+        },
+        "language": {
+          "title": "language",
+          "rw": "Kinyarwanda",
+          "en": "English"
+        },
+        "theme": {
+          "title": "Theme",
+          "dark": "dark",
+          "light": "light"
+        }
+      }
+    },
+    "leftSide": {
+      "goBack": "Back to website",
+      "spaceTogether": "Together in Learning, Together in success",
+      "register": {
+        "description": "Make Your account which, your friends can visit"
+      },
+      "onboarding": {
+        "description": "Help others recognize you by, personalizing your profile."
+      }
+    },
+    "register": {
+      "page": {
+        "title": "Create an account",
+        "paragraph": "Already have an account?",
+        "login": "Login"
+      },
+      "form": {
+        "name": "Full name",
+        "email": "Email",
+        "role": "Role",
+        "gender": {
+          "label": "Gender",
+          "male": "Male",
+          "female": "Female",
+          "other": "Other"
+        },
+        "password": "Password",
+        "button": "Create new account"
+      }
+    },
+    "login": {
+      "page": {
+        "title": "Login",
+        "paragraph": "Create an account?",
+        "login": "Register"
+      },
+      "form": {
+        "email": "Email",
+        "password": "Password",
+        "button": "Login"
+      }
+    },
+    "onboarding": {
+      "page": {
+        "title": "Complete Your Profile Setup",
+        "paragraph": "Help others understand you better by choosing your profile."
+      },
+      "form": {
+        "image": "Profile image",
+        "phone": "Phone number",
+        "age": {
+          "label": "Date you born",
+          "year": "Year",
+          "month": "Month",
+          "day": "Day"
+        },
+        "location": {
+          "label": "Your Location in Rwanda",
+          "province": "Province",
+          "district": "District"
+        },
+        "username": "Username",
+        "role": {
+          "label": "Who you are",
+          "teacher": "Teacher",
+          "student": "Student",
+          "schoolStaff": "School Staff"
+        },
+        "bio": "Bio",
+        "gender": {
+          "label": "Gender",
+          "male": "Male",
+          "female": "Female",
+          "other": "Other"
+        },
+        "button": "Get start"
+      }
+    }
+  }
+}

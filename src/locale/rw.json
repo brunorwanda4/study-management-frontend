@@ -1,0 +1,103 @@
+{
+    "auth": {
+      "setting": {
+        "dialog": {
+          "title": "Hindura imiteguro y'okwemererwa",
+          "description": "Hindura imimerere yurubuga",
+          "button": {
+            "save": "Hindura",
+            "cancel": "bireke"
+          },
+          "language": {
+            "title": "Ururimi",
+            "rw": "Kinyarwanda",
+            "en": "English"
+          },
+          "theme": {
+            "title": "Amabara",
+            "dark": "dark",
+            "light": "light"
+          }
+        }
+      },
+      "leftSide": {
+        "goBack": "Subira ahabanza",
+        "spaceTogether": "Hamwe mu myigire, hamwe mu ntsinzi.",
+        "register": {
+          "description": "Hindura konti yawe ku buryo inshuti zawe zishobora kuyisura."
+        },
+        "onboarding": {
+          "description": "Fasha abandi kukumenya neza, uhindura konti yawe ku buryo bwihariye."
+        }
+      },
+      "register": {
+        "page": {
+          "title": "Fungura konti",
+          "paragraph": "Ufite konti isanzwe?",
+          "login": "Injira"
+        },
+        "form": {
+          "name": "Amazina yose",
+          "email": "Imeyili",
+          "role": "Umwanya",
+          "gender": {
+            "label": "Gabo",
+            "male": "Gore",
+            "female": "Female",
+            "other": "Abandi"
+          },
+          "password": "Ijambo ry'ibanga",
+          "button": "Kora konti cyashya"
+        }
+      },
+      "login": {
+        "page": {
+          "title": "Injira",
+          "paragraph": "Wifuza konti nshya?",
+          "login": "Iyandikishe"
+        },
+        "form": {
+          "email": "Imeyili",
+          "password": "Ijambo ry'ibanga",
+          "button": "Injira"
+        }
+      },
+      "onboarding": {
+        "page": {
+          "title": "Uzuza Umwirondoro Wawe",
+          "paragraph": "Fasha abandi kukumenya neza ushaka umwirondoro wawe."
+        },
+        "form": {
+          "image": "Ifoto y'umwirondoro",
+          "phone": "Numero ya telefone",
+          "age": {
+            "label" : "Igihe wavukiye",
+            "year" : "Umwaka",
+            "month" : "Ukwezi",
+            "day" : "Umunsi"
+          },
+          "username": "Izina ry' umukoresha",
+             "role": {
+            "label" : "Urinde",
+            "teacher": "Mwarimu",
+            "student": "Umunyeshuri",
+            "schoolStaff": "Umuyobozi wishuri"
+          },
+          "location" : {
+            "label":"Aho ubarizwa mu Rwanda",
+            "province" : "Intara",
+            "district" : "Akarere"
+          },
+          "bio" : "Uri inde",
+          "gender": {
+            "label": "Igitsina",
+            "male": "Gabo",
+            "female": "Gore",
+            "other": "Ikindi"
+          },
+          "button": "Tangira"
+        }
+      }
+    }
+  }
+  
