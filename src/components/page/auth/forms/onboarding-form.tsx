@@ -94,21 +94,12 @@ const OnboardingForm = ({}: Props) => {
     setSuccess(null);
     setError(null);
     startTransition(async () => {
-      //   const update = await updateUserByUserSession(value, user?.id, user.token);
-
-      //   if (update.success && update.data) {
-      //     setSuccess(update.success);
-      //     setUserRole(update.data.role);
-      //   } else if (update.error) {
-      //     setTimeout(() => setError(update.error), 0);
-      //   }
       const update = await onboardingService(value);
       if (update.data) {
         setSuccess(update.data.name);
       } else if (update.error) {
         setError(`error :${update.error}, message : ${update.message}`);
       }
-      console.log(value);
     });
   };
 

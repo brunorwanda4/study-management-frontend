@@ -22,7 +22,8 @@ async function apiRequest<TRequest = unknown, TResponse = unknown>(
   method: HttpMethod,
   url: string,
   data?: TRequest,
-  token?: string
+  token?: string,
+  role?: string 
 ): Promise<APIResponse<TResponse>> {
   try {
     if (data && typeof data !== 'object') {
@@ -35,6 +36,7 @@ async function apiRequest<TRequest = unknown, TResponse = unknown>(
       headers: {
         'Content-Type': 'application/json',
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...(role ? { role } : {})
       },
       ...(method !== 'get' && data ? { data } : {}),
     };
