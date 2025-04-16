@@ -43,7 +43,7 @@ const OnboardingForm = ({}: Props) => {
   const form = useForm<onboardingDto>({
     resolver: zodResolver(OnboardingSchema),
     defaultValues: {
-      image: "",
+      image: undefined,
       age: undefined,
       phone: "",
       gender: undefined,
@@ -129,7 +129,7 @@ const OnboardingForm = ({}: Props) => {
                 className={cn("flex gap-3 items-center")}
               >
                 <MyImage
-                  src={
+                   src={
                     field.value
                       ? field.value
                       : "https://img.freepik.com/free-vector/illustration-gallery-icon_53876-27002.jpg"
