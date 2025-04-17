@@ -153,3 +153,9 @@
     @apply bg-background text-foreground;
   }
 }
+
+.logo-font{
+  font-family:'Courier New', Courier, monospace,
+}
+
+
