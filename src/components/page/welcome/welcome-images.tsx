@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
 const WelcomeImage = () => {
   const { theme } = useTheme();
+  const isDark = theme === "dark" || theme === "black";
   return (
     <div className=" w-full h-full bg-gradient-to-tr from-base-100 to-base-300 rounded-3xl p-4 px-6 space-y-4">
       <div className=" space-y-2">
@@ -13,14 +14,14 @@ const WelcomeImage = () => {
         </h2>
         <p className=" ">
           Access your lessons, connect with your class, and stay organized —
-          whether you&apos;re at home, at school, or on the go.
+          whether you&apos;re at home, at school, or on the go
         </p>
       </div>
       <MyImage
         className=" w-full h-96 "
         classname="rounded-3xl"
         src={cn(
-          (theme === "dark" || theme === "black")
+          isDark
             ? "https://img.freepik.com/free-photo/happy-black-father-children-having-video-call-laptop-home_637285-10589.jpg?uid=R104131663&ga=GA1.1.136419951.1706506037&w=740"
             : "https://img.freepik.com/free-photo/two-siblings-home-together-playing-laptop_23-2148890942.jpg"
         )}

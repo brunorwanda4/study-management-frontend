@@ -141,10 +141,17 @@ const LoginForm = ({ lang }: props) => {
           type="submit"
           library="daisy"
           variant={"info"}
+          disabled={isPending}
           size={"lg"}
           className=" w-full"
         >
-          Submit
+          Login  {isPending && (
+            <div
+              role="status"
+              aria-label="Loading"
+              className={"loading loading-spinner"}
+            />
+          )}
         </Button>
       </form>
     </Form>
