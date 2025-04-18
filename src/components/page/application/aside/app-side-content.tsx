@@ -1,19 +1,12 @@
 "use client";
-import { AiFillDatabase } from "react-icons/ai";
-import { TfiLayoutGrid3 } from "react-icons/tfi";
 
-import { AiOutlineSetting } from "react-icons/ai";
-import { LiaUsersSolid } from "react-icons/lia";
-import { MdClass } from "react-icons/md";
-import { CiGrid31 } from "react-icons/ci";
 import { Locale } from "@/i18n";
 import { ReactNode } from "react";
 
 // Define type for sidebar items
 export type SidebarItem = {
   title: string;
-  icon?: React.ComponentType<{ className?: string }>;
-  image?: string;
+  icon?: string;
   url?: string;
   children?: SidebarItem[];
   otherData1?: boolean;
@@ -34,17 +27,14 @@ export const adminSidebarGroups: sidebarGroupsProps[] = [
     items: [
       {
         title: "Dashboard",
-        icon: CiGrid31,
         url: "/admin/",
       },
       {
         title: "Database",
-        icon: AiFillDatabase,
         url: "/admin/database",
       },
       {
         title: "Collections",
-        icon: TfiLayoutGrid3,
         url: "/admin/collections",
       },
     ],
@@ -54,7 +44,6 @@ export const adminSidebarGroups: sidebarGroupsProps[] = [
     items: [
       {
         title: "Users",
-        icon: LiaUsersSolid,
         url: "/collection/users",
         children: [
           { title: "Students", url: "/admin/users/students" },
@@ -64,7 +53,6 @@ export const adminSidebarGroups: sidebarGroupsProps[] = [
       },
       {
         title: "Classes",
-        icon: MdClass,
         children: [
           { title: "All Classes", url: "/admin/classes/all" },
           { title: "Create Class", url: "/admin/classes/create" },
@@ -78,7 +66,6 @@ export const adminSidebarGroups: sidebarGroupsProps[] = [
     items: [
       {
         title: "Settings",
-        icon: AiOutlineSetting,
         url: "/setting",
       },
     ],
@@ -91,18 +78,18 @@ export const studentSidebarGroups: sidebarGroupsProps[] = [
     items: [
       {
         title: "School",
-        image: "/icons/school.png",
+        icon: "/icons/school.png",
         url: "/school",
       },
       {
         title: "Class & school",
-        image: "/icons/blackboard.png",
+        icon: "/icons/blackboard.png",
         url: "/class",
         otherData1: true,
       },
       {
         title: "Notes",
-        image: "/icons/note.png",
+        icon: "/icons/note.png",
         url: "/notes",
       },
     ],
@@ -112,12 +99,12 @@ export const studentSidebarGroups: sidebarGroupsProps[] = [
     items: [
       {
         title: "Messages",
-        image: "/icons/chat.png",
+        icon: "/icons/chat.png",
         url: "/messages",
       },
       {
         title: "Settings",
-        image: "/icons/cogwheel.png",
+        icon: "/icons/cogwheel.png",
         url: "/setting",
       },
     ],
@@ -130,12 +117,12 @@ export const teacherSidebarGroups: sidebarGroupsProps[] = [
     items: [
       {
         title: "School",
-        image: "/icons/school.png",
+        icon: "/icons/school.png",
         url: "/school",
       },
       {
         title: "Class & school",
-        image: "/icons/blackboard.png",
+        icon: "/icons/blackboard.png",
         url: "/teacher",
       },
     ],
@@ -145,12 +132,12 @@ export const teacherSidebarGroups: sidebarGroupsProps[] = [
     items: [
       {
         title: "Messages",
-        image: "/icons/chat.png",
+        icon: "/icons/chat.png",
         url: "/messages",
       },
       {
         title: "Settings",
-        image: "/icons/cogwheel.png",
+        icon: "/icons/cogwheel.png",
         url: "/setting",
       },
     ],
@@ -163,17 +150,17 @@ export const schoolStaffSidebarGroups: sidebarGroupsProps[] = [
     items: [
       {
         title: "Dashboard",
-        image: "/icons/dashboard.png",
+        icon: "/icons/dashboard.png",
         url: "/school-staff",
       },
       {
         title: "School",
-        image: "/icons/school.png",
+        icon: "/icons/school.png",
         url: "/school",
       },
       {
         title: "Calendar",
-        image: "/icons/event.png",
+        icon: "/icons/event.png",
         url: "/school-staff/calendars",
       },
     ],
@@ -183,49 +170,49 @@ export const schoolStaffSidebarGroups: sidebarGroupsProps[] = [
     items : [
       {
         title: "Students",
-        image: "/icons/students.png",
+        icon: "/icons/students.png",
         url: "/school-staff/students",
       },
       {
         title: "Teachers",
-        image: "/icons/teacher.png",
+        icon: "/icons/teacher.png",
         url: "/school-staff/teachers",
       },
       {
         title: "Classes",
-        image: "/icons/blackboard.png",
+        icon: "/icons/blackboard.png",
         url: "/school-staff/classes",
       },
-      {
-        title: "Subjects & Curriculum",
-        image: "/icons/book-stack.png",
-        url: "/school-staff/subjects",
-      },
-      {
-        title: "Academic & Performance",
-        image: "/icons/academic.png",
-        url: "/school-staff/academics",
-      },
-      {
-        title: "School Announcements",
-        image: "/icons/bell.png",
-        url: "/school-staff/notifications",
-      },
-      {
-        title: "Extracurricular Activities",
-        image: "/icons/extracurricular.png",
-        url: "/school-staff/extracurricular",
-      },
-      {
-        title: "Parental & Guardian",
-        image: "/icons/family.png",
-        url: "/school-staff/parents",
-      },
-      {
-        title: "Security & User Access",
-        image: "/icons/shield.png",
-        url: "/school-staff/Securities",
-      },
+      // {
+      //   title: "Subjects & Curriculum",
+      //   icon: "/icons/book-stack.png",
+      //   url: "/school-staff/subjects",
+      // },
+      // {
+      //   title: "Academic & Performance",
+      //   icon: "/icons/academic.png",
+      //   url: "/school-staff/academics",
+      // },
+      // {
+      //   title: "School Announcements",
+      //   icon: "/icons/bell.png",
+      //   url: "/school-staff/notifications",
+      // },
+      // {
+      //   title: "Extracurricular Activities",
+      //   icon: "/icons/extracurricular.png",
+      //   url: "/school-staff/extracurricular",
+      // },
+      // {
+      //   title: "Parental & Guardian",
+      //   icon: "/icons/family.png",
+      //   url: "/school-staff/parents",
+      // },
+      // {
+      //   title: "Security & User Access",
+      //   icon: "/icons/shield.png",
+      //   url: "/school-staff/Securities",
+      // },
     ]
   },
   {
@@ -233,12 +220,12 @@ export const schoolStaffSidebarGroups: sidebarGroupsProps[] = [
     items: [
       {
         title: "Messages",
-        image: "/icons/chat.png",
+        icon: "/icons/chat.png",
         url: "/messages",
       },
       {
         title: "Settings",
-        image: "/icons/cogwheel.png",
+        icon: "/icons/cogwheel.png",
         url: "/setting",
       },
     ],

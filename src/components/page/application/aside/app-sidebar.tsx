@@ -42,7 +42,9 @@ const SidebarGroupComponent = ({
     <SidebarGroup className=" p-0">
       <div>
         {label ? (
-          <span className=" font-medium text-xs text-myGray ml-2">{label}</span>
+          <span className=" font-medium text-sm text-gray-500 ml-2">
+            {label}
+          </span>
         ) : (
           <div>
             {index == 0 ? (
@@ -83,17 +85,15 @@ const SidebarGroupComponent = ({
                               "flex items-center gap-2 font-normal rounded-l-none"
                             )}
                           >
-                            {item.icon && <item.icon className="size-6" />}
-                            {item.image && (
-                              <MyImage className=" size-6" src={item.image} />
+                            {item.icon && (
+                              <MyImage className=" size-6" src={item.icon} />
                             )}
                             {item.title}
                           </Link>
                         ) : (
                           <div className="flex items-center gap-2 font-normal">
-                            {item.icon && <item.icon className="size-6" />}
-                            {item.image && (
-                              <MyImage className=" size-6" src={item.image} />
+                            {item.icon && (
+                              <MyImage className=" size-6" src={item.icon} />
                             )}
                             {item.title}
                           </div>
@@ -117,7 +117,6 @@ const SidebarGroupComponent = ({
                   <SidebarMenuItem>
                     <AccordionTrigger className="hover:no-underline btn btn-sm btn-ghost py-0">
                       <span className="flex items-center gap-2">
-                        {item.icon && <item.icon className=" size-6" />}
                         {item.title}
                       </span>
                     </AccordionTrigger>
@@ -133,22 +132,16 @@ const SidebarGroupComponent = ({
                                     : `${subItem.url}`
                                 }
                                 className={cn(
-                                  "ml-8 flex items-center gap-2 btn-xs btn-ghost  rounded-md",
+                                  "ml-8 flex items-center gap-2  rounded-md",
                                   path === subItem.url ||
                                     (path === `/${lang}${subItem.url}` &&
                                       "btn-info")
                                 )}
                               >
-                                {subItem.icon && (
-                                  <subItem.icon className=" size-5" />
-                                )}
                                 {subItem.title}
                               </Link>
                             ) : (
                               <button className="ml-8 flex items-center gap-2 btn-xs btn-ghost  rounded-md">
-                                {subItem.icon && (
-                                  <subItem.icon className=" size-5" />
-                                )}
                                 {subItem.title}
                               </button>
                             )}
@@ -161,28 +154,26 @@ const SidebarGroupComponent = ({
               </Accordion>
             ) : (
               <SidebarMenuItem key={index}>
-                <SidebarMenuButton asChild>
+                <SidebarMenuButton asChild >
                   {item.url ? (
                     <Link
                       href={cn(lang ? `/${lang}${item.url}` : item.url)}
                       className={cn(
-                        "flex items-center gap-2 font-normal rounded-l-none border-r-2",
+                        "flex items-center gap-2 font-normal rounded-l-none",
                         path === item.url ||
                           (path === `/${lang}${item.url}` &&
                             `bg-base-300 ${theme === "dark" && "bg-white/10"}`)
                       )}
                     >
-                      {item.icon && <item.icon className="size-6" />}
-                      {item.image && (
-                        <MyImage className=" size-6" src={item.image} />
+                      {item.icon && (
+                        <MyImage className=" size-6" src={item.icon} />
                       )}
                       {item.title}
                     </Link>
                   ) : (
                     <div className="flex items-center gap-2 font-normal">
-                      {item.icon && <item.icon className="size-6" />}
-                      {item.image && (
-                        <MyImage className=" size-6" src={item.image} />
+                      {item.icon && (
+                        <MyImage className=" size-6" src={item.icon} />
                       )}
                       {item.title}
                     </div>
