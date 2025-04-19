@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import React, { useState } from "react";
 import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
+import CreateSchoolForm from "./create-school-form";
 const steps: { title: string; description: string }[] = [
   {
     title: "Basic Information",
@@ -65,7 +66,7 @@ const CreateSchoolBody = () => {
         {step === 4 && <div>Facilities</div>}
         {step === 5 && <div>Legal</div>}
         {step === 6 && <div>Review</div>}
-
+        <CreateSchoolForm lang={"en"}/>
         <div
           className={cn(
             "mt-6 flex justify-between",
