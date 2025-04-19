@@ -14,12 +14,16 @@ export const AffiliationTypeEnum = z.enum([
 ])
 
 // Subschemas
+const googleMapsUrlRegex = /^https?:\/\/(www\.)?google\.[a-z]{2,}(\.[a-z]{2,})?\/maps([\/@?].*)?$/i;
 const AddressSchema = z.object({
   street: z.string().min(1, "Street is required"),
   city: z.string().min(1, "City is required"),
   state: z.string().min(1, "State is required"),
   postalCode: z.string().min(1, "Postal code is required"),
   country: z.string().min(1, "Country is required"),
+  googleMapUrl: z.string()
+    .url({ message: "Invalid URL format" })
+    .regex(googleMapsUrlRegex, { message: "URL must be a valid Google Maps link" })
 }).optional();
 
 const ContactSchema = z.object({
@@ -34,7 +38,9 @@ const SocialMediaSchema = z.object({
 
 export const CreateSchoolSchema = z.object({
   creatorId: z.string().min(1, "Creator ID is required"),
-  username: z.string().min(3, "Username must be at least 3 characters"),
+  username: z.string()
+    .min(3, "Username must be at least 3 characters")
+    .regex(/^[a-zA-Z0-9_]+$/, "Username can only contain letters, numbers, and underscores"),
   logo: z.string().url("Logo must be a valid URL").optional(),
   name: z.string().min(1, "Name is required"),
   code: z.string().min(2, "School code is required"),
@@ -43,14 +49,14 @@ export const CreateSchoolSchema = z.object({
   curriculum: z.array(z.object({
     label: z.string(),
     value: z.string(),
-    disable: z.boolean().optional(), // Include disable if it's part of your Option type and relevant
+    disable: z.boolean().optional(),
   })).min(1, "At least one curriculum is required"),
   educationLevel: z.array(z.object({
     label: z.string(),
     value: z.string(),
-    disable: z.boolean().optional(), // Include disable if it's part of your Option type and relevant
+    disable: z.boolean().optional(),
   })).min(1, "At least one education level is required"),
-  schoolMembers: SchoolMembers.optional(), // define this more specifically if you can
+  schoolMembers: SchoolMembers.optional(),
   accreditationNumber: z.string().optional(),
   affiliation: AffiliationTypeEnum.optional(),
 
@@ -69,12 +75,12 @@ export const CreateSchoolSchema = z.object({
   labs: z.array(z.object({
     label: z.string(),
     value: z.string(),
-    disable: z.boolean().optional(), // Include disable if it's part of your Option type and relevant
+    disable: z.boolean().optional(),
   })).optional(),
   sportsExtracurricular: z.array(z.object({
     label: z.string(),
     value: z.string(),
-    disable: z.boolean().optional(), // Include disable if it's part of your Option type and relevant
+    disable: z.boolean().optional(),
   })).optional(),
   onlineClasses: z.boolean().optional(),
 }).superRefine((data, ctx) => {
@@ -85,7 +91,6 @@ export const CreateSchoolSchema = z.object({
     });
   }
 
-  // Example custom rule: website is required if social media is not provided
   if (!data.website && (!data.socialMedia || data.socialMedia.length === 0)) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,

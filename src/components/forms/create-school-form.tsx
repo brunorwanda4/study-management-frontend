@@ -141,20 +141,7 @@ const CreateSchoolForm = ({}: Props) => {
   const onSubmit = (values: CreateSchoolDto) => {
     setSuccess(null);
     setError(null);
-
-    // // --- TODO: Pre-process arrays from comma-separated strings if needed ---
-    // // Example: If you used text inputs for arrays and need to split them
-    // const processedValues = {
-    //     ...values,
-    //     curriculum: values.curriculum // Already handled by handleArrayInputChange
-    //     educationLevel: values.educationLevel // Already handled
-    //     labs: values.labs // Already handled
-    //     sportsExtracurricular: values.sportsExtracurricular // Already handled
-    //     // Important: Ensure creatorId is added before sending
-    //     // creatorId: loggedInUserId // Get this from session/auth context
-    // };
-    // console.log("Form Values Submitted:", processedValues);
-
+console.log("🌚")
     startTransition(async () => {
       // Replace with your actual service call
       console.log("Submitting:", values);
@@ -256,7 +243,7 @@ const CreateSchoolForm = ({}: Props) => {
             {/* School member */}
             <FormField
               control={form.control}
-              name="schoolType"
+              name="schoolMembers"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Student *</FormLabel>
@@ -526,7 +513,20 @@ const CreateSchoolForm = ({}: Props) => {
                   <FormMessage />
                 </FormItem>
               )}
-            />{" "}
+            />
+            <FormField
+              control={form.control}
+              name="address.googleMapUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Google map URL</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g., https://www.google.com/maps/place/Eiffel+Tower/@48.8583701,2.2922926,17z" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             {/* Or make this a Select */}
           </div>
           {/* Contact Fields */}
