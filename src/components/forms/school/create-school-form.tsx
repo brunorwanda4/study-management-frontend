@@ -41,7 +41,7 @@ import { Label } from "@/components/ui/label";
 // Import Custom Components (Ensure these exist)
 import MyImage from "@/components/myComponents/myImage"; // Assuming this exists
 import { FormError, FormSuccess } from "@/components/myComponents/form-message"; // Assuming this exists
-import MultipleSelector from "../ui/multiselect";
+import MultipleSelector from "../../ui/multiselect";
 import {
   SchoolCurriculum,
   schoolEducationLevel,

@@ -1,4 +1,4 @@
-import CreateSchoolForm from "@/components/forms/create-school-form";
+import CreateSchoolForm from "@/components/forms/school/create-school-form";
 import PermissionPage from "@/components/page/permission-page";
 import { Locale } from "@/i18n";
 import { getAuthUserServer } from "@/lib/utils/auth";
