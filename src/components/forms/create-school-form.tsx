@@ -135,7 +135,7 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
       const create = await createSchoolService(values);
       if (create?.data?.id) {
         setSuccess("School is registered successful ☺️");
-        router.push(`/${lang}/s-t/new/${create.data.id}`);
+        router.push(`/${lang}/s-t/new/${create.data.id}/academic`);
       } else if (create?.error) {
         setError(`error: ${create.error}, message : ${create.message}`);
       }

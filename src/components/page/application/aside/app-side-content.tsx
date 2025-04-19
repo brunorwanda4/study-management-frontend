@@ -151,7 +151,7 @@ export const schoolStaffSidebarGroups: sidebarGroupsProps[] = [
       {
         title: "Dashboard",
         icon: "/icons/dashboard.png",
-        url: "/school-staff",
+        url: "/s-t",
       },
       {
         title: "School",
@@ -161,7 +161,7 @@ export const schoolStaffSidebarGroups: sidebarGroupsProps[] = [
       {
         title: "Calendar",
         icon: "/icons/event.png",
-        url: "/school-staff/calendars",
+        url: "/s-t/calendars",
       },
     ],
   },
@@ -171,47 +171,52 @@ export const schoolStaffSidebarGroups: sidebarGroupsProps[] = [
       {
         title: "Students",
         icon: "/icons/students.png",
-        url: "/school-staff/students",
+        url: "/s-t/students",
       },
       {
         title: "Teachers",
         icon: "/icons/teacher.png",
-        url: "/school-staff/teachers",
+        url: "/s-t/teachers",
       },
       {
         title: "Classes",
         icon: "/icons/blackboard.png",
-        url: "/school-staff/classes",
+        url: "/s-t/classes",
+      },
+      {
+        title: "School Setting",
+        icon: "/icons/settings.png",
+        url: "/s-t/settings",
       },
       // {
       //   title: "Subjects & Curriculum",
       //   icon: "/icons/book-stack.png",
-      //   url: "/school-staff/subjects",
+      //   url: "/s-t/subjects",
       // },
       // {
       //   title: "Academic & Performance",
       //   icon: "/icons/academic.png",
-      //   url: "/school-staff/academics",
+      //   url: "/s-t/academics",
       // },
       // {
       //   title: "School Announcements",
       //   icon: "/icons/bell.png",
-      //   url: "/school-staff/notifications",
+      //   url: "/s-t/notifications",
       // },
       // {
       //   title: "Extracurricular Activities",
       //   icon: "/icons/extracurricular.png",
-      //   url: "/school-staff/extracurricular",
+      //   url: "/s-t/extracurricular",
       // },
       // {
       //   title: "Parental & Guardian",
       //   icon: "/icons/family.png",
-      //   url: "/school-staff/parents",
+      //   url: "/s-t/parents",
       // },
       // {
       //   title: "Security & User Access",
       //   icon: "/icons/shield.png",
-      //   url: "/school-staff/Securities",
+      //   url: "/s-t/Securities",
       // },
     ]
   },

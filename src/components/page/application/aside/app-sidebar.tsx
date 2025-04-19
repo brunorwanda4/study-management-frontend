@@ -18,7 +18,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import Link from "next/link";
+import Link, { useLinkStatus } from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
@@ -38,6 +38,7 @@ const SidebarGroupComponent = ({
 }: sidebarGroupsProps) => {
   const path = usePathname();
   const { theme } = useTheme();
+  const { pending } = useLinkStatus();
   return (
     <SidebarGroup className=" p-0">
       <div>
@@ -138,7 +139,14 @@ const SidebarGroupComponent = ({
                                       "btn-info")
                                 )}
                               >
-                                {subItem.title}
+                                {subItem.title}{" "}
+                                {pending ? (
+                                  <div
+                                    role="status"
+                                    aria-label="Loading"
+                                    className={cn("loading loading-spinner")}
+                                  />
+                                ) : null}
                               </Link>
                             ) : (
                               <button className="ml-8 flex items-center gap-2 btn-xs btn-ghost  rounded-md">
@@ -154,7 +162,7 @@ const SidebarGroupComponent = ({
               </Accordion>
             ) : (
               <SidebarMenuItem key={index}>
-                <SidebarMenuButton asChild >
+                <SidebarMenuButton asChild>
                   {item.url ? (
                     <Link
                       href={cn(lang ? `/${lang}${item.url}` : item.url)}
@@ -168,7 +176,14 @@ const SidebarGroupComponent = ({
                       {item.icon && (
                         <MyImage className=" size-6" src={item.icon} />
                       )}
-                      {item.title}
+                      {item.title}{" "}
+                      {pending ? (
+                        <div
+                          role="status"
+                          aria-label="Loading"
+                          className={cn("loading loading-spinner")}
+                        />
+                      ) : null}
                     </Link>
                   ) : (
                     <div className="flex items-center gap-2 font-normal">
