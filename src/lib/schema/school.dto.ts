@@ -1,8 +1,17 @@
 import { z } from "zod";
 
-// You might need to define or import these separately
-const SchoolTypeEnum = z.enum(["Public", "Private", "Charter", "International"]); // adjust to your values
-const AttendanceSystemEnum = z.enum(["Manual", "Biometric", "RFID", "Online"]); // adjust to your values
+export const SchoolMembers = z.enum(["Mixed","Boys","Girls"]);
+export const SchoolTypeEnum = z.enum([
+  "Public",
+  "Private",
+  "Charter",
+  "International",
+]);
+export const AttendanceSystemEnum = z.enum(["Manual","Online"]);
+
+export const AffiliationTypeEnum = z.enum([
+  "Government", "Religious", "NGO", "independent"
+])
 
 // Subschemas
 const AddressSchema = z.object({
@@ -31,11 +40,15 @@ export const CreateSchoolSchema = z.object({
   code: z.string().min(2, "School code is required"),
   description: z.string().optional(),
   schoolType: SchoolTypeEnum,
-  curriculum: z.array(z.string()).min(1, "At least one curriculum is required"),
+  curriculum: z.array(z.object({
+    label: z.string(),
+    value: z.string(),
+    disable: z.boolean().optional(), // Include disable if it's part of your Option type and relevant
+  })).min(1, "At least one curriculum is required"),
   educationLevel: z.array(z.string()).min(1, "At least one education level is required"),
-  schoolMembers: z.any().optional(), // define this more specifically if you can
+  schoolMembers: SchoolMembers.optional(), // define this more specifically if you can
   accreditationNumber: z.string().optional(),
-  affiliation: z.string().optional(),
+  affiliation: AffiliationTypeEnum.optional(),
 
   address: AddressSchema,
   contact: ContactSchema,
