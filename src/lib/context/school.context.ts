@@ -10,3 +10,18 @@ export const SchoolCurriculum: Option[] = [
         label: "TVET",
     },
 ]
+
+export const schoolEducationLevel : Option[] = [
+    {
+        value: "Primary",
+        label : "primary"
+    },
+    {
+        value: "OLevel",
+        label : "Ordinary Level"
+    },
+    {
+        value: "ALevel",
+        label : "Advanced Level "
+    },
+]

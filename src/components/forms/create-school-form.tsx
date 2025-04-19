@@ -35,7 +35,7 @@ import { Label } from "@/components/ui/label";
 import MyImage from "@/components/myComponents/myImage"; // Assuming this exists
 import { FormError, FormSuccess } from "@/components/myComponents/form-message"; // Assuming this exists
 import MultipleSelector from "../ui/multiselect";
-import { SchoolCurriculum } from "@/lib/context/school.context";
+import { SchoolCurriculum, schoolEducationLevel } from "@/lib/context/school.context";
 
 
 interface Props {
@@ -233,7 +233,7 @@ const CreateSchoolForm = ({}: Props) => {
                     </SelectContent>
                   </Select>
                   <FormDescription>
-                   School type 
+                   School type of you school 
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -384,13 +384,16 @@ const CreateSchoolForm = ({}: Props) => {
                 <FormItem>
                   <FormLabel>Education Levels Offered *</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="e.g., Nursery, Primary, Secondary"
-                      value={
-                        Array.isArray(field.value) ? field.value.join(", ") : ""
-                      }
-                      onChange={(e) =>
-                        handleArrayInputChange(e.target.value, field.onChange)
+                  <MultipleSelector
+                      value={field.value}
+                      onChange={field.onChange}
+                      defaultOptions={schoolEducationLevel} 
+                      placeholder="e.g., REB, TVET"
+                      hidePlaceholderWhenSelected
+                      emptyIndicator={
+                        <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
+                          no results found.
+                        </p>
                       }
                     />
                   </FormControl>

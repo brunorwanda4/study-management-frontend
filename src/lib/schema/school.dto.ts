@@ -1,13 +1,13 @@
 import { z } from "zod";
 
-export const SchoolMembers = z.enum(["Mixed","Boys","Girls"]);
+export const SchoolMembers = z.enum(["Mixed", "Boys", "Girls"]);
 export const SchoolTypeEnum = z.enum([
   "Public",
   "Private",
   "Charter",
   "International",
 ]);
-export const AttendanceSystemEnum = z.enum(["Manual","Online"]);
+export const AttendanceSystemEnum = z.enum(["Manual", "Online"]);
 
 export const AffiliationTypeEnum = z.enum([
   "Government", "Religious", "NGO", "independent"
@@ -45,7 +45,11 @@ export const CreateSchoolSchema = z.object({
     value: z.string(),
     disable: z.boolean().optional(), // Include disable if it's part of your Option type and relevant
   })).min(1, "At least one curriculum is required"),
-  educationLevel: z.array(z.string()).min(1, "At least one education level is required"),
+  educationLevel: z.array(z.object({
+    label: z.string(),
+    value: z.string(),
+    disable: z.boolean().optional(), // Include disable if it's part of your Option type and relevant
+  })).min(1, "At least one education level is required"),
   schoolMembers: SchoolMembers.optional(), // define this more specifically if you can
   accreditationNumber: z.string().optional(),
   affiliation: AffiliationTypeEnum.optional(),
