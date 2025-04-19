@@ -1,5 +1,5 @@
+import CreateSchoolForm from "@/components/forms/create-school-form";
 import PermissionPage from "@/components/page/permission-page";
-import CreateSchoolBody from "@/components/page/school/create-school/create-school-boady";
 import { Locale } from "@/i18n";
 import { getAuthUserServer } from "@/lib/utils/auth";
 import { Metadata } from "next";
@@ -31,7 +31,8 @@ const SchoolStaffRegisterSchool = async (props: props) => {
           school.
         </p>
       </div>
-      <CreateSchoolBody />
+      {/* <CreateSchoolBody /> */}
+      <CreateSchoolForm lang="en"/>
     </div>
   );
 };

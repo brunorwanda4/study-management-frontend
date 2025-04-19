@@ -68,3 +68,5 @@ export const CreateSchoolSchema = z.object({
     });
   }
 });
+
+export type CreateSchoolDto = z.infer<typeof CreateSchoolSchema>;

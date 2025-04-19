@@ -142,7 +142,7 @@
 }
 
 .basic-card {
-  @apply bg-base-100 card p-4 border border-base-300
+  @apply bg-base-100 card p-4 border border-base-content/20
 }
 
 @layer base {

@@ -1,5 +1,3 @@
-// src/components/forms/create-school-form.tsx (Example file path)
-
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,7 +6,7 @@ import { z } from "zod";
 import { ChangeEvent, useState, useTransition } from "react";
 import { useTheme } from "next-themes";
 
-import { CreateSchoolSchema } from "@/lib/schema/school.dto"; // Adjust import path
+import { CreateSchoolDto, CreateSchoolSchema } from "@/lib/schema/school.dto"; // Adjust import path
 import { Locale } from "@/i18n"; // Assuming you might need this
 
 // Import Shadcn UI Components
@@ -42,7 +40,6 @@ import { FormError, FormSuccess } from "@/components/myComponents/form-message";
 // import { createSchoolService } from "@/service/school/school-service"; // Adjust path
 
 // Define the type based on the Zod schema
-type CreateSchoolDto = z.infer<typeof CreateSchoolSchema>;
 
 // Assuming Enums are defined/imported like this:
 const SchoolTypeEnum = z.enum(["Public", "Private", "Charter", "International"]);
@@ -176,12 +173,10 @@ const CreateSchoolForm = ({  }: Props) => {
         <Form {...form}>
             <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-6 p-4 border rounded-md shadow-sm" // Added some padding/styling
+                className="space-y-6 basic-card shadow-sm" // Added some padding/styling
             >
-                <h2 className="text-2xl font-semibold mb-6">Create New School</h2>
-
                 {/* Section: Basic Info */}
-                <div className="p-4 border rounded-md">
+                <div className="">
                     <h3 className="text-lg font-medium mb-4">Basic Information</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {/* School Name */}
@@ -199,7 +194,7 @@ const CreateSchoolForm = ({  }: Props) => {
                             )}
                         />
 
-                        {/* School Username (Unique Identifier) */}
+                        {/* School school member */}
                         <FormField
                             control={form.control}
                             name="username"
@@ -214,7 +209,6 @@ const CreateSchoolForm = ({  }: Props) => {
                                 </FormItem>
                             )}
                         />
-
                         {/* School Code */}
                         <FormField
                             control={form.control}
@@ -316,7 +310,7 @@ const CreateSchoolForm = ({  }: Props) => {
                 </div>
 
                 {/* Section: Academic Details */}
-                 <div className="p-4 border rounded-md">
+                 <div className="">
                      <h3 className="text-lg font-medium mb-4">Academic Details</h3>
                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {/* Curriculum */}
@@ -393,7 +387,7 @@ const CreateSchoolForm = ({  }: Props) => {
                 </div>
 
                 {/* Section: Contact & Location */}
-                <div className="p-4 border rounded-md">
+                <div className="">
                     <h3 className="text-lg font-medium mb-4">Contact & Location</h3>
                     {/* Address Fields */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -434,7 +428,7 @@ const CreateSchoolForm = ({  }: Props) => {
                 </div>
 
                  {/* Section: Facilities & Operations */}
-                 <div className="p-4 border rounded-md">
+                 <div className="">
                      <h3 className="text-lg font-medium mb-4">Facilities & Operations</h3>
                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {/* Student Capacity */}
