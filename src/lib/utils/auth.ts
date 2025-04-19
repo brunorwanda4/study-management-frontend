@@ -2,13 +2,14 @@
 import { Locale } from '@/i18n';
 import {jwtDecode} from 'jwt-decode';
 import { getUserToken } from './auth-cookies';
+import { UserRoleDto } from '../schema/user.dto';
 
 export interface AuthUserDto {
   id: string;
   name: string;
   email: string;
   image?: string;
-  role?: string;
+  role?: UserRoleDto;
   iat?: number;
   exp?: number;
 }

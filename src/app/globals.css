@@ -141,8 +141,8 @@
   @apply font-medium text-lg
 }
 
-.space-together-name {
-  @apply font-medium font-mono leading-1
+.basic-card {
+  @apply bg-base-100 card p-4 border border-base-300
 }
 
 @layer base {
@@ -153,8 +153,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-.logo-font{
-  font-family:'Courier New', Courier, monospace,
-}
-

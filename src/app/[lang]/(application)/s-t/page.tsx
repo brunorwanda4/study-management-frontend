@@ -2,6 +2,11 @@ import MyImage from "@/components/myComponents/myImage";
 import MyLink from "@/components/myComponents/myLink";
 import { Button } from "@/components/ui/button";
 import { Locale } from "@/i18n";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "School Dashboard",
+};
 
 interface props {
   params: Promise<{ lang: Locale }>;
