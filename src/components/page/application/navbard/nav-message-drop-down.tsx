@@ -20,7 +20,7 @@ const NavMessageDropDown = ({lang}: props) => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button library="daisy" variant="ghost" shape="circle">
-          <MyImage className=" size-8" src="/icons/message.png" />
+          <MyImage className=" size-8" src="/icons/chat.png" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className=" w-72">

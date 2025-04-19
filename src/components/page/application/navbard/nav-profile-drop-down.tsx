@@ -11,23 +11,17 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Locale } from "@/i18n";
+import { AuthUserDto } from "@/lib/utils/auth";
 import { LogOut, User } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 
 interface props {
-//   user: AuthUserDto;
   lang: Locale;
+  user : AuthUserDto
 }
 
-const user = {
-    name : "Rwanda Bruno",
-    image : "https://img.freepik.com/free-photo/young-african-american-man-wearing-white-shirt_273609-21699.jpg?t=st=1744968201~exp=1744971801~hmac=be4a690e9c62b0600ff3ec1da6a45052c1e75549cfd66cd80f944a363f5b819e&w=1380",
-    role: "STUDENT",
-    email : "rwandabruno@gmail.com"
-}
-
-const NavProfileDropDown = ({ lang }: props) => {
+const NavProfileDropDown = ({ lang , user}: props) => {
     const {theme} = useTheme()
   return (
     <DropdownMenu>

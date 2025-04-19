@@ -23,7 +23,7 @@ const ApplicationLayout = async (props: props) => {
   const { lang } = params;
   const currentUser = await getAuthUserServer();
   if (!currentUser) {
-    redirect(`/${lang}/auth/login`)
+    redirect(`/${lang}/auth/login`);
     return <div>re</div>;
   }
   const role = "STUDENT";
@@ -42,7 +42,12 @@ const ApplicationLayout = async (props: props) => {
         }
         lang={lang}
       />
-      <main className="pt-14 bg-base-200 w-full">{children} <AppFooter lang={lang}/></main>
+      <div className=" flex flex-col w-full space-y-4">
+        <main className="pt-14 bg-base-200 w-full min-h-screen">
+          {children}
+        </main>
+        <AppFooter lang={lang} />
+      </div>
     </SidebarProvider>
   );
 };

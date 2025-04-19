@@ -35,12 +35,10 @@ export async function onboardingService(input: onboardingDto) {
   const res = await apiRequest<onboardingDto, UserDto | AuthUserDto>("patch", `/user/${token.userId}`, input, token.token, 'onboarding');
   if (res.data) {
     if ('accessToken' in res.data && res.data.accessToken) {
-      localStorage.setItem('userId', res.data.id);
-      sessionStorage.setItem('accessToken', res.data.accessToken);
-    } else {
-      return { error: "Access token is undefined" }
+      await setAuthCookie(res.data.accessToken, res.data.id)
+      return res
     }
-    return res
+    else return { error: "access token backend in not generated" }
   } else {
     return { error: res.message }
   }
