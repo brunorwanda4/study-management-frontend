@@ -22,3 +22,6 @@ export const env = createEnv({
   // Treats empty strings as undefined (so validation fails)
   emptyStringAsUndefined: true,
 });
+
+export const TOKEN_KEY= "accessToken"
+export const UserId = "current-user"
