@@ -24,9 +24,8 @@ const ApplicationLayout = async (props: props) => {
   const currentUser = await getAuthUserServer();
   if (!currentUser) {
     redirect(`/${lang}/auth/login`);
-    return <div>re</div>;
   }
-  const role = "STUDENT";
+  const role = currentUser.role;
   return (
     <SidebarProvider>
       <AppNav lang={lang} />
@@ -42,8 +41,8 @@ const ApplicationLayout = async (props: props) => {
         }
         lang={lang}
       />
-      <div className=" flex flex-col w-full space-y-4">
-        <main className="pt-14 bg-base-200 w-full min-h-screen">
+      <div className=" flex flex-col w-full space-y-4 bg-base-200">
+        <main className="pt-14 w-full min-h-screen">
           {children}
         </main>
         <AppFooter lang={lang} />
