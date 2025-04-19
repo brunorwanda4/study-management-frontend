@@ -43,7 +43,6 @@ export const CreateSchoolSchema = z.object({
     .regex(/^[a-zA-Z0-9_]+$/, "Username can only contain letters, numbers, and underscores"),
   logo: z.string().url("Logo must be a valid URL").optional(),
   name: z.string().min(1, "Name is required"),
-  code: z.string().min(2, "School code is required"),
   description: z.string().optional(),
   schoolType: SchoolTypeEnum,
   curriculum: z.array(z.object({
@@ -84,10 +83,10 @@ export const CreateSchoolSchema = z.object({
   })).optional(),
   onlineClasses: z.boolean().optional(),
 }).superRefine((data, ctx) => {
-  if (!data.username || !data.name || !data.code) {
+  if (!data.username || !data.name) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
-      message: "Username, name, and code are required",
+      message: "Username, and name are required",
     });
   }
 
@@ -100,3 +99,93 @@ export const CreateSchoolSchema = z.object({
 });
 
 export type CreateSchoolDto = z.infer<typeof CreateSchoolSchema>;
+
+export const CreateSchoolSchemaBackend = z.object({
+  creatorId: z.string().min(1, "Creator ID is required"),
+  username: z.string()
+    .min(3, "Username must be at least 3 characters")
+    .regex(/^[a-zA-Z0-9_]+$/, "Username can only contain letters, numbers, and underscores"),
+  logo: z.string().url("Logo must be a valid URL").optional(),
+  name: z.string().min(1, "Name is required"),
+  description: z.string().optional(),
+  schoolType: SchoolTypeEnum,
+  curriculum: z.array(z.string()).min(1, "At least one curriculum is required"),
+  educationLevel: z.array(z.string()).min(1, "At least one education level is required"),
+  schoolMembers: SchoolMembers.optional(),
+  accreditationNumber: z.string().optional(),
+  affiliation: AffiliationTypeEnum.optional(),
+
+  address: AddressSchema,
+  contact: ContactSchema,
+  website: z.string().url("Website must be a valid URL").optional(),
+  socialMedia: z.array(SocialMediaSchema).optional(),
+
+  studentCapacity: z.number().int().positive("Capacity must be a positive number").optional(),
+  uniformRequired: z.boolean().optional(),
+  attendanceSystem: AttendanceSystemEnum.optional(),
+  scholarshipAvailable: z.boolean().optional(),
+
+  classrooms: z.number().int().positive("Classrooms must be a positive number").optional(),
+  library: z.boolean().optional(),
+  labs: z.array(z.string()).optional(),
+  sportsExtracurricular: z.array(z.string()).optional(),
+  onlineClasses: z.boolean().optional(),
+}).superRefine((data, ctx) => {
+  if (!data.username || !data.name) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Username, and name are required",
+    });
+  }
+
+  if (!data.website && (!data.socialMedia || data.socialMedia.length === 0)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Either website or at least one social media link must be provided",
+    });
+  }
+});
+
+export type CreateSchoolDtoBackend = z.infer<typeof CreateSchoolSchemaBackend>
+
+
+export const SchoolSchema = z.object({
+  id: z.string(),
+  creatorId: z.string(),
+
+  username: z.string().min(3, { message: "Username must be at least 3 characters" }),
+  logo: z.string().url({ message: "Invalid logo URL" }).optional(),
+  name: z.string().min(1, { message: "School name is required" }),
+  code: z.string().min(1, { message: "School code is required" }),
+  description: z.string().optional(),
+  schoolType: SchoolTypeEnum,
+  curriculum: z.array(z.string()).min(1, { message: "At least one curriculum must be specified" }),
+  educationLevel: z.array(z.string()).min(1, { message: "At least one education level must be specified" }),
+  schoolMembers: SchoolMembers.optional(),
+  accreditationNumber: z.string().optional(),
+  affiliation: z.string().optional(),
+
+  // location
+  address: AddressSchema.optional(),
+  contact: ContactSchema.optional(),
+  website: z.string().url({ message: "Invalid website URL" }).optional(),
+  socialMedia: z.array(SocialMediaSchema).optional(),
+
+  // students
+  studentCapacity: z.number().int().positive({ message: "Student capacity must be a positive integer" }).optional(),
+  uniformRequired: z.boolean().optional(),
+  attendanceSystem: AttendanceSystemEnum.optional(),
+  scholarshipAvailable: z.boolean().optional(),
+
+  // facilities
+  classrooms: z.number().int().positive({ message: "Number of classrooms must be a positive integer" }).optional(),
+  library: z.boolean().optional(),
+  labs: z.array(z.string()).optional(),
+  sportsExtracurricular: z.array(z.string()).optional(),
+  onlineClasses: z.boolean().optional(),
+
+  createAt: z.date().optional(),
+  updatedAt: z.date().optional(),
+});
+
+export type SchoolDto = z.infer<typeof SchoolSchema>;

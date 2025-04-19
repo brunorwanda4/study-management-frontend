@@ -48,31 +48,32 @@ import {
   schoolLabs,
   SchoolSportsExtracurricular,
 } from "@/lib/context/school.context";
+import { useRouter } from "next/navigation";
+import { createSchoolService } from "@/service/school/school.service";
 
 interface Props {
-  lang: Locale; // Keep if localization is needed
-  // Add any other props needed, like default creatorId if not handled server-side
+  lang: Locale;
+  userId: string;
 }
 
-const CreateSchoolForm = ({}: Props) => {
+const CreateSchoolForm = ({ lang, userId }: Props) => {
   const [error, setError] = useState<string | null | undefined>("");
   const [success, setSuccess] = useState<string | null | undefined>("");
   const [isPending, startTransition] = useTransition();
   const { theme } = useTheme();
-
+  const router = useRouter();
   const form = useForm<CreateSchoolDto>({
     resolver: zodResolver(CreateSchoolSchema),
     defaultValues: {
-      // creatorId: "" // Handle this outside the form if possible
+      creatorId: userId,
       username: "",
       logo: undefined,
       name: "",
-      code: "",
       description: "",
-      schoolType: undefined, // Default to placeholder
-      curriculum: [], // Will be handled by text input split
-      educationLevel: [], // Will be handled by text input split
-      //   schoolMembers: [], // Omitted for simplicity
+      schoolType: undefined,
+      curriculum: [],
+      educationLevel: [],
+      schoolMembers: undefined,
       accreditationNumber: "",
       affiliation: undefined,
       address: {
@@ -81,21 +82,22 @@ const CreateSchoolForm = ({}: Props) => {
         state: "",
         postalCode: "",
         country: "Rwanda", // Default or make it selectable
+        googleMapUrl: undefined,
       },
       contact: {
         phone: "",
         email: "",
       },
-      website: "",
+      website: undefined,
       socialMedia: [], // Simplified or omitted for now
       studentCapacity: undefined,
-      uniformRequired: undefined,
-      attendanceSystem: undefined, // Default to placeholder
-      scholarshipAvailable: undefined,
+      uniformRequired: true,
+      attendanceSystem: undefined,
+      scholarshipAvailable: false,
       classrooms: undefined,
-      library: undefined,
-      labs: [], // Will be handled by text input split
-      sportsExtracurricular: [], // Will be handled by text input split
+      library: true,
+      labs: [],
+      sportsExtracurricular: [],
       onlineClasses: true,
     },
   });
@@ -120,46 +122,22 @@ const CreateSchoolForm = ({}: Props) => {
       }
       fileReader.onload = async (event) => {
         const imageDataUrl = event.target?.result?.toString() || "";
-        fieldChange(imageDataUrl); // Assuming you store as base64 URL, adjust if you upload and store URL
+        fieldChange(imageDataUrl);
       };
       fileReader.readAsDataURL(file);
     }
   };
 
-  // Handle comma-separated input for arrays
-  // const handleArrayInputChange = (
-  //   value: string,
-  //   fieldChange: (value: string[]) => void
-  // ) => {
-  //   const items = value
-  //     .split(",")
-  //     .map((item) => item.trim())
-  //     .filter((item) => item.length > 0);
-  //   fieldChange(items);
-  // };
-
   const onSubmit = (values: CreateSchoolDto) => {
     setSuccess(null);
     setError(null);
-console.log("🌚")
     startTransition(async () => {
-      // Replace with your actual service call
-      console.log("Submitting:", values);
-      // const result = await createSchoolService(processedValues);
-      const result = {
-        success: true,
-        data: { id: "123", name: values.name },
-        error: null,
-        message: "School created successfully (Simulated)",
-      }; // Simulated success
-
-      if (result.success && result.data) {
-        setSuccess(result.message || "School created successfully! 🎉");
-        // Optionally redirect
-        // router.push(`/schools/${result.data.id}`); // Example redirect
-        form.reset(); // Reset form on success
-      } else {
-        setError(result.message || result.error || "Failed to create school.");
+      const create = await createSchoolService(values);
+      if (create?.data?.id) {
+        setSuccess("School is registered successful ☺️");
+        router.push(`/${lang}/s-t/new/${create.data.id}`);
+      } else if (create?.error) {
+        setError(`error: ${create.error}, message : ${create.message}`);
       }
     });
   };
@@ -521,13 +499,15 @@ console.log("🌚")
                 <FormItem>
                   <FormLabel>Google map URL</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., https://www.google.com/maps/place/Eiffel+Tower/@48.8583701,2.2922926,17z" {...field} />
+                    <Input
+                      placeholder="e.g., https://www.google.com/maps/place/Eiffel+Tower/@48.8583701,2.2922926,17z"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            {/* Or make this a Select */}
           </div>
           {/* Contact Fields */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -589,14 +569,7 @@ console.log("🌚")
             Provide website OR social media links (add social links in
             description or dedicated section later).
           </FormDescription>
-          {/* Example for one social media link - needs dynamic handling for array */}
-          {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                        <FormField control={form.control} name="socialMedia.0.platform" render={({ field }) => ( <FormItem><FormLabel>Social Platform</FormLabel><FormControl><Input placeholder="e.g., Facebook, Twitter" {...field} /></FormControl><FormMessage /></FormItem> )} />
-                        <FormField control={form.control} name="socialMedia.0.link" render={({ field }) => ( <FormItem><FormLabel>Social Link</FormLabel><FormControl><Input type="url" placeholder="https://..." {...field} /></FormControl><FormMessage /></FormItem> )} />
-                     </div> */}
         </div>
-
-        {/* Section: Facilities & Operations */}
         <div className="">
           <h3 className="text-lg font-medium mb-4">Facilities & Operations</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -686,8 +659,6 @@ console.log("🌚")
               name="uniformRequired"
               render={({ field }) => (
                 <FormItem className="space-y-2 pt-2">
-                  {" "}
-                  {/* Adjust spacing/alignment */}
                   <FormLabel>Uniform Required?</FormLabel>
                   <FormControl>
                     <RadioGroup
@@ -698,7 +669,7 @@ console.log("🌚")
                         field.value === undefined
                           ? undefined
                           : String(field.value)
-                      } // Convert boolean to string for RadioGroup value
+                      }
                       className="flex space-x-4"
                     >
                       <FormItem className="flex items-center space-x-2 space-y-0">
@@ -885,7 +856,7 @@ console.log("🌚")
         </div>
 
         {/* Submission Area */}
-        <div className="mt-6">
+        <div className="mt-2">
           <FormError message={error} />
           <FormSuccess message={success} />
         </div>
@@ -893,6 +864,8 @@ console.log("🌚")
         <Button
           disabled={isPending}
           type="submit"
+          library="daisy"
+          variant={"info"}
           className="w-full"
           // variant="primary" // Or your desired variant
         >

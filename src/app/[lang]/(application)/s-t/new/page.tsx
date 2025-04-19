@@ -31,8 +31,7 @@ const SchoolStaffRegisterSchool = async (props: props) => {
           school.
         </p>
       </div>
-      {/* <CreateSchoolBody /> */}
-      <CreateSchoolForm lang="en"/>
+      <CreateSchoolForm userId={currentUser.id} lang={lang} />
     </div>
   );
 };
