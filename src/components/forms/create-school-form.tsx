@@ -5,7 +5,14 @@ import { useForm } from "react-hook-form";
 import { ChangeEvent, useState, useTransition } from "react";
 import { useTheme } from "next-themes";
 
-import { AttendanceSystemEnum, CreateSchoolDto, CreateSchoolSchema, SchoolMembers, SchoolTypeEnum } from "@/lib/schema/school.dto"; // Adjust import path
+import {
+  AffiliationTypeEnum,
+  AttendanceSystemEnum,
+  CreateSchoolDto,
+  CreateSchoolSchema,
+  SchoolMembers,
+  SchoolTypeEnum,
+} from "@/lib/schema/school.dto"; // Adjust import path
 import { Locale } from "@/i18n"; // Assuming you might need this
 
 // Import Shadcn UI Components
@@ -35,8 +42,12 @@ import { Label } from "@/components/ui/label";
 import MyImage from "@/components/myComponents/myImage"; // Assuming this exists
 import { FormError, FormSuccess } from "@/components/myComponents/form-message"; // Assuming this exists
 import MultipleSelector from "../ui/multiselect";
-import { SchoolCurriculum, schoolEducationLevel } from "@/lib/context/school.context";
-
+import {
+  SchoolCurriculum,
+  schoolEducationLevel,
+  schoolLabs,
+  SchoolSportsExtracurricular,
+} from "@/lib/context/school.context";
 
 interface Props {
   lang: Locale; // Keep if localization is needed
@@ -61,7 +72,7 @@ const CreateSchoolForm = ({}: Props) => {
       schoolType: undefined, // Default to placeholder
       curriculum: [], // Will be handled by text input split
       educationLevel: [], // Will be handled by text input split
-    //   schoolMembers: [], // Omitted for simplicity
+      //   schoolMembers: [], // Omitted for simplicity
       accreditationNumber: "",
       affiliation: undefined,
       address: {
@@ -85,7 +96,7 @@ const CreateSchoolForm = ({}: Props) => {
       library: undefined,
       labs: [], // Will be handled by text input split
       sportsExtracurricular: [], // Will be handled by text input split
-      onlineClasses: undefined,
+      onlineClasses: true,
     },
   });
 
@@ -116,16 +127,16 @@ const CreateSchoolForm = ({}: Props) => {
   };
 
   // Handle comma-separated input for arrays
-  const handleArrayInputChange = (
-    value: string,
-    fieldChange: (value: string[]) => void
-  ) => {
-    const items = value
-      .split(",")
-      .map((item) => item.trim())
-      .filter((item) => item.length > 0);
-    fieldChange(items);
-  };
+  // const handleArrayInputChange = (
+  //   value: string,
+  //   fieldChange: (value: string[]) => void
+  // ) => {
+  //   const items = value
+  //     .split(",")
+  //     .map((item) => item.trim())
+  //     .filter((item) => item.length > 0);
+  //   fieldChange(items);
+  // };
 
   const onSubmit = (values: CreateSchoolDto) => {
     setSuccess(null);
@@ -184,7 +195,11 @@ const CreateSchoolForm = ({}: Props) => {
                 <FormItem>
                   <FormLabel>School Name *</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Green Hills Academy" {...field} />
+                    <Input
+                      autoFocus
+                      placeholder="e.g., Green Hills Academy"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -232,9 +247,7 @@ const CreateSchoolForm = ({}: Props) => {
                       ))}
                     </SelectContent>
                   </Select>
-                  <FormDescription>
-                   School type of you school 
-                  </FormDescription>
+                  <FormDescription>School type of you school</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -265,7 +278,7 @@ const CreateSchoolForm = ({}: Props) => {
                     </SelectContent>
                   </Select>
                   <FormDescription>
-                   Student gender school receive
+                    Student gender school receive
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -358,14 +371,9 @@ const CreateSchoolForm = ({}: Props) => {
                     <MultipleSelector
                       value={field.value}
                       onChange={field.onChange}
-                      defaultOptions={SchoolCurriculum} 
+                      defaultOptions={SchoolCurriculum}
                       placeholder="e.g., REB, TVET"
                       hidePlaceholderWhenSelected
-                      emptyIndicator={
-                        <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
-                          no results found.
-                        </p>
-                      }
                     />
                   </FormControl>
                   <FormDescription>
@@ -384,17 +392,12 @@ const CreateSchoolForm = ({}: Props) => {
                 <FormItem>
                   <FormLabel>Education Levels Offered *</FormLabel>
                   <FormControl>
-                  <MultipleSelector
+                    <MultipleSelector
                       value={field.value}
                       onChange={field.onChange}
-                      defaultOptions={schoolEducationLevel} 
-                      placeholder="e.g., REB, TVET"
+                      defaultOptions={schoolEducationLevel}
+                      placeholder="e.g., Primary, Ordinary Level"
                       hidePlaceholderWhenSelected
-                      emptyIndicator={
-                        <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
-                          no results found.
-                        </p>
-                      }
                     />
                   </FormControl>
                   <FormDescription>
@@ -430,12 +433,23 @@ const CreateSchoolForm = ({}: Props) => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Affiliation</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="e.g., Ministry of Education, Religious Body"
-                      {...field}
-                    />
-                  </FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select school Affiliation" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent data-theme={theme}>
+                      {AffiliationTypeEnum.options.map((type) => (
+                        <SelectItem key={type} value={type}>
+                          {type}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
@@ -828,14 +842,12 @@ const CreateSchoolForm = ({}: Props) => {
                 <FormItem>
                   <FormLabel>Labs Available</FormLabel>
                   <FormControl>
-                    <Input
+                    <MultipleSelector
+                      value={field.value}
+                      onChange={field.onChange}
+                      defaultOptions={schoolLabs}
                       placeholder="e.g., Science Lab, Computer Lab"
-                      value={
-                        Array.isArray(field.value) ? field.value.join(", ") : ""
-                      }
-                      onChange={(e) =>
-                        handleArrayInputChange(e.target.value, field.onChange)
-                      }
+                      hidePlaceholderWhenSelected
                     />
                   </FormControl>
                   <FormDescription>
@@ -854,14 +866,12 @@ const CreateSchoolForm = ({}: Props) => {
                 <FormItem>
                   <FormLabel>Sports & Extracurricular</FormLabel>
                   <FormControl>
-                    <Input
+                    <MultipleSelector
+                      value={field.value}
+                      onChange={field.onChange}
+                      defaultOptions={SchoolSportsExtracurricular}
                       placeholder="e.g., Football, Debate Club, Music"
-                      value={
-                        Array.isArray(field.value) ? field.value.join(", ") : ""
-                      }
-                      onChange={(e) =>
-                        handleArrayInputChange(e.target.value, field.onChange)
-                      }
+                      hidePlaceholderWhenSelected
                     />
                   </FormControl>
                   <FormDescription>

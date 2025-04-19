@@ -12,6 +12,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -21,7 +22,6 @@ import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ChangeEvent, useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { Locale } from "@/i18n";
 import { CountriesContext } from "@/lib/data/locations";
 import { Textarea } from "@/components/ui/textarea";
@@ -37,7 +37,7 @@ interface Props {
   lang: Locale;
 }
 
-const OnboardingForm = ({lang}: Props) => {
+const OnboardingForm = ({ lang }: Props) => {
   const [error, setError] = useState<undefined | null | string>("");
   const [success, setSuccess] = useState<undefined | null | string>("");
   const [isPending, startTransition] = useTransition();
@@ -51,7 +51,7 @@ const OnboardingForm = ({lang}: Props) => {
       phone: "",
       gender: undefined,
       role: undefined,
-      location: {
+      address: {
         country: "Rwanda",
         province: "",
         district: "",
@@ -101,11 +101,11 @@ const OnboardingForm = ({lang}: Props) => {
       if (update.data) {
         setSuccess("Thanks to help us to know you better! ☺️");
         if (update.data.role) {
-          router.push(redirectContents({lang , role : update.data.role}))
+          router.push(redirectContents({ lang, role: update.data.role }));
         }
       } else if (update.error) {
         setError(`error :${update.error}, message : ${update.message}`);
-      } 
+      }
     });
   };
 
@@ -117,49 +117,53 @@ const OnboardingForm = ({lang}: Props) => {
       >
         {/* image */}
         <FormField
-          control={form.control}
-          name="image"
-          render={({ field }) => (
-            <FormItem className={cn("flex gap-2 items-center")}>
-              <FormLabel
-                htmlFor="image"
-                className={cn("flex gap-3 items-center")}
-              >
-                <MyImage
-                   src={
-                    field.value
-                      ? field.value
-                      : "https://img.freepik.com/free-vector/illustration-gallery-icon_53876-27002.jpg"
-                  }
-                  className={cn("size-24")}
-                  classname=" card"
-                  alt="Profile"
-                />
-                <span
-                  className={cn("cursor-pointer", !field.value && "text-info")}
-                >
-                  Profile image
-                </span>
-              </FormLabel>
-              <FormControl>
-                <div className={cn("flex flex-col")}>
-                  <Input
+            control={form.control}
+            name="image"
+            render={({ field }) => (
+              <FormItem className="mt-4 flex flex-col gap-2">
+                <FormLabel>Profile Image</FormLabel>
+                <div className="flex items-center gap-4">
+                  <Label htmlFor="logo-upload" className="cursor-pointer">
+                    <MyImage
+                      src={
+                        field.value ||
+                        "https://img.freepik.com/free-vector/illustration-gallery-icon_53876-27002.jpg"
+                      } // Default placeholder
+                      className="size-24 border rounded" // Adjust styling as needed
+                      classname=" card" // Adjust styling as needed
+                      alt="Profile image"
+                    />
+                  </Label>
+                  <FormControl>
+                    <Input
+                      id="logo-upload"
+                      disabled={isPending}
+                      type="file"
+                      accept="image/*"
+                      placeholder="Upload Image"
+                      className="hidden" // Hide default input, trigger via label/MyImage
+                      onChange={(e) => handleImage(e, field.onChange)}
+                    />
+                  </FormControl>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() =>
+                      document.getElementById("logo-upload")?.click()
+                    }
                     disabled={isPending}
-                    type="file"
-                    id="image"
-                    accept="image/*"
-                    placeholder="Add profile photo"
-                    className={cn(
-                      "border-none outline-none bg-transparent hidden"
-                    )}
-                    onChange={(e) => handleImage(e, field.onChange)}
-                  />
+                  >
+                    {field.value ? "Change Image" : "Upload Image"}
+                  </Button>
                 </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                <FormDescription>
+                  Recommended size: 200x200px, Max 2MB.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         <div className="flex space-x-4 w-full justify-between">
           {/* Left */}
           <div className=" flex flex-col space-y-2 w-full justify-start">
@@ -169,7 +173,7 @@ const OnboardingForm = ({lang}: Props) => {
               name="age"
               render={({ field }) => (
                 <FormItem className=" w-full">
-                  <FormLabel className=" text-lg">Age</FormLabel>
+                  <FormLabel className="  ">Age</FormLabel>
                   <FormControl>
                     <div className="flex gap-2">
                       {/* Year Select */}
@@ -271,10 +275,10 @@ const OnboardingForm = ({lang}: Props) => {
               name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className=" text-lg ">Phone</FormLabel>
+                  <FormLabel className="   ">Phone</FormLabel>
                   <FormControl>
                     <Input
-                      className="h-12 text-lg w-96"
+                      className="h-12   w-96"
                       type="tel"
                       placeholder="Enter your phone number"
                       {...field}
@@ -290,7 +294,7 @@ const OnboardingForm = ({lang}: Props) => {
               name="role"
               render={({ field }) => (
                 <FormItem className="space-y-0">
-                  <FormLabel className=" text-lg">Role</FormLabel>
+                  <FormLabel className="  ">Role</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
@@ -332,7 +336,7 @@ const OnboardingForm = ({lang}: Props) => {
               name="gender"
               render={({ field }) => (
                 <FormItem className="space-y-0">
-                  <FormLabel className=" text-lg">Gender</FormLabel>
+                  <FormLabel className="  ">Gender</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
@@ -368,10 +372,10 @@ const OnboardingForm = ({lang}: Props) => {
             {/* location */}
             <FormField
               control={form.control}
-              name="location"
+              name="address"
               render={({ field }) => (
                 <FormItem className=" w-full">
-                  <FormLabel className=" text-lg">
+                  <FormLabel className="  ">
                     Location -{" "}
                     <span className=" text-base font-normal text-gray-500">
                       In Rwanda
@@ -441,10 +445,10 @@ const OnboardingForm = ({lang}: Props) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className=" text-lg">Bio</FormLabel>
+                  <FormLabel className="  ">Bio</FormLabel>
                   <FormControl>
                     <Textarea
-                      className=" text-lg w-96 h-full min-h-44 "
+                      className="   w-96 h-full min-h-44 "
                       {...field}
                       rows={8}
                     />

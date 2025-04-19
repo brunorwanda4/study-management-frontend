@@ -66,8 +66,16 @@ export const CreateSchoolSchema = z.object({
 
   classrooms: z.number().int().positive("Classrooms must be a positive number").optional(),
   library: z.boolean().optional(),
-  labs: z.array(z.string()).optional(),
-  sportsExtracurricular: z.array(z.string()).optional(),
+  labs: z.array(z.object({
+    label: z.string(),
+    value: z.string(),
+    disable: z.boolean().optional(), // Include disable if it's part of your Option type and relevant
+  })).optional(),
+  sportsExtracurricular: z.array(z.object({
+    label: z.string(),
+    value: z.string(),
+    disable: z.boolean().optional(), // Include disable if it's part of your Option type and relevant
+  })).optional(),
   onlineClasses: z.boolean().optional(),
 }).superRefine((data, ctx) => {
   if (!data.username || !data.name || !data.code) {

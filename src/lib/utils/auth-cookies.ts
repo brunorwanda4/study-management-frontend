@@ -25,3 +25,9 @@ export async function getUserToken() {
 
     }
 }
+
+export async function removeUserToken() {
+    const cooky = await cookies();
+    cooky.delete(TOKEN_KEY)
+    cooky.delete(UserId)
+}

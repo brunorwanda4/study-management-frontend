@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Locale } from "@/i18n";
-import { AuthUserDto } from "@/lib/utils/auth";
+import { AuthUserDto, logout } from "@/lib/utils/auth";
 import { LogOut, User } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
@@ -55,7 +55,7 @@ const NavProfileDropDown = ({ lang , user}: props) => {
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Button type="button" variant="ghost" size="sm" className=" text-error w-full justify-start cursor-pointer">
+          <Button onClick={() => logout(lang)} type="button" variant="ghost" size="sm" className=" text-error w-full justify-start cursor-pointer">
             <LogOut />
             <span>Logout</span>
           </Button>

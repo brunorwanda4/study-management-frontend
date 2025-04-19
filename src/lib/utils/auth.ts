@@ -1,8 +1,9 @@
 // utils/auth.ts
 import { Locale } from '@/i18n';
 import {jwtDecode} from 'jwt-decode';
-import { getUserToken } from './auth-cookies';
+import { getUserToken, removeUserToken } from './auth-cookies';
 import { UserRoleDto } from '../schema/user.dto';
+import { redirect } from 'next/navigation';
 
 export interface AuthUserDto {
   id: string;
@@ -41,4 +42,9 @@ export function getAuthUser(): AuthUserDto | null {
 export async function getAuthUserServer(): Promise<AuthUserDto | null> {
  const token =await getUserToken()
   return token.token ? getUserFromToken(token.token) : null;
+}
+
+export const logout = async (lang: Locale) => {
+  await removeUserToken()
+  redirect(`/${lang}/auth/login`)
 }

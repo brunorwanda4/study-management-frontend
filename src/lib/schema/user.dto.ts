@@ -13,15 +13,15 @@ export const GenderEnum = z.enum(["FEMALE", "MALE", "OTHER"], {
 });
 
 export const AddressSchema = z.object({
-    country: z.string().min(1, { message: "Country is required" }),
-    province: z.string().optional(),
-    district: z.string().optional(),
-    sector: z.string().optional(),
-    cell: z.string().optional(),
-    village: z.string().optional(),
-    state: z.string().optional(),
-    postalCode: z.string().optional(),
-    googleMapUrl: z.string().url({ message: "Invalid URL" }).optional(),
+country: z.string().min(1, { message: "Country is required" }),
+province: z.string().optional(),
+district: z.string().optional(),
+sector: z.string().optional(),
+cell: z.string().optional(),
+village: z.string().optional(),
+state: z.string().optional(),
+postalCode: z.string().optional(),
+googleMapUrl: z.string().url({ message: "Invalid URL" }).optional(),
 });
 
 
@@ -124,7 +124,7 @@ export const OnboardingSchema = z.object({
         message: "Role must be one of 'STUDENT', 'TEACHER', or 'SCHOOL STAFF'",
     }),
     gender: GenderEnum,
-    location: AddressSchema,
+    address: AddressSchema,
     bio: z.string().optional(),
 });
 
