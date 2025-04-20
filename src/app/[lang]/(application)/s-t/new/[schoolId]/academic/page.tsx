@@ -27,14 +27,13 @@ const SchoolAcademicOnboardingPage = async (props: props) => {
   return (
     <div className=" px-4 mt-4 space-y-2">
       <div>
-        <h1 className="title-page">
-          Educational Background Information
-        </h1>
+        <h1 className="title-page">Educational Background Information</h1>
         <p>
-        Please provide details about the academic offerings based on the school&apos;s configuration.
+          Please provide details about the academic offerings based on the
+          school&apos;s configuration.
         </p>
       </div>
-      <SchoolAcademicForm school = {school.data} />
+      <SchoolAcademicForm school={school.data} />
     </div>
   );
 };
