@@ -30,7 +30,9 @@ export const createSchoolService = async (input: CreateSchoolDto) => {
         onlineClasses: input.onlineClasses,
     };
 
-    const res = await apiRequest<CreateSchoolDtoBackend, SchoolDto>('post', '/school', data);
-
-    return res
+    return await apiRequest<CreateSchoolDtoBackend, SchoolDto>('post', '/school', data);
 };
+
+export const getSchoolByIdService = async (id : string) => {
+    return await apiRequest<void , SchoolDto>("get", `/school/${id}`);
+}

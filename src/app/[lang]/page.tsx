@@ -5,14 +5,19 @@ import AuthButton from "@/components/page/welcome/auth-button";
 import WelcomeImage from "@/components/page/welcome/welcome-images";
 import AuthTheme from "@/components/theme/auth-theme";
 import { Locale } from "@/i18n";
+import { redirectContents } from "@/lib/hooks/redirect";
+import { getAuthUserServer } from "@/lib/utils/auth";
 
 interface props {
-  params : Promise<{lang : Locale}>;
+  params: Promise<{ lang: Locale }>;
 }
 
-const WelcomePage = async (props: props ) => {
-  const params = await props.params;
-  const {lang} = params;
+const WelcomePage = async (props: props) => {
+  const [params, currentUser] = await Promise.all([
+    props.params,
+    await getAuthUserServer(),
+  ]);
+  const { lang } = params;
   return (
     <section className=" flex justify-between w-full h-screen bg-base-100">
       <div className=" w-1/2 p-8">
@@ -24,7 +29,7 @@ const WelcomePage = async (props: props ) => {
         </div>
         <div className=" mt-10 flex flex-col justify-center items-center space-y-1">
           <h1 className=" text-2xl">
-            Welcome to {" "}
+            Welcome to{" "}
             <span className=" font-medium font-mono leading-1">
               space-together
             </span>
@@ -34,7 +39,25 @@ const WelcomePage = async (props: props ) => {
           </p>
         </div>
         <div className=" mt-8 justify-center items-center flex">
-          <AuthButton lang={lang}/>
+          {!currentUser?.role ? (
+            <MyLink
+              type="button"
+              button={{ variant: "primary", library: "daisy", size: "lg" }}
+              href={"/auth/onboarding"}
+            >
+              Help others to now you better 😁
+            </MyLink>
+          ) : currentUser.role ? (
+            <MyLink
+              type="button"
+              button={{ variant: "primary", library: "daisy", size: "lg" }}
+              href={redirectContents({ lang, role: currentUser.role })}
+            >
+              Use Application 🌼
+            </MyLink>
+          ) : (
+            <AuthButton lang={lang} />
+          )}
         </div>
         <div className="mt-8  space-y-2">
           <div className=" text-center">

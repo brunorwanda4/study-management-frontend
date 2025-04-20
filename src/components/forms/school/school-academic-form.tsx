@@ -1,4 +1,4 @@
-// Assuming you are using react-hook-form with zod for validation
+"use client"
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -61,7 +61,7 @@ export function SchoolAcademicForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 basic-card shadow-sm">
         {/* Primary Education */}
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">Primary Education (P1 - P6)</h3>

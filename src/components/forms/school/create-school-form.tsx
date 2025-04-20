@@ -146,7 +146,7 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-6 basic-card shadow-sm" // Added some padding/styling
+        className="space-y-6 basic-card shadow-sm"
       >
         {/* Section: Basic Info */}
         <div className="">
