@@ -1,7 +1,7 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMemo } from "react";
+import { useMemo, useState, useTransition } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -28,21 +28,25 @@ import MultipleSelector from "@/components/ui/multiselect";
 import {
   schoolAcademicDto,
   SchoolAcademicSchema,
+  SchoolDto,
 } from "@/lib/schema/school.dto";
-interface SchoolDto {
-  curriculum: string[];
-  educationLevel: string[];
-}
-
+import { academicSchoolService } from "@/service/school/school.service";
+import { FormError, FormSuccess } from "@/components/myComponents/form-message";
+// import { academicSchoolService } from "@/service/school/school.service";
 interface props {
   school: SchoolDto;
 }
 
 export function SchoolAcademicForm({ school }: props) {
+  const [error, setError] = useState<string | null | undefined>("");
+  const [success, setSuccess] = useState<string | null | undefined>("");
+  const [isPending, startTransition] = useTransition();
+
   const form = useForm<schoolAcademicDto>({
     resolver: zodResolver(SchoolAcademicSchema),
     // Provide default values for all potential fields
     defaultValues: {
+      schoolId: school.id,
       primarySubjectsOffered: PrimarySubjects.map((subject) => subject.value),
       assessmentTypes: PrimaryAssessment.map((assessment) => assessment.value),
       primaryPassMark: 50, // Default pass mark for primary
@@ -76,6 +80,16 @@ export function SchoolAcademicForm({ school }: props) {
   );
 
   function onSubmit(values: schoolAcademicDto) {
+    setSuccess(null);
+    setError(null);
+    startTransition(async () => {
+      const academic = await academicSchoolService(values);
+      if (academic.success) {
+        setSuccess(academic.success);
+      } else {
+        setError(academic.error);
+      }
+    });
     console.log(values);
   }
 
@@ -108,6 +122,7 @@ export function SchoolAcademicForm({ school }: props) {
                             <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                               <FormControl>
                                 <Checkbox
+                                  disabled={isPending}
                                   checked={innerField.value?.includes(
                                     subject.value
                                   )}
@@ -154,6 +169,7 @@ export function SchoolAcademicForm({ school }: props) {
                             <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                               <FormControl>
                                 <Checkbox
+                                  disabled={isPending}
                                   checked={innerField.value?.includes(
                                     subject.value
                                   )}
@@ -200,6 +216,7 @@ export function SchoolAcademicForm({ school }: props) {
                             <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                               <FormControl>
                                 <Checkbox
+                                  disabled={isPending}
                                   checked={innerField.value?.includes(
                                     subject.value
                                   )}
@@ -251,6 +268,8 @@ export function SchoolAcademicForm({ school }: props) {
                         defaultOptions={AdvancedLevels}
                         placeholder="e.g., MPC, PCB"
                         hidePlaceholderWhenSelected
+                        disabled={isPending}
+                        maxSelected={6}
                       />
                     </FormControl>
                     <FormDescription>
@@ -274,6 +293,7 @@ export function SchoolAcademicForm({ school }: props) {
                         onChange={(event) =>
                           field.onChange(+event.target.value)
                         }
+                        disabled={isPending}
                       />
                     </FormControl>
                     <FormMessage />
@@ -296,6 +316,7 @@ export function SchoolAcademicForm({ school }: props) {
                             <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                               <FormControl>
                                 <Checkbox
+                                  disabled={isPending}
                                   checked={innerField.value?.includes(
                                     subject.value
                                   )}
@@ -345,6 +366,8 @@ export function SchoolAcademicForm({ school }: props) {
                         defaultOptions={TvetPrograms}
                         placeholder="e.g., SOFTWARE_DEVELOPMENT, NETWORKING_INTERNET_TECHNOLOGIES"
                         hidePlaceholderWhenSelected
+                        disabled={isPending}
+                        maxSelected={6}
                       />
                     </FormControl>
                     <FormDescription>
@@ -386,6 +409,7 @@ export function SchoolAcademicForm({ school }: props) {
                                           )
                                         );
                                   }}
+                                  disabled={isPending}
                                 />
                               </FormControl>
                               <FormLabel className="font-normal cursor-pointer">
@@ -438,6 +462,7 @@ export function SchoolAcademicForm({ school }: props) {
                                           )
                                         );
                                   }}
+                                  disabled={isPending}
                                 />
                               </FormControl>
                               <FormLabel className="font-normal cursor-pointer">
@@ -466,6 +491,7 @@ export function SchoolAcademicForm({ school }: props) {
                         onChange={(event) =>
                           field.onChange(+event.target.value)
                         }
+                        disabled={isPending}
                       />
                     </FormControl>
                     <FormMessage />
@@ -507,6 +533,7 @@ export function SchoolAcademicForm({ school }: props) {
                                         )
                                       );
                                 }}
+                                disabled={isPending}
                               />
                             </FormControl>
                             <FormLabel className="font-normal cursor-pointer">
@@ -523,9 +550,21 @@ export function SchoolAcademicForm({ school }: props) {
             />
           </div>
         </div>
-
+        <div>
+          <FormError message={error} />
+          <FormSuccess message={success} />
+        </div>
         {(hasPrimary || hasOLevel || hasALevel || hasTVET) && (
-          <Button type="submit">Submit</Button>
+          <Button disabled={isPending} type="submit">
+            Submit
+            {isPending && (
+              <div
+                role="status"
+                aria-label="Loading"
+                className={"loading loading-spinner"}
+              />
+            )}
+          </Button>
         )}
       </form>
     </Form>

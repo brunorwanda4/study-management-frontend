@@ -1,4 +1,4 @@
-import { CreateSchoolDto, CreateSchoolDtoBackend } from "@/lib/schema/school.dto";
+import { CreateSchoolDto, CreateSchoolDtoBackend, schoolAcademicDto, SchoolAcademicDtoBackend } from "@/lib/schema/school.dto";
 import { SchoolDto } from "@/lib/schema/school.dto";
 import apiRequest from "../api-client";
 
@@ -33,6 +33,34 @@ export const createSchoolService = async (input: CreateSchoolDto) => {
     return await apiRequest<CreateSchoolDtoBackend, SchoolDto>('post', '/school', data);
 };
 
-export const getSchoolByIdService = async (id : string) => {
-    return await apiRequest<void , SchoolDto>("get", `/school/${id}`);
+export const getSchoolByIdService = async (id: string) => {
+    return await apiRequest<void, SchoolDto>("get", `/school/${id}`);
+}
+
+export const academicSchoolService = async (input: schoolAcademicDto) => {
+    const data: SchoolAcademicDtoBackend = {
+        schoolId: input.schoolId,
+        assessmentTypes: input.assessmentTypes,
+        primarySubjectsOffered: input.primarySubjectsOffered,
+        primaryPassMark: input.primaryPassMark,
+
+        oLevelCoreSubjects: input.oLevelCoreSubjects,
+        oLevelOptionSubjects: input.oLevelOptionSubjects,
+        oLevelExaminationTypes: input.oLevelExaminationTypes,
+        oLevelAssessment: input.oLevelAssessment,
+
+        aLevelSubjectCombination: input.aLevelSubjectCombination?.map(item => item.value),
+        aLevelOptionSubjects: input.aLevelOptionSubjects,
+        aLevelPassMark: input.aLevelPassMark,
+
+        tvetSpecialization: input.tvetSpecialization?.map(item => item.value),
+        tvetOptionSubjects: input.tvetOptionSubjects,
+    }
+
+    const res = await apiRequest<SchoolAcademicDtoBackend, unknown>("post", "/school/academic", data);
+    if (res.data) {
+        return { success: "Classes are created successful!" }
+    } else {
+        return { error: `message :${res.message}, error : ${res.error}` }
+    }
 }
