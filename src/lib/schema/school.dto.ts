@@ -149,6 +149,49 @@ export const CreateSchoolSchemaBackend = z.object({
 export type CreateSchoolDtoBackend = z.infer<typeof CreateSchoolSchemaBackend>
 
 
+export const SchoolAcademicSchema = z.object({
+  // Primary Education
+  primarySubjectsOffered: z.array(z.string()).optional(), // Using array for multiple selections
+  primaryAssessmentTypes: z.array(z.string()).optional(),
+  primaryPassMark: z.number().optional(), // Could be a number input or a select with common values
+
+  // Ordinary Level
+  oLevelCoreSubjects: z.array(z.string()).optional(),
+  oLevelOptionSubjects: z.array(z.string()).optional(),
+  oLevelExaminationTypes: z.array(z.string()).optional(),
+  oLevelAssessment: z.array(z.string()).optional(),
+
+  // Advanced Level
+  aLevelSubjectCombination: z
+    .array(
+      z.object({
+        label: z.string(),
+        value: z.string(),
+        disable: z.boolean().optional(),
+      })
+    )
+    .min(1, {
+      message : "Advance level is required"
+    }), // Assuming one combination can be selected
+  aLevelOptionSubjects: z.array(z.string()).optional(),
+  aLevelPassMark : z.number().optional(),
+  // TVET
+  tvetSpecialization: z
+    .array(
+      z.object({
+        label: z.string(),
+        value: z.string(),
+        disable: z.boolean().optional(),
+      })
+    )
+    .min(1, {
+      message : "TVET Trading is required,"
+    }), // Assuming one specialization can be selected
+  tvetOptionSubjects: z.array(z.string()).optional(),
+});
+
+export type schoolAcademicDto = z.infer<typeof SchoolAcademicSchema>
+
 export const SchoolSchema = z.object({
   id: z.string(),
   creatorId: z.string(),

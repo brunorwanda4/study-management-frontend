@@ -1,7 +1,6 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { useMemo } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -23,47 +22,13 @@ import {
   OptionalSubjects,
   PrimaryAssessment,
   PrimarySubjects,
-  TevetLevels,
   TvetPrograms,
 } from "@/lib/context/school.context";
 import MultipleSelector from "@/components/ui/multiselect";
-
-const formSchema = z.object({
-  // Primary Education
-  primarySubjectsOffered: z.array(z.string()).optional(), // Using array for multiple selections
-  primaryAssessmentTypes: z.array(z.string()).optional(),
-  primaryPassMark: z.number().optional(), // Could be a number input or a select with common values
-
-  // Ordinary Level
-  olevelCoreSubjects: z.array(z.string()).optional(),
-  olevelOptionSubjects: z.array(z.string()).optional(),
-  olevelExaminationTypes: z.array(z.string()).optional(),
-  oLevelAssessment: z.array(z.string()).optional(),
-
-  // Advanced Level
-  alevelSubjectCombination: z
-    .array(
-      z.object({
-        label: z.string(),
-        value: z.string(),
-        disable: z.boolean().optional(),
-      })
-    )
-    .optional(), // Assuming one combination can be selected
-  // aleveSubjects
-  // TVET
-  tvetSpecialization: z
-    .array(
-      z.object({
-        label: z.string(),
-        value: z.string(),
-        disable: z.boolean().optional(),
-      })
-    )
-    .optional(), // Assuming one specialization can be selected
-  tvetCertificationLevel: z.array(z.string()).optional(), // Assuming one level can be selected
-});
-
+import {
+  schoolAcademicDto,
+  SchoolAcademicSchema,
+} from "@/lib/schema/school.dto";
 interface SchoolDto {
   curriculum: string[];
   educationLevel: string[];
@@ -74,26 +39,27 @@ interface props {
 }
 
 export function SchoolAcademicForm({ school }: props) {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<schoolAcademicDto>({
+    resolver: zodResolver(SchoolAcademicSchema),
     // Provide default values for all potential fields
     defaultValues: {
       primarySubjectsOffered: PrimarySubjects.map((subject) => subject.value),
       primaryAssessmentTypes: PrimaryAssessment.map(
         (assessment) => assessment.value
       ),
-      primaryPassMark: undefined,
-      olevelCoreSubjects: OLevelSubjects.map((subject) => subject.value),
-      olevelOptionSubjects: OptionalSubjects.map((subject) => subject.value),
-      olevelExaminationTypes: OLevelAssessment.map((subject) => subject.value),
+      primaryPassMark: 50, // Default pass mark for primary
+      oLevelCoreSubjects: OLevelSubjects.map((subject) => subject.value),
+      oLevelOptionSubjects: OptionalSubjects.map((subject) => subject.value),
+      oLevelExaminationTypes: OLevelAssessment.map((subject) => subject.value),
       oLevelAssessment: PrimaryAssessment.map((assessment) => assessment.value),
-      alevelSubjectCombination: [],
+      aLevelOptionSubjects: OptionalSubjects.map((subject) => subject.value),
+      aLevelSubjectCombination: [],
+      aLevelPassMark: 50, // Default pass mark for A-Level
       tvetSpecialization: [],
-      tvetCertificationLevel: [],
+      tvetOptionSubjects: OptionalSubjects.map((subject) => subject.value),
     },
   });
 
-  // Use useMemo to check the presence of levels/curriculum for conditional rendering
   const hasPrimary = useMemo(
     () => school.educationLevel?.includes("Primary"),
     [school.educationLevel]
@@ -111,7 +77,7 @@ export function SchoolAcademicForm({ school }: props) {
     [school.curriculum]
   );
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: schoolAcademicDto) {
     console.log(values);
   }
 
@@ -250,7 +216,7 @@ export function SchoolAcademicForm({ school }: props) {
               </h3>
               <FormField
                 control={form.control}
-                name="olevelCoreSubjects"
+                name="oLevelCoreSubjects"
                 render={({}) => (
                   <FormItem>
                     <FormLabel>Core Subjects</FormLabel>
@@ -296,7 +262,7 @@ export function SchoolAcademicForm({ school }: props) {
 
               <FormField
                 control={form.control}
-                name="olevelOptionSubjects"
+                name="oLevelOptionSubjects"
                 render={({}) => (
                   <FormItem>
                     <FormLabel>Option Subjects</FormLabel>
@@ -342,7 +308,7 @@ export function SchoolAcademicForm({ school }: props) {
 
               <FormField
                 control={form.control}
-                name="olevelExaminationTypes"
+                name="oLevelExaminationTypes"
                 render={({}) => (
                   <FormItem>
                     <FormLabel>Examinations</FormLabel>
@@ -396,7 +362,7 @@ export function SchoolAcademicForm({ school }: props) {
               </h3>
               <FormField
                 control={form.control}
-                name="alevelSubjectCombination"
+                name="aLevelSubjectCombination"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Subject Combination</FormLabel>
@@ -418,7 +384,7 @@ export function SchoolAcademicForm({ school }: props) {
               />
               <FormField
                 control={form.control}
-                name="primaryPassMark"
+                name="aLevelPassMark"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Pass Mark (usually 50%)</FormLabel>
@@ -438,7 +404,7 @@ export function SchoolAcademicForm({ school }: props) {
               />
               <FormField
                 control={form.control}
-                name="olevelOptionSubjects"
+                name="aLevelOptionSubjects"
                 render={({}) => (
                   <FormItem>
                     <FormLabel>Option Subjects</FormLabel>
@@ -446,7 +412,7 @@ export function SchoolAcademicForm({ school }: props) {
                       <FormField
                         key={subject.value}
                         control={form.control}
-                        name="primarySubjectsOffered"
+                        name="aLevelOptionSubjects"
                         render={({ field: innerField }) => {
                           return (
                             <FormItem className="flex flex-row items-start space-x-3 space-y-0">
@@ -487,9 +453,7 @@ export function SchoolAcademicForm({ school }: props) {
           {/* TVET Section - Conditionally Rendered */}
           {hasTVET && (
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">
-                TVET (Technical and Vocational Education and Training)
-              </h3>
+              <h3 className="text-lg font-semibold">TVET (Level : L3 - L5)</h3>
               <FormField
                 control={form.control}
                 name="tvetSpecialization"
@@ -506,61 +470,16 @@ export function SchoolAcademicForm({ school }: props) {
                       />
                     </FormControl>
                     <FormDescription>
-                      Search combination using username eg* SOFTWARE_DEVELOPMENT
+                      Search combination using username eg* SOFTWARE_DEVELOPMENT{" "}
+                      <br /> Pass mark are 70%
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
-                name="tvetCertificationLevel"
-                render={({}) => (
-                  <FormItem className="space-y-3">
-                    <FormLabel>Certification Level</FormLabel>
-                    {TevetLevels.map((level) => (
-                      <FormField
-                        key={level.value}
-                        control={form.control}
-                        name="primarySubjectsOffered"
-                        render={({ field: innerField }) => {
-                          return (
-                            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                              <FormControl>
-                                <Checkbox
-                                  checked={innerField.value?.includes(
-                                    level.value
-                                  )}
-                                  onCheckedChange={(checked) => {
-                                    return checked
-                                      ? innerField.onChange([
-                                          ...(innerField.value || []),
-                                          level.value,
-                                        ])
-                                      : innerField.onChange(
-                                          innerField.value?.filter(
-                                            (value) => value !== level.value
-                                          )
-                                        );
-                                  }}
-                                />
-                              </FormControl>
-                              <FormLabel className="font-normal cursor-pointer">
-                                {level.label}
-                              </FormLabel>
-                            </FormItem>
-                          );
-                        }}
-                      />
-                    ))}
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="olevelOptionSubjects"
+                name="tvetOptionSubjects"
                 render={({}) => (
                   <FormItem>
                     <FormLabel>Option Subjects</FormLabel>
@@ -568,7 +487,7 @@ export function SchoolAcademicForm({ school }: props) {
                       <FormField
                         key={subject.value}
                         control={form.control}
-                        name="primarySubjectsOffered"
+                        name="tvetOptionSubjects"
                         render={({ field: innerField }) => {
                           return (
                             <FormItem className="flex flex-row items-start space-x-3 space-y-0">
