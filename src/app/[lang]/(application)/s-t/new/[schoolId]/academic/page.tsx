@@ -31,9 +31,7 @@ const SchoolAcademicOnboardingPage = async (props: props) => {
           Educational Background Information
         </h1>
         <p>
-          Please provide details about your education across different levels,
-          including subjects, assessments, and qualifications from Primary,
-          Ordinary Level (O-Level), Advanced Level (A-Level), and TVET.
+        Please provide details about the academic offerings based on the school&apos;s configuration.
         </p>
       </div>
       <SchoolAcademicForm school = {school.data} />
