@@ -44,9 +44,7 @@ export function SchoolAcademicForm({ school }: props) {
     // Provide default values for all potential fields
     defaultValues: {
       primarySubjectsOffered: PrimarySubjects.map((subject) => subject.value),
-      primaryAssessmentTypes: PrimaryAssessment.map(
-        (assessment) => assessment.value
-      ),
+      assessmentTypes: PrimaryAssessment.map((assessment) => assessment.value),
       primaryPassMark: 50, // Default pass mark for primary
       oLevelCoreSubjects: OLevelSubjects.map((subject) => subject.value),
       oLevelOptionSubjects: OptionalSubjects.map((subject) => subject.value),
@@ -88,126 +86,6 @@ export function SchoolAcademicForm({ school }: props) {
         className="space-y-6 basic-card shadow-sm"
       >
         <div className=" grid md:grid-cols-2 gap-4 grid-cols-1">
-          {hasPrimary && (
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold">
-                Primary Education (P1 - P6)
-              </h3>
-              <FormField
-                control={form.control}
-                name="primarySubjectsOffered"
-                render={({}) => (
-                  <FormItem>
-                    <FormLabel>Subjects Offered</FormLabel>
-                    {PrimarySubjects.map((subject) => (
-                      <FormField
-                        key={subject.value}
-                        control={form.control}
-                        name="primarySubjectsOffered"
-                        render={({ field: innerField }) => {
-                          return (
-                            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                              <FormControl>
-                                <Checkbox
-                                  checked={innerField.value?.includes(
-                                    subject.value
-                                  )}
-                                  onCheckedChange={(checked) => {
-                                    return checked
-                                      ? innerField.onChange([
-                                          ...(innerField.value || []),
-                                          subject.value,
-                                        ])
-                                      : innerField.onChange(
-                                          innerField.value?.filter(
-                                            (value) => value !== subject.value
-                                          )
-                                        );
-                                  }}
-                                />
-                              </FormControl>
-                              <FormLabel className="font-normal cursor-pointer">
-                                {subject.label}
-                              </FormLabel>
-                            </FormItem>
-                          );
-                        }}
-                      />
-                    ))}
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="primaryAssessmentTypes"
-                render={({}) => (
-                  <FormItem>
-                    <FormLabel>Assessment Type</FormLabel>
-                    {PrimaryAssessment.map((subject) => (
-                      <FormField
-                        key={subject.value}
-                        control={form.control}
-                        name="primarySubjectsOffered"
-                        render={({ field: innerField }) => {
-                          return (
-                            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                              <FormControl>
-                                <Checkbox
-                                  checked={innerField.value?.includes(
-                                    subject.value
-                                  )}
-                                  onCheckedChange={(checked) => {
-                                    return checked
-                                      ? innerField.onChange([
-                                          ...(innerField.value || []),
-                                          subject.value,
-                                        ])
-                                      : innerField.onChange(
-                                          innerField.value?.filter(
-                                            (value) => value !== subject.value
-                                          )
-                                        );
-                                  }}
-                                />
-                              </FormControl>
-                              <FormLabel className="font-normal cursor-pointer">
-                                {subject.label}
-                              </FormLabel>
-                            </FormItem>
-                          );
-                        }}
-                      />
-                    ))}
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="primaryPassMark"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Pass Mark (usually 50%)</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="e.g., 50"
-                        {...field}
-                        onChange={(event) =>
-                          field.onChange(+event.target.value)
-                        }
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-          )}
-
           {/* Ordinary Level Section - Conditionally Rendered */}
           {hasOLevel && (
             <div className="space-y-4">
@@ -524,6 +402,126 @@ export function SchoolAcademicForm({ school }: props) {
               />
             </div>
           )}
+          {hasPrimary && (
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">
+                Primary Education (P1 - P6)
+              </h3>
+              <FormField
+                control={form.control}
+                name="primarySubjectsOffered"
+                render={({}) => (
+                  <FormItem>
+                    <FormLabel>Subjects Offered</FormLabel>
+                    {PrimarySubjects.map((subject) => (
+                      <FormField
+                        key={subject.value}
+                        control={form.control}
+                        name="primarySubjectsOffered"
+                        render={({ field: innerField }) => {
+                          return (
+                            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                              <FormControl>
+                                <Checkbox
+                                  checked={innerField.value?.includes(
+                                    subject.value
+                                  )}
+                                  onCheckedChange={(checked) => {
+                                    return checked
+                                      ? innerField.onChange([
+                                          ...(innerField.value || []),
+                                          subject.value,
+                                        ])
+                                      : innerField.onChange(
+                                          innerField.value?.filter(
+                                            (value) => value !== subject.value
+                                          )
+                                        );
+                                  }}
+                                />
+                              </FormControl>
+                              <FormLabel className="font-normal cursor-pointer">
+                                {subject.label}
+                              </FormLabel>
+                            </FormItem>
+                          );
+                        }}
+                      />
+                    ))}
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="primaryPassMark"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Pass Mark (usually 50%)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="e.g., 50"
+                        {...field}
+                        onChange={(event) =>
+                          field.onChange(+event.target.value)
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          )}
+          <div>
+            <h3 className="text-lg font-semibold">Assessment Type</h3>
+            <FormField
+              control={form.control}
+              name="assessmentTypes"
+              render={({}) => (
+                <FormItem>
+                  <FormLabel>Assessment Type</FormLabel>
+                  {PrimaryAssessment.map((subject) => (
+                    <FormField
+                      key={subject.value}
+                      control={form.control}
+                      name="primarySubjectsOffered"
+                      render={({ field: innerField }) => {
+                        return (
+                          <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                            <FormControl>
+                              <Checkbox
+                                checked={innerField.value?.includes(
+                                  subject.value
+                                )}
+                                onCheckedChange={(checked) => {
+                                  return checked
+                                    ? innerField.onChange([
+                                        ...(innerField.value || []),
+                                        subject.value,
+                                      ])
+                                    : innerField.onChange(
+                                        innerField.value?.filter(
+                                          (value) => value !== subject.value
+                                        )
+                                      );
+                                }}
+                              />
+                            </FormControl>
+                            <FormLabel className="font-normal cursor-pointer">
+                              {subject.label}
+                            </FormLabel>
+                          </FormItem>
+                        );
+                      }}
+                    />
+                  ))}
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
         </div>
 
         {(hasPrimary || hasOLevel || hasALevel || hasTVET) && (

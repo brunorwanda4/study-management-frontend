@@ -122,23 +122,23 @@ export const OLevelSubjects: Option[] = [
     { value: "entrepreneurship", label: "Entrepreneurship" },
     { value: "kiswahili", label: "Kiswahili" },
     { value: "ict", label: "Information and Communication Technology (ICT)" },
-    { value: "re", label: "Religious Education" },
+    // { value: "re", label: "Religious Education" },
     { value: "literature", label: "Literature in English" },
-    { value: "music", label: "Music" },
-    { value: "fineArt", label: "Fine Art" },
+    // { value: "music", label: "Music" },
+    // { value: "fineArt", label: "Fine Art" },
     { value: "pe", label: "Physical Education" },
 ];
 
 export const OptionalSubjects: Option[] = [
     { value: "computerScience", label: "Computer Science" },
-    { value: "agriculture", label: "Agriculture" },
+    // { value: "agriculture", label: "Agriculture" },
     { value: "fineArts", label: "Fine Arts" },
     { value: "homeScience", label: "Home Science" },
     { value: "music", label: "Music" },
     { value: "drama", label: "Drama" },
     { value: "literature", label: "Literature in English" },
-    { value: "entrepreneurship", label: "Entrepreneurship" },
-    { value: "technicalDrawing", label: "Technical Drawing" },
+    // { value: "entrepreneurship", label: "Entrepreneurship" },
+    // { value: "technicalDrawing", label: "Technical Drawing" },
     { value: "re", label: "Religious Education" },
 ];
 

@@ -152,7 +152,7 @@ export type CreateSchoolDtoBackend = z.infer<typeof CreateSchoolSchemaBackend>
 export const SchoolAcademicSchema = z.object({
   // Primary Education
   primarySubjectsOffered: z.array(z.string()).optional(), // Using array for multiple selections
-  primaryAssessmentTypes: z.array(z.string()).optional(),
+  assessmentTypes: z.array(z.string()).optional(),
   primaryPassMark: z.number().optional(), // Could be a number input or a select with common values
 
   // Ordinary Level
@@ -174,7 +174,7 @@ export const SchoolAcademicSchema = z.object({
       message : "Advance level is required"
     }), // Assuming one combination can be selected
   aLevelOptionSubjects: z.array(z.string()).optional(),
-  aLevelPassMark : z.number().optional(),
+  aLevelPassMark : z.number().int().optional(),
   // TVET
   tvetSpecialization: z
     .array(
