@@ -9,7 +9,7 @@ import { redirect } from "next/navigation";
 import React from "react";
 
 export const metadata: Metadata = {
-  title: "Create - school",
+  title: "school - Academic",
 };
 interface props {
   params: Promise<{ lang: Locale; schoolId: string }>;
@@ -28,7 +28,7 @@ const SchoolAcademicOnboardingPage = async (props: props) => {
     <div className=" px-4 mt-4 space-y-2">
       <div>
         <h1 className="title-page">
-          Educational Background Information {school.data.name}
+          Educational Background Information
         </h1>
         <p>
           Please provide details about your education across different levels,
@@ -36,7 +36,7 @@ const SchoolAcademicOnboardingPage = async (props: props) => {
           Ordinary Level (O-Level), Advanced Level (A-Level), and TVET.
         </p>
       </div>
-      <SchoolAcademicForm />
+      <SchoolAcademicForm school = {school.data} />
     </div>
   );
 };

@@ -17,6 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label"; // Needed for RadioGroupItem labels
+import { SchoolDto } from "@/lib/schema/school.dto";
 
 
 // Define your form schema using Zod
@@ -39,7 +40,11 @@ const formSchema = z.object({
   tvetCertificationLevel: z.string().optional(), // Assuming one level can be selected
 });
 
-export function SchoolAcademicForm() {
+interface props {
+  school : SchoolDto
+}
+
+export function SchoolAcademicForm({school} : props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -54,7 +59,7 @@ export function SchoolAcademicForm() {
       tvetCertificationLevel: "",
     },
   });
-
+  
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
   }
@@ -63,6 +68,7 @@ export function SchoolAcademicForm() {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 basic-card shadow-sm">
         {/* Primary Education */}
+        <div className=" grid grid-cols-2 gap-4">
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">Primary Education (P1 - P6)</h3>
           <FormField
@@ -367,6 +373,7 @@ export function SchoolAcademicForm() {
               </FormItem>
             )}
           />
+        </div>
         </div>
 
         <Button type="submit">Submit</Button>
