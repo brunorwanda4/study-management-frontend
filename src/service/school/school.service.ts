@@ -1,4 +1,4 @@
-import { CreateSchoolDto, CreateSchoolDtoBackend, SchoolAcademicCreationDto, schoolAcademicDto, SchoolAcademicDtoBackend } from "@/lib/schema/school.dto";
+import { CreateSchoolDto, CreateSchoolDtoBackend, SchoolAcademicCreationDto, schoolAcademicDto, SchoolAcademicDtoBackend, SchoolAdministrationDto, sendAdministrationJoinRequestsDto } from "@/lib/schema/school.dto";
 import { SchoolDto } from "@/lib/schema/school.dto";
 import apiRequest from "../api-client";
 
@@ -59,3 +59,9 @@ export const academicSchoolService = async (input: schoolAcademicDto) => {
 
     return await apiRequest<SchoolAcademicDtoBackend, SchoolAcademicCreationDto>("post", "/school/academic", data);
 }
+
+
+export const administrationSchoolRequestToJoinSchool = async (input : SchoolAdministrationDto) => {
+    return await apiRequest<SchoolAdministrationDto, sendAdministrationJoinRequestsDto>("post", `/school/administration`, input);
+}
+

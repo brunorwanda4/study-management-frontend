@@ -296,6 +296,13 @@ export const SchoolAdministrationSchema = z.object({
 // Define the DTO type based on the schema
 export type SchoolAdministrationDto = z.infer<typeof SchoolAdministrationSchema>;
 
+export const sendAdministrationJoinRequestsSchema = z.object({
+  attempted: z.number(),
+  created: z.number(),
+  message: z.string().min(1)
+})
+
+export type sendAdministrationJoinRequestsDto = z.infer<typeof sendAdministrationJoinRequestsSchema>
 
 export const SchoolSchema = z.object({
   id: z.string(),
