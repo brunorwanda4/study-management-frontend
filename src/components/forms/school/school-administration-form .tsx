@@ -16,6 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { MinusCircle } from "lucide-react";
 // Import icons if needed for buttons (like remove)
 // import { MinusCircle } from "lucide-react";
 
@@ -24,20 +25,22 @@ const SchoolAdministrationSchema = z.object({
   headmasterName: z
     .string()
     .min(2, { message: "Headmaster name is required." }),
-  headmasterEmail: z
+  headmasterEmail: z.string().email({ message: "Invalid email address." }),
+  headmasterPhone: z
     .string()
-    .email({ message: "Invalid email address." })
-    .optional()
-    .or(z.literal("")),
-  headmasterPhone: z.string().optional(),
+    .min(10, {
+      message: "Minium character are 10",
+    })
+    .regex(/^\d+$/, "Phone number must contain only numbers"),
 
-  principalName: z.string().min(2, { message: "Principal name is required." }),
-  principalEmail: z
+    DirectorOfStudies: z.string().min(2, { message: "Principal name is required." }),
+  principalEmail: z.string().email({ message: "Invalid email address." }),
+  principalPhone: z
     .string()
-    .email({ message: "Invalid email address." })
-    .optional()
-    .or(z.literal("")),
-  principalPhone: z.string().optional(),
+    .min(10, {
+      message: "Minium character are 10",
+    })
+    .regex(/^\d+$/, "Phone number must contain only numbers"),
 
   numberOfTeachers: z.coerce
     .number()
@@ -49,12 +52,13 @@ const SchoolAdministrationSchema = z.object({
       z.object({
         role: z.string().min(2, { message: "Role is required." }),
         name: z.string().min(2, { message: "Name is required." }),
-        email: z
+        email: z.string().email({ message: "Invalid email address." }),
+        phone: z
           .string()
-          .email({ message: "Invalid email address." })
-          .optional()
-          .or(z.literal("")),
-        phone: z.string().optional(),
+          .min(10, {
+            message: "Minium character are 10",
+          })
+          .regex(/^\d+$/, "Phone number must contain only numbers"),
       })
     )
     .default([])
@@ -78,10 +82,10 @@ const SchoolAdministrationForm =
         headmasterName: "",
         headmasterEmail: "",
         headmasterPhone: "",
-        principalName: "",
+        DirectorOfStudies: "",
         principalEmail: "",
         principalPhone: "",
-        numberOfTeachers: 0,
+        numberOfTeachers: 30,
         additionalAdministration: [],
         // ...initialData
       },
@@ -178,15 +182,15 @@ const SchoolAdministrationForm =
 
           {/* Principal Details */}
           <div className="space-y-2">
-            <h3 className="text-lg font-medium">Principal</h3>
+            <h3 className="text-lg font-medium">Director of Studies</h3>
             <FormDescription>
-              Enter the principal&apos;s information.
+              Enter the director of Studies information.
             </FormDescription>{" "}
             {/* Example FormDescription */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <FormField
                 control={form.control}
-                name="principalName"
+                name="DirectorOfStudies"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Full Name*</FormLabel> {/* Using FormLabel */}
@@ -279,10 +283,7 @@ const SchoolAdministrationForm =
             </FormDescription>{" "}
             {/* Example FormDescription */}
             {fields.map((field, index) => (
-              <div
-                key={field.id}
-                className="relative space-y-2 bg-accent/10"
-              >
+              <div key={field.id} className="relative space-y-2 bg-accent/10">
                 {/* Remove Button */}
                 <Button
                   type="button"
@@ -292,7 +293,7 @@ const SchoolAdministrationForm =
                   className="absolute top-2 right-2"
                 >
                   {/* You could use an icon here instead of text */}
-                  {/* <MinusCircle className="h-4 w-4" /> */}
+                  <MinusCircle className="h-4 w-4" />
                   Remove
                 </Button>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
