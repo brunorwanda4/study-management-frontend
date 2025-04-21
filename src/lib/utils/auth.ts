@@ -9,6 +9,7 @@ export interface AuthUserDto {
   id: string;
   name: string;
   email: string;
+  username : string,
   image?: string;
   role?: UserRoleDto;
   iat?: number;
@@ -34,10 +35,10 @@ export function authLogout(lang: Locale) {
   }
 }
 
-export function getAuthUser(): AuthUserDto | null {
-  const token = localStorage.getItem('accessToken');
-  return token ? getUserFromToken(token) : null;
-}
+// export function getAuthUser(): AuthUserDto | null {
+//   const token = localStorage.getItem('accessToken');
+//   return token ? getUserFromToken(token) : null;
+// }
 
 export async function getAuthUserServer(): Promise<AuthUserDto | null> {
  const token =await getUserToken()
