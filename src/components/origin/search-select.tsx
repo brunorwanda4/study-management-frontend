@@ -19,7 +19,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Option } from "./ui/multiselect";
+import { Option } from "../ui/multiselect";
 
 export const SchoolStaffRoles: Option[] = [
   {

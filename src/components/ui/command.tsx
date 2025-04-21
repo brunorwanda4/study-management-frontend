@@ -12,16 +12,19 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { useTheme } from "next-themes"
 
 function Command({
   className,
   ...props
 }: React.ComponentProps<typeof CommandPrimitive>) {
+  const {theme} = useTheme()
   return (
     <CommandPrimitive
       data-slot="command"
+      data-theme={theme}
       className={cn(
-        "bg-popover text-popover-foreground flex size-full flex-col overflow-hidden rounded-md",
+        "bg-base-200 flex size-full flex-col overflow-hidden rounded-md",
         className
       )}
       {...props}

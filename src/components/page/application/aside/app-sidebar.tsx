@@ -18,7 +18,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import Link, { useLinkStatus } from "next/link";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
@@ -27,6 +27,7 @@ import { ReactNode } from "react";
 import { sidebarGroupsProps } from "./app-side-content";
 import { useTheme } from "next-themes";
 import MyImage from "@/components/myComponents/myImage";
+import { LoadingIndicator } from "@/components/myComponents/myLink";
 
 // Reusable component for rendering sidebar groups
 const SidebarGroupComponent = ({
@@ -38,7 +39,7 @@ const SidebarGroupComponent = ({
 }: sidebarGroupsProps) => {
   const path = usePathname();
   const { theme } = useTheme();
-  const { pending } = useLinkStatus();
+  const loading = LoadingIndicator();
   return (
     <SidebarGroup className=" p-0">
       <div>
@@ -90,13 +91,7 @@ const SidebarGroupComponent = ({
                               <MyImage className=" size-6" src={item.icon} />
                             )}
                             {item.title}{" "}
-                            {pending ? (
-                              <div
-                                role="status"
-                                aria-label="Loading"
-                                className={cn("loading loading-spinner")}
-                              />
-                            ) : null}
+                            {loading}
                           </Link>
                         ) : (
                           <div className="flex items-center gap-2 font-normal">
@@ -147,13 +142,7 @@ const SidebarGroupComponent = ({
                                 )}
                               >
                                 {subItem.title}{" "}
-                                {pending ? (
-                                  <div
-                                    role="status"
-                                    aria-label="Loading"
-                                    className={cn("loading loading-spinner")}
-                                  />
-                                ) : null}
+                                {loading}
                               </Link>
                             ) : (
                               <button className="ml-8 flex items-center gap-2 btn-xs btn-ghost  rounded-md">
@@ -184,13 +173,7 @@ const SidebarGroupComponent = ({
                         <MyImage className=" size-6" src={item.icon} />
                       )}
                       {item.title}{" "}
-                      {pending ? (
-                        <div
-                          role="status"
-                          aria-label="Loading"
-                          className={cn("loading loading-spinner")}
-                        />
-                      ) : null}
+                      {loading}
                     </Link>
                   ) : (
                     <div className="flex items-center gap-2 font-normal">

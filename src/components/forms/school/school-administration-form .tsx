@@ -1,409 +1,434 @@
 "use client";
 
-import { useTransition } from "react";
-import { useForm, useFieldArray } from "react-hook-form"; // No longer need ControllerRenderProps, FieldPath for the helper, but keep useFieldArray
+import { useState, useTransition } from "react";
+import {
+  useForm,
+  useFieldArray,
+  ControllerRenderProps,
+  FieldPath,
+} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import { CheckIcon, ChevronDownIcon, MinusCircle } from "lucide-react";
 
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Form,
-  FormControl,
-  FormDescription, // Import FormDescription
+  FormControl, // Keep FormControl import as it's used for standard inputs
+  FormDescription,
   FormField,
   FormItem,
-  FormLabel, // Import FormLabel
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { MinusCircle } from "lucide-react";
-// Import icons if needed for buttons (like remove)
-// import { MinusCircle } from "lucide-react";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandList,
+  CommandItem,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { SchoolStaffRoles } from "@/lib/context/school.context";
+import { AuthUserDto } from "@/lib/utils/auth";
+import { Locale } from "@/i18n";
+import { SchoolAdministrationDto, SchoolAdministrationSchema } from "@/lib/schema/school.dto";
 
-// 1. Define the Zod Schema for the form data
-const SchoolAdministrationSchema = z.object({
-  headmasterName: z
-    .string()
-    .min(2, { message: "Headmaster name is required." }),
-  headmasterEmail: z.string().email({ message: "Invalid email address." }),
-  headmasterPhone: z
-    .string()
-    .min(10, {
-      message: "Minium character are 10",
-    })
-    .regex(/^\d+$/, "Phone number must contain only numbers"),
+const RoleSelectCombobox = ({
+  field,
+}: {
+  field: ControllerRenderProps<
+    SchoolAdministrationDto,
+    FieldPath<SchoolAdministrationDto>
+  >;
+}) => {
+  const [open, setOpen] = useState(false);
 
-    DirectorOfStudies: z.string().min(2, { message: "Principal name is required." }),
-  principalEmail: z.string().email({ message: "Invalid email address." }),
-  principalPhone: z
-    .string()
-    .min(10, {
-      message: "Minium character are 10",
-    })
-    .regex(/^\d+$/, "Phone number must contain only numbers"),
+  const selectedRoleLabel = SchoolStaffRoles.find(
+    (role) => role.value === field.value
+  )?.label;
 
-  numberOfTeachers: z.coerce
-    .number()
-    .int()
-    .min(0, { message: "Number of teachers cannot be negative." }),
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        {/* REMOVED FormControl WRAPPER HERE */}
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className="w-full justify-between px-3 font-normal"
+        >
+          <span
+            className={cn("truncate", !field.value && "text-muted-foreground")}
+          >
+            {selectedRoleLabel || "Select a role"}
+          </span>
+          <ChevronDownIcon
+            size={16}
+            className="text-muted-foreground/80 shrink-0 ml-2"
+            aria-hidden="true"
+          />
+        </Button>
+        {/* REMOVED CLOSING FormControl TAG HERE */}
+      </PopoverTrigger>
+      <PopoverContent className="w-[var(--radix-popper-anchor-width)] p-0">
+        <Command>
+          <CommandInput placeholder="Search role..." />
+          <CommandList>
+            <CommandEmpty>No role found.</CommandEmpty>
+            <CommandGroup>
+              {SchoolStaffRoles.map((role) => (
+                <CommandItem
+                  key={role.value}
+                  value={role.value}
+                  onSelect={(currentValue) => {
+                    field.onChange(
+                      currentValue === field.value ? "" : currentValue
+                    );
+                    setOpen(false);
+                  }}
+                >
+                  {role.label}
+                  <CheckIcon
+                    className={cn(
+                      "ml-auto h-4 w-4",
+                      field.value === role.value ? "opacity-100" : "opacity-0"
+                    )}
+                  />
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+};
 
-  additionalAdministration: z
-    .array(
-      z.object({
-        role: z.string().min(2, { message: "Role is required." }),
-        name: z.string().min(2, { message: "Name is required." }),
-        email: z.string().email({ message: "Invalid email address." }),
-        phone: z
-          .string()
-          .min(10, {
-            message: "Minium character are 10",
-          })
-          .regex(/^\d+$/, "Phone number must contain only numbers"),
-      })
-    )
-    .default([])
-    .optional(),
-});
+interface props {
+  currentUser : AuthUserDto,
+  lang : Locale
+}
 
-// Define the DTO type based on the schema
-type SchoolAdministrationDto = z.infer<typeof SchoolAdministrationSchema>;
-
-// Component Props Interface (adjust if needed)
-// interface SchoolAdministrationFormProps {
-//   // Add any props the component needs, e.g., initial data, onSubmit handler
-// }
-
-const SchoolAdministrationForm =
-  (/* { initialData }: SchoolAdministrationFormProps */) => {
-    // 2. Initialize react-hook-form
+const SchoolAdministrationForm =({currentUser} : props) => {
     const form = useForm<SchoolAdministrationDto>({
       resolver: zodResolver(SchoolAdministrationSchema),
       defaultValues: {
-        headmasterName: "",
-        headmasterEmail: "",
+        headmasterName: currentUser.name ? currentUser.name : "",
+        headmasterEmail: currentUser.email ? currentUser.email : "",
         headmasterPhone: "",
         DirectorOfStudies: "",
         principalEmail: "",
         principalPhone: "",
         numberOfTeachers: 30,
         additionalAdministration: [],
-        // ...initialData
       },
       mode: "onChange",
     });
 
-    // 3. Use useFieldArray for the dynamic 'additionalAdministration' field
     const { fields, append, remove } = useFieldArray({
       name: "additionalAdministration",
       control: form.control,
     });
 
-    // Optional: State for loading/submission transition
     const [isPending, startTransition] = useTransition();
 
-    // 4. Define the onSubmit function
     function onSubmit(values: SchoolAdministrationDto) {
       console.log("Form submitted with values:", values);
-      // Handle the form submission logic here (e.g., API call)
-
-      // Example of a transition wrapper
       startTransition(() => {
-        // Perform your async submission logic here
-        // await saveSchoolDetails(values);
-        // Handle success/error messages
+        // Your async submission logic here
       });
     }
 
     return (
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className=" basic-card  space-y-4"
-        >
-          {/* Headmaster Details */}
-          <div className="space-y-2">
-            <h3 className="text-lg font-medium">Headmaster</h3>
-            <FormDescription>
-              Enter the headmaster&apos;s information.
-            </FormDescription>{" "}
-            {/* Example FormDescription */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <FormField
-                control={form.control}
-                name="headmasterName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Full Name*</FormLabel> {/* Using FormLabel */}
-                    <FormControl>
-                      <Input placeholder="Headmaster Name" {...field} />
-                    </FormControl>
-                    {/* <FormDescription>This is the headmaster's full name.</FormDescription> */}{" "}
-                    {/* Another place for description */}
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="headmasterEmail"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email Address</FormLabel> {/* Using FormLabel */}
-                    <FormControl>
-                      <Input
-                        type="email"
-                        placeholder="headmaster@example.com"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="headmasterPhone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Phone Number</FormLabel> {/* Using FormLabel */}
-                    <FormControl>
-                      <Input
-                        type="tel"
-                        placeholder="e.g., +123 456 7890"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-          </div>
-
-          {/* Principal Details */}
-          <div className="space-y-2">
-            <h3 className="text-lg font-medium">Director of Studies</h3>
-            <FormDescription>
-              Enter the director of Studies information.
-            </FormDescription>{" "}
-            {/* Example FormDescription */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <FormField
-                control={form.control}
-                name="DirectorOfStudies"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Full Name*</FormLabel> {/* Using FormLabel */}
-                    <FormControl>
-                      <Input placeholder="Principal Name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="principalEmail"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email Address</FormLabel> {/* Using FormLabel */}
-                    <FormControl>
-                      <Input
-                        type="email"
-                        placeholder="principal@example.com"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="principalPhone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Phone Number</FormLabel> {/* Using FormLabel */}
-                    <FormControl>
-                      <Input
-                        type="tel"
-                        placeholder="e.g., +123 456 7890"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-          </div>
-
-          {/* Number of Teachers */}
-          <div className="space-y-2">
-            <h3 className="text-lg font-medium">School Statistics</h3>
-            <FormDescription>
-              Provide some key statistics about the school.
-            </FormDescription>{" "}
-            {/* Example FormDescription */}
-            <FormField
-              control={form.control}
-              name="numberOfTeachers"
-              render={({ field }) => (
-                <FormItem className="w-full md:w-1/3">
-                  <FormLabel>Number of Teachers*</FormLabel>{" "}
-                  {/* Using FormLabel */}
-                  <FormControl>
-                    {/* Note: Type "number" input returns string, Zod's .coerce.number() handles conversion */}
-                    <Input
-                      type="number"
-                      placeholder="e.g., 50"
-                      {...field}
-                      // Handle the change event specifically for numbers if not using coerce
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        field.onChange(value === "" ? 0 : parseInt(value, 10)); // Use parseInt and handle empty string
-                      }}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    The total count of teaching staff.
-                  </FormDescription>{" "}
-                  {/* Example FormDescription */}
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          {/* Additional Administration (Dynamic Fields) */}
-          <div className="space-y-6  ">
-            <h3 className="text-lg font-medium">Other Administrators</h3>
-            <FormDescription>
-              Add details for other key administrative staff members.
-            </FormDescription>{" "}
-            {/* Example FormDescription */}
-            {fields.map((field, index) => (
-              <div key={field.id} className="relative space-y-2 bg-accent/10">
-                {/* Remove Button */}
-                <Button
-                  type="button"
-                  variant="destructive"
-                  size="lg"
-                  onClick={() => remove(index)}
-                  className="absolute top-2 right-2"
-                >
-                  {/* You could use an icon here instead of text */}
-                  <MinusCircle className="h-4 w-4" />
-                  Remove
-                </Button>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-                  <FormField
-                    control={form.control}
-                    name={`additionalAdministration.${index}.role`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Role*</FormLabel> {/* Using FormLabel */}
-                        <FormControl>
-                          <Input
-                            placeholder="e.g., Vice Principal"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          The specific role of this administrator.
-                        </FormDescription>
-                        {/* Example FormDescription */}
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name={`additionalAdministration.${index}.name`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Full Name*</FormLabel>{" "}
-                        {/* Using FormLabel */}
-                        <FormControl>
-                          <Input placeholder="Administrator Name" {...field} />
-                        </FormControl>
-                        <FormDescription>
-                          Full name of school staff
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name={`additionalAdministration.${index}.email`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email Address</FormLabel>{" "}
-                        {/* Using FormLabel */}
-                        <FormControl>
-                          <Input
-                            type="email"
-                            placeholder="email@example.com"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name={`additionalAdministration.${index}.phone`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Phone Number</FormLabel>{" "}
-                        {/* Using FormLabel */}
-                        <FormControl>
-                          <Input
-                            type="tel"
-                            placeholder="e.g., +123 456 7890"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className=" basic-card  space-y-4" // Added back basic styling classes
+          >
+            {/* Headmaster Details */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Headmaster</h3>
+              <FormDescription>
+                Enter the headmaster&apos;s information.
+              </FormDescription>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <FormField
+                  control={form.control}
+                  name="headmasterName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Full Name*</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Headmaster Name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="headmasterEmail"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email Address*</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="email"
+                          placeholder="headmaster@example.com"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="headmasterPhone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Phone Number*</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="tel"
+                          placeholder="e.g., +1234567890"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
-            ))}
-            {/* Add Administrator Button */}
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() =>
-                append({ role: "", name: "", email: "", phone: "" })
-              }
-              className="mt-4"
-              disabled={isPending}
-            >
-              {/* Or icon + text */}
-              Add New Administrator
-            </Button>
-          </div>
+            </div>
 
-          {/* Submit Button */}
-          <Button type="submit" className="w-full mt-6" disabled={isPending}>
-            Save Administration Details
-            {isPending && (
-              <span
-                role="status"
-                aria-label="Saving..."
-                className="ml-2 h-4 w-4 animate-spin rounded-full border-2 border-foreground border-e-transparent"
-              ></span>
-            )}
-          </Button>
-        </form>
-      </Form>
+            {/* Director of Studies Details */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Director of Studies</h3>
+              <FormDescription>
+                Enter the director of Studies information.
+              </FormDescription>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <FormField
+                  control={form.control}
+                  name="DirectorOfStudies"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Full Name*</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Director Name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="principalEmail"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email Address*</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="email"
+                          placeholder="director@example.com"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="principalPhone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Phone Number*</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="tel"
+                          placeholder="e.g., +1234567890"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            {/* Number of Teachers */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">School Statistics</h3>
+              <FormDescription>
+                Provide some key statistics about the school.
+              </FormDescription>
+              <FormField
+                control={form.control}
+                name="numberOfTeachers"
+                render={({ field }) => (
+                  <FormItem className="w-full md:w-1/3">
+                    <FormLabel>Number of Teachers*</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="e.g., 50"
+                        {...field}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          // Use parseInt and handle empty string, default to 0 if invalid parse
+                          field.onChange(
+                            value === "" ? 0 : parseInt(value, 10) || 0
+                          );
+                        }}
+                        // Ensure the input displays the number value correctly
+                        value={field.value}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      The total count of teaching staff.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {/* Additional Administration (Dynamic Fields) */}
+            <div className="space-y-6">
+              <h3 className="text-lg font-semibold">Other Administrators</h3>
+              <FormDescription>
+                Add details for other key administrative staff members.
+              </FormDescription>
+              {fields.map((field, index) => (
+                <div
+                  key={field.id}
+                  className="relative space-y-4"
+                >
+                  {/* Remove Button */}
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => remove(index)}
+                    className="absolute top-2 right-2 h-8 w-8 p-0"
+                  >
+                    <MinusCircle className="h-4 w-4" />
+                    <span className="sr-only">Remove Administrator</span>
+                  </Button>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                    {/* ROLE SELECT FIELD - USING CUSTOM COMBOBOX */}
+                    <FormField
+                      control={form.control}
+                      name={`additionalAdministration.${index}.role`}
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col">
+                          <FormLabel>Role*</FormLabel>
+                          {/* Use the wrapper component */}
+                          <RoleSelectCombobox field={field} />
+                          <FormDescription>
+                            The specific role of this administrator.
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name={`additionalAdministration.${index}.name`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Full Name*</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Administrator Name"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            Full name of school staff
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name={`additionalAdministration.${index}.email`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email Address*</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="email"
+                              placeholder="email@example.com"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name={`additionalAdministration.${index}.phone`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Phone Number*</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="tel"
+                              placeholder="e.g., +1234567890"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+              ))}
+
+              {/* Add Administrator Button */}
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  append({ role: "", name: "", email: "", phone: "" })
+                }
+                className="mt-4"
+                disabled={isPending}
+              >
+                Add New Administrator
+              </Button>
+            </div>
+
+            {/* Submit Button */}
+            <Button type="submit" className="w-full mt-6" disabled={isPending}>
+              Save Administration Details
+              {isPending && (
+                <span
+                  role="status"
+                  aria-label="Saving..."
+                  className="ml-2 h-4 w-4 animate-spin rounded-full border-2 border-foreground border-e-transparent"
+                ></span>
+              )}
+            </Button>
+          </form>
+        </Form>
     );
   };
 
