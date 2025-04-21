@@ -114,14 +114,10 @@ const SchoolAdministrationForm =
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-8 p-6 border rounded-md shadow-sm"
+          className=" basic-card  space-y-4"
         >
-          <h2 className="text-2xl font-bold text-center mb-6">
-            School Administration Details
-          </h2>
-
           {/* Headmaster Details */}
-          <div className="space-y-4 border p-4 rounded-md">
+          <div className="space-y-2">
             <h3 className="text-lg font-medium">Headmaster</h3>
             <FormDescription>
               Enter the headmaster&apos;s information.
@@ -181,7 +177,7 @@ const SchoolAdministrationForm =
           </div>
 
           {/* Principal Details */}
-          <div className="space-y-4 border p-4 rounded-md">
+          <div className="space-y-2">
             <h3 className="text-lg font-medium">Principal</h3>
             <FormDescription>
               Enter the principal&apos;s information.
@@ -239,7 +235,7 @@ const SchoolAdministrationForm =
           </div>
 
           {/* Number of Teachers */}
-          <div className="space-y-4 border p-4 rounded-md">
+          <div className="space-y-2">
             <h3 className="text-lg font-medium">School Statistics</h3>
             <FormDescription>
               Provide some key statistics about the school.
@@ -276,7 +272,7 @@ const SchoolAdministrationForm =
           </div>
 
           {/* Additional Administration (Dynamic Fields) */}
-          <div className="space-y-6 border p-4 rounded-md">
+          <div className="space-y-6  ">
             <h3 className="text-lg font-medium">Other Administrators</h3>
             <FormDescription>
               Add details for other key administrative staff members.
@@ -285,15 +281,15 @@ const SchoolAdministrationForm =
             {fields.map((field, index) => (
               <div
                 key={field.id}
-                className="relative space-y-4 border p-4 rounded-md bg-accent/10"
+                className="relative space-y-2 bg-accent/10"
               >
                 {/* Remove Button */}
                 <Button
                   type="button"
                   variant="destructive"
-                  size="sm"
+                  size="lg"
                   onClick={() => remove(index)}
-                  className="absolute top-2 right-2 h-8 w-8 p-0"
+                  className="absolute top-2 right-2"
                 >
                   {/* You could use an icon here instead of text */}
                   {/* <MinusCircle className="h-4 w-4" /> */}
@@ -314,7 +310,7 @@ const SchoolAdministrationForm =
                         </FormControl>
                         <FormDescription>
                           The specific role of this administrator.
-                        </FormDescription>{" "}
+                        </FormDescription>
                         {/* Example FormDescription */}
                         <FormMessage />
                       </FormItem>
@@ -330,6 +326,9 @@ const SchoolAdministrationForm =
                         <FormControl>
                           <Input placeholder="Administrator Name" {...field} />
                         </FormControl>
+                        <FormDescription>
+                          Full name of school staff
+                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
