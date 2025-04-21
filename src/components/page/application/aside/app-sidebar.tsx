@@ -89,7 +89,14 @@ const SidebarGroupComponent = ({
                             {item.icon && (
                               <MyImage className=" size-6" src={item.icon} />
                             )}
-                            {item.title}
+                            {item.title}{" "}
+                            {pending ? (
+                              <div
+                                role="status"
+                                aria-label="Loading"
+                                className={cn("loading loading-spinner")}
+                              />
+                            ) : null}
                           </Link>
                         ) : (
                           <div className="flex items-center gap-2 font-normal">

@@ -24,6 +24,7 @@ const SchoolAcademicOnboardingPage = async (props: props) => {
     return <PermissionPage lang={lang} role={currentUser.role ?? "STUDENT"} />;
   const school = await getSchoolByIdService(schoolId);
   if (!school.data) return <NotFoundPage />;
+  if (school.data.creatorId !== currentUser.id) return <PermissionPage lang={lang} role={currentUser.role ?? "STUDENT"} />
   return (
     <div className=" px-4 mt-4 space-y-2">
       <div>
@@ -33,7 +34,7 @@ const SchoolAcademicOnboardingPage = async (props: props) => {
           school&apos;s configuration.
         </p>
       </div>
-      <SchoolAcademicForm school={school.data} />
+      <SchoolAcademicForm lang={lang} school={school.data} />
     </div>
   );
 };

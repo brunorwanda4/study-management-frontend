@@ -151,7 +151,7 @@ export type CreateSchoolDtoBackend = z.infer<typeof CreateSchoolSchemaBackend>
 
 export const SchoolAcademicSchema = z.object({
   schoolId: z.string().min(1, { message: "School is required" }),
-  assessmentTypes: z.array(z.string()).optional(),
+  // assessmentTypes: z.array(z.string()).optional(),
   // Primary Education
   primarySubjectsOffered: z.array(z.string()).optional(), // Using array for multiple selections
   primaryPassMark: z.number().optional(), // Could be a number input or a select with common values
@@ -175,7 +175,7 @@ export const SchoolAcademicSchema = z.object({
       message: "Advance level is required"
     }).max(6, {
       message: "Maximum Trading all 6"
-    }), // Assuming one combination can be selected
+    }).optional(), // Assuming one combination can be selected
   aLevelOptionSubjects: z.array(z.string()).optional(),
   aLevelPassMark: z.number().int().optional(),
   // TVET
@@ -191,7 +191,7 @@ export const SchoolAcademicSchema = z.object({
       message: "TVET Trading is required,"
     }).max(6, {
       message: "Maximum Trading all 6"
-    }), // Assuming one specialization can be selected
+    }).optional(), // Assuming one specialization can be selected
   tvetOptionSubjects: z.array(z.string()).optional(),
 });
 
@@ -200,7 +200,7 @@ export type schoolAcademicDto = z.infer<typeof SchoolAcademicSchema>
 
 export const SchoolAcademicSchemaBackend = z.object({
   schoolId: z.string().min(1, { message: "School is required" }),
-  assessmentTypes: z.array(z.string()).optional(),
+  // assessmentTypes: z.array(z.string()).optional(),
   // Primary Education
   primarySubjectsOffered: z.array(z.string()).optional(),
   primaryPassMark: z.number().optional(),
@@ -238,6 +238,13 @@ export const SchoolAcademicSchemaBackend = z.object({
 });
 
 export type SchoolAcademicDtoBackend = z.infer<typeof SchoolAcademicSchemaBackend>;
+
+export const SchoolAcademicCreation = z.object({
+    totalClasses: z.number(),
+    totalModule: z.number()
+})
+
+export type SchoolAcademicCreationDto = z.infer<typeof SchoolAcademicCreation>
 
 export const SchoolSchema = z.object({
   id: z.string(),

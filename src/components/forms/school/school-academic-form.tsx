@@ -32,36 +32,19 @@ import {
 } from "@/lib/schema/school.dto";
 import { academicSchoolService } from "@/service/school/school.service";
 import { FormError, FormSuccess } from "@/components/myComponents/form-message";
+import { useRouter } from "next/navigation";
+import { Locale } from "@/i18n";
 // import { academicSchoolService } from "@/service/school/school.service";
 interface props {
   school: SchoolDto;
+  lang: Locale;
 }
 
-export function SchoolAcademicForm({ school }: props) {
+export function SchoolAcademicForm({ school, lang }: props) {
   const [error, setError] = useState<string | null | undefined>("");
   const [success, setSuccess] = useState<string | null | undefined>("");
   const [isPending, startTransition] = useTransition();
-
-  const form = useForm<schoolAcademicDto>({
-    resolver: zodResolver(SchoolAcademicSchema),
-    // Provide default values for all potential fields
-    defaultValues: {
-      schoolId: school.id,
-      primarySubjectsOffered: PrimarySubjects.map((subject) => subject.value),
-      assessmentTypes: PrimaryAssessment.map((assessment) => assessment.value),
-      primaryPassMark: 50, // Default pass mark for primary
-      oLevelCoreSubjects: OLevelSubjects.map((subject) => subject.value),
-      oLevelOptionSubjects: OptionalSubjects.map((subject) => subject.value),
-      oLevelExaminationTypes: OLevelAssessment.map((subject) => subject.value),
-      oLevelAssessment: PrimaryAssessment.map((assessment) => assessment.value),
-      aLevelOptionSubjects: OptionalSubjects.map((subject) => subject.value),
-      aLevelSubjectCombination: [],
-      aLevelPassMark: 50, // Default pass mark for A-Level
-      tvetSpecialization: [],
-      tvetOptionSubjects: OptionalSubjects.map((subject) => subject.value),
-    },
-  });
-
+  const router = useRouter();
   const hasPrimary = useMemo(
     () => school.educationLevel?.includes("Primary"),
     [school.educationLevel]
@@ -78,19 +61,54 @@ export function SchoolAcademicForm({ school }: props) {
     () => school.curriculum?.includes("TVET"),
     [school.curriculum]
   );
+  const form = useForm<schoolAcademicDto>({
+    resolver: zodResolver(SchoolAcademicSchema),
+    // Provide default values for all potential fields
+    defaultValues: {
+      schoolId: school.id,
+      primarySubjectsOffered: hasPrimary
+        ? PrimarySubjects.map((subject) => subject.value)
+        : undefined,
+      // assessmentTypes: PrimaryAssessment.map((assessment) => assessment.value),
+      primaryPassMark: 50, // Default pass mark for primary
+      oLevelCoreSubjects: hasOLevel
+        ? OLevelSubjects.map((subject) => subject.value)
+        : undefined,
+      oLevelOptionSubjects: hasOLevel
+        ? OptionalSubjects.map((subject) => subject.value)
+        : undefined,
+      oLevelExaminationTypes: hasOLevel
+        ? OLevelAssessment.map((subject) => subject.value)
+        : undefined,
+      oLevelAssessment: hasOLevel
+        ? PrimaryAssessment.map((assessment) => assessment.value)
+        : undefined,
+      aLevelOptionSubjects: hasALevel
+        ? OptionalSubjects.map((subject) => subject.value)
+        : undefined,
+      aLevelSubjectCombination: hasALevel ? [] : undefined,
+      aLevelPassMark: hasALevel ? 50 : undefined, // Default pass mark for A-Level
+      tvetSpecialization: hasTVET ? [] : undefined,
+      tvetOptionSubjects: hasTVET
+        ? OptionalSubjects.map((subject) => subject.value)
+        : undefined,
+    },
+  });
 
   function onSubmit(values: schoolAcademicDto) {
     setSuccess(null);
     setError(null);
     startTransition(async () => {
       const academic = await academicSchoolService(values);
-      if (academic.success) {
-        setSuccess(academic.success);
+      if (academic.data) {
+        setSuccess(
+          `Successfully created ${academic.data?.totalClasses} classes and ${academic.data?.totalModule} module instances for school ${school.name}.`
+        );
+        router.push(`/${lang}/s-t/new/${school.id}/administration`);
       } else {
-        setError(academic.error);
+        setError(`Error setting up academic structure: ${academic.message}`);
       }
     });
-    console.log(values);
   }
 
   return (
@@ -248,7 +266,6 @@ export function SchoolAcademicForm({ school }: props) {
               />
             </div>
           )}
-
           {/* Advanced Level Section - Conditionally Rendered */}
           {hasALevel && (
             <div className="space-y-4">
@@ -500,7 +517,7 @@ export function SchoolAcademicForm({ school }: props) {
               />
             </div>
           )}
-          <div>
+          {/* <div>
             <h3 className="text-lg font-semibold">Assessment Type</h3>
             <FormField
               control={form.control}
@@ -548,15 +565,19 @@ export function SchoolAcademicForm({ school }: props) {
                 </FormItem>
               )}
             />
-          </div>
+          </div> */}
         </div>
         <div>
           <FormError message={error} />
           <FormSuccess message={success} />
         </div>
         {(hasPrimary || hasOLevel || hasALevel || hasTVET) && (
-          <Button disabled={isPending} type="submit">
-            Submit
+          <Button
+            library="daisy"
+            variant={"info"}
+            disabled={isPending}
+            type="submit"
+          >
             {isPending && (
               <div
                 role="status"
@@ -564,6 +585,9 @@ export function SchoolAcademicForm({ school }: props) {
                 className={"loading loading-spinner"}
               />
             )}
+            {!isPending
+              ? "Add academic in school"
+              : "Creating classes and subjects..."}
           </Button>
         )}
       </form>

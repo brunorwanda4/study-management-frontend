@@ -1,4 +1,4 @@
-import { CreateSchoolDto, CreateSchoolDtoBackend, schoolAcademicDto, SchoolAcademicDtoBackend } from "@/lib/schema/school.dto";
+import { CreateSchoolDto, CreateSchoolDtoBackend, SchoolAcademicCreationDto, schoolAcademicDto, SchoolAcademicDtoBackend } from "@/lib/schema/school.dto";
 import { SchoolDto } from "@/lib/schema/school.dto";
 import apiRequest from "../api-client";
 
@@ -40,7 +40,7 @@ export const getSchoolByIdService = async (id: string) => {
 export const academicSchoolService = async (input: schoolAcademicDto) => {
     const data: SchoolAcademicDtoBackend = {
         schoolId: input.schoolId,
-        assessmentTypes: input.assessmentTypes,
+        // assessmentTypes: input.assessmentTypes,
         primarySubjectsOffered: input.primarySubjectsOffered,
         primaryPassMark: input.primaryPassMark,
 
@@ -57,10 +57,5 @@ export const academicSchoolService = async (input: schoolAcademicDto) => {
         tvetOptionSubjects: input.tvetOptionSubjects,
     }
 
-    const res = await apiRequest<SchoolAcademicDtoBackend, unknown>("post", "/school/academic", data);
-    if (res.data) {
-        return { success: "Classes are created successful!" }
-    } else {
-        return { error: `message :${res.message}, error : ${res.error}` }
-    }
+    return await apiRequest<SchoolAcademicDtoBackend, SchoolAcademicCreationDto>("post", "/school/academic", data);
 }
