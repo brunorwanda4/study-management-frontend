@@ -33,7 +33,7 @@ const AdministrationPage = async (props: props) => {
           administration and staff.
         </p>
       </div>
-      <SchoolAdministrationForm lang={lang} currentUser={currentUser}/>
+      <SchoolAdministrationForm schoolId={schoolId} lang={lang} currentUser={currentUser}/>
     </div>
   );
 };

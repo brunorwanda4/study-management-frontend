@@ -113,13 +113,15 @@ const RoleSelectCombobox = ({
 
 interface props {
   currentUser : AuthUserDto,
-  lang : Locale
+  lang : Locale,
+  schoolId : string
 }
 
-const SchoolAdministrationForm =({currentUser} : props) => {
+const SchoolAdministrationForm =({currentUser, schoolId} : props) => {
     const form = useForm<SchoolAdministrationDto>({
       resolver: zodResolver(SchoolAdministrationSchema),
       defaultValues: {
+        schoolId : schoolId,
         headmasterName: currentUser.name ? currentUser.name : "",
         headmasterEmail: currentUser.email ? currentUser.email : "",
         headmasterPhone: "",

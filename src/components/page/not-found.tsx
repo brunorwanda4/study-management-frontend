@@ -22,14 +22,16 @@ const NotFoundPage = () => {
         <MyImage className="size-96" src="/notFound.svg" />
         <div>
           <div className="text-center">
-          <h4 className="  font-medium"> Not found item</h4>
-           <p className=" text-myGray">Check your internet connection or your params for this page.</p>
+            <h4 className="  font-medium"> Not found item</h4>
+            <p className=" text-myGray">
+              Check your internet connection or your params for this page.
+            </p>
           </div>
-          <div className="flex space-x-2 mt-2 justify-center">
-            <Button size="sm" variant="outline" onClick={handleGoBack}>
+          <div className="flex space-x-2 mt-2 justify-center items-center">
+            <Button library="daisy" variant="outline" onClick={handleGoBack}>
               <BsArrowLeft /> Go back
             </Button>
-            <Button library="daisy" size="sm" variant="info" onClick={handleRefresh}>
+            <Button library="daisy" variant="info" onClick={handleRefresh}>
               Refresh <RefreshCcw size={12} />
             </Button>
           </div>

@@ -247,6 +247,7 @@ export const SchoolAcademicCreation = z.object({
 export type SchoolAcademicCreationDto = z.infer<typeof SchoolAcademicCreation>
 
 export const SchoolAdministrationSchema = z.object({
+  schoolId : z.string().min(1),
   headmasterName: z
     .string()
     .min(2, { message: "Headmaster name is required." }),
