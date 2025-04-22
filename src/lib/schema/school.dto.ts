@@ -303,11 +303,11 @@ export const sendAdministrationJoinRequestsSchema = z.object({
 })
 
 export type sendAdministrationJoinRequestsDto = z.infer<typeof sendAdministrationJoinRequestsSchema>
-
 export const SchoolSchema = z.object({
   id: z.string(),
   creatorId: z.string(),
 
+  // basic information
   username: z.string().min(3, { message: "Username must be at least 3 characters" }),
   logo: z.string().url({ message: "Invalid logo URL" }).optional(),
   name: z.string().min(1, { message: "School name is required" }),
@@ -316,6 +316,7 @@ export const SchoolSchema = z.object({
   schoolType: SchoolTypeEnum,
   curriculum: z.array(z.string()).min(1, { message: "At least one curriculum must be specified" }),
   educationLevel: z.array(z.string()).min(1, { message: "At least one education level must be specified" }),
+  assessmentTypes: z.array(z.string()).optional(),
   schoolMembers: SchoolMembers.optional(),
   accreditationNumber: z.string().optional(),
   affiliation: z.string().optional(),
@@ -339,6 +340,7 @@ export const SchoolSchema = z.object({
   sportsExtracurricular: z.array(z.string()).optional(),
   onlineClasses: z.boolean().optional(),
 
+  // metadata
   createAt: z.date().optional(),
   updatedAt: z.date().optional(),
 });

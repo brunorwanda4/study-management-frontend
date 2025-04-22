@@ -1,32 +1,34 @@
- import MyImage from "@/components/myComponents/myImage";
+"use client"
+import MyImage from "@/components/myComponents/myImage";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Separator } from "../ui/separator";
 import { Dot } from "lucide-react";
 import Link from "next/link";
 import { Locale } from "@/i18n";
 import { cn } from "@/lib/utils";
-import { TextTooltip } from "@/context/tooltip/text-tooltip";
 import { Button } from "../ui/button";
+import { TextTooltip } from "../myComponents/text-tooltip";
 
 interface props {
   lang: Locale;
   isClassTeacher?: boolean;
   isStudent?: boolean;
+  className ?: string;
 }
 
-const SchoolCard = ({ lang, isClassTeacher, isStudent }: props) => {
+const SchoolCard = ({ lang,className, isClassTeacher, isStudent }: props) => {
   return (
-    <div className=" basic-card p-0 relative h-auto">
+    <div className={cn("basic-card p-0 relative h-auto", className)}>
       <div className=" relative">
         <MyImage
-          src="/images/12.jpg"
+          src="https://i.pinimg.com/1200x/26/cd/e6/26cde6253b9328baeaa9bf10a7b32427.jpg"
           className=" w-full h-28"
           classname=" card rounded-b-none"
         />
         <Separator />
         <div className=" -bottom-20 p-4 flex items-center gap-2 absolute">
           <Avatar className=" size-20">
-            <AvatarImage src="/images/19.jpg" />
+            <AvatarImage src="https://img.freepik.com/free-vector/gradient-school-logo-design-template_23-2149664347.jpg?t=st=1745211049~exp=1745214649~hmac=678f349c9bd7752892a1fe4e786b2071c68c9c58a033d1066eab7663a99d4f4c&w=826" />
             <AvatarFallback>LOGO</AvatarFallback>
           </Avatar>
           <div className=" mt-6  space-x-1">
@@ -163,7 +165,8 @@ const SchoolCard = ({ lang, isClassTeacher, isStudent }: props) => {
         {/* TODO: add link of class */}
         <Link href={`/${lang}/teacher/school/student`}>
           <Button
-            variant={isClassTeacher ? "info" : "primary"}
+            library="daisy"
+            variant={className ? "info" : isClassTeacher ? "info" : "primary"}
             className=" w-full"
           >
             Join School

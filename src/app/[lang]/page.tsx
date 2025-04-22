@@ -39,7 +39,9 @@ const WelcomePage = async (props: props) => {
           </p>
         </div>
         <div className=" mt-8 justify-center items-center flex">
-          {!currentUser?.role ? (
+          {!currentUser ? (
+            <AuthButton lang={lang} />
+          ) : !currentUser.role ? (
             <MyLink
               type="button"
               button={{ variant: "primary", library: "daisy", size: "lg" }}
@@ -47,7 +49,7 @@ const WelcomePage = async (props: props) => {
             >
               Help others to now you better 😁
             </MyLink>
-          ) : currentUser.role ? (
+          ) : (
             <MyLink
               type="button"
               button={{ variant: "primary", library: "daisy", size: "lg" }}
@@ -55,8 +57,6 @@ const WelcomePage = async (props: props) => {
             >
               Use Application 🌼
             </MyLink>
-          ) : (
-            <AuthButton lang={lang} />
           )}
         </div>
         <div className="mt-8  space-y-2">
