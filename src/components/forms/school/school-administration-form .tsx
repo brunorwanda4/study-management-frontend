@@ -58,7 +58,7 @@ const RoleSelectCombobox = ({
 
   const selectedRoleLabel = SchoolStaffRoles.find(
     (role) => role.value === field.value
-  )?.label;
+  )?.value;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -429,7 +429,6 @@ const SchoolAdministrationForm = ({ currentUser, schoolId, lang }: props) => {
         </div>
         {/* Submit Button */}
         <Button type="submit" className="w-full mt-6" disabled={isPending}>
-          Save Administration Details
           {isPending && (
             <span
               role="status"
@@ -437,6 +436,7 @@ const SchoolAdministrationForm = ({ currentUser, schoolId, lang }: props) => {
               className="ml-2 h-4 w-4 animate-spin rounded-full border-2 border-foreground border-e-transparent"
             ></span>
           )}
+          Save Administration Details {isPending && "..."}
         </Button>
       </form>
     </Form>

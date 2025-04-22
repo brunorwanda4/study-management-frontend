@@ -43,6 +43,7 @@ const WelcomePage = async (props: props) => {
             <AuthButton lang={lang} />
           ) : !currentUser.role ? (
             <MyLink
+              loading
               type="button"
               button={{ variant: "primary", library: "daisy", size: "lg" }}
               href={"/auth/onboarding"}
@@ -51,6 +52,7 @@ const WelcomePage = async (props: props) => {
             </MyLink>
           ) : (
             <MyLink
+              loading
               type="button"
               button={{ variant: "primary", library: "daisy", size: "lg" }}
               href={redirectContents({ lang, role: currentUser.role })}

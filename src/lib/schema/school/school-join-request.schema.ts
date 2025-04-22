@@ -19,3 +19,7 @@ export type SchoolJoinRequestDto = z.infer<typeof SchoolJoinRequestSchema>
 export interface SchoolJoinRequestAndSchool extends SchoolJoinRequestDto {
     school : SchoolDto
 }
+
+export interface SchoolJoinRequestAndToken extends SchoolJoinRequestDto {
+    token : string
+}

@@ -1,10 +1,12 @@
 import SchoolJoinRequestCard from "@/components/cards/school-Join-request-card";
 import MyImage from "@/components/myComponents/myImage";
 import MyLink from "@/components/myComponents/myLink";
+import NotFoundPage from "@/components/page/not-found";
 import { Button } from "@/components/ui/button";
 import { Locale } from "@/i18n";
-import { getAuthUserServer } from "@/lib/utils/auth";
+import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";
 import { GetAllJoinSchoolRequestByCurrentUserEmail } from "@/service/school/school-join-request.service";
+import { getSchoolByIdService } from "@/service/school/school.service";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
@@ -19,15 +21,26 @@ interface props {
 const SchoolStaffPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
-  const currentUser = await getAuthUserServer();
+  const [currentUser, currentSchool] = await Promise.all([
+    await getAuthUserServer(),
+    await getSchoolServer(),
+  ]);
+
   if (!currentUser) {
     redirect(`/${lang}/auth/login`);
   }
+
+  if (currentSchool) {
+    const school = await getSchoolByIdService(currentSchool.schoolId);
+    if (!school) return <NotFoundPage />;
+    return <div>Hello school {currentSchool.schoolId}</div>;
+  }
+
   const getSchoolJoinRequest = await GetAllJoinSchoolRequestByCurrentUserEmail(
     currentUser.email
   );
   return (
-    <div className=" w-full px-4 py-2 space-y-4 flex justify-center flex-col items-center">
+    <div className=" w-full px-4 py-2 space-y-4 grid place-content-center h-full">
       <div className=" flex flex-col justify-center items-center space-y-2">
         <div className=" flex justify-center items-center w-full h-full gap-2 flex-row-reverse">
           <MyLink
@@ -48,6 +61,7 @@ const SchoolStaffPage = async (props: props) => {
       {getSchoolJoinRequest.data && (
         <div className=" flex flex-row gap-4 justify-center items-center">
           {getSchoolJoinRequest.data.map((item) => {
+            if (item.status !== "pending") return null;
             return (
               <SchoolJoinRequestCard
                 currentUserImage={currentUser.image}
