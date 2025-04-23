@@ -219,7 +219,7 @@ const UserUserDataForm = ({ currentUser }: props) => {
                                     <>
                                       <DateSegment
                                         segment={segment}
-                                        className="inline rounded p-0.5 caret-transparent outline outline-0 data-[disabled]:cursor-not-allowed data-[focused]:bg-accent data-[invalid]:data-[focused]:bg-destructive data-[type=literal]:px-0 data-[focused]:data-[placeholder]:text-foreground data-[focused]:text-foreground data-[invalid]:data-[focused]:data-[placeholder]:text-destructive-foreground data-[invalid]:data-[focused]:text-destructive-foreground data-[invalid]:data-[placeholder]:text-destructive data-[invalid]:text-destructive data-[placeholder]:text-muted-foreground/70 data-[type=literal]:text-muted-foreground/70 data-[disabled]:opacity-50"
+                                        className="inline rounded p-0.5 caret-transparent outline outline-0 data-[disabled]:cursor-not-allowed data-[focused]:bg-accent data-[invalid]:data-[focused]:bg-destructive data-[type=literal]:px-0 data-[focused]:data-[placeholder]:  data-[focused]:  data-[invalid]:data-[focused]:data-[placeholder]:text-destructive-foreground data-[invalid]:data-[focused]:text-destructive-foreground data-[invalid]:data-[placeholder]:text-destructive data-[invalid]:text-destructive data-[placeholder]: /70 data-[type=literal]: /70 data-[disabled]:opacity-50"
                                       />
                                       {segment.type !== "year" && (
                                         <span>/</span>
@@ -245,14 +245,14 @@ const UserUserDataForm = ({ currentUser }: props) => {
                                 <header className="flex w-full items-center gap-1 pb-1">
                                   <ButtonDate
                                     slot="previous"
-                                    className="flex size-9 items-center justify-center rounded-lg outline-offset-2 transition-colors hover:bg-accent hover:text-foreground data-[focus-visible]:outline data-[focus-visible]:outline-2 data-[focus-visible]:outline-ring/70"
+                                    className="flex size-9 items-center justify-center rounded-lg outline-offset-2 transition-colors hover:bg-accent hover:  data-[focus-visible]:outline data-[focus-visible]:outline-2 data-[focus-visible]:outline-ring/70"
                                   >
                                     <ChevronLeft size={16} strokeWidth={2} />
                                   </ButtonDate>
                                   <Heading className="grow text-center text-sm font-medium" />
                                   <ButtonDate
                                     slot="next"
-                                    className="flex size-9 items-center justify-center rounded-lg outline-offset-2 transition-colors hover:bg-accent hover:text-foreground data-[focus-visible]:outline data-[focus-visible]:outline-2 data-[focus-visible]:outline-ring/70"
+                                    className="flex size-9 items-center justify-center rounded-lg outline-offset-2 transition-colors hover:bg-accent hover:  data-[focus-visible]:outline data-[focus-visible]:outline-2 data-[focus-visible]:outline-ring/70"
                                   >
                                     <ChevronRight size={16} strokeWidth={2} />
                                   </ButtonDate>
@@ -260,7 +260,7 @@ const UserUserDataForm = ({ currentUser }: props) => {
                                 <CalendarGrid>
                                   <CalendarGridHeader>
                                     {(day) => (
-                                      <CalendarHeaderCell className="size-9 rounded-lg p-0 text-xs font-medium text-muted-foreground/80">
+                                      <CalendarHeaderCell className="size-9 rounded-lg p-0 text-xs font-medium  /80">
                                         {day}
                                       </CalendarHeaderCell>
                                     )}
@@ -270,7 +270,7 @@ const UserUserDataForm = ({ currentUser }: props) => {
                                       <CalendarCell
                                         date={date}
                                         className={cn(
-                                          "relative flex size-9 items-center justify-center whitespace-nowrap rounded-lg border border-transparent p-0 text-sm font-normal outline-offset-2 transition-colors data-[disabled]:pointer-events-none data-[unavailable]:pointer-events-none data-[focus-visible]:z-10 data-[hovered]:bg-accent data-[selected]:bg-info data-[hovered]:text-foreground data-[selected]:text-primary-foreground data-[unavailable]:line-through data-[disabled]:opacity-30 data-[unavailable]:opacity-30 data-[focus-visible]:outline data-[focus-visible]:outline-2 data-[focus-visible]:outline-ring/70 data-[invalid]:data-[selected]:[&:not([data-hover])]:bg-destructive data-[invalid]:data-[selected]:[&:not([data-hover])]:text-destructive-foreground",
+                                          "relative flex size-9 items-center justify-center whitespace-nowrap rounded-lg border border-transparent p-0 text-sm font-normal outline-offset-2 transition-colors data-[disabled]:pointer-events-none data-[unavailable]:pointer-events-none data-[focus-visible]:z-10 data-[hovered]:bg-accent data-[selected]:bg-info data-[hovered]:  data-[selected]:text-primary-foreground data-[unavailable]:line-through data-[disabled]:opacity-30 data-[unavailable]:opacity-30 data-[focus-visible]:outline data-[focus-visible]:outline-2 data-[focus-visible]:outline-ring/70 data-[invalid]:data-[selected]:[&:not([data-hover])]:bg-destructive data-[invalid]:data-[selected]:[&:not([data-hover])]:text-destructive-foreground",
                                           date.compare(now) === 0 &&
                                             "after:pointer-events-none after:absolute after:bottom-1 after:start-1/2 after:z-10 after:size-[3px] after:-translate-x-1/2 after:rounded-full after:bg-info data-[selected]:after:bg-info"
                                         )}

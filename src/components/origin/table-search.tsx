@@ -332,10 +332,10 @@ export default function ExampleTable() {
           )}
         </TableBody>
       </Table>
-      <p className="text-muted-foreground mt-4 text-center text-sm">
+      <p className="  mt-4 text-center text-sm">
         Data table with filters made with{" "}
         <a
-          className="hover:text-foreground underline"
+          className="hover:  underline"
           href="https://tanstack.com/table"
           target="_blank"
           rel="noopener noreferrer"
@@ -447,7 +447,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
           placeholder={`Search ${columnHeader.toLowerCase()}`}
           type="text"
         />
-        <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
+        <div className=" /80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
           <SearchIcon size={16} />
         </div>
       </div>

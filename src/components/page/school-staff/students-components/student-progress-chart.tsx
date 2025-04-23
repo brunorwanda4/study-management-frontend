@@ -172,7 +172,7 @@ export function StudentProgressChart({title}: props) {
             : "Main exam performance improved by 3.8% this year"}
           <TrendingUp className="h-4 w-4" />
         </div>
-        <div className="leading-none text-muted-foreground">
+        <div className="leading-none  ">
           Based on {examType === "periodExams" ? "mid-term" : "final"} examination results across all subjects
         </div>
       </CardFooter>

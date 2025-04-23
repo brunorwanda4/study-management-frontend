@@ -71,13 +71,13 @@ const RoleSelectCombobox = ({
           className="w-full justify-between px-3 font-normal"
         >
           <span
-            className={cn("truncate", !field.value && "text-muted-foreground")}
+            className={cn("truncate", !field.value && " ")}
           >
             {selectedRoleLabel || "Select a role"}
           </span>
           <ChevronDownIcon
             size={16}
-            className="text-muted-foreground/80 shrink-0 ml-2"
+            className=" /80 shrink-0 ml-2"
             aria-hidden="true"
           />
         </Button>

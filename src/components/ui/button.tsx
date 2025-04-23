@@ -1,7 +1,9 @@
+"use client";
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
+import { useTheme } from "next-themes";
 
 // ShadCN-style variants
 const shadcnVariants = cva(
@@ -14,7 +16,7 @@ const shadcnVariants = cva(
         destructive:
           "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
         outline:
-          "border bg-base-100 shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
+          "border bg-base-100 shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-base-content/20 dark:hover:bg-input/50",
         secondary:
           "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
         ghost:
@@ -88,7 +90,7 @@ type UniversalButtonProps = ShadcnButtonProps | DaisyButtonProps;
 const Button = React.forwardRef<HTMLButtonElement, UniversalButtonProps>(
   ({ className, asChild = false, library = "shadcn", ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
-
+    const {theme} = useTheme()
     const styles =
       library === "daisy"
         ? daisyVariants({
@@ -100,7 +102,7 @@ const Button = React.forwardRef<HTMLButtonElement, UniversalButtonProps>(
             className,
           });
 
-    return <Comp ref={ref} className={cn("cursor-pointer",styles)} {...props} />;
+    return <Comp data-them={theme} ref={ref} className={cn("cursor-pointer",styles)} {...props} />;
   }
 );
 

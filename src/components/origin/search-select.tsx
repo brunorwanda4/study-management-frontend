@@ -89,9 +89,9 @@ export default function Component() {
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="bg-background hover:bg-background border-input w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]"
+            className="bg-background hover:bg-background border-base-content/20 w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]"
           >
-            <span className={cn("truncate", !value && "text-muted-foreground")}>
+            <span className={cn("truncate", !value && " ")}>
               {value
                 ? SchoolStaffRoles.find((framework) => framework.value === value)
                     ?.label
@@ -99,13 +99,13 @@ export default function Component() {
             </span>
             <ChevronDownIcon
               size={16}
-              className="text-muted-foreground/80 shrink-0"
+              className=" /80 shrink-0"
               aria-hidden="true"
             />
           </Button>
         </PopoverTrigger>
         <PopoverContent
-          className="border-input w-full min-w-[var(--radix-popper-anchor-width)] p-0"
+          className="border-base-content/20 w-full min-w-[var(--radix-popper-anchor-width)] p-0"
           align="start"
         >
           <Command>

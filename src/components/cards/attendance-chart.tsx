@@ -138,28 +138,28 @@ export default function AttendanceChart({
       </div>
       
       {lastUpdated && (
-        <p className="text-xs text-muted-foreground mb-4">
+        <p className="text-xs   mb-4">
           Last updated: {lastUpdated}
         </p>
       )}
       
       {error ? (
         <div className="bg-muted p-6 rounded-md text-center">
-          <p className="text-muted-foreground">{error}</p>
+          <p className=" ">{error}</p>
         </div>
       ) : (
         <>
           <div className="flex flex-wrap gap-4 mb-6">
             <div className="bg-muted/30 p-3 rounded-md">
-              <p className="text-sm text-muted-foreground">Total Students</p>
+              <p className="text-sm  ">Total Students</p>
               <p className="text-2xl font-bold">{totals.students}</p>
             </div>
             <div className="bg-muted/30 p-3 rounded-md">
-              <p className="text-sm text-muted-foreground">Total Teachers</p>
+              <p className="text-sm  ">Total Teachers</p>
               <p className="text-2xl font-bold">{totals.teachers}</p>
             </div>
             <div className="bg-muted/30 p-3 rounded-md">
-              <p className="text-sm text-muted-foreground">Total Staff</p>
+              <p className="text-sm  ">Total Staff</p>
               <p className="text-2xl font-bold">{totals.staff}</p>
             </div>
           </div>

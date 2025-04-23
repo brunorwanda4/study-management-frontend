@@ -76,7 +76,7 @@ export function StaffList({ staffMembers }: StaffListProps) {
                     </Avatar>
                     <div>
                       <div>{staff.name}</div>
-                      <div className="text-xs text-muted-foreground">{staff.email}</div>
+                      <div className="text-xs  ">{staff.email}</div>
                     </div>
                   </div>
                 </TableCell>
@@ -124,7 +124,7 @@ export function StaffList({ staffMembers }: StaffListProps) {
         </Table>
       </CardContent>
       <CardFooter className="flex items-center justify-between">
-        <div className="text-sm text-muted-foreground">
+        <div className="text-sm  ">
           Showing <strong>5</strong> of <strong>42</strong> staff members
         </div>
         <div className="flex items-center gap-2">

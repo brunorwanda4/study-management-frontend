@@ -144,7 +144,7 @@ const columns = (
     header: "Email",
     accessorKey: "email",
     cell: ({ row }) => (
-      <div className="text-sm text-muted-foreground">
+      <div className="text-sm  ">
         {row.getValue("email") ?? "N/A"}
       </div>
     ),
@@ -154,7 +154,7 @@ const columns = (
     header: "Phone",
     accessorKey: "phone",
     cell: ({ row }) => (
-      <div className="text-sm text-muted-foreground">
+      <div className="text-sm  ">
         {row.getValue("phone") ?? "N/A"}
       </div>
     ),
@@ -173,7 +173,7 @@ const columns = (
   //         </Button>
   //       </Link>
   //     ) : (
-  //       <span className="text-xs text-muted-foreground">Guest</span>
+  //       <span className="text-xs  ">Guest</span>
   //     );
   //   },
   //   enableSorting: false,
@@ -185,7 +185,7 @@ const columns = (
   //   cell: ({ row }) => {
   //     const status = row.getValue("status") as string;
   //     // Optional: Add styling based on status
-  //     let colorClass = "text-muted-foreground";
+  //     let colorClass = " ";
   //     if (status === "approved") colorClass = "text-green-600";
   //     if (status === "rejected") colorClass = "text-red-600";
   //     if (status === "pending") colorClass = "text-yellow-600";
@@ -205,7 +205,7 @@ const columns = (
   //   cell: ({ row }) => {
   //     const dateVal = row.getValue("createAt");
   //     return (
-  //       <div className="text-sm text-muted-foreground">
+  //       <div className="text-sm  ">
   //         {dateVal ? new Date(dateVal as string).toLocaleDateString() : "N/A"}
   //       </div>
   //     );
@@ -219,7 +219,7 @@ const columns = (
   //   cell: ({ row }) => {
   //       const dateVal = row.getValue("updatedAt");
   //       return (
-  //           <div className="text-sm text-muted-foreground">
+  //           <div className="text-sm  ">
   //               {dateVal ? new Date(dateVal as string).toLocaleDateString() : "N/A"}
   //           </div>
   //       );
@@ -235,7 +235,7 @@ const columns = (
 
       // Only show actions if the status is 'pending'
       if (status !== "pending") {
-        return <span className="text-xs text-muted-foreground">Processed</span>;
+        return <span className="text-xs  ">Processed</span>;
       }
 
       return (
@@ -369,7 +369,7 @@ export default function SchoolJoinTable({
               placeholder="Search requests..."
               type="text"
             />
-            <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
+            <div className=" /80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
               <SearchIcon size={16} />
             </div>
           </div>
@@ -393,7 +393,7 @@ export default function SchoolJoinTable({
         {/* Add Date Filter components here if needed */}
       </div>
       {/* Selected Row Count (Optional) */}
-      <div className="text-sm text-muted-foreground">
+      <div className="text-sm  ">
         {table.getFilteredSelectedRowModel().rows.length} of{" "}
         {table.getFilteredRowModel().rows.length} row(s) selected.
       </div>
@@ -664,7 +664,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
           placeholder={`Filter ${columnHeader.toLowerCase()}...`}
           type="text"
         />
-        <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
+        <div className=" /80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
           <SearchIcon size={16} />
         </div>
       </div>

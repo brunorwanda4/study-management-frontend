@@ -1,11 +1,10 @@
 import SchoolJoinRequestCard from "@/components/cards/school-Join-request-card";
+import JoinSchoolDialog from "@/components/dialog/join-school-dialg";
 import MyImage from "@/components/myComponents/myImage";
 import MyLink from "@/components/myComponents/myLink";
 import NotFoundPage from "@/components/page/not-found";
 import StaffDashboardDetails from "@/components/page/school-staff/dashboard/staff-dashboard-details";
-// import StaffSchoolDashboardRequest from "@/components/page/school-staff/dashboard/staff-dashboard-request";
 import SchoolHeader from "@/components/page/school/school-header";
-import { Button } from "@/components/ui/button";
 import { Locale } from "@/i18n";
 import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";
 import { GetAllJoinSchoolRequestByCurrentUserEmail } from "@/service/school/school-join-request.service";
@@ -40,25 +39,26 @@ const SchoolStaffPage = async (props: props) => {
     return (
       <div className=" p-4 space-y-4 w-full">
         <SchoolHeader school={school.data} onThePage lang={lang} />
-        <StaffDashboardDetails schoolStaffs={school.data.SchoolStaff} teachers={school.data.Teacher} students={school.data.Student} lang={lang} />
+        <StaffDashboardDetails
+          schoolStaffs={school.data.SchoolStaff}
+          teachers={school.data.Teacher}
+          students={school.data.Student}
+          lang={lang}
+        />
         <div className=" flex space-x-4">
           <div className=" w-1/2 space-y-4">
             {/* <StaffSchoolDashboardRequest requests={school.data.SchoolJoinRequest}/> */}
             {/* <PostCard lang={lang} postRole="IMAGE" /> */}
           </div>
-          <div className=" w-1/2">
-            {/* <StaffDashboardActions /> */}
-          </div>
+          <div className=" w-1/2">{/* <StaffDashboardActions /> */}</div>
         </div>
         {/* <ExampleTable /> */}
-       <div className=" flex space-x-4">
-       <div className=" basic-card">
-       {/* <SchoolJoinTable items={school.data.SchoolJoinRequest}/> */}
-       </div>
-       <div>
-        hello
-       </div>
-       </div>
+        <div className=" flex space-x-4">
+          <div className=" basic-card">
+            {/* <SchoolJoinTable items={school.data.SchoolJoinRequest}/> */}
+          </div>
+          <div>hello</div>
+        </div>
       </div>
     );
   }
@@ -79,10 +79,7 @@ const SchoolStaffPage = async (props: props) => {
             <MyImage src="/icons/memo.png" role="ICON" />
             Register your school
           </MyLink>
-          <Button library="daisy" variant={"outline"}>
-            <MyImage src="/icons/school.png" role="ICON" />
-            Join your school
-          </Button>
+          <JoinSchoolDialog />
         </div>
       </div>
       {getSchoolJoinRequest.data && (

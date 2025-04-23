@@ -171,7 +171,7 @@ export default function StudentsList( {title}: props) {
       <h1>{title}</h1>
       <div className="flex items-center justify-between mb-4">
         <div className="relative w-full max-w-sm">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4  " />
           <Input
             type="text"
             placeholder="Search..."
@@ -410,7 +410,7 @@ export default function StudentsList( {title}: props) {
         </AlertDialogContent>
       </AlertDialog>
 
-      <span className="text-muted-foreground mt-8 text-center text-sm">
+      <span className="  mt-8 text-center text-sm">
         Students list
       </span>
     </div>

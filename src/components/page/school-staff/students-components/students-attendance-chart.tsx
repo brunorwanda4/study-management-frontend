@@ -57,7 +57,7 @@ export default function StudentAttendanceChart() {
             <Bar dataKey="attendance" fill="var(--color-attendance)" radius={[4, 4, 0, 0]} barSize={40} />
           </BarChart>
         </ChartContainer>
-        <div className="mt-4 flex justify-between text-sm text-muted-foreground">
+        <div className="mt-4 flex justify-between text-sm  ">
           <div className="flex items-center gap-2">
             <div className="h-3 w-3 rounded-full bg-primary"></div>
             <span>Total Students: 50 students</span>

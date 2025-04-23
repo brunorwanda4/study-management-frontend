@@ -159,7 +159,7 @@ export function PostsManagement({ staffMembers }: PostsManagementProps) {
         </div>
       </CardContent>
       <CardFooter className="flex items-center justify-between">
-        <div className="text-sm text-muted-foreground">
+        <div className="text-sm  ">
           Showing <strong>6</strong> of <strong>24</strong> posts
         </div>
         <div className="flex items-center gap-2">

@@ -26,7 +26,7 @@ export function RoleManagement() {
             <div className="flex items-center justify-between p-4">
               <div>
                 <h3 className="font-semibold">Administrator</h3>
-                <p className="text-sm text-muted-foreground">Full system access and management</p>
+                <p className="text-sm  ">Full system access and management</p>
               </div>
               <div className="flex items-center gap-2">
                 <Badge>3 Users</Badge>
@@ -65,7 +65,7 @@ export function RoleManagement() {
             <div className="flex items-center justify-between p-4">
               <div>
                 <h3 className="font-semibold">Teacher</h3>
-                <p className="text-sm text-muted-foreground">Teaching staff with content creation access</p>
+                <p className="text-sm  ">Teaching staff with content creation access</p>
               </div>
               <div className="flex items-center gap-2">
                 <Badge>24 Users</Badge>
@@ -98,7 +98,7 @@ export function RoleManagement() {
             <div className="flex items-center justify-between p-4">
               <div>
                 <h3 className="font-semibold">Librarian</h3>
-                <p className="text-sm text-muted-foreground">Library resource management</p>
+                <p className="text-sm  ">Library resource management</p>
               </div>
               <div className="flex items-center gap-2">
                 <Badge>2 Users</Badge>

@@ -69,41 +69,41 @@ export function StaffOverview({ staffMembers }: StaffOverviewProps) {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Staff</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <Users className="h-4 w-4  " />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">42</div>
-            <p className="text-xs text-muted-foreground">+4 from last month</p>
+            <p className="text-xs  ">+4 from last month</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Active Staff</CardTitle>
-            <UserCog className="h-4 w-4 text-muted-foreground" />
+            <UserCog className="h-4 w-4  " />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">38</div>
-            <p className="text-xs text-muted-foreground">90.5% of total staff</p>
+            <p className="text-xs  ">90.5% of total staff</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Departments</CardTitle>
-            <ClipboardList className="h-4 w-4 text-muted-foreground" />
+            <ClipboardList className="h-4 w-4  " />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">8</div>
-            <p className="text-xs text-muted-foreground">All departments staffed</p>
+            <p className="text-xs  ">All departments staffed</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Posts This Month</CardTitle>
-            <BarChart3 className="h-4 w-4 text-muted-foreground" />
+            <BarChart3 className="h-4 w-4  " />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">24</div>
-            <p className="text-xs text-muted-foreground">+8 from last month</p>
+            <p className="text-xs  ">+8 from last month</p>
           </CardContent>
         </Card>
       </div>
@@ -120,7 +120,7 @@ export function StaffOverview({ staffMembers }: StaffOverviewProps) {
                 <div key={post.id} className="flex items-start gap-4 rounded-lg border p-3">
                   <div className="flex-1 space-y-1">
                     <p className="font-medium">{post.title}</p>
-                    <div className="flex items-center text-sm text-muted-foreground">
+                    <div className="flex items-center text-sm  ">
                       <span>{post.author}</span>
                       <span className="mx-1">•</span>
                       <span>{post.date}</span>
@@ -149,7 +149,7 @@ export function StaffOverview({ staffMembers }: StaffOverviewProps) {
                 <div key={request.id} className="flex items-start gap-4 rounded-lg border p-3">
                   <div className="flex-1 space-y-1">
                     <p className="font-medium">{request.name}</p>
-                    <div className="flex items-center text-sm text-muted-foreground">
+                    <div className="flex items-center text-sm  ">
                       <span>
                         {request.currentRole} → {request.requestedRole}
                       </span>
