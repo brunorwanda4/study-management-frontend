@@ -167,7 +167,7 @@ export default function StudentsList( {title}: props) {
   }
 
   return (
-    <div className="happy-card ">
+    <div className="basic-card ">
       <h1>{title}</h1>
       <div className="flex items-center justify-between mb-4">
         <div className="relative w-full max-w-sm">
@@ -257,7 +257,7 @@ export default function StudentsList( {title}: props) {
       </div>
 
       <div className="[&>div]:max-h-96">
-        <Table className="[&_td]:border-border [&_th]:border-border border-separate border-spacing-0 [&_tfoot_td]:border-t [&_th]:border-b [&_tr]:border-none [&_tr:not(:last-child)_td]:border-b">
+        <Table className="[&_td]:border-base-content/20 [&_th]:border-base-content/20 border-separate border-spacing-0 [&_tfoot_td]:border-t [&_th]:border-b [&_tr]:border-none [&_tr:not(:last-child)_td]:border-b">
           <TableHeader className="bg-slate-800 sticky top-0 z-10 backdrop-blur-xs">
             <TableRow className="hover:bg-transparent">
               <TableHead>Name</TableHead>

@@ -14,13 +14,13 @@ interface props {
   role: string;
 }
  
-const StaffPeople = ({ lang, total, Ftotal, Mtotal, title, role }: props) => {
+const StaffPeople = ({ lang, total, title, role }: props) => {
   return (
-    <div className=" happy-card p-0">
+    <div className=" basic-card w-full">
       <div className=" flex justify-between px-4 py-2 border-b border-b-border">
         <div className="   flex gap-2 space-x-1 items-center">
           <MyImage className=" size-6" src="/icons/group.png" />
-          <h5 className=" happy-title-base text-my">{title}</h5>
+          <h5 className=" basic-title text-my">{title}</h5>
         </div>
         <Button library="daisy" size="sm" variant="ghost" shape="circle">
           <BsThreeDots />
@@ -37,7 +37,7 @@ const StaffPeople = ({ lang, total, Ftotal, Mtotal, title, role }: props) => {
           </Link>
         </div>
         {/* school members */}
-        <div className=" space-x-4 flex ">
+        {/* <div className=" space-x-4 flex ">
           <Button size="sm" className=" px-1">
             <span className="  text-xl font-medium">{Mtotal}</span>
             <span className=" text-sm font-normal">Males</span>
@@ -47,7 +47,7 @@ const StaffPeople = ({ lang, total, Ftotal, Mtotal, title, role }: props) => {
             <span className=" text-sm font-normal">Females</span>
           </Button>
           
-        </div>
+        </div> */}
       </div>
     </div>
   );

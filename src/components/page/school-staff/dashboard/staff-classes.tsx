@@ -10,11 +10,11 @@ interface props {
 }
 const StaffClasses = ({lang} : props) => {
   return (
-    <div className=" happy-card p-0">
+    <div className=" basic-card p-0">
       <div className=" flex justify-between px-4 py-2 border-b border-b-border">
         <div className="   flex gap-2 space-x-1 items-center">
           <MyImage className=" size-6" src="/icons/blackboard.png" />
-          <h5 className=" happy-title-base text-my">Classes</h5>
+          <h5 className=" basic-title text-my">Classes</h5>
         </div>
         <Button library="daisy" size="sm" variant="ghost" shape="circle">
           <BsThreeDots />

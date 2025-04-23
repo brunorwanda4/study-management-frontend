@@ -38,14 +38,14 @@ const SchoolStaffPage = async (props: props) => {
   // page which shown base on user
   if (currentSchool) {
     const school = await getSchoolByIdService(currentSchool.schoolId);
-    if (!school) return <NotFoundPage />;
+    if (!school.data) return <NotFoundPage />;
     return (
-      <div className=" p-4 space-y-4">
-        <SchoolHeader onThePage lang={lang} />
-        <StaffDashboardDetails lang={lang} />
+      <div className=" p-4 space-y-4 w-full">
+        <SchoolHeader school={school.data} onThePage lang={lang} />
+        <StaffDashboardDetails schoolStaffs={school.data.SchoolStaff} teachers={school.data.Teacher} students={school.data.Student} lang={lang} />
         <div className=" flex space-x-4">
           <div className=" w-1/2 space-y-4">
-            <StaffSchoolDashboardRequest />
+            <StaffSchoolDashboardRequest requests={school.data.SchoolJoinRequest}/>
             <PostCard lang={lang} postRole="IMAGE" />
           </div>
           <div className=" w-1/2">

@@ -25,7 +25,7 @@ const NavMessageDropDown = ({lang}: props) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent className=" w-72">
         <DropdownMenuLabel>
-          <h3 className=" happy-title-base">Messages</h3>
+          <h3 className=" basic-title">Messages</h3>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <NavMessageDropDownCard lang={lang}/>

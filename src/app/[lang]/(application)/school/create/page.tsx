@@ -26,7 +26,7 @@ const SchoolStaffCreateSchoolPage = async (props: props) => {
   return (
     <div className=" px-4 mt-4">
       <div>
-        <h1 className=" happy-title-head">Create School</h1>
+        <h1 className=" basic-title">Create School</h1>
         <p>To create school they are some information we ask you to create school which help us to know your school please use real information</p>
       </div>
       <SchoolCreateBody />

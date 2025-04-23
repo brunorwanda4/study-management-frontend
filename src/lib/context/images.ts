@@ -1,0 +1,1 @@
+export const DefaultChildImage = "https://i.pinimg.com/1200x/40/fd/f6/40fdf6a05d14d671d8d16190b8a3a15a.jpg"

@@ -120,7 +120,7 @@ export default function AttendanceChart({
   }
 
   return (
-    <div className="w-full p-6 happy-card rounded-lg border">
+    <div className="w-full p-6 basic-card rounded-lg border">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">{title}</h2>
         {showRefreshButton && (

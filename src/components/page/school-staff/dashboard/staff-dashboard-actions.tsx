@@ -3,7 +3,7 @@ import React from 'react'
 
 const StaffDashboardActions = () => {
   return (
-    <div className=' happy-card '>
+    <div className=' basic-card '>
       <AttendanceChart refreshInterval={5000}/>
     </div>
   )

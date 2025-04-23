@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { TeacherDto } from "./school/teacher.dto";
 import { StudentDto } from "./school/student.dto";
+import { SchoolStaffDto } from "./school/school-staff.schema";
+import { SchoolJoinRequestDto } from "./school/school-join-request.schema";
 
 export const SchoolMembers = z.enum(["Mixed", "Boys", "Girls"]);
 export const SchoolTypeEnum = z.enum([
@@ -350,6 +352,8 @@ export const SchoolSchema = z.object({
 export type SchoolDto = z.infer<typeof SchoolSchema>;
 
 export interface SchoolAndOthers extends SchoolDto {
-  teachers ?: TeacherDto[],
-  students ?: StudentDto[],
+  Teacher : TeacherDto[],
+  Student : StudentDto[],
+  SchoolStaff : SchoolStaffDto[],
+  SchoolJoinRequest : SchoolJoinRequestDto[]
 }

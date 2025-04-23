@@ -1,9 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @plugin "daisyui" {
-  themes: light --default, dark --prefersdark, cupcake, bumblebee, retro,
-    cyberpunk, valentine, garden, forest, aqua, lofi, pastel, fantasy, wireframe,
-    black, luxury, dracula, cmyk;
+  themes: light --default, dark --prefersdark, cupcake, cmyk, acid, winter,
+    valentine, synthwave, business, night, forest, black;
 }
 
 @custom-variant dark (&:is(.dark *));
@@ -127,20 +126,24 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-base-content/20 outline-ring/50;
   }
   body {
-    @apply bg-base-300 ;
+    @apply bg-base-300;
   }
 }
 
 .title-page {
-  @apply font-bold text-2xl
+  @apply font-bold text-2xl;
 }
 .basic-title {
-  @apply font-medium text-lg
+  @apply font-medium text-lg;
 }
 
 .basic-card {
-  @apply bg-base-100 card p-4 border border-base-content/20
+  @apply bg-base-100 p-4 card border border-base-content/20;
+}
+
+.basic-card-no-p {
+  @apply bg-base-100 card border border-base-content/20;
 }

@@ -48,7 +48,7 @@ const SchoolCreateBody = () => {
   return (
     <div className=" basic-card">
       <div>
-        <h2 className=" happy-title-base">
+        <h2 className=" basic-title">
           Step {step + 1}: {steps[step].title}
         </h2>
         <p>{steps[step].description}</p>
