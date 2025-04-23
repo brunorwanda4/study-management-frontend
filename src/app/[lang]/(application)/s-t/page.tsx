@@ -3,8 +3,8 @@ import MyImage from "@/components/myComponents/myImage";
 import MyLink from "@/components/myComponents/myLink";
 import NotFoundPage from "@/components/page/not-found";
 import StaffDashboardDetails from "@/components/page/school-staff/dashboard/staff-dashboard-details";
+// import StaffSchoolDashboardRequest from "@/components/page/school-staff/dashboard/staff-dashboard-request";
 import SchoolHeader from "@/components/page/school/school-header";
-import SchoolJoinTable from "@/components/table/school-join-request-table";
 import { Button } from "@/components/ui/button";
 import { Locale } from "@/i18n";
 import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";
@@ -41,17 +41,24 @@ const SchoolStaffPage = async (props: props) => {
       <div className=" p-4 space-y-4 w-full">
         <SchoolHeader school={school.data} onThePage lang={lang} />
         <StaffDashboardDetails schoolStaffs={school.data.SchoolStaff} teachers={school.data.Teacher} students={school.data.Student} lang={lang} />
-        {/* <div className=" flex space-x-4">
+        <div className=" flex space-x-4">
           <div className=" w-1/2 space-y-4">
-            <StaffSchoolDashboardRequest requests={school.data.SchoolJoinRequest}/>
-            <PostCard lang={lang} postRole="IMAGE" />
+            {/* <StaffSchoolDashboardRequest requests={school.data.SchoolJoinRequest}/> */}
+            {/* <PostCard lang={lang} postRole="IMAGE" /> */}
           </div>
           <div className=" w-1/2">
-            <StaffDashboardActions />
+            {/* <StaffDashboardActions /> */}
           </div>
-        </div> */}
+        </div>
         {/* <ExampleTable /> */}
-        <SchoolJoinTable items={school.data.SchoolJoinRequest}/>
+       <div className=" flex space-x-4">
+       <div className=" basic-card">
+       {/* <SchoolJoinTable items={school.data.SchoolJoinRequest}/> */}
+       </div>
+       <div>
+        hello
+       </div>
+       </div>
       </div>
     );
   }

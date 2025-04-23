@@ -1,8 +1,11 @@
+import JoinSchoolPage from "@/components/page/join-school-page";
+import NotFoundPage from "@/components/page/not-found";
 import SchoolHeader from "@/components/page/school/school-header";
 import SchoolHomeNav from "@/components/page/school/school-home-navbar";
 import { Separator } from "@/components/ui/separator";
 import { Locale } from "@/i18n";
-import { getAuthUserServer } from "@/lib/utils/auth";
+import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";
+import { getSchoolByIdService } from "@/service/school/school.service";
 import { redirect } from "next/navigation";
 
 interface props {
@@ -14,17 +17,24 @@ const layout = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
   const { children } = props;
-  const user = await getAuthUserServer()
-  if (!user) {
-    return redirect(`/${lang}/auth/login`);
+  const [currentUser, currentSchool] = await Promise.all([
+    await getAuthUserServer(),
+    await getSchoolServer(),
+  ]);
+
+  if (!currentUser) {
+    redirect(`/${lang}/auth/login`);
   }
+  if (!currentSchool) return <JoinSchoolPage />;
+  const school = await getSchoolByIdService(currentSchool.schoolId);
+  if (!school.data) return <NotFoundPage />;
 
   return (
     <section>
       <div className=" px-4 space-y-4 pb-4">
-        <SchoolHeader isMySchool lang={lang} />
+        <SchoolHeader school={school.data} isMySchool lang={lang} />
         <Separator />
-        <SchoolHomeNav lang={lang}/>
+        <SchoolHomeNav lang={lang} />
       </div>
       {children}
     </section>

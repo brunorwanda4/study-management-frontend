@@ -6,9 +6,11 @@ import SchoolStaff from "./school-staff";
 import SchoolTeachers from "./school-teachers";
 import SchoolStudents from "./school-student";
 import SchoolClasses from "./school-classese";
+import { SchoolAndOthers } from "@/lib/schema/school.dto";
 
 interface props {
   lang: Locale;
+  school : SchoolAndOthers
 }
 
 const SchoolHomeBody = ({ lang }: props) => {

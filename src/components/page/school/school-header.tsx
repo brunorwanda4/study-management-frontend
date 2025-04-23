@@ -20,7 +20,7 @@ const SchoolHeader = ({ isMySchool, school ,lang, onThePage }: props) => {
     <div className=" space-y-2">
       {!onThePage && (
         <MyImage
-          src={school?.logo ? school.logo : "https://img.freepik.com/free-photo/red-buildings-households_1127-2024.jpg?t=st=1745209220~exp=1745212820~hmac=bfe15881f9ddcdf60c6b18bf704e12723017253ffb865653e6f4d12b9bfb1d37&w=1380"}
+          src={"https://img.freepik.com/free-photo/red-buildings-households_1127-2024.jpg?t=st=1745209220~exp=1745212820~hmac=bfe15881f9ddcdf60c6b18bf704e12723017253ffb865653e6f4d12b9bfb1d37&w=1380"}
           className=" w-full h-80"
           classname=" card rounded-t-none"
         />

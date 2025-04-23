@@ -79,7 +79,7 @@ const SchoolJoinRequestCard = ({
           {/* Added overflow-hidden */}
           <h3 className="font-medium text-base truncate">{displayName}</h3>
           {/* Display applicant name/email */}
-          {email && <p className="text-sm text-gray-500 truncate">{email}</p>} {id}
+          {email && <p className="text-sm text-gray-500 truncate">{email}</p>}
           {/* Display email if available */}
         </div>
       </div>
