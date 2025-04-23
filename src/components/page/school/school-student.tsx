@@ -1,25 +1,60 @@
 import UserCardSmall from "@/components/cards/user-card-small";
+import MyLink from "@/components/myComponents/myLink";
 import { Button } from "@/components/ui/button";
 import { Locale } from "@/i18n";
+import { StudentDto } from "@/lib/schema/school/student.dto";
+import { AuthUserDto } from "@/lib/utils/auth";
 import Link from "next/link";
- 
+import { BsPlusCircle } from "react-icons/bs";
+
 interface props {
   lang: Locale;
   onThePage?: boolean;
+  students: StudentDto[];
+  currentUser: AuthUserDto;
 }
 
-const SchoolStudents = ({ lang, onThePage }: props) => {
+const SchoolStudents = ({ lang, currentUser, students, onThePage }: props) => {
+  if (students.length === 0) {
+    return (
+      <div className=" basic-card space-y-2">
+        <h3 className=" text-center basic-title text-gray-500">
+          This school have no students! 😔
+        </h3>
+        {currentUser.role === "SCHOOLSTAFF" && (
+          <div>
+            <MyLink
+              button={{ variant: "primary", library: "daisy" }}
+              type="button"
+              href="s-t/students"
+              className=" w-auto"
+            >
+              <BsPlusCircle />
+              Add new students
+            </MyLink>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className=" basic-card space-y-2">
       <div className="">
         <h3 className=" font-semibold capitalize">school Student </h3>
       </div>
       <div className=" space-y-2 ml-2">
-        <UserCardSmall lang={lang} userRole="STUDENT" />
-        <UserCardSmall lang={lang} userRole="STUDENT" />
-        <UserCardSmall lang={lang} userRole="STUDENT" />
-        <UserCardSmall lang={lang} userRole="STUDENT" />
-        <UserCardSmall lang={lang} userRole="STUDENT" />
+        {students.map((item) => {
+          return (
+            <UserCardSmall
+              key={item.id}
+              id={item.id}
+              role="s"
+              lang={lang}
+              userRole="STUDENT"
+            />
+          );
+        })}
       </div>
       {!onThePage && (
         <Link

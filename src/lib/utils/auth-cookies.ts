@@ -1,18 +1,25 @@
 "use server"
+import { UserRoleDto } from '@/lib/schema/user.dto';
 import { cookies } from "next/headers";
 import { SchoolTokenKey, TOKEN_KEY, UserId, } from "../env";
+const expiresOneWeek = new Date(Date.now() + (7 * 24 * 60 * 60 * 1000))
+const expiresOneDay = new Date(Date.now() + (24 * 60 * 60 * 1000))
+const expiresThreeDays = new Date(Date.now() + (3 * 24 * 60 * 60 * 1000))
 
-export async function setAuthCookie(token: string, userId: string) {
+export async function setAuthCookie(token: string, userId: string,) {
     const saveCookies = await cookies();
     saveCookies.set(TOKEN_KEY, token, {
         httpOnly: true,
         secure: true,
         sameSite: "lax",
+        expires : expiresOneWeek
     });
+
     saveCookies.set(UserId, userId, {
         httpOnly: true,
         secure: true,
         sameSite: "lax",
+        expires : expiresOneWeek
     });
 }
 
@@ -31,12 +38,20 @@ export async function removeUserToken() {
     cooky.delete(UserId)
 }
 
-export async function setSchoolCookies(token: string) {
+export async function setSchoolCookies(token: string, role: UserRoleDto) {
     const cooky = await cookies();
+    let expires: Date = expiresOneWeek;
+    if (role === "SCHOOLSTAFF") {
+        expires = expiresOneDay
+    } else if (role === "TEACHER") {
+        expires = expiresThreeDays
+    }
+
     cooky.set(SchoolTokenKey, token, {
         httpOnly: true,
-        secure: true,
+        secure: process.env.NODE_ENV === 'production',
         sameSite: "lax",
+        expires: expires
     });
 }
 

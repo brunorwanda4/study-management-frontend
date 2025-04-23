@@ -1,4 +1,4 @@
- import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { LuMessageCircle } from "react-icons/lu";
 import Link from "next/link";
@@ -9,20 +9,26 @@ import { TextTooltip } from "../myComponents/text-tooltip";
 import { toLowerCase } from "@/lib/functions/characters";
 
 interface props {
-  userRole:
-    | "DIRECTER"
-    | "EDUCATION_PREFECT"
-    | "DISCIPLINE_PREFECT"
-    | "TEACHER"
-    | "STUDENT";
+  userRole: string;
   lang: Locale;
-  className ?:  string;
+  className?: string;
+  name?: string;
+  id?: string;
+  role?: "s-t" | "s" | "t" | "a";
 }
 
-const UserCardSmall = ({ userRole, lang,className }: props) => {
-  
+const UserCardSmall = ({
+  id,
+  role,
+  userRole,
+  name,
+  lang,
+  className,
+}: props) => {
   return (
-    <div className={cn("flex justify-between items-center  space-y-2", className)}>
+    <div
+      className={cn("flex justify-between items-center  space-y-2", className)}
+    >
       <div className=" flex space-x-2">
         <Link href={`/${lang}/profile/student`}>
           <Avatar className=" size-12">
@@ -32,22 +38,29 @@ const UserCardSmall = ({ userRole, lang,className }: props) => {
         </Link>
         <div>
           <Link href={`/${lang}/profile/student`}>
-            <h4 className=" font-medium">Murekezi Hindiro</h4>
+            <h4 className=" ">{name ? name : "Murekezi Hindiro"}</h4>
           </Link>
           <div className=" flex items-center">
-            <span className=" font-medium text-myGray capitalize">
+            <span className=" text-myGray capitalize text-sm">
               {toLowerCase(userRole)}
             </span>
             {userRole === "STUDENT" && (
               <div className=" flex -space-x-2 items-center">
                 <Dot size={32} />
-                <TextTooltip content={<span>Level 5 Software development</span>} trigger={<span>L5 SOD</span>}/>
+                <TextTooltip
+                  content={<span>Level 5 Software development</span>}
+                  trigger={<span>L5 SOD</span>}
+                />
               </div>
             )}
           </div>
         </div>
       </div>
-      <Link href={`/${lang}/messages/12334`}>
+      <Link
+        href={`/${lang}/messages/${role === "s-t" ? "s-t" : "user"}/${
+          id ? id : 12334
+        }`}
+      >
         <Button library="daisy" variant="info" size="sm">
           <LuMessageCircle />
           Message
