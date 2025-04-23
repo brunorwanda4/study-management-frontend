@@ -1,7 +1,12 @@
+import PostCard from "@/components/cards/post-card";
 import SchoolJoinRequestCard from "@/components/cards/school-Join-request-card";
 import MyImage from "@/components/myComponents/myImage";
 import MyLink from "@/components/myComponents/myLink";
 import NotFoundPage from "@/components/page/not-found";
+import StaffDashboardActions from "@/components/page/school-staff/dashboard/staff-dashboard-actions";
+import StaffDashboardDetails from "@/components/page/school-staff/dashboard/staff-dashboard-details";
+import StaffSchoolDashboardRequest from "@/components/page/school-staff/dashboard/staff-dashboard-request";
+import SchoolHeader from "@/components/page/school/school-header";
 import { Button } from "@/components/ui/button";
 import { Locale } from "@/i18n";
 import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";
@@ -30,10 +35,25 @@ const SchoolStaffPage = async (props: props) => {
     redirect(`/${lang}/auth/login`);
   }
 
+  // page which shown base on user
   if (currentSchool) {
     const school = await getSchoolByIdService(currentSchool.schoolId);
     if (!school) return <NotFoundPage />;
-    return <div>Hello school {currentSchool.schoolId}</div>;
+    return (
+      <div className=" p-4 space-y-4">
+        <SchoolHeader onThePage lang={lang} />
+        <StaffDashboardDetails lang={lang} />
+        <div className=" flex space-x-4">
+          <div className=" w-1/2 space-y-4">
+            <StaffSchoolDashboardRequest />
+            <PostCard lang={lang} postRole="IMAGE" />
+          </div>
+          <div className=" w-1/2">
+            <StaffDashboardActions />
+          </div>
+        </div>
+      </div>
+    );
   }
 
   const getSchoolJoinRequest = await GetAllJoinSchoolRequestByCurrentUserEmail(
