@@ -2,6 +2,7 @@ import { SchoolJoinRequestAndSchool, SchoolJoinRequestAndToken, SchoolJoinReques
 import apiRequest from "../api-client"
 import { getUserToken, setSchoolCookies } from "@/lib/utils/auth-cookies"
 import { getAuthUserServer } from "@/lib/utils/auth"
+import { JoinSchoolDto } from "@/lib/schema/school/join-school-schema"
 
 export const GetAllJoinSchoolRequestByCurrentUserEmail = async (email: string) => {
     return await apiRequest<void, SchoolJoinRequestAndSchool[]>("get", `/school-join-requests/by-email/${email}`)
@@ -22,3 +23,13 @@ export const RejectSchoolJoinRequestByCurrentUser = async (id: string) => {
     return await apiRequest<void, SchoolJoinRequestDto>("patch", `/school-join-requests/${id}/reject`)
 }
 
+export const JoinSchoolByUsernameAndCode = async (joinSchoolDto: JoinSchoolDto) => {
+    const [token, currentUser] = await Promise.all([await getUserToken(), await getAuthUserServer()])
+    if (!token) {
+        return { error: "User token not found, it look like you not login 😔" }
+    }
+    const request = await apiRequest<JoinSchoolDto, SchoolJoinRequestAndToken>("post", `/school-join-requests/join`, joinSchoolDto, token.token)
+    if (!request.data) return request
+    if (currentUser?.role) { await setSchoolCookies(request.data.token, currentUser.role) }
+    return request
+}

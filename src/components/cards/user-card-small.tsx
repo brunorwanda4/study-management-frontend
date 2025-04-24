@@ -32,7 +32,7 @@ const UserCardSmall = ({
       className={cn("flex justify-between items-center  space-y-2", className)}
     >
       <div className=" flex space-x-2">
-        <Link href={`/${lang}/profile/student`}>
+        <Link href={`/${lang}/profile/${id ? id : 12334}${role && `?role=${role}`}`}>
           <Avatar className=" size-12">
             <AvatarImage
               src={
