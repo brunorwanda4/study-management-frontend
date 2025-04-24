@@ -26,3 +26,6 @@ export const env = createEnv({
 export const TOKEN_KEY= "accessToken"
 export const UserId = "current-user"
 export const SchoolTokenKey = "school-token-key"
+export const TeacherAccessTokenSchool = "teacher-access-token-school"
+export const StudentAccessTokenSchool = "student-access-token-school"
+export const schoolStaffAccessTokenSchool = "schoolStaff-access-token-school"

@@ -428,7 +428,7 @@ const SchoolAdministrationForm = ({ currentUser, schoolId, lang }: props) => {
           <FormSuccess message={success} />
         </div>
         {/* Submit Button */}
-        <Button type="submit" className="w-full mt-6" disabled={isPending}>
+        <Button type="submit" library="daisy" variant={"info"} className="w-full mt-6" disabled={isPending}>
           {isPending && (
             <span
               role="status"

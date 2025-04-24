@@ -1,7 +1,7 @@
-import SchoolJoinRequestCard from "@/components/cards/school-Join-request-card";
 import JoinSchoolDialog from "@/components/dialog/join-school-dialg";
 import MyImage from "@/components/myComponents/myImage";
 import MyLink from "@/components/myComponents/myLink";
+import JoinSchoolRequestBody from "@/components/page/application/join-school-request/join-school-request-body";
 import NotFoundPage from "@/components/page/not-found";
 import StaffDashboardDetails from "@/components/page/school-staff/dashboard/staff-dashboard-details";
 import SchoolHeader from "@/components/page/school/school-header";
@@ -83,19 +83,11 @@ const SchoolStaffPage = async (props: props) => {
         </div>
       </div>
       {getSchoolJoinRequest.data && (
-        <div className=" flex flex-row gap-4 justify-center items-center">
-          {getSchoolJoinRequest.data.map((item) => {
-            if (item.status !== "pending") return null;
-            return (
-              <SchoolJoinRequestCard
-                currentUserImage={currentUser.image}
-                key={item.id}
-                request={item}
-                lang={lang}
-              />
-            );
-          })}
-        </div>
+        <JoinSchoolRequestBody
+          lang={lang}
+          currentUser={currentUser}
+          requests={getSchoolJoinRequest.data}
+        />
       )}
     </div>
   );

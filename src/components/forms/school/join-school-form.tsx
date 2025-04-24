@@ -69,7 +69,7 @@ export default function InputJoinSchoolFormForm() {
             <FormItem>
               <FormLabel className=" bg-base-200">Username</FormLabel>
               <FormControl>
-                <Input placeholder="Your username" {...field} />
+                <Input placeholder="school username" {...field} />
               </FormControl>
               <FormDescription>
                 Enter school user name you want to join

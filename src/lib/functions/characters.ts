@@ -131,20 +131,6 @@ export function generateCode(): string {
   ).join("");
 }
 
-// Hash a password
-// export async function hashPassword(password: string): Promise<string> {
-//   const salt = await bcrypt.genSalt(10);
-//   return bcrypt.hash(password, salt);
-// }
-
-// Verify a hashed password
-// export async function verifyPassword(
-//   hashedPassword: string,
-//   password: string
-// ): Promise<boolean> {
-//   return bcrypt.compare(password, hashedPassword);
-// }
-
 // Check if a string matches an ISO datetime format
 export function isDateString(date: string): boolean {
   const datetimeRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/;

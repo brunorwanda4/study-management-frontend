@@ -6,9 +6,13 @@ import { Locale } from "@/i18n";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { SchoolJoinRequestAndSchool } from "@/lib/schema/school/school-join-request.schema";
-import { approvedSchoolJoinRequestByCurrentUser, RejectSchoolJoinRequestByCurrentUser } from "@/service/school/school-join-request.service";
+import {
+  approvedSchoolJoinRequestByCurrentUser,
+  RejectSchoolJoinRequestByCurrentUser,
+} from "@/service/school/school-join-request.service";
 import { FormError, FormSuccess } from "../myComponents/form-message";
 import { useState, useTransition } from "react";
+import { formatTimeAgo } from "@/lib/functions/change-time";
 
 interface props {
   lang: Locale;
@@ -36,11 +40,11 @@ const SchoolJoinRequestCard = ({
     setError(null);
     setSuccess(null);
     startTransition(async () => {
-      const approve = await approvedSchoolJoinRequestByCurrentUser(id);
+      const approve = await approvedSchoolJoinRequestByCurrentUser(request.id);
       if (approve.data) {
         setSuccess(`You have been join ${school.name}`);
       } else {
-        setError(approve.message);
+        setError(`message :${approve.message} , error:${approve.error}`);
       }
     });
   };
@@ -49,23 +53,19 @@ const SchoolJoinRequestCard = ({
     setError(null);
     setSuccess(null);
     startTransition(async () => {
-      const approve = await RejectSchoolJoinRequestByCurrentUser(id);
+      const approve = await RejectSchoolJoinRequestByCurrentUser(request.id);
       if (approve.data) {
-        setSuccess(`You have been reject ${school.name}`);
+        setSuccess(`You have been rejected to join ${school.name}`);
       } else {
         setError(approve.message);
       }
     });
   };
 
-
   return (
     <div className={cn("basic-card p-4 w-72", className)}>
-      {/* Adjusted width */}
       <div className="flex items-start gap-3">
-        {/* Applicant's Avatar - Using a generic one or could try to derive from userId if possible elsewhere */}
         <Avatar className="size-12">
-          {/* If you have a way to get the applicant's avatar using request.userId, use it here */}
           <AvatarImage
             src={
               currentUserImage ? currentUserImage : "/images/default-avatar.jpg"
@@ -76,35 +76,31 @@ const SchoolJoinRequestCard = ({
           <AvatarFallback>{displayName.charAt(0).toUpperCase()}</AvatarFallback>
         </Avatar>
         <div className="flex-1 overflow-hidden">
-          {/* Added overflow-hidden */}
           <h3 className="font-medium text-base truncate">{displayName}</h3>
-          {/* Display applicant name/email */}
           {email && <p className="text-sm text-gray-500 truncate">{email}</p>}
-          {/* Display email if available */}
         </div>
       </div>
-      <div className="mt-4 text-sm text-gray-700">
-        Requests to join as
+      <div className="mt-4 text-sm">
+        Requests to join as {" "}
         <span className="font-semibold capitalize">{displayRole}</span> at:
       </div>
-      <div className="flex items-center gap-2 mt-2">
-        {/* School Logo */}
-        <Avatar className="size-8">
-          {/* Smaller school logo */}
-          <AvatarImage
-            src={schoolLogo || "/images/default-school-logo.jpg"}
-            alt={`${schoolName} logo`}
-          />
-          {/* Use school logo or placeholder */}
-          <AvatarFallback>SCH</AvatarFallback>
-        </Avatar>
-        {/* School Name - Linked */}
-        <Link
-          href={`/${lang}/school/${schoolId}`}
-          className="font-medium text-sm hover:underline truncate"
-        >
-          {schoolName}
-        </Link>
+      <div>
+        <div className="flex items-center gap-2 mt-2">
+          <Avatar className="size-8">
+            <AvatarImage
+              src={schoolLogo || "/images/default-school-logo.jpg"}
+              alt={`${schoolName} logo`}
+            />
+            <AvatarFallback>SCH</AvatarFallback>
+          </Avatar>
+          <Link
+            href={`/${lang}/school/${schoolId}`}
+            className="font-medium text-sm hover:underline truncate"
+          >
+            {schoolName}
+          </Link>
+        </div>
+        <div className=" flex justify-end flex-col"><span className=" text-sm text-gray-500"> {formatTimeAgo(request.updatedAt)}</span> <span>{id}</span></div>
       </div>
       <div className=" mt-2">
         <FormError message={error} />
@@ -112,13 +108,13 @@ const SchoolJoinRequestCard = ({
       </div>
       <Separator className="my-2" />
       <div className="flex gap-3">
-        {/* Adjusted gap */}
         <Button
+          library="daisy"
           type="button"
-          variant="default" // Or 'success'
+          variant="primary"
           className="flex-1"
           disabled={isPending}
-          onClick={() => onApprove()} // Pass the request ID
+          onClick={() => onApprove()}
         >
           Approve{" "}
           {isPending && (
@@ -131,19 +127,13 @@ const SchoolJoinRequestCard = ({
         </Button>
         <Button
           type="button"
-          variant="outline" // Or 'destructive'
+          library="daisy"
+          variant="outline"
           className="flex-1"
           disabled={isPending}
-          onClick={() => onReject()} // Pass the request ID
+          onClick={() => onReject()}
         >
           Reject{" "}
-          {isPending && (
-            <div
-              role="status"
-              aria-label="Loading"
-              className={"loading loading-spinner"}
-            />
-          )}
         </Button>
       </div>
     </div>

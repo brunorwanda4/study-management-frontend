@@ -11,6 +11,7 @@ export interface AuthUserDto {
   email: string;
   username: string,
   image?: string;
+  phone?: string;
   role?: UserRoleDto;
   iat?: number;
   exp?: number;
@@ -51,18 +52,24 @@ export const logout = async (lang: Locale) => {
 }
 
 export interface UserSchool {
-  sub: string, // Subject: the user ID
+  sub: string,
   schoolId: string,
-  role: string, // The role they just got assigned in this school (Teacher, Student, or specific staff role)
+  role?: string, // The role they just got assigned in this school (Teacher, Student, or specific staff role)
   name: string,
   email: string,
+  classId?: string,
+  exp?: number,
+  iat?: number
 };
 
 export async function getSchoolServer() {
-  const token = await getSchoolToken()
-  if (!token) return null
   try {
+    const currentUser = await getAuthUserServer();
+    if (!currentUser?.role) return null
+    const token = await getSchoolToken(currentUser.role)
+    if (!token) return null
     const decoded = jwtDecode<UserSchool>(token);
+    if (decoded.exp && Date.now() >= decoded.exp * 1000) return null;
     return decoded;
   } catch {
     return null;
