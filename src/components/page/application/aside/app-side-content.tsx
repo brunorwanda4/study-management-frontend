@@ -166,7 +166,7 @@ export const schoolStaffSidebarGroups: sidebarGroupsProps[] = [
     ],
   },
   {
-    label : "School",
+    label : "Your school",
     items : [
       {
         title: "Students",
@@ -182,6 +182,11 @@ export const schoolStaffSidebarGroups: sidebarGroupsProps[] = [
         title: "Classes",
         icon: "/icons/blackboard.png",
         url: "/s-t/classes",
+      },
+      {
+        title: "Staff",
+        icon: "/icons/blackboard.png",
+        url: "/s-t/staffs",
       },
       {
         title: "School Setting",

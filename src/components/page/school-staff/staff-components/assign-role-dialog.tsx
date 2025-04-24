@@ -16,11 +16,12 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import type { ReactNode } from "react"
+import { SchoolStaffDto } from "@/lib/schema/school/school-staff.schema"
 
 interface AssignRoleDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  staffMembers: any[]
+  staffMembers: SchoolStaffDto[]
   trigger?: ReactNode
 }
 

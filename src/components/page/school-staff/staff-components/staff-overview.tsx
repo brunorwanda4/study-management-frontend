@@ -7,9 +7,10 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { AssignRoleDialog } from "./assign-role-dialog"
+import { SchoolStaffDto } from "@/lib/schema/school/school-staff.schema"
 
 interface StaffOverviewProps {
-  staffMembers: any[]
+  staffMembers: SchoolStaffDto[]
 }
 
 export function StaffOverview({ staffMembers }: StaffOverviewProps) {
