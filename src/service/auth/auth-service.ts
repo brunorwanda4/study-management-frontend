@@ -1,12 +1,13 @@
 import { AuthUserDto, CreateUserDto, LoginUserDto, onboardingDto, UserDto } from "@/lib/schema/user.dto";
 import apiRequest from "../api-client";
-import { getUserToken, setAuthCookie } from "@/lib/utils/auth-cookies";
+import { getUserToken, setAuthCookie, setSchoolCookies } from "@/lib/utils/auth-cookies";
 
 export async function loginService(input: LoginUserDto) {
   const res = await apiRequest<LoginUserDto, AuthUserDto>('post', '/auth/login', input);
   if (res.data) {
     if (res.data.accessToken) {
       await setAuthCookie(res.data.accessToken, res.data.id)
+      if (res.data.schoolAccessToken && res.data.role) { await setSchoolCookies(res.data.schoolAccessToken, res.data.role) }
       return res
     } else return { error: "access token backend in not generated" }
   } else {

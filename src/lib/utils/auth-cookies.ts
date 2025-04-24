@@ -36,6 +36,10 @@ export async function removeUserToken() {
     const cooky = await cookies();
     cooky.delete(TOKEN_KEY)
     cooky.delete(UserId)
+    cooky.delete(SchoolTokenKey)
+    cooky.delete(StudentAccessTokenSchool)
+    cooky.delete(TeacherAccessTokenSchool)
+    cooky.delete(schoolStaffAccessTokenSchool)
 }
 
 export async function setSchoolCookies(token: string, role: UserRoleDto) {

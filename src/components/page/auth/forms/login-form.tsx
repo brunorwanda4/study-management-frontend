@@ -78,7 +78,7 @@ const LoginForm = ({ lang }: props) => {
                   <Input
                     autoFocus
                     disabled={isPending}
-                    className=" h-12 base text-lg"
+                    className=" h-12 base   "
                     {...field}
                     id="email"
                     placeholder=" "
@@ -106,7 +106,7 @@ const LoginForm = ({ lang }: props) => {
                     </span>
                   </label>
                   <Input
-                    className=" h-12 base text-lg"
+                    className=" h-12 base   "
                     type={isVisible ? "text" : "password"}
                     disabled={isPending}
                     placeholder=" "

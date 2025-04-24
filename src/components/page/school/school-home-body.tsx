@@ -7,13 +7,15 @@ import SchoolTeachers from "./school-teachers";
 import SchoolStudents from "./school-student";
 import SchoolClasses from "./school-classese";
 import { SchoolAndOthers } from "@/lib/schema/school.dto";
+import { AuthUserDto } from "@/lib/utils/auth";
 
 interface props {
   lang: Locale;
   school : SchoolAndOthers
+  currentUser : AuthUserDto
 }
 
-const SchoolHomeBody = ({ lang }: props) => {
+const SchoolHomeBody = ({ lang,school , currentUser}: props) => {
   return (
     <div className=" w-full space-y-4">
       <div className=" flex space-x-4 justify-between w-full">
@@ -24,9 +26,9 @@ const SchoolHomeBody = ({ lang }: props) => {
         <div className=" w-2/5 space-y-4">
           <SchoolHomeAbout lang={lang}/>
           <SchoolContacts />
-          <SchoolStaff lang={lang} />
-          <SchoolTeachers lang={lang} />
-          <SchoolStudents lang={lang} />
+          <SchoolStaff schoolStaff={school.SchoolStaff} lang={lang} />
+          <SchoolTeachers currentUser={currentUser}  teachers={school.Teacher} lang={lang} />
+          <SchoolStudents currentUser={currentUser} students={school.Student} lang={lang} />
         </div>
       </div>
     </div>

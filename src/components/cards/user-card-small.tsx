@@ -15,6 +15,7 @@ interface props {
   name?: string;
   id?: string;
   role?: "s-t" | "s" | "t" | "a";
+  image?: string;
 }
 
 const UserCardSmall = ({
@@ -24,6 +25,7 @@ const UserCardSmall = ({
   name,
   lang,
   className,
+  image,
 }: props) => {
   return (
     <div
@@ -32,12 +34,22 @@ const UserCardSmall = ({
       <div className=" flex space-x-2">
         <Link href={`/${lang}/profile/student`}>
           <Avatar className=" size-12">
-            <AvatarImage src="https://i.pinimg.com/1200x/5d/0c/d8/5d0cd81e76339b484605c2b2a5bb681f.jpg" />
+            <AvatarImage
+              src={
+                image
+                  ? image
+                  : "https://i.pinimg.com/1200x/5d/0c/d8/5d0cd81e76339b484605c2b2a5bb681f.jpg"
+              }
+            />
             <AvatarFallback>PR</AvatarFallback>
           </Avatar>
         </Link>
         <div>
-          <Link href={`/${lang}/profile/student`}>
+          <Link
+            href={`/${lang}/profile${
+              role === "s-t" ? `/s-t/${id ? id : "school-staff"}` : "/student"
+            }`}
+          >
             <h4 className=" ">{name ? name : "Murekezi Hindiro"}</h4>
           </Link>
           <div className=" flex items-center">

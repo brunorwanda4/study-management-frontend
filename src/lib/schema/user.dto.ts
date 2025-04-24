@@ -84,6 +84,7 @@ export const AuthUserSchema = z.object({
     image : z.string().optional(),
     role: UserRoleEnum.optional(),
     accessToken: z.string().optional(),
+    schoolAccessToken : z.string().optional(),
 })
 export type AuthUserDto = z.infer<typeof AuthUserSchema>;
 

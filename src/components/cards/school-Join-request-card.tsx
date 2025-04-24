@@ -30,7 +30,7 @@ const SchoolJoinRequestCard = ({
   const [error, setError] = useState<undefined | null | string>("");
   const [success, setSuccess] = useState<undefined | null | string>("");
   const [isPending, startTransition] = useTransition();
-  const { id, name, email, role, school } = request;
+  const { name, email, role, school } = request;
   const { id: schoolId, name: schoolName, logo: schoolLogo } = school;
 
   const displayName = name || email || "Unknown Applicant";
@@ -81,7 +81,7 @@ const SchoolJoinRequestCard = ({
         </div>
       </div>
       <div className="mt-4 text-sm">
-        Requests to join as {" "}
+        Requests to join as{" "}
         <span className="font-semibold capitalize">{displayRole}</span> at:
       </div>
       <div>
@@ -100,7 +100,11 @@ const SchoolJoinRequestCard = ({
             {schoolName}
           </Link>
         </div>
-        <div className=" flex justify-end flex-col"><span className=" text-sm text-gray-500"> {formatTimeAgo(request.updatedAt)}</span> <span>{id}</span></div>
+        <div className=" flex justify-end">
+          <span className=" text-sm text-gray-500">
+            {formatTimeAgo(request.updatedAt)}
+          </span>
+        </div>
       </div>
       <div className=" mt-2">
         <FormError message={error} />

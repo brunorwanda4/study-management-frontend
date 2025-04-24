@@ -23,6 +23,8 @@ const SchoolStaff = ({ lang, schoolStaff }: props) => {
               role="s-t"
               lang={lang}
               userRole={item.role}
+              name={item.name}
+              image={item.image}
             />
           );
         })}
