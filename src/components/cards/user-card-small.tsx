@@ -46,9 +46,7 @@ const UserCardSmall = ({
         </Link>
         <div>
           <Link
-            href={`/${lang}/profile${
-              role === "s-t" ? `/s-t/${id ? id : "school-staff"}` : "/student"
-            }`}
+            href={`/${lang}/profile/${id ? id : 12334}${role && `?role=${role}`}`}
           >
             <h4 className=" ">{name ? name : "Murekezi Hindiro"}</h4>
           </Link>

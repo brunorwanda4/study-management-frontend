@@ -7,7 +7,7 @@ import { getSchoolByIdService } from "@/service/school/school.service";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 export const metadata: Metadata = {
-  title: "school - Administration",
+  title: "school new Administration",
 };
 interface props {
   params: Promise<{ lang: Locale; schoolId: string }>;
