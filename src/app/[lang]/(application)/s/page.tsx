@@ -1,4 +1,5 @@
 import SchoolJoinRequestCard from "@/components/cards/school-Join-request-card";
+import JoinSchoolDialog from "@/components/dialog/join-school-dialg";
 import JoinSchoolRequestBody from "@/components/page/application/join-school-request/join-school-request-body";
 import { Locale } from "@/i18n";
 import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";
@@ -28,7 +29,8 @@ const StudentPage = async (props: props) => {
     currentUser.email
   );
   return (
-    <div>
+    <div className="w-full px-4 py-2 space-y-4 grid place-content-center h-full">
+      <JoinSchoolDialog />
       {getSchoolJoinRequest.data && (
         <JoinSchoolRequestBody
           lang={lang}
