@@ -14,6 +14,7 @@ export const metadata : Metadata= {
 }
 
 import type { Locale } from "@/i18n";
+import TableList from "@/components/table/s-t/table-list";
 
 interface props {
   lang: Locale;
@@ -21,47 +22,14 @@ interface props {
 
 const SchoolStaffStudentPage = ({ lang }: props) => {
   return (
-    <div className="p-4 space-y-2 max-w-full">
-      {/* <SchoolHeader onThePage lang={lang} /> */}
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 space-x-4">
-        <div className="space-y-4">
-          <div className="overflow-hidden">
-            <StaffPeople
-              lang={lang}
-              total={100}
-              Ftotal={50}
-              Mtotal={50}
-              title="Students"
-              role="Student"
-            />
-          </div>
-
-          <div className=" overflow-hidden">
-            <StudentsList title="New Comers" />
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          <div className="overflow-hidden">
-            <StudentStatus
-              lang={lang}
-              status="Students Status rol"
-              role="Student"
-            />
-          </div>
-
-          <div className="  overflow-hidden">
-            <StudentsList title="All students" />
-          </div>
-        </div>
-      </div>
-      <div className="happy-card ">
-        <StudentAttendanceChart />
-      </div>
-
+    <div className="p-4 space-y-4 ">
+      <div className=' flex space-x-4'>
+      <StaffPeople lang={lang} total={762} title='Students' Ftotal={60} Mtotal={37} role='Total students'/>
+      <StaffPeople lang={lang} total={345} title='Primary' Ftotal={100} Mtotal={233} role='Total Primary Students' />
+      <StaffPeople lang={lang} total={345} title='Ordinary_level' Ftotal={100} Mtotal={233} role='Total Ordinary_level Students' />
+    </div>
       <div>
-        <StudentProgressChart title="Student Performance Distribution" />
+      <TableList/>
       </div>
     </div>
   );

@@ -13,7 +13,7 @@ interface props {
   role: string;
 }
  
-const StaffPeople = ({ lang, total, title, role }: props) => {
+const StaffPeople = ({ lang, total, title, role, Mtotal, Ftotal }: props) => {
   return (
     <div className=" basic-card-no-p w-full">
       <div className=" flex justify-between px-4 py-2 border-b border-b-border">
@@ -36,7 +36,7 @@ const StaffPeople = ({ lang, total, title, role }: props) => {
           </Link>
         </div>
         {/* school members */}
-        {/* <div className=" space-x-4 flex ">
+        <div className=" space-x-4 flex ">
           <Button size="sm" className=" px-1">
             <span className="  text-xl font-medium">{Mtotal}</span>
             <span className=" text-sm font-normal">Males</span>
@@ -46,7 +46,7 @@ const StaffPeople = ({ lang, total, title, role }: props) => {
             <span className=" text-sm font-normal">Females</span>
           </Button>
           
-        </div> */}
+        </div>
       </div>
     </div>
   );
