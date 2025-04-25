@@ -15,10 +15,10 @@ interface props {
 const StaffDashboardDetails = ({lang , students , teachers , schoolStaffs} : props) => {
   return (
     <div className=' flex space-x-4 w-full'>
-      <StaffPeople lang={lang} total={students.length} title='Students' Ftotal={60} Mtotal={37} role='Total students'/>
-      <StaffPeople lang={lang} total={teachers.length} title='Teachers' Ftotal={100} Mtotal={233} role='Total teachers' />
+      <StaffPeople icon='/icons/student.png' lang={lang} total={students.length} title='Students' Ftotal={60} Mtotal={37} role='Total students'/>
+      <StaffPeople icon='/icons/teacher.png' lang={lang} total={teachers.length} title='Teachers' Ftotal={100} Mtotal={233} role='Total teachers' />
       {/* <StaffClasses lang={lang}/> */}
-      <StaffPeople lang={lang} total={schoolStaffs.length} title='School Staffs' Ftotal={100} Mtotal={233} role='Total school staffs' />
+      <StaffPeople icon='/icons/staff.png' lang={lang} total={schoolStaffs.length} title='School Staffs' Ftotal={100} Mtotal={233} role='Total school staffs' />
     </div>
   )
 }

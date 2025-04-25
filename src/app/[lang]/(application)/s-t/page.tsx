@@ -38,26 +38,15 @@ const SchoolStaffPage = async (props: props) => {
     if (!school.data) return <NotFoundPage />;
     return (
       <div className=" p-4 space-y-4 w-full">
-        <SchoolHeader school={school.data} onThePage lang={lang} />
+        <SchoolHeader currentUser={currentUser} currentSchool={currentSchool} school={school.data} onThePage lang={lang} />
         <StaffDashboardDetails
           schoolStaffs={school.data.SchoolStaff}
           teachers={school.data.Teacher}
           students={school.data.Student}
           lang={lang}
         />
-        <div className=" flex space-x-4">
-          <div className=" w-1/2 space-y-4">
-            {/* <StaffSchoolDashboardRequest requests={school.data.SchoolJoinRequest}/> */}
-            {/* <PostCard lang={lang} postRole="IMAGE" /> */}
-          </div>
-          <div className=" w-1/2">{/* <StaffDashboardActions /> */}</div>
-        </div>
-        {/* <ExampleTable /> */}
-        <div className=" flex space-x-4">
-          <div className=" basic-card">
-            {/* <SchoolJoinTable items={school.data.SchoolJoinRequest}/> */}
-          </div>
-          <div>hello</div>
+        <div>
+          
         </div>
       </div>
     );

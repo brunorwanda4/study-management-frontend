@@ -11,14 +11,15 @@ interface props {
   Ftotal: number;
   Mtotal: number;
   role: string;
+  icon : string;
 }
  
-const StaffPeople = ({ lang, total, title, role }: props) => {
+const StaffPeople = ({ lang,Ftotal,Mtotal, icon, total, title, role }: props) => {
   return (
     <div className=" basic-card-no-p w-full">
       <div className=" flex justify-between px-4 py-2 border-b border-b-border">
         <div className="   flex gap-2 space-x-1 items-center">
-          <MyImage className=" size-6" src="/icons/group.png" />
+          <MyImage className=" size-6" src={icon} />
           <h5 className=" basic-title text-my">{title}</h5>
         </div>
         <Button library="daisy" size="sm" variant="ghost" shape="circle">
@@ -36,17 +37,20 @@ const StaffPeople = ({ lang, total, title, role }: props) => {
           </Link>
         </div>
         {/* school members */}
-        {/* <div className=" space-x-4 flex ">
-          <Button size="sm" className=" px-1">
+        <div className=" space-x-2 flex ">
+          <Button library="daisy" size="sm" className=" px-1">
             <span className="  text-xl font-medium">{Mtotal}</span>
             <span className=" text-sm font-normal">Males</span>
           </Button>
-          <Button size="sm" className=" px-1">
+          <Button library="daisy" size="sm" className=" px-1">
             <span className="  text-xl font-medium">{Ftotal}</span>
             <span className=" text-sm font-normal">Females</span>
           </Button>
-          
-        </div> */}
+          <Button library="daisy" size="sm" className=" px-1">
+            <span className="  text-xl font-medium">{Ftotal}</span>
+            <span className=" text-sm font-normal">Other</span>
+          </Button>
+        </div>
       </div>
     </div>
   );
