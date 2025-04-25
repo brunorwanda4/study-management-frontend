@@ -1,3 +1,4 @@
+import SchoolEducationChart from "@/components/charts/school-education-chart";
 import JoinSchoolDialog from "@/components/dialog/join-school-dialg";
 import MyImage from "@/components/myComponents/myImage";
 import MyLink from "@/components/myComponents/myLink";
@@ -45,8 +46,11 @@ const SchoolStaffPage = async (props: props) => {
           students={school.data.Student}
           lang={lang}
         />
+        {/* school basic info */}
         <div>
-          
+          <div className=" w-1/3">
+          <SchoolEducationChart />
+          </div>
         </div>
       </div>
     );
