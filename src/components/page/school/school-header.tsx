@@ -74,7 +74,7 @@ const SchoolHeader = ({
           </div>
         </div>
         <div className=" flex space-x-2 items-center">
-        <MyImage className=" size-20" classname="mask mask-squircle" src={currentUser ? currentUser.image : "https://i.pinimg.com/1200x/5d/0c/d8/5d0cd81e76339b484605c2b2a5bb681f.jpg"} />
+        <MyImage className=" size-20" classname="mask mask-squircle" src={currentUser.image ? currentUser.image : "https://i.pinimg.com/1200x/5d/0c/d8/5d0cd81e76339b484605c2b2a5bb681f.jpg"} />
           <div>
             <h4 className=" basic-title">{currentUser.name}</h4>
             <span>{currentSchool.role}</span>

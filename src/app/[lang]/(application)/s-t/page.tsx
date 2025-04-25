@@ -1,4 +1,5 @@
 import SchoolEducationChart from "@/components/charts/school-education-chart";
+import SchoolStudentAndClassChart from "@/components/charts/school-student-and-classes-chart";
 import JoinSchoolDialog from "@/components/dialog/join-school-dialg";
 import MyImage from "@/components/myComponents/myImage";
 import MyLink from "@/components/myComponents/myLink";
@@ -39,7 +40,13 @@ const SchoolStaffPage = async (props: props) => {
     if (!school.data) return <NotFoundPage />;
     return (
       <div className=" p-4 space-y-4 w-full">
-        <SchoolHeader currentUser={currentUser} currentSchool={currentSchool} school={school.data} onThePage lang={lang} />
+        <SchoolHeader
+          currentUser={currentUser}
+          currentSchool={currentSchool}
+          school={school.data}
+          onThePage
+          lang={lang}
+        />
         <StaffDashboardDetails
           schoolStaffs={school.data.SchoolStaff}
           teachers={school.data.Teacher}
@@ -47,10 +54,9 @@ const SchoolStaffPage = async (props: props) => {
           lang={lang}
         />
         {/* school basic info */}
-        <div>
-          <div className=" w-1/3">
+        <div className=" flex space-x-4 w-full">
           <SchoolEducationChart />
-          </div>
+          <SchoolStudentAndClassChart />
         </div>
       </div>
     );

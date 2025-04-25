@@ -41,7 +41,7 @@ const chartConfig = {
   },
   edge: {
     label: "Edge",
-    color: "#1100ff",
+    color: "#5b9bd3",
   },
   other: {
     label: "Other",
@@ -55,7 +55,7 @@ export default function SchoolEducationChart() {
   }, []);
 
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-col w-1/3">
       <CardHeader className=" flex justify-between items-center pb-0 border-b border-base-content/20">
         <CardTitle>School Education</CardTitle>
         <Button variant={"ghost"} shape={"circle"} library="daisy">

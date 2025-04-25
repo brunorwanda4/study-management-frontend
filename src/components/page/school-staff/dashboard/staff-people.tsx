@@ -16,7 +16,7 @@ interface props {
  
 const StaffPeople = ({ lang,Ftotal,Mtotal, icon, total, title, role }: props) => {
   return (
-    <div className=" basic-card-no-p w-full">
+    <div className=" basic-card-no-p w-1/3">
       <div className=" flex justify-between px-4 py-2 border-b border-b-border">
         <div className="   flex gap-2 space-x-1 items-center">
           <MyImage className=" size-6" src={icon} />
