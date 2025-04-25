@@ -3,6 +3,7 @@ import SchoolStudentAndClassChart from "@/components/charts/school-student-and-c
 import JoinSchoolDialog from "@/components/dialog/join-school-dialg";
 import MyImage from "@/components/myComponents/myImage";
 import MyLink from "@/components/myComponents/myLink";
+import SimpleTable from "@/components/origin/simple-table";
 import JoinSchoolRequestBody from "@/components/page/application/join-school-request/join-school-request-body";
 import NotFoundPage from "@/components/page/not-found";
 import StaffDashboardDetails from "@/components/page/school-staff/dashboard/staff-dashboard-details";
@@ -57,6 +58,9 @@ const SchoolStaffPage = async (props: props) => {
         <div className=" flex space-x-4 w-full">
           <SchoolEducationChart />
           <SchoolStudentAndClassChart />
+        </div>
+        <div>
+          <SimpleTable />
         </div>
       </div>
     );
