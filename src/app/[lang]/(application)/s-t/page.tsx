@@ -3,7 +3,6 @@ import SchoolStudentAndClassChart from "@/components/charts/school-student-and-c
 import JoinSchoolDialog from "@/components/dialog/join-school-dialg";
 import MyImage from "@/components/myComponents/myImage";
 import MyLink from "@/components/myComponents/myLink";
-import SimpleTable from "@/components/origin/simple-table";
 import JoinSchoolRequestBody from "@/components/page/application/join-school-request/join-school-request-body";
 import NotFoundPage from "@/components/page/not-found";
 import StaffDashboardDetails from "@/components/page/school-staff/dashboard/staff-dashboard-details";
@@ -14,6 +13,7 @@ import { GetAllJoinSchoolRequestByCurrentUserEmail } from "@/service/school/scho
 import { getSchoolByIdService } from "@/service/school/school.service";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
+import JoinSchoolTable from "./dashboard/join-school-table";
 
 export const metadata: Metadata = {
   title: "School Dashboard",
@@ -60,7 +60,7 @@ const SchoolStaffPage = async (props: props) => {
           <SchoolStudentAndClassChart />
         </div>
         <div>
-          <SimpleTable />
+          <JoinSchoolTable />
         </div>
       </div>
     );

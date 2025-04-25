@@ -59,7 +59,7 @@ export default function SchoolEducationChart() {
       <CardHeader className=" flex justify-between items-center pb-0 border-b border-base-content/20">
         <CardTitle>School Education</CardTitle>
         <Button variant={"ghost"} shape={"circle"} library="daisy">
-          <HiOutlineDotsHorizontal />
+          <HiOutlineDotsHorizontal size={24}/>
         </Button>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
