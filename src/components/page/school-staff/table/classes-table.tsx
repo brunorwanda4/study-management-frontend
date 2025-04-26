@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useId, useMemo, useState } from "react";
+import React, { useId, useMemo, useState } from "react";
 import {
   Column,
   ColumnDef,
@@ -16,15 +15,21 @@ import {
   RowData,
   SortingState,
   useReactTable,
+  // Import FilterFn if needed for custom filtering, though not used in this specific refactor
+  // FilterFn,
 } from "@tanstack/react-table";
 import {
   ChevronDownIcon,
   ChevronUpIcon,
-  ExternalLinkIcon,
+  MoreHorizontal, // Using MoreHorizontal for an actions dropdown
   SearchIcon,
+  UsersIcon, // Example icon for student count
+  BookOpenIcon, // Example icon for curriculum
+//   BuildingLibraryIcon, // Example icon for Education Level
+  ShieldCheckIcon // Example icon for Class Type
 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Checkbox } from "@/components/ui/checkbox";
+import { cn } from "@/lib/utils"; // Assuming you have this utility
+import { Checkbox } from "@/components/ui/checkbox"; // Assuming shadcn/ui
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -43,28 +48,60 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button"; // For Actions
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"; // For Actions
+import { IoLibrary } from "react-icons/io5";
+
+// --- Prisma Schema related types ---
+
+// Define the ClassType enum based on your Prisma schema (replace if different)
+enum ClassType {
+  Public = "Public",
+  Private = "Private",
+  // Add other types if they exist
+}
+
+// Define the Class data structure based on the schema
+// Include fields needed for display, sorting, filtering
+// Add derived/related fields like teacherName and studentCount if you fetch them
+type Class = {
+  id: string;
+  schoolId?: string | null; // Allow null based on schema
+  creatorId?: string | null; // Allow null based on schema
+  code: string;
+  name: string;
+  username: string;
+  image?: string | null; // Allow null based on schema
+  classType?: ClassType | null; // Allow null based on schema
+  educationLevel?: string | null; // Allow null based on schema
+  curriculum?: string | null; // Allow null based on schema
+  classTeacherId?: string | null; // Allow null based on schema
+  createdAt: Date;
+  updatedAt: Date;
+
+  // Example derived/related data (you'd populate this when fetching)
+  teacherName?: string | null;
+  studentCount: number;
+  schoolName?: string | null; // Example if needed
+};
+
+// --- TanStack Table Configuration ---
 
 declare module "@tanstack/react-table" {
-  //allows us to define custom properties for our columns
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface ColumnMeta<TData extends RowData, TValue> {
     filterVariant?: "text" | "range" | "select";
   }
 }
 
-type Item = {
-  id: string;
-  keyword: string;
-  intents: Array<
-    "Informational" | "Navigational" | "Commercial" | "Transactional"
-  >;
-  volume: number;
-  cpc: number;
-  traffic: number;
-  link: string;
-};
-
-const columns: ColumnDef<Item>[] = [
+// --- Column Definitions for Classes ---
+const columns: ColumnDef<Class>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -84,138 +121,275 @@ const columns: ColumnDef<Item>[] = [
         aria-label="Select row"
       />
     ),
+    enableSorting: false,
+    enableHiding: false,
   },
   {
-    header: "Keyword",
-    accessorKey: "keyword",
+    header: "Name",
+    accessorKey: "name",
     cell: ({ row }) => (
-      <div className="font-medium">{row.getValue("keyword")}</div>
+        <div className="font-medium flex items-center gap-2">
+            {/* Optionally display image */}
+            {/* {row.original.image && <img src={row.original.image} alt={row.getValue("name")} className="h-8 w-8 rounded-full object-cover" />} */}
+            <span>{row.getValue("name")}</span>
+        </div>
     ),
+    meta: {
+      filterVariant: "text",
+    },
   },
   {
-    header: "Intents",
-    accessorKey: "intents",
+    header: "Code",
+    accessorKey: "code",
+    cell: ({ row }) => <div className="font-mono text-sm">{row.getValue("code")}</div>,
+    meta: {
+      filterVariant: "text",
+    },
+  },
+  {
+    header: "Type",
+    accessorKey: "classType",
     cell: ({ row }) => {
-      const intents = row.getValue("intents") as string[];
-      return (
-        <div className="flex gap-1">
-          {intents.map((intent) => {
-            const styles = {
-              Informational: "bg-indigo-400/20 text-indigo-500",
-              Navigational: "bg-emerald-400/20 text-emerald-500",
-              Commercial: "bg-amber-400/20 text-amber-500",
-              Transactional: "bg-rose-400/20 text-rose-500",
-            }[intent];
-
-            return (
-              <div
-                key={intent}
-                className={cn(
-                  "flex size-5 items-center justify-center rounded text-xs font-medium",
-                  styles
-                )}
-              >
-                {intent.charAt(0)}
-              </div>
-            );
-          })}
+      const type = row.getValue("classType") as ClassType | null;
+      return type ? (
+        <div className="flex items-center gap-1">
+             <ShieldCheckIcon className="h-4 w-4 text-muted-foreground" />
+            <span className={cn(
+                "px-2 py-0.5 rounded text-xs font-medium",
+                 type === ClassType.Private ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200" :
+                 type === ClassType.Public ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200" :
+                 "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200" // Default/fallback
+            )}>
+                {type}
+            </span>
         </div>
+      ) : (
+        <span className="text-muted-foreground">-</span>
       );
     },
-    enableSorting: false,
     meta: {
       filterVariant: "select",
     },
+    // You might need a custom filterFn if null/undefined is a possibility you want to filter specifically
     filterFn: (row, id, filterValue) => {
-      const rowValue = row.getValue(id);
-      return Array.isArray(rowValue) && rowValue.includes(filterValue);
-    },
+        const rowValue = row.getValue(id);
+        // Handle 'all' selection and actual value matching
+        if (filterValue === undefined || filterValue === "all") return true;
+        return rowValue === filterValue;
+     },
   },
   {
-    header: "Volume",
-    accessorKey: "volume",
+    header: "Level",
+    accessorKey: "educationLevel",
     cell: ({ row }) => {
-      const volume = parseInt(row.getValue("volume"));
-      return new Intl.NumberFormat("en-US", {
-        notation: "compact",
-        maximumFractionDigits: 1,
-      }).format(volume);
+        const level = row.getValue("educationLevel") as string | null;
+        return level ? (
+            <div className="flex items-center gap-1 text-sm">
+                <IoLibrary className="h-4 w-4 text-muted-foreground" />
+                {level}
+            </div>
+         ) : <span className="text-muted-foreground">-</span>;
     },
     meta: {
-      filterVariant: "range",
+        filterVariant: "select", // Or 'text' if many unique levels
     },
+    filterFn: (row, id, filterValue) => { // Handle potential nulls if using select
+        const rowValue = row.getValue(id);
+        if (filterValue === undefined || filterValue === "all") return true;
+        return rowValue === filterValue;
+     },
   },
   {
-    header: "CPC",
-    accessorKey: "cpc",
-    cell: ({ row }) => <div>${row.getValue("cpc")}</div>,
-    meta: {
-      filterVariant: "range",
-    },
-  },
-  {
-    header: "Traffic",
-    accessorKey: "traffic",
+    header: "Curriculum",
+    accessorKey: "curriculum",
     cell: ({ row }) => {
-      const traffic = parseInt(row.getValue("traffic"));
-      return new Intl.NumberFormat("en-US", {
-        notation: "compact",
-        maximumFractionDigits: 1,
-      }).format(traffic);
+        const curriculum = row.getValue("curriculum") as string | null;
+         return curriculum ? (
+            <div className="flex items-center gap-1 text-sm">
+                <BookOpenIcon className="h-4 w-4 text-muted-foreground" />
+                {curriculum}
+            </div>
+         ) : <span className="text-muted-foreground">-</span>;
     },
     meta: {
-      filterVariant: "range",
+      filterVariant: "select", // Or 'text'
     },
+     filterFn: (row, id, filterValue) => { // Handle potential nulls if using select
+        const rowValue = row.getValue(id);
+        if (filterValue === undefined || filterValue === "all") return true;
+        return rowValue === filterValue;
+     },
   },
   {
-    header: "Link",
-    accessorKey: "link",
+    header: "Teacher",
+    accessorKey: "teacherName", // Use the derived field
+    cell: ({ row }) => row.getValue("teacherName") || <span className="text-muted-foreground">N/A</span>,
+    enableSorting: true, // Enable if desired, ensure data is sortable
+    // Filtering is not enabled for this column
+  },
+  {
+    header: "Students",
+    accessorKey: "studentCount",
     cell: ({ row }) => (
-      <a className="inline-flex items-center gap-1 hover:underline" href="#">
-        {row.getValue("link")} <ExternalLinkIcon size={12} aria-hidden="true" />
-      </a>
+      <div className="flex items-center justify-end gap-1">
+        <UsersIcon className="h-4 w-4 text-muted-foreground" />
+        {row.getValue("studentCount")}
+      </div>
     ),
+    meta: {
+      filterVariant: "range",
+    },
+    // headerProps: { // Example custom prop for alignment
+    //   className: "text-right",
+    // },
+    // cellProps: { // Example custom prop for alignment
+    //     className: "text-right tabular-nums",
+    // },
+  },
+  {
+    header: "Created",
+    accessorKey: "createdAt",
+    cell: ({ row }) => (
+      <time dateTime={row.getValue("createdAt")}>
+        {new Intl.DateTimeFormat("en-US", {
+          year: 'numeric', month: 'short', day: 'numeric',
+        }).format(new Date(row.getValue("createdAt")))}
+      </time>
+    ),
+    // enableFiltering: true, // Range filtering for dates is complex, skip for now
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const classData = row.original;
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={() => navigator.clipboard.writeText(classData.id)} // Example action
+            >
+              Copy Class ID
+            </DropdownMenuItem>
+            {/* Add other actions like View, Edit, Delete */}
+            <DropdownMenuItem>View Details</DropdownMenuItem>
+            <DropdownMenuItem>Edit Class</DropdownMenuItem>
+            <DropdownMenuItem className="text-destructive focus:text-destructive focus:bg-destructive/10">
+              Delete Class
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
     enableSorting: false,
+    enableHiding: false,
   },
 ];
 
-const items: Item[] = [
+// --- Sample Data (Replace with actual data fetching) ---
+const classesData: Class[] = [
   {
-    id: "1",
-    keyword: "react components",
-    intents: ["Informational", "Navigational"],
-    volume: 2507,
-    cpc: 2.5,
-    traffic: 88,
-    link: "https://originui.com",
+    id: "cls_1",
+    schoolId: "sch_abc",
+    creatorId: "usr_123",
+    code: "MATH-G5A",
+    name: "Mathematics Grade 5A",
+    username: "math-g5a-2025",
+    image: null,
+    classType: ClassType.Private,
+    educationLevel: "Grade 5",
+    curriculum: "National",
+    classTeacherId: "tch_xyz",
+    createdAt: new Date(2024, 7, 15), // Aug 15, 2024
+    updatedAt: new Date(2025, 3, 10), // Apr 10, 2025
+    teacherName: "Alice Smith",
+    studentCount: 25,
+    schoolName: "Sunshine Primary",
   },
   {
-    id: "2",
-    keyword: "buy react templates",
-    intents: ["Commercial", "Transactional"],
-    volume: 1850,
-    cpc: 4.75,
-    traffic: 65,
-    link: "https://originui.com/input",
+    id: "cls_2",
+    schoolId: "sch_abc",
+    creatorId: "usr_123",
+    code: "ENG-G5B",
+    name: "English Grade 5B",
+    username: "eng-g5b-2025",
+    image: null,
+    classType: ClassType.Private,
+    educationLevel: "Grade 5",
+    curriculum: "National",
+    classTeacherId: "tch_pqr",
+    createdAt: new Date(2024, 7, 15), // Aug 15, 2024
+    updatedAt: new Date(2025, 4, 20), // May 20, 2025
+    teacherName: "Bob Jones",
+    studentCount: 28,
+    schoolName: "Sunshine Primary",
+  },
+   {
+    id: "cls_3",
+    schoolId: "sch_def",
+    creatorId: "usr_456",
+    code: "SCI-HS1",
+    name: "General Science HS1",
+    username: "sci-hs1-public",
+    image: null,
+    classType: ClassType.Public,
+    educationLevel: "High School Year 1",
+    curriculum: "Cambridge",
+    classTeacherId: null, // No specific teacher assigned
+    createdAt: new Date(2025, 0, 10), // Jan 10, 2025
+    updatedAt: new Date(2025, 2, 1),   // Mar 1, 2025
+    teacherName: null,
+    studentCount: 150, // Public classes might have more students
+    schoolName: "Oakwood High",
+  },
+  {
+    id: "cls_4",
+    schoolId: "sch_def",
+    creatorId: "usr_456",
+    code: "HIST-HS1",
+    name: "History HS1",
+    username: "hist-hs1-2025",
+    image: null,
+    classType: ClassType.Private,
+    educationLevel: "High School Year 1",
+    curriculum: "Cambridge",
+    classTeacherId: "tch_mno",
+    createdAt: new Date(2025, 0, 10), // Jan 10, 2025
+    updatedAt: new Date(2025, 4, 15), // May 15, 2025
+    teacherName: "Carol White",
+    studentCount: 35,
+    schoolName: "Oakwood High",
   },
 ];
 
-export default function ClassesSchoolTable() {
+// --- React Component ---
+export default function ClassesTable() { // Renamed for clarity
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([
     {
-      id: "traffic",
+      id: "name", // Default sort by name
       desc: false,
     },
   ]);
+  const [rowSelection, setRowSelection] = useState({}); // Add row selection state
+
 
   const table = useReactTable({
-    data: items,
+    data: classesData, // Use the new classes data
     columns,
     state: {
       sorting,
       columnFilters,
+      rowSelection, // Pass row selection state
     },
+    enableRowSelection: true, // Enable row selection
+    onRowSelectionChange: setRowSelection, // Add handler for row selection
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(), //client-side filtering
@@ -230,195 +404,251 @@ export default function ClassesSchoolTable() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className=" flex space-x-2">All classes</CardTitle>
+        <CardTitle>All Classes</CardTitle>
+        {/* Add description or controls here if needed */}
       </CardHeader>
+
       {/* Filters */}
-      <div className="flex flex-wrap gap-3 px-4">
-        {/* Search input */}
-        <div className="w-44">
-          <Filter column={table.getColumn("keyword")!} />
+      <div className="flex flex-wrap gap-3 px-4 pb-4 border-b">
+        {/* Name filter */}
+        <div className="w-48">
+          <Filter column={table.getColumn("name")!} />
         </div>
-        {/* Intents select */}
-        <div className="w-36">
-          <Filter column={table.getColumn("intents")!} />
+         {/* Code filter */}
+         <div className="w-40">
+          <Filter column={table.getColumn("code")!} />
         </div>
-        {/* Volume inputs */}
+        {/* Class Type select */}
         <div className="w-36">
-          <Filter column={table.getColumn("volume")!} />
+          <Filter column={table.getColumn("classType")!} />
         </div>
-        {/* CPC inputs */}
-        <div className="w-36">
-          <Filter column={table.getColumn("cpc")!} />
+         {/* Education Level select */}
+        <div className="w-48">
+          <Filter column={table.getColumn("educationLevel")!} />
         </div>
-        {/* Traffic inputs */}
+         {/* Curriculum select */}
+        <div className="w-40">
+          <Filter column={table.getColumn("curriculum")!} />
+        </div>
+        {/* Student Count range */}
         <div className="w-36">
-          <Filter column={table.getColumn("traffic")!} />
+          <Filter column={table.getColumn("studentCount")!} />
         </div>
       </div>
 
-      <CardContent className=" p-0">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className=" bg-base-300">
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead
-                      key={header.id}
-                      className="relative h-10 border-t select-none"
-                      aria-sort={
-                        header.column.getIsSorted() === "asc"
-                          ? "ascending"
-                          : header.column.getIsSorted() === "desc"
-                          ? "descending"
-                          : "none"
-                      }
-                    >
-                      {header.isPlaceholder ? null : header.column.getCanSort() ? (
-                        <div
-                          className={cn(
-                            header.column.getCanSort() &&
-                              "flex h-full cursor-pointer items-center justify-between gap-2 select-none"
-                          )}
-                          onClick={header.column.getToggleSortingHandler()}
-                          onKeyDown={(e) => {
-                            // Enhanced keyboard handling for sorting
-                            if (
-                              header.column.getCanSort() &&
-                              (e.key === "Enter" || e.key === " ")
-                            ) {
-                              e.preventDefault();
-                              header.column.getToggleSortingHandler()?.(e);
-                            }
-                          }}
-                          tabIndex={header.column.getCanSort() ? 0 : undefined}
-                        >
-                          {flexRender(
+      <CardContent className="p-0">
+        <div className="overflow-x-auto"> {/* Added for better responsiveness */}
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    const headerProps = (header.column.columnDef as any).headerProps; // Get custom props
+                    return (
+                      <TableHead
+                        key={header.id}
+                        className={cn("relative h-10 select-none", headerProps?.className)} // Apply custom class
+                        aria-sort={
+                          header.column.getCanSort() ?
+                          (header.column.getIsSorted() === "asc"
+                            ? "ascending"
+                            : header.column.getIsSorted() === "desc"
+                              ? "descending"
+                              : "none") : undefined // Only add aria-sort if sortable
+                        }
+                      >
+                        {header.isPlaceholder ? null : header.column.getCanSort() ? (
+                          <div
+                            className={cn(
+                              "flex items-center gap-2 cursor-pointer",
+                               headerProps?.className ? '' : 'justify-between' // Avoid double justify-end on right aligned headers
+                            )}
+                            onClick={header.column.getToggleSortingHandler()}
+                            onKeyDown={(e) => {
+                              if (
+                                header.column.getCanSort() &&
+                                (e.key === "Enter" || e.key === " ")
+                              ) {
+                                e.preventDefault();
+                                header.column.getToggleSortingHandler()?.(e);
+                              }
+                            }}
+                            tabIndex={header.column.getCanSort() ? 0 : undefined}
+                            role="button" // Add role button for accessibility
+                            aria-label={`Sort by ${typeof header.column.columnDef.header === 'string' ? header.column.columnDef.header : header.column.id}`}
+                          >
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                            {{
+                              asc: (
+                                <ChevronUpIcon
+                                  className="shrink-0 opacity-60"
+                                  size={16}
+                                  aria-hidden="true"
+                                />
+                              ),
+                              desc: (
+                                <ChevronDownIcon
+                                  className="shrink-0 opacity-60"
+                                  size={16}
+                                  aria-hidden="true"
+                                />
+                              ),
+                            }[header.column.getIsSorted() as string] ?? (
+                              // Optionally show a default sort icon placeholder if needed
+                              <span className="size-4" aria-hidden="true" />
+                            )}
+                          </div>
+                        ) : (
+                          flexRender(
                             header.column.columnDef.header,
                             header.getContext()
-                          )}
-                          {{
-                            asc: (
-                              <ChevronUpIcon
-                                className="shrink-0 opacity-60"
-                                size={16}
-                                aria-hidden="true"
-                              />
-                            ),
-                            desc: (
-                              <ChevronDownIcon
-                                className="shrink-0 opacity-60"
-                                size={16}
-                                aria-hidden="true"
-                              />
-                            ),
-                          }[header.column.getIsSorted() as string] ?? (
-                            <span className="size-4" aria-hidden="true" />
-                          )}
-                        </div>
-                      ) : (
-                        flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )
-                      )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
+                          )
+                        )}
+                      </TableHead>
+                    );
+                  })}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                  >
+                    {row.getVisibleCells().map((cell) => {
+                       const cellProps = (cell.column.columnDef as any).cellProps; // Get custom props
+                      return (
+                        <TableCell key={cell.id} className={cn(cellProps?.className)}> {/* Apply custom class */}
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </TableCell>
+                      )
+                      })}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    No results.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </CardContent>
+      {/* Optional: Add Pagination Controls here */}
+       <div className="flex items-center justify-end space-x-2 py-4 px-4 border-t">
+        <div className="flex-1 text-sm text-muted-foreground">
+          {table.getFilteredSelectedRowModel().rows.length} of{" "}
+          {table.getFilteredRowModel().rows.length} row(s) selected.
+        </div>
+         {/* Add TanStack Table Pagination component if needed */}
+       </div>
     </Card>
   );
 }
 
+// --- Filter Component (Modified slightly for robustness) ---
 function Filter({ column }: { column: Column<any, unknown> }) {
   const id = useId();
   const columnFilterValue = column.getFilterValue();
   const { filterVariant } = column.columnDef.meta ?? {};
-  const columnHeader =
-    typeof column.columnDef.header === "string" ? column.columnDef.header : "";
+  const columnHeader = useMemo(() => {
+    const header = column.columnDef.header;
+    if (typeof header === 'string') return header;
+    // Attempt to extract text if it's a simple component, otherwise use ID
+    // This is a basic heuristic and might need adjustment for complex headers
+    if (typeof header === 'function') {
+        try {
+             // Render header function in a dummy context to extract text potentially
+             // This is experimental and might not always work reliably
+             const renderedHeader = flexRender(header, { /* dummy context */ } as any);
+             if (typeof renderedHeader === 'string') return renderedHeader;
+             // Could try accessing props.children if it's a simple element
+        } catch (e) { /* ignore errors during heuristic render */ }
+    }
+    return column.id; // Fallback to column ID
+  }, [column.columnDef.header, column.id]);
+
   const sortedUniqueValues = useMemo(() => {
-    if (filterVariant === "range") return [];
+    // No need for unique values for range or text filters
+    if (filterVariant === "range" || filterVariant === "text") return [];
 
-    // Get all unique values from the column
-    const values = Array.from(column.getFacetedUniqueValues().keys());
+    // Get unique values for select filter
+    try {
+        // This inherently handles simple values and arrays (by treating array refs as unique keys)
+        const uniqueMap = column.getFacetedUniqueValues();
+        // Filter out potential undefined/null keys if they shouldn't be selectable options
+        // Keep null/undefined if you explicitly want to filter by them
+        const values = Array.from(uniqueMap.keys())
+                           .filter(val => val !== null && val !== undefined); // Adjust filter as needed
 
-    // If the values are arrays, flatten them and get unique items
-    const flattenedValues = values.reduce((acc: string[], curr) => {
-      if (Array.isArray(curr)) {
-        return [...acc, ...curr];
-      }
-      return [...acc, curr];
-    }, []);
-
-    // Get unique values and sort them
-    return Array.from(new Set(flattenedValues)).sort();
+        // No need to flatten like before, as 'intents' was the special array case.
+        // For simple types like ClassType, educationLevel, curriculum, the keys are the values themselves.
+        return values.sort();
+    } catch (e) {
+      console.error("Error getting faceted unique values for column:", column.id, e);
+      return [];
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [column.getFacetedUniqueValues(), filterVariant]);
+  }, [column.id, column.getFacetedUniqueValues(), filterVariant]);
+
 
   if (filterVariant === "range") {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const [min, max] = useMemo(
+      () => {
+        try {
+          return column.getFacetedMinMaxValues() ?? [undefined, undefined];
+        } catch (e) {
+          console.error("Error getting min/max values for column:", column.id, e);
+          return [undefined, undefined];
+        }
+      },
+      [column] // Depend only on the column object itself
+    );
     return (
-      <div className="*:not-first:mt-2">
-        <Label>{columnHeader}</Label>
-        <div className="flex">
+      <div>
+        <Label htmlFor={`${id}-range-min`}>{columnHeader}</Label>
+        <div className="flex gap-2 mt-1">
           <Input
-            id={`${id}-range-1`}
-            className="flex-1 rounded-e-none [-moz-appearance:_textfield] focus:z-10 [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
+            id={`${id}-range-min`}
+            className="flex-1 [-moz-appearance:_textfield] [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
             value={(columnFilterValue as [number, number])?.[0] ?? ""}
             onChange={(e) =>
               column.setFilterValue((old: [number, number]) => [
-                e.target.value ? Number(e.target.value) : undefined,
+                e.target.value !== '' ? Number(e.target.value) : undefined,
                 old?.[1],
               ])
             }
-            placeholder="Min"
+            placeholder={`Min ${min !== undefined ? `(${min})` : ''}`}
             type="number"
-            aria-label={`${columnHeader} min`}
+            aria-label={`${columnHeader} min value`}
           />
           <Input
-            id={`${id}-range-2`}
-            className="-ms-px flex-1 rounded-s-none [-moz-appearance:_textfield] focus:z-10 [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
+            id={`${id}-range-max`}
+            className="flex-1 [-moz-appearance:_textfield] [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
             value={(columnFilterValue as [number, number])?.[1] ?? ""}
             onChange={(e) =>
               column.setFilterValue((old: [number, number]) => [
                 old?.[0],
-                e.target.value ? Number(e.target.value) : undefined,
+                e.target.value !== '' ? Number(e.target.value) : undefined,
               ])
             }
-            placeholder="Max"
+            placeholder={`Max ${max !== undefined ? `(${max})` : ''}`}
             type="number"
-            aria-label={`${columnHeader} max`}
+            aria-label={`${columnHeader} max value`}
           />
         </div>
       </div>
@@ -427,7 +657,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
 
   if (filterVariant === "select") {
     return (
-      <div className="*:not-first:mt-2">
+      <div>
         <Label htmlFor={`${id}-select`}>{columnHeader}</Label>
         <Select
           value={columnFilterValue?.toString() ?? "all"}
@@ -435,11 +665,13 @@ function Filter({ column }: { column: Column<any, unknown> }) {
             column.setFilterValue(value === "all" ? undefined : value);
           }}
         >
-          <SelectTrigger id={`${id}-select`}>
-            <SelectValue />
+          <SelectTrigger id={`${id}-select`} className="mt-1">
+            <SelectValue placeholder={`Filter ${columnHeader.toLowerCase()}`} />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All</SelectItem>
+            {/* Add options for null/empty if applicable */}
+            {/* <SelectItem value="null">None</SelectItem> */}
             {sortedUniqueValues.map((value) => (
               <SelectItem key={String(value)} value={String(value)}>
                 {String(value)}
@@ -451,19 +683,20 @@ function Filter({ column }: { column: Column<any, unknown> }) {
     );
   }
 
+  // Default to text filter
   return (
-    <div className="*:not-first:mt-2">
+    <div>
       <Label htmlFor={`${id}-input`}>{columnHeader}</Label>
-      <div className="relative">
+      <div className="relative mt-1">
         <Input
           id={`${id}-input`}
           className="peer ps-9"
           value={(columnFilterValue ?? "") as string}
           onChange={(e) => column.setFilterValue(e.target.value)}
-          placeholder={`Search ${columnHeader.toLowerCase()}`}
+          placeholder={`Search ${columnHeader.toLowerCase()}...`}
           type="text"
         />
-        <div className=" /80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
+        <div className="text-muted-foreground pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
           <SearchIcon size={16} />
         </div>
       </div>
