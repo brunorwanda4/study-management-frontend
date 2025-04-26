@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/table";
 import { Locale } from "@/i18n";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
+import AddStudentInSchoolDialog from "../dialog/add-student-in-school-dialog";
 
 const items = [
   {
@@ -72,12 +73,16 @@ export default function StudentDashboardTable({ lang }: props) {
       <CardHeader className=" flex justify-between">
         <CardTitle className="text-lg font-semibold">Students</CardTitle>
         <div className=" space-x-4">
-          <Button library="daisy" variant="info">
+          <MyLink
+            loading
+            href={`/${lang}/s-t/students`}
+            type="button"
+            button={{ variant: "info", library: "daisy" , size : "sm"}}
+            className=" w-fit"
+          >
             View all students
-          </Button>
-          <Button library="daisy" variant="info">
-            Add student
-          </Button>
+          </MyLink>
+          <AddStudentInSchoolDialog />
           <Button variant={"ghost"} shape={"circle"} library="daisy">
             <HiOutlineDotsHorizontal size={24} />
           </Button>

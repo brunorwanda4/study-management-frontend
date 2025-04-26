@@ -8,9 +8,9 @@ const AddStudentInSchoolDialog = () => {
   return (
     <AlertDialog>
     <AlertDialogTrigger asChild>
-      <Button library="daisy" variant="primary" className="">
+      <Button library="daisy" variant="primary" size={"sm"} className="">
         <UserPlus className="h-4 w-4 mr-2" />
-        Add new Student
+        Add Student
       </Button>
     </AlertDialogTrigger>
     <AlertDialogContent>

@@ -37,7 +37,7 @@ const MyLink = ({
   if (type === "button") {
     return (
       <Link href={href} className={className}>
-        <Button {...button} className={cn("w-full", classname)}>
+        <Button {...button} className={cn("", classname)}>
           {children}
           {loading && <LoadingIndicator />}
         </Button>
