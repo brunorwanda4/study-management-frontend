@@ -99,7 +99,7 @@ function FormLabel({
       data-theme={theme}
       data-slot="form-label"
       data-error={!!error}
-      className={cn("data-[error=true]:text-error  bg-base-200", className)}
+      className={cn("data-[error=true]:text-error", className)}
       htmlFor={formItemId}
       {...props}
     />

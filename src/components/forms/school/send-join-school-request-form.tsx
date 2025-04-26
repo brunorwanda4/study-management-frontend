@@ -105,7 +105,7 @@ export default function SendJoinSchoolRequestForm({ currentSchool }: props) {
               name="email"
               render={({ field }) => (
                 <FormItem className=" w-full">
-                  <FormLabel className=" bg-base-200">
+                  <FormLabel className="  ">
                     Email Address *
                   </FormLabel>
                   <FormControl>
@@ -127,7 +127,7 @@ export default function SendJoinSchoolRequestForm({ currentSchool }: props) {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className=" bg-base-200">
+                  <FormLabel className="  ">
                     Full Name (Optional)
                   </FormLabel>
                   <FormControl>
@@ -149,7 +149,7 @@ export default function SendJoinSchoolRequestForm({ currentSchool }: props) {
               name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className=" bg-base-200">
+                  <FormLabel className="  ">
                     Phone Number (Optional)
                   </FormLabel>
                   <FormControl>
@@ -173,7 +173,7 @@ export default function SendJoinSchoolRequestForm({ currentSchool }: props) {
               name="role"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className=" bg-base-200">Select Role *</FormLabel>
+                  <FormLabel className="  ">Select Role *</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -205,7 +205,7 @@ export default function SendJoinSchoolRequestForm({ currentSchool }: props) {
                 name="staffRole" // Target the correct field name
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className=" bg-base-200">Specific Staff Role *</FormLabel>{" "}
+                    <FormLabel className="  ">Specific Staff Role *</FormLabel>{" "}
                     {/* Updated Label */}
                     {/* Replace Input with Select */}
                     <Select
