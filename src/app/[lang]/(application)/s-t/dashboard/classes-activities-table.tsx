@@ -68,7 +68,7 @@ interface props {
 
 export default function ClassActivitiesTable({ lang }: props) {
   return (
-    <Card className="w-1/2">
+    <Card className="w-1/2 pb-2">
       <CardHeader className=" flex justify-between">
         <CardTitle className="text-lg font-semibold">
           Classes activities
