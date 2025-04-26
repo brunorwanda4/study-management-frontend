@@ -56,8 +56,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"; // For Actions
-import { IoLibrary } from "react-icons/io5";
-
+import { GiLevelEndFlag } from "react-icons/gi";
 // --- Prisma Schema related types ---
 
 // Define the ClassType enum based on your Prisma schema (replace if different)
@@ -185,7 +184,7 @@ const columns: ColumnDef<Class>[] = [
         const level = row.getValue("educationLevel") as string | null;
         return level ? (
             <div className="flex items-center gap-1 text-sm">
-                <IoLibrary className="h-4 w-4 text-muted-foreground" />
+                <GiLevelEndFlag className="h-4 w-4 text-muted-foreground" />
                 {level}
             </div>
          ) : <span className="text-muted-foreground">-</span>;
