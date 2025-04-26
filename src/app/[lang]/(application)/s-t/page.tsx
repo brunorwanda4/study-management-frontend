@@ -1,6 +1,6 @@
 import SchoolEducationChart from "@/components/charts/school-education-chart";
 import SchoolStudentAndClassChart from "@/components/charts/school-student-and-classes-chart";
-import JoinSchoolDialog from "@/components/dialog/join-school-dialg";
+import JoinSchoolDialog from "@/components/dialog/join-school-dialog";
 import MyImage from "@/components/myComponents/myImage";
 import MyLink from "@/components/myComponents/myLink";
 import JoinSchoolRequestBody from "@/components/page/application/join-school-request/join-school-request-body";

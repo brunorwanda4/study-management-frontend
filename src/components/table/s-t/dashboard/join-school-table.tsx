@@ -1,4 +1,4 @@
-import SendJoinSchoolRequest from "@/components/dialog/send-join-school-request";
+import SendJoinSchoolRequest from "@/components/dialog/send-join-school-request-dialog";
 import MyImage from "@/components/myComponents/myImage";
 import MyLink from "@/components/myComponents/myLink";
 import { Button } from "@/components/ui/button";
