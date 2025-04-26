@@ -163,6 +163,11 @@ export const schoolStaffSidebarGroups: sidebarGroupsProps[] = [
         icon: "/icons/event.png",
         url: "/s-t/calendar",
       },
+      {
+        title: "Join school requests",
+        icon: "/icons/request.png",
+        url: "/s-t/join-school-requests",
+      },
     ],
   },
   {
