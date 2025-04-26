@@ -23,7 +23,7 @@ const SendJoinSchoolRequest = ({ currentSchool }: Props) => {
           Send join request
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="sm:max-w-[45rem]">
         <DialogHeader>
           <DialogTitle>
             Send request to Join{" "}
