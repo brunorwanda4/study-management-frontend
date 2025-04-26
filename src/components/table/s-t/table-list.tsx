@@ -20,6 +20,15 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import {
+  newStudentFormSchema,
+  editStudentFormSchema,
+  type NewStudentForm,
+  type EditStudentForm,
+} from "@/lib/schema/table-forms/forms"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 
 // Initial student data
 const initialStudents = [
@@ -113,33 +122,50 @@ export default function TableList() {
   const [minAge, setMinAge] = useState("")
   const [maxAge, setMaxAge] = useState("")
 
-  // State for new student form
-  const [newStudent, setNewStudent] = useState({
-    name: "",
-    email: "",
-    gender: "Male",
-    age: "",
-    class: "L1",
-    phone: "",
-  })
-
-  // State for edit student
-  const [editingStudent, setEditingStudent] = useState<null | {
-    id: string
-    name: string
-    email: string
-    gender: string
-    age: string
-    class: string
-    phone: string
-  }>(null)
-
   // State for dialog open status
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [studentToDelete, setStudentToDelete] = useState<string | null>(null)
   const [isBulkDeleteDialogOpen, setIsBulkDeleteDialogOpen] = useState(false)
+
+  // Form for adding a new student
+  const addStudentForm = useForm<NewStudentForm>({
+    resolver: zodResolver(newStudentFormSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      gender: "Male",
+      age: "",
+      class: "L1",
+      phone: "",
+    },
+  })
+
+  // Form for editing a student
+  const editStudentForm = useForm<EditStudentForm>({
+    resolver: zodResolver(editStudentFormSchema),
+    defaultValues: {
+      id: "",
+      name: "",
+      email: "",
+      gender: "Male",
+      age: "",
+      class: "L1",
+      phone: "",
+    },
+  })
+
+  // Form for filters
+  const filterForm = useForm({
+    defaultValues: {
+      searchTerm: "",
+      genderFilter: "All gender",
+      classFilter: "All education level",
+      minAge: "",
+      maxAge: "",
+    },
+  })
 
   // Toggle student selection
   const toggleStudent = (id: string) => {
@@ -156,68 +182,53 @@ export default function TableList() {
   }
 
   // Handle adding a new student
-  const handleAddStudent = () => {
-    if (!newStudent.name || !newStudent.email) return
-
+  const handleAddStudent = (data: NewStudentForm) => {
     const newId = (students.length + 1).toString()
     const studentToAdd = {
-      ...newStudent,
+      ...data,
       id: newId,
-      age: newStudent.age + " Years",
+      age: data.age + " Years",
       image: "/placeholder.svg?height=40&width=40",
     }
 
     setStudents([...students, studentToAdd])
-
-    // Reset form
-    setNewStudent({
-      name: "",
-      email: "",
-      gender: "Male",
-      age: "",
-      class: "L1",
-      phone: "",
-    })
-
     setIsAddDialogOpen(false)
+    addStudentForm.reset()
   }
 
   // Prepare student for editing
   const prepareStudentForEdit = (student: (typeof initialStudents)[0]) => {
     const age = student.age.replace(" Years", "")
-    setEditingStudent({
+    editStudentForm.reset({
       id: student.id,
       name: student.name,
       email: student.email,
-      gender: student.gender,
+      gender: student.gender as "Male" | "Female",
       age: age,
-      class: student.class,
+      class: student.class as "L1" | "L2" | "L3",
       phone: student.phone,
     })
     setIsEditDialogOpen(true)
   }
 
   // Handle editing a student
-  const handleEditStudent = () => {
-    if (!editingStudent) return
-
+  const handleEditStudent = (data: EditStudentForm) => {
     setStudents(
       students.map((student) =>
-        student.id === editingStudent.id
+        student.id === data.id
           ? {
               ...student,
-              name: editingStudent.name,
-              email: editingStudent.email,
-              gender: editingStudent.gender,
-              age: editingStudent.age.includes("Years") ? editingStudent.age : editingStudent.age + " Years",
-              class: editingStudent.class,
-              phone: editingStudent.phone,
+              name: data.name,
+              email: data.email,
+              gender: data.gender,
+              age: data.age.includes("Years") ? data.age : data.age + " Years",
+              class: data.class,
+              phone: data.phone,
             }
           : student,
       ),
     )
 
-    setEditingStudent(null)
     setIsEditDialogOpen(false)
   }
 
@@ -233,6 +244,16 @@ export default function TableList() {
     setStudents(students.filter((student) => !selectedStudents.includes(student.id)))
     setSelectedStudents([])
     setIsBulkDeleteDialogOpen(false)
+  }
+
+  // Apply filters from form
+  const applyFilters = (data: any) => {
+    setSearchTerm(data.searchTerm || "")
+    setGenderFilter(data.genderFilter)
+    setClassFilter(data.classFilter)
+    setMinAge(data.minAge || "")
+    setMaxAge(data.maxAge || "")
+    setCurrentPage(1) // Reset to first page on filter change
   }
 
   // Filter students based on search and filters
@@ -282,6 +303,15 @@ export default function TableList() {
     }
   }
 
+  // Update filter form when filter state changes
+  useEffect(() => {
+    filterForm.setValue("searchTerm", searchTerm)
+    filterForm.setValue("genderFilter", genderFilter as any)
+    filterForm.setValue("classFilter", classFilter as any)
+    filterForm.setValue("minAge", minAge)
+    filterForm.setValue("maxAge", maxAge)
+  }, [searchTerm, genderFilter, classFilter, minAge, maxAge, filterForm])
+
   return (
     <div className="w-full rounded-md basic-card-no-p border shadow-md">
       <div className="text-white p-4 flex justify-between items-center">
@@ -294,7 +324,13 @@ export default function TableList() {
               Delete Selected
             </Button>
           )}
-          <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+          <Dialog
+            open={isAddDialogOpen}
+            onOpenChange={(open) => {
+              setIsAddDialogOpen(open)
+              if (!open) addStudentForm.reset()
+            }}
+          >
             <DialogTrigger asChild>
               <Button variant="outline" className="basic-title-sm hover:bg-gray-100">
                 <UserPlus className="h-4 w-4 mr-2" />
@@ -305,188 +341,252 @@ export default function TableList() {
               <DialogHeader>
                 <DialogTitle>Add New Student</DialogTitle>
               </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Full Name</Label>
-                    <Input
-                      id="name"
-                      value={newStudent.name}
-                      onChange={(e) => setNewStudent({ ...newStudent, name: e.target.value })}
-                      placeholder="Enter student name"
+              <Form {...addStudentForm}>
+                <form onSubmit={addStudentForm.handleSubmit(handleAddStudent)} className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={addStudentForm.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Full Name</FormLabel>
+                          <FormControl>
+                            <Input {...field} placeholder="Enter student name" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={addStudentForm.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input {...field} type="email" placeholder="Enter email address" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={newStudent.email}
-                      onChange={(e) => setNewStudent({ ...newStudent, email: e.target.value })}
-                      placeholder="Enter email address"
-                    />
-                  </div>
-                </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="gender">Gender</Label>
-                    <Select
-                      value={newStudent.gender}
-                      onValueChange={(value) => setNewStudent({ ...newStudent, gender: value })}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select gender" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Male">Male</SelectItem>
-                        <SelectItem value="Female">Female</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="age">Age</Label>
-                    <Input
-                      id="age"
-                      type="number"
-                      value={newStudent.age}
-                      onChange={(e) => setNewStudent({ ...newStudent, age: e.target.value })}
-                      placeholder="Enter age"
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={addStudentForm.control}
+                      name="gender"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Gender</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select gender" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="Male">Male</SelectItem>
+                              <SelectItem value="Female">Female</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={addStudentForm.control}
+                      name="phone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Phone Number</FormLabel>
+                          <FormControl>
+                            <Input {...field} placeholder="Enter phone number" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
                   </div>
-                </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="class">Class</Label>
-                    <Select
-                      value={newStudent.class}
-                      onValueChange={(value) => setNewStudent({ ...newStudent, class: value })}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select class" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="L1">L1</SelectItem>
-                        <SelectItem value="L2">L2</SelectItem>
-                        <SelectItem value="L3">L3</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Phone Number</Label>
-                    <Input
-                      id="phone"
-                      value={newStudent.phone}
-                      onChange={(e) => setNewStudent({ ...newStudent, phone: e.target.value })}
-                      placeholder="Enter phone number"
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={addStudentForm.control}
+                      name="class"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Class</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select class" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="L1">L1</SelectItem>
+                              <SelectItem value="L2">L2</SelectItem>
+                              <SelectItem value="L3">L3</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
+                    
                   </div>
-                </div>
-              </div>
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
-                  Cancel
-                </Button>
-                <Button onClick={handleAddStudent}>Add Student</Button>
-              </DialogFooter>
+
+                  <DialogFooter>
+                    <Button variant="outline" type="button" onClick={() => setIsAddDialogOpen(false)}>
+                      Cancel
+                    </Button>
+                    <Button type="submit">Add Student</Button>
+                  </DialogFooter>
+                </form>
+              </Form>
             </DialogContent>
           </Dialog>
         </div>
       </div>
 
-      <div className="p-4 grid grid-cols-4 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="search" className="text-white">
-            Search
-          </Label>
-          <div className="relative">
-            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              id="search"
-              placeholder="Search by name or email"
-              className="w-full pl-8"
-              value={searchTerm}
-              onChange={(e) => {
-                setSearchTerm(e.target.value)
-                setCurrentPage(1) // Reset to first page on search
-              }}
-            />
+      <Form {...filterForm}>
+        <form onChange={filterForm.handleSubmit(applyFilters)} className="p-4 grid grid-cols-4 gap-4">
+          <FormField
+            control={filterForm.control}
+            name="searchTerm"
+            render={({ field }) => (
+              <FormItem className="space-y-2">
+                <FormLabel className="text-white">Search</FormLabel>
+                <div className="relative">
+                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <FormControl>
+                    <Input
+                      {...field}
+                      placeholder="Search by name or email"
+                      className="w-full pl-8"
+                      onChange={(e) => {
+                        field.onChange(e)
+                        setSearchTerm(e.target.value)
+                        setCurrentPage(1) // Reset to first page on search
+                      }}
+                    />
+                  </FormControl>
+                </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={filterForm.control}
+            name="genderFilter"
+            render={({ field }) => (
+              <FormItem className="space-y-2">
+                <FormLabel className="text-white">Gender</FormLabel>
+                <Select
+                  onValueChange={(value) => {
+                    field.onChange(value)
+                    setGenderFilter(value)
+                    setCurrentPage(1)
+                  }}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger id="gender-filter" className="w-full">
+                      <SelectValue placeholder="Select gender" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent className="bg-slate-800 text-white border-slate-700">
+                    <SelectItem value="All gender">All gender</SelectItem>
+                    <SelectItem value="Male">Male</SelectItem>
+                    <SelectItem value="Female">Female</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={filterForm.control}
+            name="classFilter"
+            render={({ field }) => (
+              <FormItem className="space-y-2">
+                <FormLabel className="text-white">Education Level</FormLabel>
+                <Select
+                  onValueChange={(value) => {
+                    field.onChange(value)
+                    setClassFilter(value)
+                    setCurrentPage(1)
+                  }}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger id="class-filter" className="w-full">
+                      <SelectValue placeholder="Select class" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent className="bg-slate-800 text-white border-slate-700">
+                    <SelectItem value="All education level">All education level</SelectItem>
+                    <SelectItem value="L1">L1</SelectItem>
+                    <SelectItem value="L2">L2</SelectItem>
+                    <SelectItem value="L3">L3</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="space-y-2">
+            <Label htmlFor="age-filter" className="text-white">
+              Age Range
+            </Label>
+            <div className="flex gap-2">
+              <FormField
+                control={filterForm.control}
+                name="minAge"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormControl>
+                      <Input
+                        {...field}
+                        id="min-age"
+                        placeholder="Min"
+                        type="number"
+                        onChange={(e) => {
+                          field.onChange(e)
+                          setMinAge(e.target.value)
+                          setCurrentPage(1)
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={filterForm.control}
+                name="maxAge"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormControl>
+                      <Input
+                        {...field}
+                        id="max-age"
+                        placeholder="Max"
+                        type="number"
+                        onChange={(e) => {
+                          field.onChange(e)
+                          setMaxAge(e.target.value)
+                          setCurrentPage(1)
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="gender-filter" className="text-white">
-            Gender
-          </Label>
-          <Select
-            value={genderFilter}
-            onValueChange={(value) => {
-              setGenderFilter(value)
-              setCurrentPage(1)
-            }}
-          >
-            <SelectTrigger id="gender-filter" className="w-full">
-              <SelectValue placeholder="Select gender" />
-            </SelectTrigger>
-            <SelectContent className="bg-slate-800 text-white border-slate-700">
-              <SelectItem value="All gender">All gender</SelectItem>
-              <SelectItem value="Male">Male</SelectItem>
-              <SelectItem value="Female">Female</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="class-filter" className="text-white">
-            Education Level
-          </Label>
-          <Select
-            value={classFilter}
-            onValueChange={(value) => {
-              setClassFilter(value)
-              setCurrentPage(1)
-            }}
-          >
-            <SelectTrigger id="class-filter" className="w-full">
-              <SelectValue placeholder="Select class" />
-            </SelectTrigger>
-            <SelectContent className="bg-slate-800 text-white border-slate-700">
-              <SelectItem value="All education level">All education level</SelectItem>
-              <SelectItem value="L1">L1</SelectItem>
-              <SelectItem value="L2">L2</SelectItem>
-              <SelectItem value="L3">L3</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="age-filter" className="text-white">
-            Age Range
-          </Label>
-          <div className="flex gap-2">
-            <Input
-              id="min-age"
-              placeholder="Min"
-              className="w-full"
-              type="number"
-              value={minAge}
-              onChange={(e) => {
-                setMinAge(e.target.value)
-                setCurrentPage(1) // Reset to first page on filter change
-              }}
-            />
-            <Input
-              id="max-age"
-              placeholder="Max"
-              className="w-full"
-              type="number"
-              value={maxAge}
-              onChange={(e) => {
-                setMaxAge(e.target.value)
-                setCurrentPage(1) // Reset to first page on filter change
-              }}
-            />
-          </div>
-        </div>
-      </div>
+        </form>
+      </Form>
 
       <Table>
         <TableHeader className="text-white">
@@ -610,94 +710,119 @@ export default function TableList() {
       </div>
 
       {/* Edit Student Dialog */}
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+      <Dialog
+        open={isEditDialogOpen}
+        onOpenChange={(open) => {
+          setIsEditDialogOpen(open)
+          if (!open) editStudentForm.reset()
+        }}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Edit Student</DialogTitle>
           </DialogHeader>
-          {editingStudent && (
-            <div className="grid gap-4 py-4">
+          <Form {...editStudentForm}>
+            <form onSubmit={editStudentForm.handleSubmit(handleEditStudent)} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="edit-name">Full Name</Label>
-                  <Input
-                    id="edit-name"
-                    value={editingStudent.name}
-                    onChange={(e) => setEditingStudent({ ...editingStudent, name: e.target.value })}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="edit-email">Email</Label>
-                  <Input
-                    id="edit-email"
-                    type="email"
-                    value={editingStudent.email}
-                    onChange={(e) => setEditingStudent({ ...editingStudent, email: e.target.value })}
-                  />
-                </div>
+                <FormField
+                  control={editStudentForm.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Full Name</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="Enter student name" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={editStudentForm.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input {...field} type="email" placeholder="Enter email address" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="edit-gender">Gender</Label>
-                  <Select
-                    value={editingStudent.gender}
-                    onValueChange={(value) => setEditingStudent({ ...editingStudent, gender: value })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent className="bg-slate-800 text-white border-slate-700">
-                      <SelectItem value="Male">Male</SelectItem>
-                      <SelectItem value="Female">Female</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="edit-age">Age</Label>
-                  <Input
-                    id="edit-age"
-                    type="number"
-                    value={editingStudent.age}
-                    onChange={(e) => setEditingStudent({ ...editingStudent, age: e.target.value })}
-                  />
-                </div>
+                <FormField
+                  control={editStudentForm.control}
+                  name="gender"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Gender</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select gender" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="bg-slate-800 text-white border-slate-700">
+                          <SelectItem value="Male">Male</SelectItem>
+                          <SelectItem value="Female">Female</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={editStudentForm.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Phone Number</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="Enter phone number" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="edit-class">Class</Label>
-                  <Select
-                    value={editingStudent.class}
-                    onValueChange={(value) => setEditingStudent({ ...editingStudent, class: value })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent className="bg-slate-800 text-white border-slate-700">
-                      <SelectItem value="L1">L1</SelectItem>
-                      <SelectItem value="L2">L2</SelectItem>
-                      <SelectItem value="L3">L3</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="edit-phone">Phone Number</Label>
-                  <Input
-                    id="edit-phone"
-                    value={editingStudent.phone}
-                    onChange={(e) => setEditingStudent({ ...editingStudent, phone: e.target.value })}
-                  />
-                </div>
+                <FormField
+                  control={editStudentForm.control}
+                  name="class"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Class</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select class" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="bg-slate-800 text-white border-slate-700">
+                          <SelectItem value="L1">L1</SelectItem>
+                          <SelectItem value="L2">L2</SelectItem>
+                          <SelectItem value="L3">L3</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
               </div>
-            </div>
-          )}
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleEditStudent}>Save Changes</Button>
-          </DialogFooter>
+
+              <DialogFooter>
+                <Button variant="outline" type="button" onClick={() => setIsEditDialogOpen(false)}>
+                  Cancel
+                </Button>
+                <Button type="submit">Save Changes</Button>
+              </DialogFooter>
+            </form>
+          </Form>
         </DialogContent>
       </Dialog>
 
