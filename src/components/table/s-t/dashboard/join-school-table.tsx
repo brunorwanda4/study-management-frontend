@@ -126,7 +126,7 @@ export default function JoinSchoolTable({ lang, currentSchool }: props) {
           loading
           type="button"
           button={{ library: "daisy", variant: "ghost" }}
-          href={`/${lang}/s-t/join-school-request`}
+          href={`/${lang}/s-t/join-school-requests`}
           className=" w-full"
         >
           See others 43
