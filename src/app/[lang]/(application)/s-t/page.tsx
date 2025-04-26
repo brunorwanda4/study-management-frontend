@@ -13,8 +13,9 @@ import { GetAllJoinSchoolRequestByCurrentUserEmail } from "@/service/school/scho
 import { getSchoolByIdService } from "@/service/school/school.service";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
-import JoinSchoolTable from "./dashboard/join-school-table";
-import ClassActivitiesTable from "./dashboard/classes-activities-table";
+import JoinSchoolTable from "../../../../components/table/s-t/dashboard/join-school-table";
+import ClassActivitiesTable from "../../../../components/table/s-t/dashboard/classes-activities-table";
+import StudentDashboardTable from "@/components/table/s-t/dashboard/student-dashboard-table";
 
 export const metadata: Metadata = {
   title: "School Dashboard",
@@ -63,6 +64,9 @@ const SchoolStaffPage = async (props: props) => {
         <div className=" flex space-x-4 w-full">
           <JoinSchoolTable lang={lang}/>
           <ClassActivitiesTable lang={lang}/>
+        </div>
+        <div className=" flex space-x-4 w-full">
+          <StudentDashboardTable lang={lang}/>
         </div>
       </div>
     );

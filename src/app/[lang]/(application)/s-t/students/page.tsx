@@ -1,8 +1,4 @@
 import StaffPeople from "@/components/page/school-staff/dashboard/staff-people";
-import { StudentProgressChart } from "@/components/page/school-staff/students-components/student-progress-chart";
-import StudentStatus from "@/components/page/school-staff/students-components/student-status";
-import StudentAttendanceChart from "@/components/page/school-staff/students-components/students-attendance-chart";
-import StudentsList from "@/components/page/school-staff/students-components/students-list";
 import { Metadata } from "next";
 
 export const metadata : Metadata= {

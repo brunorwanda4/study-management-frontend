@@ -129,7 +129,7 @@
     @apply border-base-content/20 outline-ring/50;
   }
   body {
-    @apply bg-base-300;
+    @apply bg-base-200;
   }
 }
 
