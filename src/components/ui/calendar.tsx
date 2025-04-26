@@ -5,7 +5,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
 import { DayPicker } from "react-day-picker"
 
 import { cn } from "@/lib/utils"
-import { buttonVariants } from "@/components/ui/button"
+import { shadcnVariants } from "@/components/ui/button"
 
 function Calendar({
   className,
@@ -22,11 +22,11 @@ function Calendar({
     caption_label: "text-sm font-medium",
     nav: "absolute top-0 flex w-full justify-between z-10",
     button_previous: cn(
-      buttonVariants({ variant: "ghost" }),
+      shadcnVariants({ variant: "ghost" }),
       "size-9 text-muted-foreground/80 hover:text-foreground p-0"
     ),
     button_next: cn(
-      buttonVariants({ variant: "ghost" }),
+      shadcnVariants({ variant: "ghost" }),
       "size-9 text-muted-foreground/80 hover:text-foreground p-0"
     ),
     weekday: "size-9 p-0 text-xs font-medium text-muted-foreground/80",

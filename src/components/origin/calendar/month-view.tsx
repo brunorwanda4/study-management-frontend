@@ -14,25 +14,18 @@ import {
   startOfWeek,
 } from "date-fns"
 
-import {
-  DraggableEvent,
-  DroppableCell,
-  EventGap,
-  EventHeight,
-  EventItem,
-  getAllEventsForDay,
-  getEventsForDay,
-  getSpanningEventsForDay,
-  sortEvents,
-  useEventVisibility,
-  type CalendarEvent,
-} from "@/components/event-calendar"
-import { DefaultStartHour } from "@/components/constants"
+import { DefaultStartHour, EventGap, EventHeight } from "@/components/origin/calendar/constants"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { CalendarEvent } from "./types"
+import { useEventVisibility } from "./use-event-visibility"
+import { getAllEventsForDay, getEventsForDay, getSpanningEventsForDay, sortEvents } from "./utils"
+import { DroppableCell } from "./droppable-cell"
+import { EventItem } from "./event-item"
+import { DraggableEvent } from "./draggable-event"
 
 interface MonthViewProps {
   currentDate: Date

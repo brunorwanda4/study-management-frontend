@@ -6,7 +6,7 @@ import { endOfWeek, isSameDay, isWithinInterval, startOfWeek } from "date-fns"
 import {
   EndHour,
   StartHour,
-} from "@/components/constants"
+} from "@/components/origin/calendar/constants"
 
 export function useCurrentTimeIndicator(
   currentDate: Date,

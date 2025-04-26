@@ -1,9 +1,5 @@
 import { isSameDay } from "date-fns"
-
-import type {
-  CalendarEvent,
-  EventColor,
-} from "@/components/event-calendar"
+import { CalendarEvent, EventColor } from "./types"
 
 /**
  * Get CSS classes for event colors

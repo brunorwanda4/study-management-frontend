@@ -1,3 +1,4 @@
+import SendJoinSchoolRequest from "@/components/dialog/send-join-school-request";
 import MyImage from "@/components/myComponents/myImage";
 import MyLink from "@/components/myComponents/myLink";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Locale } from "@/i18n";
+import { UserSchool } from "@/lib/utils/auth";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 
 const items = [
@@ -64,9 +66,10 @@ const items = [
 
 interface props {
   lang: Locale;
+  currentSchool: UserSchool;
 }
 
-export default function JoinSchoolTable({ lang }: props) {
+export default function JoinSchoolTable({ lang, currentSchool }: props) {
   return (
     <Card className=" w-1/2 pb-2">
       <CardHeader className=" flex justify-between">
@@ -74,9 +77,7 @@ export default function JoinSchoolTable({ lang }: props) {
           Join School Requests
         </CardTitle>
         <div className=" space-x-4">
-          <Button library="daisy" variant="info">
-            Send join request
-          </Button>
+          <SendJoinSchoolRequest currentSchool={currentSchool} lang={lang} />
           <Button variant={"ghost"} shape={"circle"} library="daisy">
             <HiOutlineDotsHorizontal size={24} />
           </Button>

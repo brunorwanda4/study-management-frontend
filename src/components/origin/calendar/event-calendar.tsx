@@ -21,21 +21,21 @@ import {
 } from "lucide-react"
 import { toast } from "sonner"
 
-import {
-  addHoursToDate,
-  AgendaDaysToShow,
-  AgendaView,
-  CalendarDndProvider,
-  CalendarEvent,
-  CalendarView,
-  DayView,
-  EventDialog,
-  EventGap,
-  EventHeight,
-  MonthView,
-  WeekCellsHeight,
-  WeekView,
-} from "@/components/event-calendar"
+// import {
+//   addHoursToDate,
+//   AgendaDaysToShow,
+//   AgendaView,
+//   CalendarDndProvider,
+//   CalendarEvent,
+//   CalendarView,
+//   DayView,
+//   EventDialog,
+//   EventGap,
+//   EventHeight,
+//   MonthView,
+//   WeekCellsHeight,
+//   WeekView,
+// } from "@/components/event-calendar"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -45,6 +45,15 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { CalendarEvent, CalendarView } from "./types"
+import { AgendaDaysToShow, EventGap, EventHeight, WeekCellsHeight } from "./constants"
+import { addHoursToDate } from "./utils"
+import { CalendarDndProvider } from "./calendar-dnd-context"
+import { MonthView } from "./month-view"
+import { WeekView } from "./week-view"
+import { DayView } from "./day-view"
+import { EventDialog } from "./event-dialog"
+import { AgendaView } from "./agenda-view"
 
 export interface EventCalendarProps {
   events?: CalendarEvent[]

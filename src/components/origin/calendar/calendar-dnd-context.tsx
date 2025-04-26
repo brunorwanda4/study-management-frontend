@@ -23,14 +23,13 @@ import {
 } from "@dnd-kit/core"
 import { addMinutes, differenceInMinutes } from "date-fns"
 
-import {
-  EventItem,
-  type CalendarEvent,
-} from "@/components/event-calendar"
+
+import { EventItem, } from "./event-item"
+import { CalendarEvent } from "./types"
 
 // Define the context type
 type CalendarDndContextType = {
-  activeEvent: CalendarEvent | null
+  activeEvent: typeof EventItem | null
   activeId: UniqueIdentifier | null
   activeView: "month" | "week" | "day" | null
   currentTime: Date | null

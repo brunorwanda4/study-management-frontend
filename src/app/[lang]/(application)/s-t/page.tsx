@@ -63,7 +63,7 @@ const SchoolStaffPage = async (props: props) => {
           <SchoolStudentAndClassChart />
         </div>
         <div className=" flex space-x-4 w-full">
-          <JoinSchoolTable lang={lang}/>
+          <JoinSchoolTable currentSchool={currentSchool} lang={lang}/>
           <ClassActivitiesTable lang={lang}/>
         </div>
         <div className=" flex space-x-4 w-full">
