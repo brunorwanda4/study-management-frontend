@@ -1,4 +1,4 @@
-import EditStudentInSchoolForm from "../../school/edit-student-in-form";
+import EditStudentInSchoolForm from "../../../table/school/edit-student-in-form";
 import { AlertDialog,AlertDialogContent, AlertDialogHeader, AlertDialogTitle } from "../../../ui/alert-dialog";
 
 interface EditStudentInSchoolDialogProps {

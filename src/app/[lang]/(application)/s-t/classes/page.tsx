@@ -14,7 +14,7 @@ interface props {
   params: Promise<{ lang: Locale }>;
 }
 
-const SchoolStaffClassesPage = async (props : props) => {
+const SchoolStaffClassesPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
   const [currentUser, currentSchool] = await Promise.all([
@@ -26,14 +26,15 @@ const SchoolStaffClassesPage = async (props : props) => {
     redirect(`/${lang}/auth/login`);
   }
 
-  if (!currentSchool) return <PermissionPage lang={lang} role={currentUser.role ?? "STUDENT"}/>
+  if (!currentSchool)
+    return <PermissionPage lang={lang} role={currentUser.role ?? "STUDENT"} />;
   // const school = await getSchoolByIdService(currentSchool.schoolId);
   // if (!school.data) return <NotFoundPage />;
   return (
     <div className="p-4 space-y-2 max-w-full">
-      
+      <h2 className=" title-page">Classes</h2>
       <div>
-        {/* <ClassTimetable /> */}
+        
       </div>
     </div>
   );

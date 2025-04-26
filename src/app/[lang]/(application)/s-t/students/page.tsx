@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 import type { Locale } from "@/i18n";
-import TableList from "@/components/table/s-t/table-student-list";
+import TableList from "@/components/page/school-staff/table/table-student-list";
 
 interface props {
   lang: Locale;

@@ -1,5 +1,5 @@
 import SchoolJoinRequestCard from "@/components/cards/school-Join-request-card";
-import JoinSchoolDialog from "@/components/table/s-t/dialog/join-school-dialog";
+import JoinSchoolDialog from "@/components/page/school-staff/dialog/join-school-dialog";
 import JoinSchoolRequestBody from "@/components/page/application/join-school-request/join-school-request-body";
 import { Locale } from "@/i18n";
 import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";

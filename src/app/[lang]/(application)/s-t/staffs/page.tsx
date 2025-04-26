@@ -9,7 +9,7 @@ export const metadata : Metadata= {
   },
 }
 
-import StaffList from "@/components/table/s-t/table-staff-list";
+import StaffList from "@/components/page/school-staff/table/table-staff-list";
 
 
 const SchoolStaffStudentPage = () => {

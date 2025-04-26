@@ -1,6 +1,6 @@
 import SchoolEducationChart from "@/components/charts/school-education-chart";
 import SchoolStudentAndClassChart from "@/components/charts/school-student-and-classes-chart";
-import JoinSchoolDialog from "@/components/table/s-t/dialog/join-school-dialog";
+import JoinSchoolDialog from "@/components/page/school-staff/dialog/join-school-dialog";
 import MyImage from "@/components/myComponents/myImage";
 import MyLink from "@/components/myComponents/myLink";
 import JoinSchoolRequestBody from "@/components/page/application/join-school-request/join-school-request-body";
@@ -13,10 +13,10 @@ import { GetAllJoinSchoolRequestByCurrentUserEmail } from "@/service/school/scho
 import { getSchoolByIdService } from "@/service/school/school.service";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
-import JoinSchoolTable from "../../../../components/table/s-t/dashboard/join-school-table";
-import ClassActivitiesTable from "../../../../components/table/s-t/dashboard/classes-activities-table";
-import StudentDashboardTable from "@/components/table/s-t/dashboard/student-dashboard-table";
-import TeachersDashboardTable from "@/components/table/s-t/dashboard/teacher-dashboard-table";
+import JoinSchoolTable from "../../../../components/page/school-staff/dashboard/table/join-school-table";
+import ClassActivitiesTable from "../../../../components/page/school-staff/dashboard/table/classes-activities-table";
+import StudentDashboardTable from "@/components/page/school-staff/dashboard/table/student-dashboard-table";
+import TeachersDashboardTable from "@/components/page/school-staff/dashboard/table/teacher-dashboard-table";
 
 export const metadata: Metadata = {
   title: "School Dashboard",

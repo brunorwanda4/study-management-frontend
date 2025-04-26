@@ -2,7 +2,7 @@ import { AlertDialog } from '@radix-ui/react-alert-dialog';
 import { Button } from '../../../ui/button';
 import { UserPlus } from 'lucide-react';
 import { AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '../../../ui/alert-dialog';
-import AddStudentInSchoolForm from '../../school/add-student-in-school-form';
+import AddStudentInSchoolForm from '../../../table/school/add-student-in-school-form';
 
 const AddStudentInSchoolDialog = () => {
   return (

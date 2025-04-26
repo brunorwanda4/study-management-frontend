@@ -8,7 +8,7 @@ import {
 import { Button } from "../../../ui/button";
 import { Locale } from "@/i18n";
 import { UserSchool } from "@/lib/utils/auth";
-import SendJoinSchoolRequestForm from "../../school/send-join-school-request-form";
+import SendJoinSchoolRequestForm from "../../../table/school/send-join-school-request-form";
 
 interface Props {
   lang: Locale;

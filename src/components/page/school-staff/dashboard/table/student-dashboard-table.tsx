@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/table";
 import { Locale } from "@/i18n";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
-import AddStudentInSchoolDialog from "../dialog/add-student-in-school-dialog";
+import AddStudentInSchoolDialog from "../../dialog/add-student-in-school-dialog";
 
 const items = [
   {

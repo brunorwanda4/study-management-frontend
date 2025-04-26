@@ -8,7 +8,7 @@ import {
 } from "../../../ui/dialog";
 import MyImage from "../../../myComponents/myImage";
 import { Button } from "../../../ui/button";
-import InputJoinSchoolFormForm from "../../school/join-school-form";
+import InputJoinSchoolFormForm from "../../../table/school/join-school-form";
 
 const JoinSchoolDialog = () => {
   return (
