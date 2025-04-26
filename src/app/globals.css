@@ -140,6 +140,10 @@
   @apply font-medium text-lg;
 }
 
+.small-title{
+  @apply font-medium text-base
+}
+
 .basic-card {
   @apply bg-base-100 p-4 card border border-base-content/20;
 }
