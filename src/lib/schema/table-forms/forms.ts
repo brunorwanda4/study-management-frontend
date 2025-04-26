@@ -1,12 +1,11 @@
 import { z } from "zod"
+import { GenderEnum } from "../user.dto"
 
 // Schema for the "Add New Student" form
 export const newStudentFormSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
   email: z.string().email({ message: "Invalid email address" }),
-  gender: z.enum(["Male", "Female"], {
-    required_error: "Gender is required",
-  }),
+  gender: GenderEnum,
   age: z.string().min(1, { message: "Age is required" }),
   class: z.enum(["L1", "L2", "L3"], {
     required_error: "Class is required",
@@ -15,7 +14,7 @@ export const newStudentFormSchema = z.object({
 })
 
 // Schema for the "Edit Student" form
-export const editStudentFormSchema = z.object({
+export const editStudentSchema = z.object({
   id: z.string(),
   name: z.string().min(1, { message: "Name is required" }),
   email: z.string().email({ message: "Invalid email address" }),
@@ -33,4 +32,4 @@ export const editStudentFormSchema = z.object({
 
 // Type definitions derived from schemas
 export type NewStudentForm = z.infer<typeof newStudentFormSchema>
-export type EditStudentForm = z.infer<typeof editStudentFormSchema>
+export type EditStudentDto = z.infer<typeof editStudentSchema>

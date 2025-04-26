@@ -5,8 +5,8 @@ import { addDays, setHours, setMinutes, subDays } from "date-fns"
 
 import {
   EventCalendar,
-  type CalendarEvent,
 } from "@/components/origin/calendar/event-calendar"
+import { CalendarEvent } from "./calendar/types"
 
 // Sample events data with hardcoded times
 const sampleEvents: CalendarEvent[] = [

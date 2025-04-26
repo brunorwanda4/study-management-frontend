@@ -1,4 +1,4 @@
-import { SchoolAcademicForm } from "@/components/forms/school/school-academic-form";
+import { SchoolAcademicForm } from "@/components/table/school/school-academic-form";
 import NotFoundPage from "@/components/page/not-found";
 import PermissionPage from "@/components/page/permission-page";
 import { Locale } from "@/i18n";

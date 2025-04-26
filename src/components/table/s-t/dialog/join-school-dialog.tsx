@@ -5,10 +5,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../ui/dialog";
-import MyImage from "../myComponents/myImage";
-import { Button } from "../ui/button";
-import InputJoinSchoolFormForm from "../forms/school/join-school-form";
+} from "../../../ui/dialog";
+import MyImage from "../../../myComponents/myImage";
+import { Button } from "../../../ui/button";
+import InputJoinSchoolFormForm from "../../school/join-school-form";
 
 const JoinSchoolDialog = () => {
   return (
