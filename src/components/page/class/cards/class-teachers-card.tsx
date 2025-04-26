@@ -2,7 +2,7 @@ import MyImage from "@/components/myComponents/myImage";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import React from "react";
-import { BsGear } from "react-icons/bs";
+import { BsGear, BsPlusCircle } from "react-icons/bs";
 
 const ClassTeacherCard = () => {
   return (
@@ -10,7 +10,7 @@ const ClassTeacherCard = () => {
       <CardHeader className=" flex justify-between">
         <CardTitle>Teachers</CardTitle>
         <Button variant={"primary"} library="daisy" size={"sm"}>
-          Add Teacher
+        <BsPlusCircle />  Add Teacher
         </Button>
       </CardHeader>
       <CardContent className=" p-0">
