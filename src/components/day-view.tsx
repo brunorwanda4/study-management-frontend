@@ -25,7 +25,7 @@ import {
 import {
   EndHour,
   StartHour,
-} from "@/components/event-calendar/constants"
+} from "@/components/constants"
 import { cn } from "@/lib/utils"
 
 interface DayViewProps {

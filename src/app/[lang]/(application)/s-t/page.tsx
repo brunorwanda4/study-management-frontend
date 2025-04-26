@@ -16,6 +16,7 @@ import { redirect } from "next/navigation";
 import JoinSchoolTable from "../../../../components/table/s-t/dashboard/join-school-table";
 import ClassActivitiesTable from "../../../../components/table/s-t/dashboard/classes-activities-table";
 import StudentDashboardTable from "@/components/table/s-t/dashboard/student-dashboard-table";
+import TeachersDashboardTable from "@/components/table/s-t/dashboard/teacher-dashboard-table";
 
 export const metadata: Metadata = {
   title: "School Dashboard",
@@ -67,6 +68,7 @@ const SchoolStaffPage = async (props: props) => {
         </div>
         <div className=" flex space-x-4 w-full">
           <StudentDashboardTable lang={lang}/>
+          <TeachersDashboardTable lang={lang}/>
         </div>
       </div>
     );
