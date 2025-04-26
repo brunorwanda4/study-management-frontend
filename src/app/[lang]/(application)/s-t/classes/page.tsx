@@ -1,4 +1,5 @@
 import PermissionPage from "@/components/page/permission-page";
+import ClassesSchoolTable from "@/components/page/school-staff/table/classes-table";
 import type { Locale } from "@/i18n";
 import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";
 import { Metadata } from "next";
@@ -34,7 +35,7 @@ const SchoolStaffClassesPage = async (props: props) => {
     <div className="p-4 space-y-2 max-w-full">
       <h2 className=" title-page">Classes</h2>
       <div>
-        
+        <ClassesSchoolTable />
       </div>
     </div>
   );
