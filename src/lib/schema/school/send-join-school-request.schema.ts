@@ -7,11 +7,9 @@ const ROLES = ["STUDENT", "TEACHER", "SCHOOLSTAFF"] as const;
 export const sendJoinSchoolRequestSchema = z
   .object({
     email: z.string().email({ message: "Invalid email address" }),
-    name: z.string().optional(),
     role: z.enum(ROLES, { required_error: "Please select a role" }),
     schoolId: z.string().min(1, { message: "School ID is required" }),
     classId: z.string().optional(),
-    phone: z.string().optional(),
     // Use z.enum for staffRole, make it optional initially
     staffRole: z.enum(validSchoolStaffRoles).optional(),
     // Add a field for 'Other' staff role if you have an 'OTHER' option

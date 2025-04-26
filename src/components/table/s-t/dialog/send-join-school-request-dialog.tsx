@@ -19,18 +19,18 @@ const SendJoinSchoolRequest = ({ currentSchool }: Props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button library="daisy" variant="info">
+        <Button size={"sm"} library="daisy" variant="info">
           Send join request
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[45rem]">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>
             Send request to Join{" "}
             <span className=" font-medium">{currentSchool.name}</span>
           </DialogTitle>
         </DialogHeader>
-        <SendJoinSchoolRequestForm currentSchool={currentSchool}/>
+        <SendJoinSchoolRequestForm currentSchool={currentSchool} />
       </DialogContent>
     </Dialog>
   );
