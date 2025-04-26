@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form"; // Import useWatch
+import { useForm } from "react-hook-form"; // useWatch is implicitly used via form.watch
 
 import { Button } from "@/components/ui/button";
 import {
@@ -13,7 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react"; // Added useEffect
 import { FormError, FormSuccess } from "@/components/myComponents/form-message";
 import {
   SendJoinSchoolRequestDto,
@@ -27,13 +27,39 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SchoolStaffRoles } from "@/lib/context/school.context";
+import { SchoolStaffRoles } from "@/lib/context/school.context"; // Keep for staff roles
+
+// Define a type for your class data (adjust as needed)
+interface ClassData {
+  id: string;
+  name: string; // e.g., "Grade 10A", "Physics Class"
+}
+
+const clasess: ClassData[] = [
+  {
+    id: "1",
+    name: "L5 SOD",
+  },
+  {
+    id: "2",
+    name: "L3 SOD",
+  },
+  {
+    id: "3",
+    name: "L5 NIT",
+  },
+];
 
 interface props {
   currentSchool: UserSchool;
+  // classes: ClassData[]; // <-- Pass the available classes for the school here
 }
 
-export default function SendJoinSchoolRequestForm({ currentSchool }: props) {
+export default function SendJoinSchoolRequestForm({
+  currentSchool,
+  // classes = [],
+}: props) {
+  // Default classes to empty array
   const [error, setError] = useState<undefined | null | string>("");
   const [success, setSuccess] = useState<undefined | null | string>("");
   const [isPending, startTransition] = useTransition();
@@ -43,65 +69,76 @@ export default function SendJoinSchoolRequestForm({ currentSchool }: props) {
     defaultValues: {
       email: "",
       schoolId: currentSchool.schoolId,
-      role: undefined, // Explicitly set default for select if needed
-      staffRole: "", // Add default value for the new field
-      classId: "", // Add if you have this field
+      role: undefined,
+      staffRole: undefined, // Use undefined or "" based on your schema/preference
+      classId: undefined, // Use undefined or ""
     },
-    mode: "onChange", // Optional: Validate on change for better UX with conditional fields
+    mode: "onChange",
   });
 
-  const selectedRole = form.watch("role");
+  const selectedRole = form.watch("role"); 
+
+  useEffect(() => {
+    if (selectedRole !== "SCHOOLSTAFF") {
+      form.resetField("staffRole", { defaultValue: undefined }); // Or ""
+    }
+    if (selectedRole !== "STUDENT") {
+      form.resetField("classId", { defaultValue: undefined }); // Or ""
+    }
+    // Re-trigger validation if needed after reset
+    if (selectedRole) {
+      form.trigger();
+    }
+  }, [selectedRole, form]);
 
   function onSubmit(data: SendJoinSchoolRequestDto) {
     setError(null);
     setSuccess(null);
 
-    // If role is not SCHOOLSTAFF, explicitly remove or nullify staffRole
-    // This prevents sending unnecessary data if the user selected staff,
-    // entered a role, then changed their mind back to student/teacher.
-    // Zod refine handles validation, but this cleans the submitted data.
-    const submissionData = {
-      ...data,
-      staffRole: data.role === "SCHOOLSTAFF" ? data.staffRole : undefined,
+    // Prepare submission data, only include relevant conditional fields
+    const submissionData: Partial<SendJoinSchoolRequestDto> = {
+      // Use Partial<> if some fields might be undefined
+      email: data.email,
+      schoolId: data.schoolId,
+      role: data.role,
     };
 
+    if (data.role === "SCHOOLSTAFF") {
+      submissionData.staffRole = data.staffRole;
+    } else if (data.role === "STUDENT") {
+      submissionData.classId = data.classId;
+    }
+
     console.log("Data before processing:", data);
-    console.log("Data being submitted:", submissionData);
+    console.log("Data being submitted:", submissionData); // Log the cleaned data
 
     startTransition(async () => {
-      // --- Replace with your actual API call ---
-      // Simulating API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
       console.log("Simulating API call with:", submissionData);
-      // Example success/error handling
+
+      // Example success/error handling (use submissionData)
       if (submissionData.email === "error@example.com") {
         setError("Simulated API error occurred.");
       } else {
         setSuccess(`Request sent successfully for ${submissionData.email}! ☺️`);
-        // Reset form on success (optional)
-        // form.reset();
+        // form.reset(); // Optionally reset the form on success
       }
-      // --- End of simulation ---
-
-      // const join = await JoinSchoolByUsernameAndCode(submissionData); // Use submissionData
-      // if (join.data) {
-      //   setSuccess(`To join school successfully! ☺️`);
-      //   form.reset(); // Optionally reset form on success
-      // } else {
-      //   setError(join.message);
-      // }
     });
   }
 
   return (
     <Form {...form}>
-      <form className=" w-full space-y-4 flex flex-col" onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        className=" w-full space-y-4 flex flex-col"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
+        {/* Email Field (no changes needed) */}
         <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
             <FormItem className=" space-y-2 flex flex-col">
-              <FormLabel className="  ">Email Address *</FormLabel>
+              <FormLabel className=" ">Email Address *</FormLabel>
               <FormControl>
                 <Input
                   type="email"
@@ -114,20 +151,25 @@ export default function SendJoinSchoolRequestForm({ currentSchool }: props) {
             </FormItem>
           )}
         />
+
+        {/* Role Select Field (no changes needed) */}
         <FormField
           control={form.control}
           name="role"
           render={({ field }) => (
             <FormItem className=" space-y-2 flex flex-col">
-              <FormLabel className="  ">Select Role *</FormLabel>
+              <FormLabel className=" ">Select Role *</FormLabel>
               <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                disabled={isPending} // Disable select when pending
+                onValueChange={(value) => {
+                  field.onChange(value); // Update the form state
+                  // Triggering validation here ensures dependent fields are checked immediately
+                  form.trigger(["staffRole", "classId"]);
+                }}
+                value={field.value || ""} // Handle undefined case
+                disabled={isPending}
               >
                 <FormControl>
                   <SelectTrigger>
-                    {/* Show placeholder if no value, otherwise show selected value */}
                     <SelectValue placeholder="Select joiner role" />
                   </SelectTrigger>
                 </FormControl>
@@ -135,7 +177,6 @@ export default function SendJoinSchoolRequestForm({ currentSchool }: props) {
                   <SelectItem value="STUDENT">Student</SelectItem>
                   <SelectItem value="TEACHER">Teacher</SelectItem>
                   <SelectItem value="SCHOOLSTAFF">School Staff</SelectItem>{" "}
-                  {/* Updated Label */}
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -143,29 +184,25 @@ export default function SendJoinSchoolRequestForm({ currentSchool }: props) {
           )}
         />
 
+        {/* Conditional Staff Role Select */}
         {selectedRole === "SCHOOLSTAFF" && (
           <FormField
             control={form.control}
-            name="staffRole" // Target the correct field name
+            name="staffRole"
             render={({ field }) => (
               <FormItem className=" space-y-2 flex flex-col">
-                <FormLabel className="  ">Specific Staff Role *</FormLabel>{" "}
-                {/* Updated Label */}
-                {/* Replace Input with Select */}
+                <FormLabel className=" ">Specific Staff Role *</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  // Use field.value which comes from defaultValues or user selection
-                  value={field.value}
+                  value={field.value || ""} // Handle undefined case
                   disabled={isPending}
                 >
                   <FormControl>
                     <SelectTrigger>
-                      {/* Show placeholder */}
                       <SelectValue placeholder="Select staff role" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {/* Map over the imported SchoolStaffRoles */}
                     {SchoolStaffRoles.map((staffRole) => (
                       <SelectItem key={staffRole.value} value={staffRole.value}>
                         {staffRole.label}
@@ -173,21 +210,65 @@ export default function SendJoinSchoolRequestForm({ currentSchool }: props) {
                     ))}
                   </SelectContent>
                 </Select>
-                <FormMessage /> {/* Show validation errors */}
+                <FormMessage /> {/* Shows validation errors for staffRole */}
               </FormItem>
             )}
           />
         )}
+
+        {/* Conditional Class Select - THIS IS THE UPDATED SECTION */}
+        {selectedRole === "STUDENT" && (
+          <FormField
+            control={form.control}
+            name="classId" // Correct field name
+            render={({ field }) => (
+              <FormItem className=" space-y-2 flex flex-col">
+                {/* Updated Label */}
+                <FormLabel className=" ">Select Class *</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  value={field.value || ""} // Handle undefined case
+                  disabled={isPending || clasess.length === 0} // Disable if no classes
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      {/* Updated Placeholder */}
+                      <SelectValue placeholder="Select student's class" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {/* Map over the actual classes data */}
+                    {clasess.length === 0 ? (
+                      <SelectItem value="-" disabled>
+                        No classes available
+                      </SelectItem>
+                    ) : (
+                      clasess.map((classItem) => (
+                        <SelectItem key={classItem.id} value={classItem.id}>
+                          {classItem.name}
+                        </SelectItem>
+                      ))
+                    )}
+                  </SelectContent>
+                </Select>
+                <FormMessage /> {/* Shows validation errors for classId */}
+              </FormItem>
+            )}
+          />
+        )}
+
+        {/* Error/Success Messages */}
         <div className=" ">
           <FormError message={error} />
           <FormSuccess message={success} />
         </div>
+
         {/* Submit Button */}
         <Button
-          library="daisy"
+          library="daisy" // Assuming this is a custom prop/style
           disabled={isPending}
           className=" w-full"
-          variant={"info"}
+          variant={"info"} // Assuming this is a custom prop/style
           type="submit"
         >
           {isPending ? "Sending..." : "Send Request"}
