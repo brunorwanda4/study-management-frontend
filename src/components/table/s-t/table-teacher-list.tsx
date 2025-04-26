@@ -445,27 +445,50 @@ export default function TeacherList() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Classes</FormLabel>
-                          <div className="flex flex-wrap gap-2 mt-2">
-                            {availableClasses.map((cls) => (
-                              <div key={cls} className="flex items-center space-x-2">
-                                <Checkbox
-                                  id={`class-${cls}`}
-                                  checked={field.value.includes(cls)}
-                                  onCheckedChange={(checked) => {
-                                    if (checked) {
-                                      field.onChange([...field.value, cls])
-                                    } else {
-                                      field.onChange(field.value.filter((value) => value !== cls))
-                                    }
+                          <Select
+                            onValueChange={(value) => {
+                              const currentValues = field.value || []
+                              if (currentValues.includes(value)) {
+                                field.onChange(currentValues.filter((v) => v !== value))
+                              } else {
+                                field.onChange([...currentValues, value])
+                              }
+                            }}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select classes">
+                                  {field.value?.length > 0
+                                    ? `${field.value.length} class${field.value.length > 1 ? "es" : ""} selected`
+                                    : "Select classes"}
+                                </SelectValue>
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {availableClasses.map((cls) => (
+                                <SelectItem key={cls} value={cls}>
+                                  <div className="flex items-center gap-2">
+                                    <Checkbox checked={field.value?.includes(cls)} />
+                                    <span>{cls}</span>
+                                  </div>
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <div className="flex flex-wrap gap-1 mt-2">
+                            {field.value?.map((cls) => (
+                              <Badge key={cls} variant="outline" className="bg-slate-700">
+                                {cls}
+                                <button
+                                  type="button"
+                                  className="ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                                  onClick={() => {
+                                    field.onChange(field.value.filter((value) => value !== cls))
                                   }}
-                                />
-                                <label
-                                  htmlFor={`class-${cls}`}
-                                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                 >
-                                  {cls}
-                                </label>
-                              </div>
+                                  ×
+                                </button>
+                              </Badge>
                             ))}
                           </div>
                           <FormMessage />
@@ -481,27 +504,50 @@ export default function TeacherList() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Subjects</FormLabel>
-                          <div className="flex flex-wrap gap-2 mt-2">
-                            {availableSubjects.map((subject) => (
-                              <div key={subject} className="flex items-center space-x-2">
-                                <Checkbox
-                                  id={`subject-${subject}`}
-                                  checked={field.value.includes(subject)}
-                                  onCheckedChange={(checked) => {
-                                    if (checked) {
-                                      field.onChange([...field.value, subject])
-                                    } else {
-                                      field.onChange(field.value.filter((value) => value !== subject))
-                                    }
+                          <Select
+                            onValueChange={(value) => {
+                              const currentValues = field.value || []
+                              if (currentValues.includes(value)) {
+                                field.onChange(currentValues.filter((v) => v !== value))
+                              } else {
+                                field.onChange([...currentValues, value])
+                              }
+                            }}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select subjects">
+                                  {field.value?.length > 0
+                                    ? `${field.value.length} subject${field.value.length > 1 ? "s" : ""} selected`
+                                    : "Select subjects"}
+                                </SelectValue>
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {availableSubjects.map((subject) => (
+                                <SelectItem key={subject} value={subject}>
+                                  <div className="flex items-center gap-2">
+                                    <Checkbox checked={field.value?.includes(subject)} />
+                                    <span>{subject}</span>
+                                  </div>
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <div className="flex flex-wrap gap-1 mt-2">
+                            {field.value?.map((subject) => (
+                              <Badge key={subject} variant="outline" className="bg-slate-700">
+                                {subject}
+                                <button
+                                  type="button"
+                                  className="ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                                  onClick={() => {
+                                    field.onChange(field.value.filter((value) => value !== subject))
                                   }}
-                                />
-                                <label
-                                  htmlFor={`subject-${subject}`}
-                                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                 >
-                                  {subject}
-                                </label>
-                              </div>
+                                  ×
+                                </button>
+                              </Badge>
                             ))}
                           </div>
                           <FormMessage />
@@ -942,27 +988,50 @@ export default function TeacherList() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Classes</FormLabel>
-                      <div className="flex flex-wrap gap-2 mt-2">
-                        {availableClasses.map((cls) => (
-                          <div key={cls} className="flex items-center space-x-2">
-                            <Checkbox
-                              id={`edit-class-${cls}`}
-                              checked={field.value.includes(cls)}
-                              onCheckedChange={(checked) => {
-                                if (checked) {
-                                  field.onChange([...field.value, cls])
-                                } else {
-                                  field.onChange(field.value.filter((value) => value !== cls))
-                                }
+                      <Select
+                        onValueChange={(value) => {
+                          const currentValues = field.value || []
+                          if (currentValues.includes(value)) {
+                            field.onChange(currentValues.filter((v) => v !== value))
+                          } else {
+                            field.onChange([...currentValues, value])
+                          }
+                        }}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select classes">
+                              {field.value?.length > 0
+                                ? `${field.value.length} class${field.value.length > 1 ? "es" : ""} selected`
+                                : "Select classes"}
+                            </SelectValue>
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="bg-slate-800 text-white border-slate-700">
+                          {availableClasses.map((cls) => (
+                            <SelectItem key={cls} value={cls}>
+                              <div className="flex items-center gap-2">
+                                <Checkbox checked={field.value?.includes(cls)} />
+                                <span>{cls}</span>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <div className="flex flex-wrap gap-1 mt-2">
+                        {field.value?.map((cls) => (
+                          <Badge key={cls} variant="outline" className="bg-slate-700">
+                            {cls}
+                            <button
+                              type="button"
+                              className="ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                              onClick={() => {
+                                field.onChange(field.value.filter((value) => value !== cls))
                               }}
-                            />
-                            <label
-                              htmlFor={`edit-class-${cls}`}
-                              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             >
-                              {cls}
-                            </label>
-                          </div>
+                              ×
+                            </button>
+                          </Badge>
                         ))}
                       </div>
                       <FormMessage />
@@ -978,27 +1047,50 @@ export default function TeacherList() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Subjects</FormLabel>
-                      <div className="flex flex-wrap gap-2 mt-2">
-                        {availableSubjects.map((subject) => (
-                          <div key={subject} className="flex items-center space-x-2">
-                            <Checkbox
-                              id={`edit-subject-${subject}`}
-                              checked={field.value.includes(subject)}
-                              onCheckedChange={(checked) => {
-                                if (checked) {
-                                  field.onChange([...field.value, subject])
-                                } else {
-                                  field.onChange(field.value.filter((value) => value !== subject))
-                                }
+                      <Select
+                        onValueChange={(value) => {
+                          const currentValues = field.value || []
+                          if (currentValues.includes(value)) {
+                            field.onChange(currentValues.filter((v) => v !== value))
+                          } else {
+                            field.onChange([...currentValues, value])
+                          }
+                        }}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select subjects">
+                              {field.value?.length > 0
+                                ? `${field.value.length} subject${field.value.length > 1 ? "s" : ""} selected`
+                                : "Select subjects"}
+                            </SelectValue>
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="bg-slate-800 text-white border-slate-700">
+                          {availableSubjects.map((subject) => (
+                            <SelectItem key={subject} value={subject}>
+                              <div className="flex items-center gap-2">
+                                <Checkbox checked={field.value?.includes(subject)} />
+                                <span>{subject}</span>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <div className="flex flex-wrap gap-1 mt-2">
+                        {field.value?.map((subject) => (
+                          <Badge key={subject} variant="outline" className="bg-slate-700">
+                            {subject}
+                            <button
+                              type="button"
+                              className="ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                              onClick={() => {
+                                field.onChange(field.value.filter((value) => value !== subject))
                               }}
-                            />
-                            <label
-                              htmlFor={`edit-subject-${subject}`}
-                              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             >
-                              {subject}
-                            </label>
-                          </div>
+                              ×
+                            </button>
+                          </Badge>
                         ))}
                       </div>
                       <FormMessage />
