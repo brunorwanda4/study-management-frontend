@@ -21,44 +21,44 @@ import { HiOutlineDotsHorizontal } from "react-icons/hi";
 
 const items = [
   {
-    id: "1",
-    name: "Alex Thompson",
-    username: "@alexthompson",
+    id: "5",
+    name: "David Kim",
+    className: "L4 SOD",
     image:
-      "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358071/avatar-40-02_upqrxi.jpg",
-    email: "alex.t@company.com",
-    role: "Student",
-    sendOn: "2 day ago",
+      "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358070/avatar-40-05_cmz0mg.jpg",
+    subject: "Kinyarwanda",
+    type: "Homework",
+    submit: "43 min from now",
   },
   {
-    id: "2",
-    name: "Sarah Chen",
-    username: "@sarahchen",
+    id: "1",
+    name: "Alex Thompson",
+    className: "S3",
     image:
-      "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358073/avatar-40-01_ij9v7j.jpg",
-    email: "sarah.c@company.com",
-    role: "Teacher",
-    sendOn: "1 hour ago",
+      "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358071/avatar-40-02_upqrxi.jpg",
+    subject: "English",
+    type: "Excises",
+    submit: "2 day from now",
   },
   {
     id: "4",
     name: "Maria Garcia",
-    username: "@mariagarcia",
+    className: "L5 NIT",
     image:
       "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358072/avatar-40-03_dkeufx.jpg",
-    email: "m.garcia@company.com",
-    role: "School Staff",
-    sendOn: "3 days ago",
+    subject: "Math",
+    type: "Homework",
+    submit: "3 hours from now",
   },
   {
-    id: "5",
-    name: "David Kim",
-    username: "@davidkim",
+    id: "2",
+    name: "Sarah Chen",
+    className: "L4 SOD",
     image:
-      "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358070/avatar-40-05_cmz0mg.jpg",
-    email: "d.kim@company.com",
-    role: "Teacher",
-    sendOn: "43 min ago",
+      "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358073/avatar-40-01_ij9v7j.jpg",
+    subject: "Biology",
+    type: "Test",
+    submit: "1 hour ago",
   },
 ];
 
@@ -66,17 +66,14 @@ interface props {
   lang: Locale;
 }
 
-export default function JoinSchoolTable({ lang }: props) {
+export default function ClassActivitiesTable({ lang }: props) {
   return (
-    <Card className=" w-1/2">
+    <Card className="w-1/2">
       <CardHeader className=" flex justify-between">
         <CardTitle className="text-lg font-semibold">
-          Join School Requests
+          Classes activities
         </CardTitle>
         <div className=" space-x-4">
-          <Button library="daisy" variant="info">
-            Send join request
-          </Button>
           <Button variant={"ghost"} shape={"circle"} library="daisy">
             <HiOutlineDotsHorizontal size={24} />
           </Button>
@@ -86,9 +83,10 @@ export default function JoinSchoolTable({ lang }: props) {
         <Table className="">
           <TableHeader>
             <TableRow className="hover:bg-transparent">
-              <TableHead>Name</TableHead>
-              <TableHead>Role</TableHead>
-              <TableHead>Send on</TableHead>
+              <TableHead>Class</TableHead>
+              <TableHead>Subject</TableHead>
+              <TableHead>Type</TableHead>
+              <TableHead>Submit on</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -103,18 +101,16 @@ export default function JoinSchoolTable({ lang }: props) {
                       alt={item.name}
                     />
                     <div>
-                      <div className="font-medium">{item.name}</div>
+                      <div className="font-medium">{item.className}</div>
                       <span className="text-muted-foreground mt-0.5 text-xs">
-                        {item.email}
+                        {item.name}
                       </span>
                     </div>
                   </div>
                 </TableCell>
-                <TableCell>{item.role}</TableCell>
-                <TableCell className="text-right">{item.sendOn}</TableCell>
-                <TableCell>
-                  <HiOutlineDotsHorizontal />
-                </TableCell>
+                <TableCell>{item.subject}</TableCell>
+                <TableCell className="text-start">{item.type}</TableCell>
+                <TableCell className="text-start">{item.submit}</TableCell>
               </TableRow>
             ))}
           </TableBody>

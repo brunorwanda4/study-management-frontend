@@ -14,6 +14,7 @@ import { getSchoolByIdService } from "@/service/school/school.service";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import JoinSchoolTable from "./dashboard/join-school-table";
+import ClassActivitiesTable from "./dashboard/classes-activities-table";
 
 export const metadata: Metadata = {
   title: "School Dashboard",
@@ -59,8 +60,9 @@ const SchoolStaffPage = async (props: props) => {
           <SchoolEducationChart />
           <SchoolStudentAndClassChart />
         </div>
-        <div>
-          <JoinSchoolTable />
+        <div className=" flex space-x-4 w-full">
+          <JoinSchoolTable lang={lang}/>
+          <ClassActivitiesTable lang={lang}/>
         </div>
       </div>
     );
