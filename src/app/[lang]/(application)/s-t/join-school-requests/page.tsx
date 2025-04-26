@@ -3,7 +3,6 @@ import { Locale } from "@/i18n";
 import { getAuthUserServer } from "@/lib/utils/auth";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
-import React from "react";
 export const metadata: Metadata = {
   title: "School Join Requests",
   description: "Join School Requests",
