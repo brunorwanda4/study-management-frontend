@@ -1,46 +1,33 @@
+import StaffPeople from "@/components/page/school-staff/dashboard/staff-people";
+import { Metadata } from "next";
 
-import StaffPeople from '@/components/page/school-staff/dashboard/staff-people';
-import { StudentProgressChart } from '@/components/page/school-staff/students-components/student-progress-chart';
-import StudentStatus from '@/components/page/school-staff/students-components/student-status';
-import StudentsList from '@/components/page/school-staff/students-components/students-list';
-import SchoolHeader from '@/components/page/school/school-header';
-import { Locale } from '@/i18n';
+export const metadata : Metadata= {
+  title: "Teacher management",
+  description: "Teacher page",
+  icons: {
+    icon: "/favicon.ico",
+  },
+}
+
+import type { Locale } from "@/i18n";
+import TeacherList from "@/components/table/s-t/table-teacher-list";
 
 interface props {
-  lang: Locale
+  lang: Locale;
 }
-const SchoolStaffTeacherPage = ({lang}: props) => {
-   
+
+const SchoolStaffStudentPage = ({ lang }: props) => {
   return (
-    <div className="p-4 space-y-2 max-w-full">
-      <SchoolHeader onThePage lang={lang} />
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 space-x-4">
-        <div className="space-y-4">
-          <div className="overflow-hidden">
-            <StaffPeople lang={lang} total={100} Ftotal={50} Mtotal={50} title="Teachers" role="Teachers" />
-          </div>
-
-          <div className=" overflow-hidden">
-            <StudentsList title="All teachers" />
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          <div className="overflow-hidden">
-            <StudentStatus lang={lang} status='Teachers Status' role='Teacher' />
-          </div>
-
-          <div className="  overflow-hidden">
-            <StudentsList title="Attendance" />
-          </div>
-        </div>
-      </div>
+    <div className="p-4 space-y-4 ">
+      <div className=' flex space-x-4'>
+      <StaffPeople lang={lang} total={762} title='Teacher' Ftotal={60} Mtotal={37} role='Total Teacher'/>
+      <StaffPeople lang={lang} total={345} title='Primary' Ftotal={100} Mtotal={233} role='Total Primary Teacher' />
+      <StaffPeople lang={lang} total={345} title='Ordinary_level' Ftotal={100} Mtotal={233} role='Total Ordinary_level Teacher' />
+    </div>
       <div>
-        <StudentProgressChart title='Teaching Progress'/>
+      <TeacherList/>
       </div>
     </div>
-  )
-}
-
-export default SchoolStaffTeacherPage
+  );
+};
+export default SchoolStaffStudentPage;
