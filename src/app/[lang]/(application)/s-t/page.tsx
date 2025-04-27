@@ -17,6 +17,7 @@ import JoinSchoolTable from "../../../../components/page/school-staff/dashboard/
 import ClassActivitiesTable from "../../../../components/page/school-staff/dashboard/table/classes-activities-table";
 import StudentDashboardTable from "@/components/page/school-staff/dashboard/table/student-dashboard-table";
 import TeachersDashboardTable from "@/components/page/school-staff/dashboard/table/teacher-dashboard-table";
+import { getClassesBySchoolIdViewData } from "@/service/class/class.service";
 
 export const metadata: Metadata = {
   title: "School Dashboard",
@@ -40,7 +41,10 @@ const SchoolStaffPage = async (props: props) => {
 
   // page which shown base on user
   if (currentSchool) {
-    const school = await getSchoolByIdService(currentSchool.schoolId);
+    const [school, classes] = await Promise.all([
+      getSchoolByIdService(currentSchool.schoolId),
+      getClassesBySchoolIdViewData(currentSchool.schoolId),
+    ]);
     if (!school.data) return <NotFoundPage />;
     return (
       <div className=" p-4 space-y-4 w-full">
@@ -60,15 +64,15 @@ const SchoolStaffPage = async (props: props) => {
         {/* school basic info */}
         <div className=" flex space-x-4 w-full">
           <SchoolEducationChart />
-          <SchoolStudentAndClassChart />
+          <SchoolStudentAndClassChart classes={classes.data || []}/>
         </div>
         <div className=" flex space-x-4 w-full">
-          <JoinSchoolTable currentSchool={currentSchool} lang={lang}/>
-          <ClassActivitiesTable lang={lang}/>
+          <JoinSchoolTable currentSchool={currentSchool} lang={lang} />
+          <ClassActivitiesTable lang={lang} />
         </div>
         <div className=" flex space-x-4 w-full">
-          <StudentDashboardTable lang={lang}/>
-          <TeachersDashboardTable lang={lang}/>
+          <StudentDashboardTable lang={lang} />
+          <TeachersDashboardTable lang={lang} />
         </div>
       </div>
     );
