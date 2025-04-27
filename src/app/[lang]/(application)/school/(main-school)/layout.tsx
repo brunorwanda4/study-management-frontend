@@ -32,7 +32,12 @@ const layout = async (props: props) => {
   return (
     <section>
       <div className=" px-4 space-y-4 pb-4">
-        <SchoolHeader school={school.data} isMySchool lang={lang} />
+        <SchoolHeader
+          school={school.data}
+          currentSchool={currentSchool}
+          currentUser={currentUser}
+          lang={lang}
+        />
         <Separator />
         <SchoolHomeNav lang={lang} />
       </div>
