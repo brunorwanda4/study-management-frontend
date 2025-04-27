@@ -49,7 +49,7 @@ const ClassIdPage = async ({ params }: Props) => {
       />
       <Separator />
       <div className="flex">
-        <ClassTeacherCard />
+        <ClassTeacherCard teachers={currentCls.data.teacher}/>
         <div />
       </div>
     </div>
