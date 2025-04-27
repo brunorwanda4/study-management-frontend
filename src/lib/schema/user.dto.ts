@@ -6,22 +6,22 @@ export const UserRoleEnum = z.enum(["STUDENT", "TEACHER", "ADMIN", "SCHOOLSTAFF"
 });
 export type UserRoleDto = z.infer<typeof UserRoleEnum>
 
-export const GenderEnum = z.enum(["FEMALE", "MALE", "OTHER"], {
-    message: "Gender must be one of 'MALE', 'FEMALE', or 'OTHER'",
+export const GenderEnum = z.enum(["FEMALE", "MALE"], {
+    message: "Gender must be one of 'MALE' or 'FEMALE',",
     required_error: "Gender is required",
     invalid_type_error: "Invalid gender",
 });
 
 export const AddressSchema = z.object({
-country: z.string().min(1, { message: "Country is required" }),
-province: z.string().optional(),
-district: z.string().optional(),
-sector: z.string().optional(),
-cell: z.string().optional(),
-village: z.string().optional(),
-state: z.string().optional(),
-postalCode: z.string().optional(),
-googleMapUrl: z.string().url({ message: "Invalid URL" }).optional(),
+    country: z.string().min(1, { message: "Country is required" }),
+    province: z.string().optional(),
+    district: z.string().optional(),
+    sector: z.string().optional(),
+    cell: z.string().optional(),
+    village: z.string().optional(),
+    state: z.string().optional(),
+    postalCode: z.string().optional(),
+    googleMapUrl: z.string().url({ message: "Invalid URL" }).optional(),
 });
 
 
@@ -81,10 +81,10 @@ export const AuthUserSchema = z.object({
     name: z.string().min(1, {
         message: " Minimum 1 character"
     }),
-    image : z.string().optional(),
+    image: z.string().optional(),
     role: UserRoleEnum.optional(),
     accessToken: z.string().optional(),
-    schoolAccessToken : z.string().optional(),
+    schoolAccessToken: z.string().optional(),
 })
 export type AuthUserDto = z.infer<typeof AuthUserSchema>;
 

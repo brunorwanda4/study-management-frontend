@@ -47,10 +47,6 @@ const StaffPeople = ({ lang,Ftotal,Mtotal, icon, total, title, role }: props) =>
             <span className="  text-xl font-medium">{Ftotal}</span>
             <span className=" text-sm font-normal">Females</span>
           </Button>
-          <Button library="daisy" size="sm" className=" px-1">
-            <span className="  text-xl font-medium">{Ftotal}</span>
-            <span className=" text-sm font-normal">Other</span>
-          </Button>
         </div>
       </CardContent>
     </Card>
