@@ -1,7 +1,9 @@
+import NotFoundPage from "@/components/page/not-found";
 import PermissionPage from "@/components/page/permission-page";
 import ClassesSchoolTable from "@/components/page/school-staff/table/classes-table";
 import type { Locale } from "@/i18n";
 import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";
+import { getClassesBySchoolId } from "@/service/class/class.service";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
@@ -29,13 +31,13 @@ const SchoolStaffClassesPage = async (props: props) => {
 
   if (!currentSchool)
     return <PermissionPage lang={lang} role={currentUser.role ?? "STUDENT"} />;
-  // const school = await getSchoolByIdService(currentSchool.schoolId);
-  // if (!school.data) return <NotFoundPage />;
+  const classes = await getClassesBySchoolId(currentSchool.schoolId);
+  if (!classes.data) return <NotFoundPage />;
   return (
     <div className="p-4 space-y-2 max-w-full">
       <h2 className=" title-page">Classes</h2>
       <div>
-        <ClassesSchoolTable />
+        <ClassesSchoolTable classes={classes.data} />
       </div>
     </div>
   );

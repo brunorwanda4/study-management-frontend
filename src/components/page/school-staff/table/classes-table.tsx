@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useId, useMemo, useState } from "react";
@@ -25,8 +26,8 @@ import {
   SearchIcon,
   UsersIcon, // Example icon for student count
   BookOpenIcon, // Example icon for curriculum
-//   BuildingLibraryIcon, // Example icon for Education Level
-  ShieldCheckIcon // Example icon for Class Type
+  //   BuildingLibraryIcon, // Example icon for Education Level
+  ShieldCheckIcon, // Example icon for Class Type
 } from "lucide-react";
 import { cn } from "@/lib/utils"; // Assuming you have this utility
 import { Checkbox } from "@/components/ui/checkbox"; // Assuming shadcn/ui
@@ -57,50 +58,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"; // For Actions
 import { GiLevelEndFlag } from "react-icons/gi";
+import { ClassDto, ClassEnum } from "@/lib/schema/class/class.schema";
 // --- Prisma Schema related types ---
 
-// Define the ClassType enum based on your Prisma schema (replace if different)
-enum ClassType {
-  Public = "Public",
-  Private = "Private",
-  // Add other types if they exist
-}
-
-// Define the Class data structure based on the schema
-// Include fields needed for display, sorting, filtering
-// Add derived/related fields like teacherName and studentCount if you fetch them
-type Class = {
-  id: string;
-  schoolId?: string | null; // Allow null based on schema
-  creatorId?: string | null; // Allow null based on schema
-  code: string;
-  name: string;
-  username: string;
-  image?: string | null; // Allow null based on schema
-  classType?: ClassType | null; // Allow null based on schema
-  educationLevel?: string | null; // Allow null based on schema
-  curriculum?: string | null; // Allow null based on schema
-  classTeacherId?: string | null; // Allow null based on schema
-  createdAt: Date;
-  updatedAt: Date;
-
-  // Example derived/related data (you'd populate this when fetching)
-  teacherName?: string | null;
-  studentCount: number;
-  schoolName?: string | null; // Example if needed
-};
-
-// --- TanStack Table Configuration ---
-
 declare module "@tanstack/react-table" {
-     // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface ColumnMeta<TData extends RowData, TValue> {
     filterVariant?: "text" | "range" | "select";
   }
 }
 
 // --- Column Definitions for Classes ---
-const columns: ColumnDef<Class>[] = [
+const columns: ColumnDef<ClassDto>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -127,11 +96,11 @@ const columns: ColumnDef<Class>[] = [
     header: "Name",
     accessorKey: "name",
     cell: ({ row }) => (
-        <div className="font-medium flex items-center gap-2">
-            {/* Optionally display image */}
-            {/* {row.original.image && <img src={row.original.image} alt={row.getValue("name")} className="h-8 w-8 rounded-full object-cover" />} */}
-            <span>{row.getValue("name")}</span>
-        </div>
+      <div className="font-medium flex items-center gap-2">
+        {/* Optionally display image */}
+        {/* {row.original.image && <img src={row.original.image} alt={row.getValue("name")} className="h-8 w-8 rounded-full object-cover" />} */}
+        <span>{row.getValue("name")}</span>
+      </div>
     ),
     meta: {
       filterVariant: "text",
@@ -140,7 +109,9 @@ const columns: ColumnDef<Class>[] = [
   {
     header: "Code",
     accessorKey: "code",
-    cell: ({ row }) => <div className="font-mono text-sm">{row.getValue("code")}</div>,
+    cell: ({ row }) => (
+      <div className="font-mono text-sm">{row.getValue("code")}</div>
+    ),
     meta: {
       filterVariant: "text",
     },
@@ -149,18 +120,22 @@ const columns: ColumnDef<Class>[] = [
     header: "Type",
     accessorKey: "classType",
     cell: ({ row }) => {
-      const type = row.getValue("classType") as ClassType | null;
+      const type = row.getValue("classType") as ClassEnum | null;
       return type ? (
         <div className="flex items-center gap-1">
-             <ShieldCheckIcon className="h-4 w-4 text-muted-foreground" />
-            <span className={cn(
-                "px-2 py-0.5 rounded text-xs font-medium",
-                 type === ClassType.Private ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200" :
-                 type === ClassType.Public ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200" :
-                 "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200" // Default/fallback
-            )}>
-                {type}
-            </span>
+          <ShieldCheckIcon className="h-4 w-4 text-muted-foreground" />
+          <span
+            className={cn(
+              "px-2 py-0.5 rounded text-xs font-medium",
+              type === "Private"
+                ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+                : type === "Public"
+                ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200" // Default/fallback
+            )}
+          >
+            {type}
+          </span>
         </div>
       ) : (
         <span className="text-muted-foreground">-</span>
@@ -171,58 +146,67 @@ const columns: ColumnDef<Class>[] = [
     },
     // You might need a custom filterFn if null/undefined is a possibility you want to filter specifically
     filterFn: (row, id, filterValue) => {
-        const rowValue = row.getValue(id);
-        // Handle 'all' selection and actual value matching
-        if (filterValue === undefined || filterValue === "all") return true;
-        return rowValue === filterValue;
-     },
+      const rowValue = row.getValue(id);
+      // Handle 'all' selection and actual value matching
+      if (filterValue === undefined || filterValue === "all") return true;
+      return rowValue === filterValue;
+    },
   },
   {
     header: "Level",
     accessorKey: "educationLevel",
     cell: ({ row }) => {
-        const level = row.getValue("educationLevel") as string | null;
-        return level ? (
-            <div className="flex items-center gap-1 text-sm">
-                <GiLevelEndFlag className="h-4 w-4 text-muted-foreground" />
-                {level}
-            </div>
-         ) : <span className="text-muted-foreground">-</span>;
+      const level = row.getValue("educationLevel") as string | null;
+      return level ? (
+        <div className="flex items-center gap-1 text-sm">
+          <GiLevelEndFlag className="h-4 w-4 text-muted-foreground" />
+          {level}
+        </div>
+      ) : (
+        <span className="text-muted-foreground">-</span>
+      );
     },
     meta: {
-        filterVariant: "select", // Or 'text' if many unique levels
+      filterVariant: "select", // Or 'text' if many unique levels
     },
-    filterFn: (row, id, filterValue) => { // Handle potential nulls if using select
-        const rowValue = row.getValue(id);
-        if (filterValue === undefined || filterValue === "all") return true;
-        return rowValue === filterValue;
-     },
+    filterFn: (row, id, filterValue) => {
+      // Handle potential nulls if using select
+      const rowValue = row.getValue(id);
+      if (filterValue === undefined || filterValue === "all") return true;
+      return rowValue === filterValue;
+    },
   },
   {
     header: "Curriculum",
     accessorKey: "curriculum",
     cell: ({ row }) => {
-        const curriculum = row.getValue("curriculum") as string | null;
-         return curriculum ? (
-            <div className="flex items-center gap-1 text-sm">
-                <BookOpenIcon className="h-4 w-4 text-muted-foreground" />
-                {curriculum}
-            </div>
-         ) : <span className="text-muted-foreground">-</span>;
+      const curriculum = row.getValue("curriculum") as string | null;
+      return curriculum ? (
+        <div className="flex items-center gap-1 text-sm">
+          <BookOpenIcon className="h-4 w-4 text-muted-foreground" />
+          {curriculum}
+        </div>
+      ) : (
+        <span className="text-muted-foreground">-</span>
+      );
     },
     meta: {
       filterVariant: "select", // Or 'text'
     },
-     filterFn: (row, id, filterValue) => { // Handle potential nulls if using select
-        const rowValue = row.getValue(id);
-        if (filterValue === undefined || filterValue === "all") return true;
-        return rowValue === filterValue;
-     },
+    filterFn: (row, id, filterValue) => {
+      // Handle potential nulls if using select
+      const rowValue = row.getValue(id);
+      if (filterValue === undefined || filterValue === "all") return true;
+      return rowValue === filterValue;
+    },
   },
   {
     header: "Teacher",
     accessorKey: "teacherName", // Use the derived field
-    cell: ({ row }) => row.getValue("teacherName") || <span className="text-muted-foreground">N/A</span>,
+    cell: ({ row }) =>
+      row.getValue("teacherName") || (
+        <span className="text-muted-foreground">N/A</span>
+      ),
     enableSorting: true, // Enable if desired, ensure data is sortable
     // Filtering is not enabled for this column
   },
@@ -250,9 +234,7 @@ const columns: ColumnDef<Class>[] = [
     accessorKey: "createdAt",
     cell: ({ row }) => (
       <time dateTime={row.getValue("createdAt")}>
-        {new Intl.DateTimeFormat("en-US", {
-          year: 'numeric', month: 'short', day: 'numeric',
-        }).format(new Date(row.getValue("createdAt")))}
+        {row.getValue("createdAt")}
       </time>
     ),
     // enableFiltering: true, // Range filtering for dates is complex, skip for now
@@ -291,84 +273,12 @@ const columns: ColumnDef<Class>[] = [
   },
 ];
 
-// --- Sample Data (Replace with actual data fetching) ---
-const classesData: Class[] = [
-  {
-    id: "cls_1",
-    schoolId: "sch_abc",
-    creatorId: "usr_123",
-    code: "MATH-G5A",
-    name: "Mathematics Grade 5A",
-    username: "math-g5a-2025",
-    image: null,
-    classType: ClassType.Private,
-    educationLevel: "Grade 5",
-    curriculum: "National",
-    classTeacherId: "tch_xyz",
-    createdAt: new Date(2024, 7, 15), // Aug 15, 2024
-    updatedAt: new Date(2025, 3, 10), // Apr 10, 2025
-    teacherName: "Alice Smith",
-    studentCount: 25,
-    schoolName: "Sunshine Primary",
-  },
-  {
-    id: "cls_2",
-    schoolId: "sch_abc",
-    creatorId: "usr_123",
-    code: "ENG-G5B",
-    name: "English Grade 5B",
-    username: "eng-g5b-2025",
-    image: null,
-    classType: ClassType.Private,
-    educationLevel: "Grade 5",
-    curriculum: "National",
-    classTeacherId: "tch_pqr",
-    createdAt: new Date(2024, 7, 15), // Aug 15, 2024
-    updatedAt: new Date(2025, 4, 20), // May 20, 2025
-    teacherName: "Bob Jones",
-    studentCount: 28,
-    schoolName: "Sunshine Primary",
-  },
-   {
-    id: "cls_3",
-    schoolId: "sch_def",
-    creatorId: "usr_456",
-    code: "SCI-HS1",
-    name: "General Science HS1",
-    username: "sci-hs1-public",
-    image: null,
-    classType: ClassType.Public,
-    educationLevel: "High School Year 1",
-    curriculum: "Cambridge",
-    classTeacherId: null, // No specific teacher assigned
-    createdAt: new Date(2025, 0, 10), // Jan 10, 2025
-    updatedAt: new Date(2025, 2, 1),   // Mar 1, 2025
-    teacherName: null,
-    studentCount: 150, // Public classes might have more students
-    schoolName: "Oakwood High",
-  },
-  {
-    id: "cls_4",
-    schoolId: "sch_def",
-    creatorId: "usr_456",
-    code: "HIST-HS1",
-    name: "History HS1",
-    username: "hist-hs1-2025",
-    image: null,
-    classType: ClassType.Private,
-    educationLevel: "High School Year 1",
-    curriculum: "Cambridge",
-    classTeacherId: "tch_mno",
-    createdAt: new Date(2025, 0, 10), // Jan 10, 2025
-    updatedAt: new Date(2025, 4, 15), // May 15, 2025
-    teacherName: "Carol White",
-    studentCount: 35,
-    schoolName: "Oakwood High",
-  },
-];
-
+interface ClassTableProps {
+  classes: ClassDto[];
+}
 // --- React Component ---
-export default function ClassesTable() { // Renamed for clarity
+export default function ClassesTable({ classes }: ClassTableProps) {
+  // Renamed for clarity
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([
     {
@@ -378,9 +288,8 @@ export default function ClassesTable() { // Renamed for clarity
   ]);
   const [rowSelection, setRowSelection] = useState({}); // Add row selection state
 
-
   const table = useReactTable({
-    data: classesData, // Use the new classes data
+    data: classes, // Use the new classes data
     columns,
     state: {
       sorting,
@@ -413,19 +322,19 @@ export default function ClassesTable() { // Renamed for clarity
         <div className="w-48">
           <Filter column={table.getColumn("name")!} />
         </div>
-         {/* Code filter */}
-         <div className="w-40">
+        {/* Code filter */}
+        <div className="w-40">
           <Filter column={table.getColumn("code")!} />
         </div>
         {/* Class Type select */}
         <div className="w-36">
           <Filter column={table.getColumn("classType")!} />
         </div>
-         {/* Education Level select */}
+        {/* Education Level select */}
         <div className="w-48">
           <Filter column={table.getColumn("educationLevel")!} />
         </div>
-         {/* Curriculum select */}
+        {/* Curriculum select */}
         <div className="w-40">
           <Filter column={table.getColumn("curriculum")!} />
         </div>
@@ -436,31 +345,38 @@ export default function ClassesTable() { // Renamed for clarity
       </div>
 
       <CardContent className="p-0">
-        <div className="overflow-x-auto"> {/* Added for better responsiveness */}
+        <div className="overflow-x-auto">
+          {" "}
+          {/* Added for better responsiveness */}
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => {
-                    const headerProps = (header.column.columnDef as any).headerProps; // Get custom props
+                    const headerProps = (header.column.columnDef as any)
+                      .headerProps; // Get custom props
                     return (
                       <TableHead
                         key={header.id}
-                        className={cn("relative h-10 select-none", headerProps?.className)} // Apply custom class
+                        className={cn(
+                          "relative h-10 select-none",
+                          headerProps?.className
+                        )} // Apply custom class
                         aria-sort={
-                          header.column.getCanSort() ?
-                          (header.column.getIsSorted() === "asc"
-                            ? "ascending"
-                            : header.column.getIsSorted() === "desc"
+                          header.column.getCanSort()
+                            ? header.column.getIsSorted() === "asc"
+                              ? "ascending"
+                              : header.column.getIsSorted() === "desc"
                               ? "descending"
-                              : "none") : undefined // Only add aria-sort if sortable
+                              : "none"
+                            : undefined // Only add aria-sort if sortable
                         }
                       >
                         {header.isPlaceholder ? null : header.column.getCanSort() ? (
                           <div
                             className={cn(
                               "flex items-center gap-2 cursor-pointer",
-                               headerProps?.className ? '' : 'justify-between' // Avoid double justify-end on right aligned headers
+                              headerProps?.className ? "" : "justify-between" // Avoid double justify-end on right aligned headers
                             )}
                             onClick={header.column.getToggleSortingHandler()}
                             onKeyDown={(e) => {
@@ -472,9 +388,15 @@ export default function ClassesTable() { // Renamed for clarity
                                 header.column.getToggleSortingHandler()?.(e);
                               }
                             }}
-                            tabIndex={header.column.getCanSort() ? 0 : undefined}
+                            tabIndex={
+                              header.column.getCanSort() ? 0 : undefined
+                            }
                             role="button" // Add role button for accessibility
-                            aria-label={`Sort by ${typeof header.column.columnDef.header === 'string' ? header.column.columnDef.header : header.column.id}`}
+                            aria-label={`Sort by ${
+                              typeof header.column.columnDef.header === "string"
+                                ? header.column.columnDef.header
+                                : header.column.id
+                            }`}
                           >
                             {flexRender(
                               header.column.columnDef.header,
@@ -520,16 +442,22 @@ export default function ClassesTable() { // Renamed for clarity
                     data-state={row.getIsSelected() && "selected"}
                   >
                     {row.getVisibleCells().map((cell) => {
-                       const cellProps = (cell.column.columnDef as any).cellProps; // Get custom props
+                      const cellProps = (cell.column.columnDef as any)
+                        .cellProps; // Get custom props
                       return (
-                        <TableCell key={cell.id} className={cn(cellProps?.className)}> {/* Apply custom class */}
+                        <TableCell
+                          key={cell.id}
+                          className={cn(cellProps?.className)}
+                        >
+                          {" "}
+                          {/* Apply custom class */}
                           {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext()
                           )}
                         </TableCell>
-                      )
-                      })}
+                      );
+                    })}
                   </TableRow>
                 ))
               ) : (
@@ -547,13 +475,13 @@ export default function ClassesTable() { // Renamed for clarity
         </div>
       </CardContent>
       {/* Optional: Add Pagination Controls here */}
-       <div className="flex items-center justify-end space-x-2 py-4 px-4 border-t">
+      <div className="flex items-center justify-end space-x-2 py-4 px-4 border-t">
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
           {table.getFilteredRowModel().rows.length} row(s) selected.
         </div>
-         {/* Add TanStack Table Pagination component if needed */}
-       </div>
+        {/* Add TanStack Table Pagination component if needed */}
+      </div>
     </Card>
   );
 }
@@ -565,17 +493,21 @@ function Filter({ column }: { column: Column<any, unknown> }) {
   const { filterVariant } = column.columnDef.meta ?? {};
   const columnHeader = useMemo(() => {
     const header = column.columnDef.header;
-    if (typeof header === 'string') return header;
+    if (typeof header === "string") return header;
     // Attempt to extract text if it's a simple component, otherwise use ID
     // This is a basic heuristic and might need adjustment for complex headers
-    if (typeof header === 'function') {
-        try {
-             // Render header function in a dummy context to extract text potentially
-             // This is experimental and might not always work reliably
-             const renderedHeader = flexRender(header, { /* dummy context */ } as any);
-             if (typeof renderedHeader === 'string') return renderedHeader;
-             // Could try accessing props.children if it's a simple element
-        } catch (e) { /* ignore errors during heuristic render */ }
+    if (typeof header === "function") {
+      try {
+        // Render header function in a dummy context to extract text potentially
+        // This is experimental and might not always work reliably
+        const renderedHeader = flexRender(header, {
+          /* dummy context */
+        } as any);
+        if (typeof renderedHeader === "string") return renderedHeader;
+        // Could try accessing props.children if it's a simple element
+      } catch {
+        /* ignore errors during heuristic render */
+      }
     }
     return column.id; // Fallback to column ID
   }, [column.columnDef.header, column.id]);
@@ -586,23 +518,27 @@ function Filter({ column }: { column: Column<any, unknown> }) {
 
     // Get unique values for select filter
     try {
-        // This inherently handles simple values and arrays (by treating array refs as unique keys)
-        const uniqueMap = column.getFacetedUniqueValues();
-        // Filter out potential undefined/null keys if they shouldn't be selectable options
-        // Keep null/undefined if you explicitly want to filter by them
-        const values = Array.from(uniqueMap.keys())
-                           .filter(val => val !== null && val !== undefined); // Adjust filter as needed
+      // This inherently handles simple values and arrays (by treating array refs as unique keys)
+      const uniqueMap = column.getFacetedUniqueValues();
+      // Filter out potential undefined/null keys if they shouldn't be selectable options
+      // Keep null/undefined if you explicitly want to filter by them
+      const values = Array.from(uniqueMap.keys()).filter(
+        (val) => val !== null && val !== undefined
+      ); // Adjust filter as needed
 
-        // No need to flatten like before, as 'intents' was the special array case.
-        // For simple types like ClassType, educationLevel, curriculum, the keys are the values themselves.
-        return values.sort();
+      // No need to flatten like before, as 'intents' was the special array case.
+      // For simple types like ClassType, educationLevel, curriculum, the keys are the values themselves.
+      return values.sort();
     } catch (e) {
-      console.error("Error getting faceted unique values for column:", column.id, e);
+      console.error(
+        "Error getting faceted unique values for column:",
+        column.id,
+        e
+      );
       return [];
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [column.id, column.getFacetedUniqueValues(), filterVariant]);
-
 
   if (filterVariant === "range") {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -611,7 +547,11 @@ function Filter({ column }: { column: Column<any, unknown> }) {
         try {
           return column.getFacetedMinMaxValues() ?? [undefined, undefined];
         } catch (e) {
-          console.error("Error getting min/max values for column:", column.id, e);
+          console.error(
+            "Error getting min/max values for column:",
+            column.id,
+            e
+          );
           return [undefined, undefined];
         }
       },
@@ -627,11 +567,11 @@ function Filter({ column }: { column: Column<any, unknown> }) {
             value={(columnFilterValue as [number, number])?.[0] ?? ""}
             onChange={(e) =>
               column.setFilterValue((old: [number, number]) => [
-                e.target.value !== '' ? Number(e.target.value) : undefined,
+                e.target.value !== "" ? Number(e.target.value) : undefined,
                 old?.[1],
               ])
             }
-            placeholder={`Min ${min !== undefined ? `(${min})` : ''}`}
+            placeholder={`Min ${min !== undefined ? `(${min})` : ""}`}
             type="number"
             aria-label={`${columnHeader} min value`}
           />
@@ -642,10 +582,10 @@ function Filter({ column }: { column: Column<any, unknown> }) {
             onChange={(e) =>
               column.setFilterValue((old: [number, number]) => [
                 old?.[0],
-                e.target.value !== '' ? Number(e.target.value) : undefined,
+                e.target.value !== "" ? Number(e.target.value) : undefined,
               ])
             }
-            placeholder={`Max ${max !== undefined ? `(${max})` : ''}`}
+            placeholder={`Max ${max !== undefined ? `(${max})` : ""}`}
             type="number"
             aria-label={`${columnHeader} max value`}
           />
