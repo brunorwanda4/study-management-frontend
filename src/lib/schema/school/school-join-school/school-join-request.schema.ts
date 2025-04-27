@@ -1,11 +1,12 @@
 import { z } from "zod";
-import { SchoolDto } from "../school.dto";
+import { SchoolDto } from "../../school.dto";
+import { validSchoolStaffRoles } from "@/lib/context/school.context";
 
 export const SchoolJoinRequestSchema = z.object({
     id: z.string(),
     userId: z.string().nullable().optional(),
     schoolId: z.string(),
-    role: z.enum(["Headmaster"]), // extend with other roles if needed
+    role: z.enum(validSchoolStaffRoles), // extend with other roles if needed
     name: z.string().optional(),
     email: z.string().email().optional(),
     phone: z.string().optional(), // You can add regex for validation if needed

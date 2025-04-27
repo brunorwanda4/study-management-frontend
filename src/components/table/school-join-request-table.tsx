@@ -52,7 +52,7 @@ import { Button } from "@/components/ui/button"; // Import Button
 import {
   SchoolJoinRequestDto,
   SchoolJoinRequestSchema, // Assuming your DTO matches the Zod schema structure
-} from "@/lib/schema/school/school-join-request.schema"; // Adjust path as needed
+} from "@/lib/schema/school/school-join-school/school-join-request.schema"; // Adjust path as needed
 
 // Define SchoolStaffRoles and valid roles (as provided)
 export const SchoolStaffRoles = [

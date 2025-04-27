@@ -1,6 +1,6 @@
 import SchoolJoinRequestCard from "@/components/cards/school-Join-request-card";
 import { Locale } from "@/i18n";
-import { SchoolJoinRequestAndSchool } from "@/lib/schema/school/school-join-request.schema";
+import { SchoolJoinRequestAndSchool } from "@/lib/schema/school/school-join-school/school-join-request.schema";
 import { AuthUserDto } from "@/lib/utils/auth";
 
 interface props {

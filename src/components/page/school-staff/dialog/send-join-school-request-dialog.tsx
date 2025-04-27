@@ -9,13 +9,16 @@ import { Button } from "../../../ui/button";
 import { Locale } from "@/i18n";
 import { UserSchool } from "@/lib/utils/auth";
 import SendJoinSchoolRequestForm from "../../../table/school/send-join-school-request-form";
+import { getClassesBySchoolIdViewData } from "@/service/class/class.service";
 
 interface Props {
   lang: Locale;
   currentSchool: UserSchool;
 }
 
-const SendJoinSchoolRequest = ({ currentSchool }: Props) => {
+const SendJoinSchoolRequest = async ({ currentSchool }: Props) => {
+  const response = await getClassesBySchoolIdViewData(currentSchool.schoolId);
+  const classes = response.data;
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -30,7 +33,7 @@ const SendJoinSchoolRequest = ({ currentSchool }: Props) => {
             <span className=" font-medium">{currentSchool.name}</span>
           </DialogTitle>
         </DialogHeader>
-        <SendJoinSchoolRequestForm currentSchool={currentSchool} />
+        <SendJoinSchoolRequestForm classes={classes || []} currentSchool={currentSchool} />
       </DialogContent>
     </Dialog>
   );

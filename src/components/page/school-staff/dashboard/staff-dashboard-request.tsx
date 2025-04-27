@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import StaffEvents from "../staff-events";
-import { SchoolJoinRequestDto } from "@/lib/schema/school/school-join-request.schema";
+import { SchoolJoinRequestDto } from "@/lib/schema/school/school-join-school/school-join-request.schema";
 interface props {
   requests: SchoolJoinRequestDto[];
 }

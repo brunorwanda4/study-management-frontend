@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useTheme } from "next-themes";
-import { SchoolJoinRequestDto } from "@/lib/schema/school/school-join-request.schema";
+import { SchoolJoinRequestDto } from "@/lib/schema/school/school-join-school/school-join-request.schema";
 import { DefaultChildImage } from "@/lib/context/images";
 
 interface props {

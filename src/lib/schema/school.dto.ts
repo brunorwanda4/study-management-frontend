@@ -2,7 +2,7 @@ import { z } from "zod";
 import { TeacherDto } from "./school/teacher.dto";
 import { StudentDto } from "./school/student.dto";
 import { SchoolStaffDto } from "./school/school-staff.schema";
-import { SchoolJoinRequestDto } from "./school/school-join-request.schema";
+import { SchoolJoinRequestDto } from "./school/school-join-school/school-join-request.schema";
 
 export const SchoolMembers = z.enum(["Mixed", "Boys", "Girls"]);
 export const SchoolTypeEnum = z.enum([

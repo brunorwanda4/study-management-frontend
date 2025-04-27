@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 import { Locale } from "@/i18n";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { SchoolJoinRequestAndSchool } from "@/lib/schema/school/school-join-request.schema";
+import { SchoolJoinRequestAndSchool } from "@/lib/schema/school/school-join-school/school-join-request.schema";
 import {
   approvedSchoolJoinRequestByCurrentUser,
   RejectSchoolJoinRequestByCurrentUser,

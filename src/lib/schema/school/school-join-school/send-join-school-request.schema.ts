@@ -61,3 +61,4 @@ export const sendJoinSchoolRequestSchema = z
 export type SendJoinSchoolRequestDto = z.infer<
   typeof sendJoinSchoolRequestSchema
 >;
+
