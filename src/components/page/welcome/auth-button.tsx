@@ -26,6 +26,7 @@ const AuthButton = ({ lang }: props) => {
         href={`/${lang}/auth/login`}
         type="button"
         className=" w-full"
+        classname=" w-full"
       >
         Sign in
       </MyLink>
@@ -35,7 +36,9 @@ const AuthButton = ({ lang }: props) => {
         button={{library : "daisy",variant: "default" , size: "lg"}}
         href={`/${lang}/auth/register`}
         type="button"
-        className=" w-full">
+        className=" w-full"
+        classname=" w-full"
+        >
         Create account
       </MyLink>
     </div>

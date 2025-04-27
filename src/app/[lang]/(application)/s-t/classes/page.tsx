@@ -37,7 +37,7 @@ const SchoolStaffClassesPage = async (props: props) => {
     <div className="p-4 space-y-2 max-w-full">
       <h2 className=" title-page">Classes</h2>
       <div>
-        <ClassesSchoolTable classes={classes.data} />
+        <ClassesSchoolTable lang={lang} classes={classes.data} />
       </div>
     </div>
   );
