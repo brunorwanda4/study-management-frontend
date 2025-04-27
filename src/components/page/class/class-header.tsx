@@ -18,7 +18,7 @@ interface props {
 
 const ClassHeader = ({
   currentCls,
-  currentUser,
+  // currentUser,
   currentSchool,
   lang,
 }: props) => {
