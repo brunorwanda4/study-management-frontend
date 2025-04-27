@@ -20,56 +20,18 @@ import {
 import { Locale } from "@/i18n";
 import { UserSchool } from "@/lib/utils/auth";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
-
-const items = [
-  {
-    id: "1",
-    name: "Alex Thompson",
-    username: "@alexthompson",
-    image:
-      "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358071/avatar-40-02_upqrxi.jpg",
-    email: "alex.t@company.com",
-    role: "Student",
-    sendOn: "2 day ago",
-  },
-  {
-    id: "2",
-    name: "Sarah Chen",
-    username: "@sarahchen",
-    image:
-      "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358073/avatar-40-01_ij9v7j.jpg",
-    email: "sarah.c@company.com",
-    role: "Teacher",
-    sendOn: "1 hour ago",
-  },
-  {
-    id: "4",
-    name: "Maria Garcia",
-    username: "@mariagarcia",
-    image:
-      "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358072/avatar-40-03_dkeufx.jpg",
-    email: "m.garcia@company.com",
-    role: "School Staff",
-    sendOn: "3 days ago",
-  },
-  {
-    id: "5",
-    name: "David Kim",
-    username: "@davidkim",
-    image:
-      "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358070/avatar-40-05_cmz0mg.jpg",
-    email: "d.kim@company.com",
-    role: "Teacher",
-    sendOn: "43 min ago",
-  },
-];
-
+import { GetAllSchoolJoinRequestBySchoolId } from "@/service/school/school-join-request.service";
+import { formatTimeAgo } from "@/lib/functions/change-time";
+import { studentImage, teacherImage } from "@/lib/context/images";
 interface props {
   lang: Locale;
   currentSchool: UserSchool;
 }
 
-export default function JoinSchoolTable({ lang, currentSchool }: props) {
+export default async function JoinSchoolTable({ lang, currentSchool }: props) {
+  const requests = await GetAllSchoolJoinRequestBySchoolId(
+    currentSchool.schoolId
+  );
   return (
     <Card className=" w-1/2 pb-2">
       <CardHeader className=" flex justify-between">
@@ -83,55 +45,77 @@ export default function JoinSchoolTable({ lang, currentSchool }: props) {
           </Button>
         </div>
       </CardHeader>
-      <CardContent className=" p-0">
-        <Table className="">
-          <TableHeader>
-            <TableRow className="hover:bg-transparent">
-              <TableHead>Name</TableHead>
-              <TableHead>Role</TableHead>
-              <TableHead>Send on</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {items.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell>
-                  <div className="flex items-center gap-3">
-                    <MyImage
-                      className="rounded-full size-12"
-                      classname="mask mask-squircle"
-                      src={item.image}
-                      alt={item.name}
-                    />
-                    <div>
-                      <div className="font-medium">{item.name}</div>
-                      <span className="text-muted-foreground mt-0.5 text-xs">
-                        {item.email}
-                      </span>
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell>{item.role}</TableCell>
-                <TableCell className="text-right">{item.sendOn}</TableCell>
-                <TableCell>
-                  <HiOutlineDotsHorizontal />
-                </TableCell>
+      <CardContent className=" p-0 justify-between flex flex-col">
+        {!requests.data ? (
+          <div>no data found</div>
+        ) : requests.data.length === 0 ? (
+          <div>No School request found</div>
+        ) : (
+          <Table className="">
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                <TableHead>Name</TableHead>
+                <TableHead>Role</TableHead>
+                <TableHead>Send on</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {requests.data.slice(0, 4).map((item) => { 
+                if (item.status !== "pending") return null
+                return(
+                <TableRow key={item.id}>
+                  <TableCell>
+                    <div className="flex items-center gap-3">
+                      <MyImage
+                        className="rounded-full size-12"
+                        classname="mask mask-squircle"
+                        src={
+                          item.user?.image
+                            ? item.user.image || "/images/p.jpg"
+                            : item.role === "STUDENT"
+                            ? studentImage
+                            : teacherImage
+                        }
+                        alt={item.name}
+                      />
+                      <div>
+                        <div className="font-medium">{item.name}</div>
+                        <span className="text-muted-foreground mt-0.5 text-xs">
+                          {item.email}
+                        </span>
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>{item.role}</TableCell>
+                  {/* 2 day ago */}
+                  <TableCell className="text-right">
+                    {formatTimeAgo(item.createAt)}
+                  </TableCell>
+                  <TableCell>
+                    <HiOutlineDotsHorizontal />
+                  </TableCell>
+                </TableRow>
+              )})}
+            </TableBody>
+          </Table>
+        )}
       </CardContent>
-      <CardFooter>
-        <MyLink
-          loading
-          type="button"
-          button={{ library: "daisy", variant: "ghost" }}
-          href={`/${lang}/s-t/join-school-requests`}
-          className=" w-full"
-        >
-          See others 43
-        </MyLink>
-      </CardFooter>
+      {requests.data ? (
+        <CardFooter>
+          {requests.data.length !== 0 ? (
+            <MyLink
+              loading
+              type="button"
+              button={{ library: "daisy", variant: "ghost" }}
+              href={`/${lang}/s-t/join-school-requests`}
+              className=" w-full"
+              classname=" w-full"
+            >
+              See others {requests.data.length}
+            </MyLink>
+          ) : null}
+        </CardFooter>
+      ) : null}
     </Card>
   );
 }

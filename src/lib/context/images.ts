@@ -1,1 +1,5 @@
 export const DefaultChildImage = "https://i.pinimg.com/1200x/40/fd/f6/40fdf6a05d14d671d8d16190b8a3a15a.jpg"
+export const classImage = "https://i.pinimg.com/1200x/25/26/8c/25268cd7e7e7d7bd67f71cb37406a568.jpg"
+export const teacherImage = "https://img.freepik.com/free-photo/medium-shot-smiley-woman-teaching_23-2149272223.jpg"
+export const studentImage = "https://i.pinimg.com/1200x/b2/cb/d4/b2cbd44e4efaa0a7972950b4cf52c175.jpg"
+export const schoolLogoImage = "https://i.pinimg.com/1200x/58/1d/1d/581d1daa6c7be0e3ab6cced49fef6a0a.jpg"

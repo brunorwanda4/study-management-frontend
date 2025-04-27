@@ -1,4 +1,4 @@
-import { ClassDto } from "@/lib/schema/class/class.schema"
+import { ClassAndOthers, ClassDto } from "@/lib/schema/class/class.schema"
 import apiRequest from "../api-client"
 import { ViewDataClassDto } from "@/lib/schema/class/view-data-class.dto"
 
@@ -10,4 +10,8 @@ export const getClassesBySchoolIdViewData = async (schoolId: string) => {
         "get",
         `/class/school/${schoolId}/view-data`
     )
+}
+
+export const getClassById = async (classId: string) => {
+    return await apiRequest<void, ClassAndOthers>("get", `/class/${classId}`)
 }

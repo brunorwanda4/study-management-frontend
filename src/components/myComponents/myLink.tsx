@@ -47,7 +47,7 @@ const MyLink = ({
 
   return (
     <Link href={href} className={className || "underline"}>
-      {loading ? <LoadingIndicator /> : children}
+      {children} {loading && <LoadingIndicator />}
     </Link>
   );
 };

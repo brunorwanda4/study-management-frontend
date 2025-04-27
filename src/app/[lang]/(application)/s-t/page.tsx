@@ -31,8 +31,8 @@ const SchoolStaffPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
   const [currentUser, currentSchool] = await Promise.all([
-    await getAuthUserServer(),
-    await getSchoolServer(),
+    getAuthUserServer(),
+    getSchoolServer(),
   ]);
 
   if (!currentUser) {
@@ -64,7 +64,7 @@ const SchoolStaffPage = async (props: props) => {
         {/* school basic info */}
         <div className=" flex space-x-4 w-full">
           <SchoolEducationChart />
-          <SchoolStudentAndClassChart classes={classes.data || []}/>
+          <SchoolStudentAndClassChart classes={classes.data || []} />
         </div>
         <div className=" flex space-x-4 w-full">
           <JoinSchoolTable currentSchool={currentSchool} lang={lang} />

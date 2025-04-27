@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { SchoolDto } from "../../school.dto";
 import { validSchoolStaffRoles } from "@/lib/context/school.context";
+import { UserDto } from "../../user.dto";
 
 export const SchoolJoinRequestSchema = z.object({
     id: z.string(),
@@ -18,9 +19,14 @@ export const SchoolJoinRequestSchema = z.object({
 export type SchoolJoinRequestDto = z.infer<typeof SchoolJoinRequestSchema>
 
 export interface SchoolJoinRequestAndSchool extends SchoolJoinRequestDto {
-    school : SchoolDto
+    school: SchoolDto
+}
+
+export interface SchoolJoinRequestAndOther extends SchoolJoinRequestDto {
+    school?: SchoolDto,
+    user?: UserDto
 }
 
 export interface SchoolJoinRequestAndToken extends SchoolJoinRequestDto {
-    token : string
+    token: string
 }

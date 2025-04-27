@@ -1,4 +1,7 @@
 import { z } from 'zod';
+import { SchoolDto } from '../school.dto';
+import { TeacherDto } from '../school/teacher.dto';
+import { StudentDto } from '../school/student.dto';
 
 export const ClassType = z.enum(["Private", "Public", "SchoolClass"]);
 export type ClassEnum = z.infer<typeof ClassType>;
@@ -22,3 +25,9 @@ export const ClassSchema = z.object({
 });
 
 export type ClassDto = z.infer<typeof ClassSchema>;
+
+export interface ClassAndOthers extends ClassDto {
+    school?: SchoolDto,
+    teacher?: TeacherDto,
+    student?: StudentDto[];
+}

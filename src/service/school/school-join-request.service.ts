@@ -1,4 +1,4 @@
-import { SchoolJoinRequestAndSchool, SchoolJoinRequestAndToken, SchoolJoinRequestDto, } from "@/lib/schema/school/school-join-school/school-join-request.schema"
+import { SchoolJoinRequestAndOther, SchoolJoinRequestAndSchool, SchoolJoinRequestAndToken, SchoolJoinRequestDto, } from "@/lib/schema/school/school-join-school/school-join-request.schema"
 import apiRequest from "../api-client"
 import { getUserToken, setSchoolCookies } from "@/lib/utils/auth-cookies"
 import { getAuthUserServer } from "@/lib/utils/auth"
@@ -44,4 +44,8 @@ export const CreateSchoolJoinRequest = async (schoolJoinRequestDto: SendJoinScho
         classId: schoolJoinRequestDto.classId,
     }
     return await apiRequest<CreateJoinSchoolRequestDto, SchoolJoinRequestAndSchool>("post", `/school-join-requests`, data)
+}
+
+export const GetAllSchoolJoinRequestBySchoolId = async (schoolId: string) => {
+    return await apiRequest<void, SchoolJoinRequestAndOther[]>("get", `/school-join-requests?schoolId=${schoolId}`)
 }
