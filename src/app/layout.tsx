@@ -3,7 +3,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
-  title: "student-management",
+  title: "Student-management",
   description: "system which help student to study every ware they are and communication, collaboration and help teacher to manage them and school to manage the class and student how they study",
   icons: "/logo.png",
   keywords: [

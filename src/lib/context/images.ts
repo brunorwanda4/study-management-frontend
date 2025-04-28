@@ -4,3 +4,4 @@ export const teacherImage = "https://img.freepik.com/free-photo/medium-shot-smil
 export const studentImage = "https://i.pinimg.com/1200x/b2/cb/d4/b2cbd44e4efaa0a7972950b4cf52c175.jpg"
 export const schoolLogoImage = "https://i.pinimg.com/1200x/58/1d/1d/581d1daa6c7be0e3ab6cced49fef6a0a.jpg"
 export const studentsImage = "https://i.pinimg.com/1200x/53/58/41/5358412892040d5d10ba7262c3efa1b0.jpg"
+export const userImage = "https://i.pinimg.com/1200x/5d/0c/d8/5d0cd81e76339b484605c2b2a5bb681f.jpg"

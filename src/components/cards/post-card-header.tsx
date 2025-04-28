@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Locale } from "@/i18n";
 import PostCardHeaderDropdown from "./post-card-header-dropdown";
 import UserTooltip from "@/components/myComponents/user-tooltip";
+import { userImage } from "@/lib/context/images";
 
 interface props {
   lang: Locale;
@@ -18,7 +19,7 @@ const PostCardHeader = ({ lang }: props) => {
             lang={lang}
             trigger={
               <Avatar className=" size-12">
-                <AvatarImage src="https://i.pinimg.com/1200x/5d/0c/d8/5d0cd81e76339b484605c2b2a5bb681f.jpg" />
+                <AvatarImage src={userImage} />
                 <AvatarFallback>PR</AvatarFallback>
               </Avatar>
             }
