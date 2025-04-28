@@ -11,7 +11,7 @@ interface props {
 const PostCardHeader = ({ lang }: props) => {
   
   return (
-    <div className="flex justify-between items-center px-4 py-2">
+    <div className="flex justify-between items-center">
       <div className=" flex items-center space-x-2">
         <Link href={`/${lang}/profile/user`}>
           <UserTooltip

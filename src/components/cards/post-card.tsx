@@ -7,6 +7,7 @@ import { Dot } from "lucide-react";
 import { Locale } from "@/i18n";
 import Link from "next/link";
 import MyImage from "@/components/myComponents/myImage";
+import { Card, CardContent, CardHeader } from "../ui/card";
 
 interface props {
   postRole?: "NOTES" | "IMAGE" | "VIDEO" | "POST" | "ACTIVITY" | "TEXT";
@@ -16,13 +17,12 @@ interface props {
 
 const PostCard = ({ postRole, lang, role }: props) => {
   return (
-    <div className=" basic-card p-0 justify-between">
-      <div>
+    <Card className="justify-between">
+      <CardHeader>
         <PostCardHeader lang={lang} />
-        <Separator />
-      </div>
+      </CardHeader>
       {postRole === "NOTES" && (
-        <div className=" px-4 pb-2">
+        <CardContent className=" px-4 pb-2">
           <div className=" space-x-2 text-sm text-myGray">
             <span>Kinyarwanda</span>
             <span className=" ">Notes</span>
@@ -42,7 +42,7 @@ const PostCard = ({ postRole, lang, role }: props) => {
               asperiores delectus nihil accusamus...
             </Link>
           </p>
-        </div>
+        </CardContent>
       )}
       {postRole === "IMAGE" && (
         <div className=" relative h-72">
@@ -80,7 +80,7 @@ const PostCard = ({ postRole, lang, role }: props) => {
 
       <Separator />
       {postRole === "ACTIVITY" && (
-        <div className=" p-4">
+        <CardContent className=" p-4">
           <div className=" flex justify-between">
             <div className=" text-sm text-myGray">
               <div className=" space-x-2">
@@ -101,10 +101,10 @@ const PostCard = ({ postRole, lang, role }: props) => {
             nesciunt perferendis voluptatem nobis natus facilis nostrum, ratione
             dolores vero numquam iusto cumque! ...
           </div>
-        </div>
+        </CardContent>
       )}
       {postRole === "TEXT" && (
-        <div>
+        <CardContent>
           <div className=" p-4">
             <p>
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui,
@@ -114,10 +114,10 @@ const PostCard = ({ postRole, lang, role }: props) => {
             </p>
           </div>
           <Separator />
-        </div>
+        </CardContent>
       )}
       {postRole !== "ACTIVITY" && <PostCardFooter postRole={postRole} />}
-    </div>
+    </Card>
   );
 };
 

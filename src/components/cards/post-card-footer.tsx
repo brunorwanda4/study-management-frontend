@@ -1,6 +1,7 @@
  import { Button } from "../ui/button";
 import { FaComment, FaReadme, FaRegBookmark, FaShare } from "react-icons/fa6";
 import { AiOutlineLike } from "react-icons/ai";
+import { CardFooter } from "../ui/card";
 
 // interface props {
 //   postRole?:
@@ -21,7 +22,7 @@ interface props {
 
 const PostCardFooter = ({ postRole }: props) => {
   return (
-    <div className=" flex justify-between px-4 py-2">
+    <CardFooter className=" flex justify-between px-4 py-2">
       <div className=" flex items-center">
         <Button library="daisy" variant="ghost" size="md">
           {postRole === "NOTES" || postRole === "BOOK" ? (
@@ -44,7 +45,7 @@ const PostCardFooter = ({ postRole }: props) => {
           <FaRegBookmark size={28} />
         </Button>
       </div>
-    </div>
+    </CardFooter>
   );
 };
 

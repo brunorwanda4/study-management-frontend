@@ -1,3 +1,4 @@
+import PostCard from "@/components/cards/post-card";
 import ClassStudentCard from "@/components/page/class/cards/class-students-card";
 import ClassTeacherCard from "@/components/page/class/cards/class-teachers-card";
 import ClassHeader from "@/components/page/class/class-header";
@@ -52,8 +53,18 @@ const ClassIdPage = async (props: Props) => {
         currentCls={currentCls.data}
       />
       <Separator />
-      <div className="flex">
-        <div className=" w-1/2">class activities</div>
+      <div className="flex space-x-4">
+        <div className=" w-1/2 space-y-4">
+          <h3 className=" basic-title">class activities</h3>
+          <div className=" space-y-2">
+            {[...Array(2)].map((_, index) => {
+              return <PostCard postRole="NOTES" key={index} lang={lang} />;
+            })}
+            {[...Array(3)].map((_, index) => {
+              return <PostCard postRole="IMAGE" key={index} lang={lang} />;
+            })}
+          </div>
+        </div>
         <div className=" w-1/2 space-y-4">
           <ClassTimetable />
           <ClassTeacherCard />
