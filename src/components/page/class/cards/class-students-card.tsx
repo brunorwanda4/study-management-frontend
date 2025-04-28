@@ -4,11 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import React from "react";
 import { BsGear, BsPlusCircle } from "react-icons/bs";
 
-const ClassTeacherCard = () => {
+const ClassStudentCard = () => {
   return (
-    <Card >
+    <Card>
       <CardHeader className=" flex justify-between">
-        <CardTitle>Teachers</CardTitle>
+        <CardTitle>Students</CardTitle>
         <Button variant={"primary"} library="daisy" size={"sm"}>
           <BsPlusCircle /> Add Teacher
         </Button>
@@ -29,7 +29,7 @@ const ClassTeacherCard = () => {
                 />
                 <div>
                   <span className=" small-title">Teacher name</span>
-                  <p>Kinyarwanda, english, Kiswahili</p>
+                  <p>Male</p>
                 </div>
               </div>
               <Button shape={"circle"} library="daisy" variant={"ghost"}>
@@ -43,4 +43,4 @@ const ClassTeacherCard = () => {
   );
 };
 
-export default ClassTeacherCard;
+export default ClassStudentCard;
