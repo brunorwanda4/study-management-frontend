@@ -8,6 +8,7 @@ import { Locale } from "@/i18n";
 import Link from "next/link";
 import MyImage from "@/components/myComponents/myImage";
 import { Card, CardContent, CardHeader } from "../ui/card";
+import { studentsImage } from "@/lib/context/images";
 
 interface props {
   postRole?: "NOTES" | "IMAGE" | "VIDEO" | "POST" | "ACTIVITY" | "TEXT";
@@ -45,9 +46,9 @@ const PostCard = ({ postRole, lang, role }: props) => {
         </CardContent>
       )}
       {postRole === "IMAGE" && (
-        <div className=" relative h-72">
+        <CardContent className=" relative h-72 py-0 px-0">
           <MyImage
-            src="https://i.pinimg.com/1200x/53/58/41/5358412892040d5d10ba7262c3efa1b0.jpg"
+            src={studentsImage}
             className=" w-full h-full"
           />
           <div className=" flex justify-between">
@@ -75,7 +76,7 @@ const PostCard = ({ postRole, lang, role }: props) => {
               <Dot size={48} />
             </div>
           </div>
-        </div>
+        </CardContent>
       )}
 
       <Separator />
