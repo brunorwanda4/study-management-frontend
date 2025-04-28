@@ -9,10 +9,11 @@ import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 interface Props {
-  params: { lang: Locale; classId: string };
+  params: Promise<{ lang: Locale; classId: string }>;
 }
 
-export const generateMetadata = async ({ params }: { params: { lang: Locale; classId: string } }): Promise<Metadata> => {
+export const generateMetadata = async (props : Props): Promise<Metadata> => {
+  const params = await props.params;
   const { classId } = params;
   const classResponse = await getClassById(classId);
 
@@ -22,7 +23,8 @@ export const generateMetadata = async ({ params }: { params: { lang: Locale; cla
   };
 };
 
-const ClassIdPage = async ({ params }: Props) => {
+const ClassIdPage = async (props: Props) => {
+  const params = await props.params;
   const { lang, classId } = params;
 
   const [currentUser, currentCls, currentSchool] = await Promise.all([
@@ -49,7 +51,7 @@ const ClassIdPage = async ({ params }: Props) => {
       />
       <Separator />
       <div className="flex">
-        <ClassTeacherCard teachers={currentCls.data.teacher}/>
+        <ClassTeacherCard/>
         <div />
       </div>
     </div>

@@ -1,15 +1,10 @@
 import MyImage from "@/components/myComponents/myImage";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { TeacherDto } from "@/lib/schema/school/teacher.dto";
 import React from "react";
 import { BsGear, BsPlusCircle } from "react-icons/bs";
 
-interface props {
-  teachers: TeacherDto[];
-}
-
-const ClassTeacherCard = ({ teachers }: props) => {
+const ClassTeacherCard = () => {
   return (
     <Card className=" w-1/2">
       <CardHeader className=" flex justify-between">
@@ -19,10 +14,10 @@ const ClassTeacherCard = ({ teachers }: props) => {
         </Button>
       </CardHeader>
       <CardContent className=" p-0">
-        {teachers.map((item) => {
+        {[...Array(4)].map((_, index) => {
           return (
             <div
-              key={item.id}
+              key={index}
               className=" flex w-full justify-between hover:bg-base-300 card flex-row duration-200 p-2"
             >
               <div className=" flex space-x-2">
