@@ -1,12 +1,13 @@
 import React from "react";
 import MyImage from "../myComponents/myImage";
-import {  User } from "lucide-react";
+import { Phone, User } from "lucide-react";
 import { Separator } from "../ui/separator";
 import { FaSchool } from "react-icons/fa6";
+import { MdClass, MdEmail } from "react-icons/md";
 
 const ProfileAside = () => {
   return (
-    <aside className=" space-y-4">
+    <aside className=" space-y-4 w-1/3">
       <div className=" flex flex-col space-x-2">
         <MyImage className=" size-60" role="AVATAR" src={"/images/p.jpg"} />
         <div className=" flex flex-col">
@@ -15,14 +16,29 @@ const ProfileAside = () => {
           <div className=" flex space-x-1">
             <User size={18} /> <span className=" font-medium">Student</span>
           </div>
-          <span> example@mail.com</span>
+          <div className=" flex items-center space-x-2">
+            <MdEmail size={16} />
+            <span>example@mail.com</span>
+          </div>
+          <div className=" flex items-center space-x-2">
+            <Phone size={16}/>
           <span>0788765239</span>
+          </div>
           <div className=" flex items-center space-x-2">
             <FaSchool size={16} />
             <span>excella high school</span>
           </div>
+          <div className=" flex items-center space-x-2">
+            <MdClass size={16} />
+            <span>L5 SOD execella school</span>
+          </div>
         </div>
-        {/* location */}
+        <p className=" mt-4">
+          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sint
+          possimus fugiat eos cupiditate, facere laudantium nam beatae iusto?
+          Inventore fugit dolor harum tempora modi numquam eius illo non
+          repudiandae suscipit!
+        </p>
       </div>
       <Separator />
       <div className=" space-y-2">
