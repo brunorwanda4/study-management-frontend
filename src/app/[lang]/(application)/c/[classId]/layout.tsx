@@ -1,7 +1,5 @@
-import PostCard from "@/components/cards/post-card";
+import ClassHeader from "@/components/page/class/class-header";
 import NotFoundPage from "@/components/page/not-found";
-import ClassTimetable from "@/components/page/school-staff/class-components/time-table";
-import { Separator } from "@/components/ui/separator";
 import { Locale } from "@/i18n";
 import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";
 import { getClassById } from "@/service/class/class.service";
@@ -10,6 +8,7 @@ import { redirect } from "next/navigation";
 
 interface Props {
   params: Promise<{ lang: Locale; classId: string }>;
+  children: React.ReactNode;
 }
 
 export const generateMetadata = async (props: Props): Promise<Metadata> => {
@@ -23,11 +22,11 @@ export const generateMetadata = async (props: Props): Promise<Metadata> => {
   };
 };
 
-const ClassIdPage = async (props: Props) => {
+const ClassIdLayout = async (props: Props) => {
+  const { children } = props;
   const params = await props.params;
   const { lang, classId } = params;
-
-  const [currentUser, currentCls] = await Promise.all([
+  const [currentUser, currentCls, currentSchool] = await Promise.all([
     getAuthUserServer(),
     getClassById(classId),
     getSchoolServer(),
@@ -42,26 +41,16 @@ const ClassIdPage = async (props: Props) => {
   }
 
   return (
-    <div className="space-y-4">
-      <Separator />
-      <div className="flex space-x-4">
-        <div className=" w-1/2 space-y-4">
-          <h3 className=" basic-title">Class activities</h3>
-          <div className=" space-y-2">
-            {[...Array(2)].map((_, index) => {
-              return <PostCard postRole="NOTES" key={index} lang={lang} />;
-            })}
-            {[...Array(3)].map((_, index) => {
-              return <PostCard postRole="IMAGE" key={index} lang={lang} />;
-            })}
-          </div>
-        </div>
-        <div className=" w-1/2 space-y-4">
-          <ClassTimetable />
-        </div>
-      </div>
-    </div>
+    <section className="px-4 py-2 space-y-4">
+      <ClassHeader
+        lang={lang}
+        currentSchool={currentSchool ?? undefined}
+        currentUser={currentUser}
+        currentCls={currentCls.data}
+      />
+      {children}
+    </section>
   );
 };
 
-export default ClassIdPage;
+export default ClassIdLayout;
