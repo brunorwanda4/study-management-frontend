@@ -31,7 +31,7 @@ const SchoolIdPage = async (props: props) => {
         </div>
         <div className=" w-1/2 space-y-2">
           <SchoolContacts />
-          <SchoolStaff lang={lang} />
+          {/* <SchoolStaff lang={lang} /> */}
         </div>
       </div>
     </div>

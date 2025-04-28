@@ -1,7 +1,6 @@
 import PostCard from "@/components/cards/post-card";
 import NotFoundPage from "@/components/page/not-found";
 import ClassTimetable from "@/components/page/school-staff/class-components/time-table";
-import { Separator } from "@/components/ui/separator";
 import { Locale } from "@/i18n";
 import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";
 import { getClassById } from "@/service/class/class.service";
@@ -43,7 +42,6 @@ const ClassIdPage = async (props: Props) => {
 
   return (
     <div className="space-y-4">
-      <Separator />
       <div className="flex space-x-4">
         <div className=" w-1/2 space-y-4">
           <h3 className=" basic-title">Class activities</h3>

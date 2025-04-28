@@ -155,7 +155,6 @@ export default function ClassTimetable() {
                 key={slotData.time}
                 className="grid grid-cols-6 gap-2 mb-2 items-stretch"
               >
-                {" "}
                 {/* Use items-stretch */}
                 {/* Time Column */}
                 <div className="text-sm py-2 flex items-center">
@@ -167,9 +166,7 @@ export default function ClassTimetable() {
                   <div
                     className={`col-span-${
                       daysOfWeek.length
-                    } basic-title flex items-center justify-center card p-2 text-center text-sm rounded-md ${
-                      " bg-base-200"
-                    }`}
+                    } basic-title w-full flex items-center justify-center card p-2 text-center text-sm rounded-md  bg-base-200`}
                   >
                     {slotData.name}
                   </div>

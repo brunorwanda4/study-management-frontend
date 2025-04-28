@@ -27,7 +27,8 @@ const SchoolTeachers = ({ lang, onThePage, currentUser, teachers }: props) => {
               button={{ variant: "primary", library: "daisy" }}
               type="button"
               href="s-t/teachers"
-              className=" w-auto"
+              className=" w-full"
+              classname=" w-full"
             >
               <BsPlusCircle />
               Add new teaches

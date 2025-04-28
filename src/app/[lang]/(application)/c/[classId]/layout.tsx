@@ -1,5 +1,7 @@
 import ClassHeader from "@/components/page/class/class-header";
+import ClassNavbar from "@/components/page/class/class-navbar";
 import NotFoundPage from "@/components/page/not-found";
+import { Separator } from "@/components/ui/separator";
 import { Locale } from "@/i18n";
 import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";
 import { getClassById } from "@/service/class/class.service";
@@ -48,6 +50,8 @@ const ClassIdLayout = async (props: Props) => {
         currentUser={currentUser}
         currentCls={currentCls.data}
       />
+      <Separator />
+      <ClassNavbar lang={lang} classId={classId} />
       {children}
     </section>
   );

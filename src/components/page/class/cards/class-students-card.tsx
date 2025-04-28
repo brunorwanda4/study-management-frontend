@@ -1,10 +1,15 @@
 import MyImage from "@/components/myComponents/myImage";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Locale } from "@/i18n";
 import React from "react";
 import { BsGear, BsPlusCircle } from "react-icons/bs";
 
-const ClassStudentCard = () => {
+interface props {
+  lang : Locale
+}
+
+const ClassStudentCard = ({} : props) => {
   return (
     <Card>
       <CardHeader className=" flex justify-between">
@@ -14,7 +19,7 @@ const ClassStudentCard = () => {
         </Button>
       </CardHeader>
       <CardContent className=" px-2">
-        {[...Array(4)].map((_, index) => {
+        {[...Array(9)].map((_, index) => {
           return (
             <div
               key={index}

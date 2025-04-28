@@ -53,13 +53,12 @@ import {
 
 // Data & Schema
 import { initialStudents } from "@/lib/context/student.context"; // Assuming initial data source
-import { StudentDto, StudentSchema } from "@/lib/schema/school/student.dto"; // Using the provided schema
+import { StudentDto } from "@/lib/schema/school/student.dto"; // Using the provided schema
 
 // Dialog Components (assuming these exist and accept necessary props)
 import AddStudentInSchoolDialog from "@/components/page/school-staff/dialog/add-student-in-school-dialog";
 import DeleteStudentDialog from "@/components/page/school-staff/dialog/delete-student-dialog"; // Likely for bulk delete
 import EditStudentInSchoolDialog from "@/components/page/school-staff/dialog/edit-student-in-school-dialog";
-import DeleteConfirmationDialog from "@/components/page/school-staff/dialog/delete-confirmation-dialog"; // For single delete
 
 // Define the schema for the filter form
 const FilterFormSchema = z.object({
