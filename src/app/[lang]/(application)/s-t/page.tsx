@@ -19,13 +19,17 @@ import StudentDashboardTable from "@/components/page/school-staff/dashboard/tabl
 import TeachersDashboardTable from "@/components/page/school-staff/dashboard/table/teacher-dashboard-table";
 import { getClassesBySchoolIdViewData } from "@/service/class/class.service";
 
-export const metadata: Metadata = {
-  title: "School Dashboard",
-};
-
 interface props {
   params: Promise<{ lang: Locale }>;
 }
+
+export const generateMetadata = async (): Promise<Metadata> => {
+  const school = await getSchoolServer();
+  return {
+    title: school?.schoolName || "School not found",
+    description: school?.schoolDescription || "school description",
+  };
+};
 
 const SchoolStaffPage = async (props: props) => {
   const params = await props.params;

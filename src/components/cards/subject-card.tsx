@@ -1,49 +1,75 @@
-import Link from "next/link";
-import MyImage from "@/components/myComponents/myImage";
-import { Button } from "../ui/button";
 import { Locale } from "@/i18n";
+import MyImage from "../myComponents/myImage";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { classImage } from "@/lib/context/images";
+import MyLink from "../myComponents/myLink";
 
 interface props {
   lang: Locale;
-  role : "isNote"
 }
-
-const SubjectCard = ({ lang , role}: props) => {
+const SubjectCard = ({ lang }: props) => {
   return (
-    <div className=" basic-card space-y-2">
-      <div className=" flex space-x-2">
-        <MyImage src="/images/3.jpg" className=" size-10" classname=" card" />
-        <div className=" flex flex-col">
-          <strong className=" text-lg">React js</strong>
-          <span className=" font-medium text-sm">SPJJEN</span>
-        </div>
-      </div>
-      <div>
-        <div className="">
-          Class room : <span className=" font-medium">L5SOD</span>
-        </div>
-        <div>
-          Topics : <span className=" font-medium">3</span>
-        </div>
-        <div>
-          Type : <span className=" font-medium">General</span>
-        </div>
-      </div>
-      <div>
-        <span className=" font-medium">Purpose:</span>
-        <p className=" line-clamp-3 text-sm">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore
-          dolores dolorem, quas veniam qui vel nihil incidunt tempora non rem
-          facere earum voluptatibus animi quaerat in doloribus ipsam, expedita
-          voluptates?
+    <Card>
+      <CardHeader className="">
+        <CardTitle className="">
+          <MyLink
+            className=" underline-offset-0"
+            href={`/${lang}/c/classId/subjects/1234`}
+          >
+            Kinyarwanda
+          </MyLink>
+        </CardTitle>
+        <p className="text-sm mb-4">
+          <MyLink
+            className=" underline-offset-0"
+            href={`/${lang}/c/classId/subjects/1234`}
+          >
+            Code: 754De
+          </MyLink>
         </p>
-      </div>
-      <Button variant="primary">
-        <Link href={role === "isNote" ? `/${lang}/notes/subjects/123` :`/${lang}/subject/123`} className="w-full">
-          About Subject
-        </Link>
-      </Button>
-    </div>
+      </CardHeader>
+
+      {/* Module Details */}
+      <CardContent>
+        <div className=" text-base mb-4">
+          <p>Subject Type: General</p>
+          <p>Curriculum: REB</p>
+          <p>Topics: 12</p>
+          <p>Learning Hours: Hr 75</p>
+        </div>
+
+        {/* Teacher Information */}
+        <MyLink
+          href={`/${lang}/p/hello?teacherID=00343`}
+          className="flex items-center mb-4 border-t pt-4 border-t-base-content/20"
+        >
+          <MyImage
+            className="w-10 h-10 rounded-full mr-4 object-cover"
+            src={"/images/p.jpg"}
+            alt={`Teacher`}
+          />
+          <div className="text-sm">
+            <p className="leading-none">Teacher: Teacher name</p>
+            {/* Add other teacher details if needed */}
+          </div>
+        </MyLink>
+
+        {/* Class Information */}
+        <MyLink
+          href={`/${lang}/c/12434`}
+          className="flex items-center mb-4 border-t pt-4 border-t-base-content/20"
+        >
+          <MyImage
+            className="w-10 h-10 rounded-full mr-4 object-cover"
+            src={classImage}
+            alt={classImage}
+          />
+          <div className="text-sm">
+            <p className="leading-none">Class: class name</p>
+          </div>
+        </MyLink>
+      </CardContent>
+    </Card>
   );
 };
 

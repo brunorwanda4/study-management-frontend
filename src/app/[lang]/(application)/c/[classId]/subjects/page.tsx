@@ -1,4 +1,4 @@
-import DevelopingPage from "@/components/page/developing-page";
+import SubjectCard from "@/components/cards/subject-card";
 import { Locale } from "@/i18n";
 import { getAuthUserServer } from "@/lib/utils/auth";
 import { redirect } from "next/navigation";
@@ -18,7 +18,13 @@ const ClassSubjectPage = async (props: Props) => {
     return redirect(`/${lang}/auth/onboarding`);
   }
 
-  return <DevelopingPage lang={lang} role={currentUser.role} />;
+  return (
+    <div className=" grid grid-cols-3 gap-4">
+      {[...Array(12)].map((_, i) => (
+        <SubjectCard key={i} lang={lang} />
+      ))}
+    </div>
+  );
 };
 
 export default ClassSubjectPage;

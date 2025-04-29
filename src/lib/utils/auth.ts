@@ -50,11 +50,15 @@ export const logout = async (lang: Locale) => {
   await removeUserToken()
   redirect(`/${lang}/auth/login`)
 }
-
-export interface UserSchool {
+  export interface UserSchool {
   sub: string,
   schoolId: string,
-  role?: string, // The role they just got assigned in this school (Teacher, Student, or specific staff role)
+  schoolName?: string,
+  schoolUsername?: string,
+  schoolEmail?: string,
+  schoolDescription?: string,
+  schoolLogo ?: string,
+  role?: string,
   name: string,
   email: string,
   classId?: string,
