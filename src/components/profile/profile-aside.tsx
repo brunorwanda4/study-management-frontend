@@ -4,13 +4,27 @@ import { Phone, User } from "lucide-react";
 import { Separator } from "../ui/separator";
 import { FaSchool } from "react-icons/fa6";
 import { MdClass, MdEmail } from "react-icons/md";
+import MyLink from "../myComponents/myLink";
+import { Locale } from "@/i18n";
 
-const ProfileAside = () => {
+interface props {
+  lang: Locale;
+}
+
+const ProfileAside = ({ lang }: props) => {
   return (
     <aside className=" space-y-4 w-1/3">
-      <div className=" flex flex-col space-x-2">
-        <MyImage className=" size-60" role="AVATAR" src={"/images/p.jpg"} />
-        <div className=" flex flex-col">
+      <div className=" flex flex-col space-y-2">
+        <MyImage className=" size-64 w-full" role="AVATAR" src={"/images/p.jpg"} />
+        <div className=" flex flex-col space-y-2">
+          <MyLink
+            type="button"
+            classname=" w-full"
+            button={{ variant: "primary", library: "daisy" }}
+            href={`/${lang}/settings/profile`}
+          >
+            Edit Profile
+          </MyLink>
           <h3 className=" basic-title">User name</h3>
           <span className=" link-hover">@ username</span>
           <div className=" flex space-x-1">
@@ -21,8 +35,8 @@ const ProfileAside = () => {
             <span>example@mail.com</span>
           </div>
           <div className=" flex items-center space-x-2">
-            <Phone size={16}/>
-          <span>0788765239</span>
+            <Phone size={16} />
+            <span>0788765239</span>
           </div>
           <div className=" flex items-center space-x-2">
             <FaSchool size={16} />
