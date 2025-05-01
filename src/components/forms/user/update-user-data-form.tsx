@@ -371,11 +371,11 @@ const UserUserDataForm = ({ currentUser }: props) => {
                         />
                       </div>
                       <FormControl>
-                        {/* <input
+                        <input
                           disabled={isPending}
-                          {...getInputProps()}
+                          // {...getInputProps()}
                           id="image"
-                        /> */}
+                        />
                       </FormControl>
                     </div>
                   </FormLabel>

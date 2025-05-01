@@ -39,7 +39,6 @@ const SidebarGroupComponent = ({
 }: sidebarGroupsProps) => {
   const path = usePathname();
   const { theme } = useTheme();
-  const loading = LoadingIndicator();
   return (
     <SidebarGroup className=" p-0">
       <div>
@@ -84,14 +83,16 @@ const SidebarGroupComponent = ({
                           <Link
                             href={cn(lang ? `/${lang}${item.url}` : item.url)}
                             className={cn(
-                              "flex items-center gap-2 font-normal rounded-l-none"
+                              "flex items-center gap-2 font-normal justify-between rounded-l-none "
                             )}
                           >
                             {item.icon && (
                               <MyImage className=" size-6" src={item.icon} />
                             )}
-                            {item.title}{" "}
-                            {loading}
+                           <div className=" flex justify-between">
+                             <span>{item.title}</span>
+                            <LoadingIndicator /> 
+                           </div>
                           </Link>
                         ) : (
                           <div className="flex items-center gap-2 font-normal">
@@ -141,8 +142,10 @@ const SidebarGroupComponent = ({
                                       "btn-info")
                                 )}
                               >
-                                {subItem.title}{" "}
-                                {loading}
+                                <div className=" flex justify-between">
+                                 <span className=" "> {subItem.title}</span>
+                                <LoadingIndicator />
+                                </div>
                               </Link>
                             ) : (
                               <button className="ml-8 flex items-center gap-2 btn-xs btn-ghost  rounded-md">
@@ -163,7 +166,7 @@ const SidebarGroupComponent = ({
                     <Link
                       href={cn(lang ? `/${lang}${item.url}` : item.url)}
                       className={cn(
-                        "flex items-center gap-2 font-normal rounded-l-none",
+                        "flex items-center gap-2  font-normal rounded-l-none",
                         path === item.url ||
                           (path === `/${lang}${item.url}` &&
                             `bg-base-300 ${theme === "dark" && "bg-white/10"}`)
@@ -172,8 +175,10 @@ const SidebarGroupComponent = ({
                       {item.icon && (
                         <MyImage className=" size-6" src={item.icon} />
                       )}
-                      {item.title}{" "}
-                      {loading}
+                      <div className=" justify-between flex ">
+                        {item.title}
+                      <LoadingIndicator />
+                      </div>
                     </Link>
                   ) : (
                     <div className="flex items-center gap-2 font-normal">

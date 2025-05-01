@@ -29,7 +29,7 @@ import {
   type EditStaffForm,
 } from "@/lib/schema/table-forms/staff-forms"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import StaffForm from "./dialogs/staff-form"
+import StaffForm from "@/components/table/s-t/dialogs/staff-form"
 
 // Initial staff data
 const initialStaff = [

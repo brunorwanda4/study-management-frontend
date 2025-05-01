@@ -34,7 +34,7 @@ import {
   ComboboxItem,
 } from "@/components/table/school/class-combobox";
 import { CreateSchoolJoinRequest } from "@/service/school/school-join-request.service";
-import { UsersIcon } from "lucide-react";
+import { Plus, UsersIcon } from "lucide-react";
 import { FormError, FormSuccess } from "@/components/myComponents/form-message";
 
 interface CreateStudentModalProps {
@@ -67,7 +67,9 @@ export function SendStudentRequestToJoinSchool({
       const sendRequest = await CreateSchoolJoinRequest(data);
       if (sendRequest.data) {
         setSuccess(
-          `Request sent successfully for ${sendRequest.data.name}! ☺️`
+          `Request sent successfully ${
+            sendRequest.data.name ? `"for"${sendRequest.data.name}` : " "
+          }! ☺️`
         );
         form.reset(); // Reset the entire form on success
       } else {
@@ -79,17 +81,17 @@ export function SendStudentRequestToJoinSchool({
   }
 
   const classItems: ComboboxItem[] = Classes.map((classItem) => ({
-    value: classItem.id, // The value to store in the form
-    label: classItem.name, // The display label
-    icon: UsersIcon, // Use the imported icon
-    number: classItem._count.students, // Display student count
+    value: classItem.id,
+    label: classItem.name,
+    icon: UsersIcon,
+    number: classItem._count.students,
   }));
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button library="daisy" variant={"primary"} size={"sm"}>
-          Add new student
+        <Button library="daisy" variant={"info"} size={"sm"}>
+          <Plus /> New student
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
@@ -145,18 +147,23 @@ export function SendStudentRequestToJoinSchool({
                 </FormItem>
               )}
             />
+            <div className=" ">
+              <FormError message={error} />
+              <FormSuccess message={success} />
+            </div>
             <DialogFooter>
-              <div className=" ">
-                <FormError message={error} />
-                <FormSuccess message={success} />
-              </div>
               <DialogClose asChild>
                 <Button library="daisy" type="button" variant="outline">
                   Cancel
                 </Button>
               </DialogClose>
-              <Button library="daisy" variant={"info"} type="submit" disabled={isPending}>
-                {isPending ? "Add new student" : "Sending request..."}
+              <Button
+                library="daisy"
+                variant={"info"}
+                type="submit"
+                disabled={isPending}
+              >
+                {!isPending ? "Add new student" : "Sending request..."}
               </Button>
             </DialogFooter>
           </form>

@@ -15,7 +15,7 @@ const SettingHeader = ({ user, lang }: props) => {
         <MyImage
           role="AVATAR"
           className=" size-40"
-          src={!!user?.image ? user.image : "/profiles/b/20.png"}
+          src={user?.image || "/images/p.jpg"}
         />
         <div className=" flex flex-col space-y-1">
           <div>

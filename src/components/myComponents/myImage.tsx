@@ -34,9 +34,9 @@ const MyImage = ({
           classname
         )}
         fill
-        blurDataURL={`${src}?w=10&q=10`} // Low-quality blur preview
-        quality={90} // Adjust quality
-        priority // Ensure critical images load first
+        blurDataURL={`${src}?w=10&q=10`}
+        quality={90}
+        priority
       />
     </div>
   );

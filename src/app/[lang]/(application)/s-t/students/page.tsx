@@ -1,7 +1,7 @@
 import StaffPeople from "@/components/page/school-staff/dashboard/staff-people";
 import { Metadata } from "next";
 import type { Locale } from "@/i18n";
-import SchoolStudentTable from "@/components/page/school-staff/table/table-student-list";
+import SchoolStudentTable from "@/components/page/school-staff/table/student-table/table-student-list";
 import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";
 import { redirect } from "next/navigation";
 import NotFoundPage from "@/components/page/not-found";

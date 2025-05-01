@@ -3,7 +3,6 @@
 import { Locale } from "@/i18n";
 import { ReactNode } from "react";
 
-// Define type for sidebar items
 export type SidebarItem = {
   title: string;
   icon?: string;

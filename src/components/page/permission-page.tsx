@@ -32,10 +32,10 @@ const PermissionPage = ({description , lang , role} : props) => {
            <div className="text-center">
              <p className=" ">{!!description ? description : "Your permission not allowed on this page"}</p>
              <div className="flex space-x-2 mt-2 justify-center">
-              <MyLink button={{ library :"daisy",variant :"default",  size : "sm"}} type="button" href={redirectContents({lang, role})}>
+              <MyLink button={{ library :"daisy",variant :"default",}} type="button" href={redirectContents({lang, role})}>
                <MyImage role="ICON" src="/icons/3d-house.png"/> Go Home
               </MyLink>
-              <Button library="daisy" size="sm" variant="primary" onClick={() =>handleGoBack()}>
+              <Button library="daisy" size="sm" variant="info" onClick={() =>handleGoBack()}>
                <BsArrowLeft /> Go back
              </Button>
              </div>
