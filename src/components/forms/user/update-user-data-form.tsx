@@ -361,12 +361,12 @@ const UserUserDataForm = ({ currentUser }: props) => {
                     className="flex gap-3 items-center"
                   >
                     <div className=" flex flex-col space-y-2 items-center">
-                      <div className=" space-y-2">
+                      <div className=" space-y-4 flex flex-col">
                         <FormLabel className="">Profile image</FormLabel>
                         <MyImage
                           role="AVATAR"
-                          src={field.value || "/default.jpg"}
-                          className="size-40 min-h-36 min-w-36 "
+                          src={field.value || "/images/p.jpg"}
+                          className="size-54 min-h-36 min-w-36 "
                           alt="Profile"
                         />
                       </div>

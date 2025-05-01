@@ -19,15 +19,15 @@ const SettingProfilePage = async (props: props) => {
   const getCurrentUser = await getUserById(currentUser.id);
   if (!getCurrentUser) return <NotFoundPage />;
   return (
-    <div className=" happy-page p-4">
+    <div className=" space-y-2 p-4 ">
       <h1 className=" title-page">Profile setting</h1>
       <Separator />
-      <div>
+      <div className=" space-y-4">
         <h2 className=" basic-title">General setting</h2>
         <UserUserDataForm currentUser={getCurrentUser} />
       </div>
       <Separator />
-      <div>
+      <div className=" space-y-4">
         <h2 className=" basic-title">Privacy & Security</h2>
         <SettingPrivacyBody />
       </div>
