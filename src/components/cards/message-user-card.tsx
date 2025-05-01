@@ -2,15 +2,15 @@
  import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Locale } from "@/i18n";
 import Link from "next/link";
-import UseTheme from "@/context/theme/use-theme";
 import { cn } from "@/lib/utils";
+import { useTheme } from "next-themes";
 
 interface props {
     lang : Locale
 }
 
 const MessageUserCard = ({lang} : props) => {
-  const theme = UseTheme();
+  const {theme} = useTheme();
   return (
     <div className={cn(" flex space-x-2  duration-200 p-2 card w-full  flex-row", theme === "dark" ? "hover:bg-white/10" : "hover:bg-black/10")}>
       <Avatar className=" size-12">
@@ -19,7 +19,7 @@ const MessageUserCard = ({lang} : props) => {
       </Avatar>
       <div className=" w-full">
         <Link href={`/${lang}/messages/student`} className=" flex justify-between items-center w-full">
-          <h4 className=" line-clamp-1"> Uwiman Like</h4>
+          <h4 className=" line-clamp-1"> Bahabe Like</h4>
           <span className=" text-xs text-myGray font-medium">2min ago</span>
         </Link>
         <p className=" text-sm line-clamp-1 text-myGray">
