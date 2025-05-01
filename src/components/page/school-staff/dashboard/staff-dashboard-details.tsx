@@ -22,9 +22,9 @@ const StaffDashboardDetails = ({
     <div className="flex space-x-4 w-full">
       <StaffPeople
         icon="/icons/student.png"
-        lang={lang}
         total={students.length}
         title="Students"
+        link={`/${lang}/s-t/students`}
         Ftotal={
           students.filter((student) => student.gender === "FEMALE").length
         }
@@ -32,8 +32,8 @@ const StaffDashboardDetails = ({
         role="Total students"
       />
       <StaffPeople
+       link={`/${lang}/s-t/teachers`}
         icon="/icons/teacher.png"
-        lang={lang}
         total={teachers.length}
         title="Teachers"
         Ftotal={
@@ -43,8 +43,8 @@ const StaffDashboardDetails = ({
         role="Total teachers"
       />
       <StaffPeople
+       link={`/${lang}/s-t/staffs`}
         icon="/icons/staff.png"
-        lang={lang}
         total={schoolStaffs.length}
         title="School Staffs"
         Ftotal={

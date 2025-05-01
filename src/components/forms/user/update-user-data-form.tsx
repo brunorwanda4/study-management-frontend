@@ -12,7 +12,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useState, useTransition } from "react";
-// import { useDropzone } from "react-dropzone";
+import { useDropzone } from "react-dropzone";
 import {
   Button as ButtonDate,
   Calendar,
@@ -78,33 +78,33 @@ const UserUserDataForm = ({ currentUser }: props) => {
     reValidateMode: "onChange",
     mode: "onChange",
   });
-  // const onDrop = (acceptedFiles: File[]) => {
-  //   setError("");
-  //   const file = acceptedFiles[0];
-  //   if (!file) return;
+  const onDrop = (acceptedFiles: File[]) => {
+    setError("");
+    const file = acceptedFiles[0];
+    if (!file) return;
 
-  //   if (!file.type.includes("image")) {
-  //     return setError("Please select an image file.");
-  //   }
+    if (!file.type.includes("image")) {
+      return setError("Please select an image file.");
+    }
 
-  //   if (file.size > 10 * 1024 * 1024) {
-  //     return setError("Image size exceeds 10MB.");
-  //   }
+    if (file.size > 10 * 1024 * 1024) {
+      return setError("Image size exceeds 10MB.");
+    }
 
-  //   const reader = new FileReader();
-  //   reader.onload = (event) => {
-  //     const imageDataUrl = event.target?.result as string;
-  //     form.setValue("image", imageDataUrl);
-  //   };
-  //   reader.onerror = () => setError("Failed to read image file.");
-  //   reader.readAsDataURL(file);
-  // };
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const imageDataUrl = event.target?.result as string;
+      form.setValue("image", imageDataUrl);
+    };
+    reader.onerror = () => setError("Failed to read image file.");
+    reader.readAsDataURL(file);
+  };
 
-  // const { getInputProps } = useDropzone({
-  //   onDrop,
-  //   // accept: "image/*",
-  //   maxFiles: 1,
-  // });
+  const { getInputProps } = useDropzone({
+    onDrop,
+    // accept: "image/*",
+    maxFiles: 1,
+  });
   const now = today(getLocalTimeZone());
   const handleSubmit = (values: UpdateUserDto) => {
     setError("");
@@ -373,7 +373,7 @@ const UserUserDataForm = ({ currentUser }: props) => {
                       <FormControl>
                         <input
                           disabled={isPending}
-                          // {...getInputProps()}
+                          {...getInputProps()}
                           id="image"
                         />
                       </FormControl>

@@ -1,37 +1,45 @@
 import MyImage from "@/components/myComponents/myImage";
+import MyLink from "@/components/myComponents/myLink";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Locale } from "@/i18n";
 import Link from "next/link";
-import { BsThreeDots } from "react-icons/bs";
 
 interface props {
-  lang: Locale;
   title: string;
   total: number;
   Ftotal: number;
   Mtotal: number;
   role: string;
-  icon : string;
+  icon: string;
+  link: string;
 }
- 
-const StaffPeople = ({ lang,Ftotal,Mtotal, icon, total, title, role }: props) => {
+
+const StaffPeople = ({
+  link,
+  Ftotal,
+  Mtotal,
+  icon,
+  total,
+  title,
+  role,
+}: props) => {
   return (
     <Card className="w-1/3">
       <CardHeader className=" flex justify-between">
         <CardTitle className="   flex gap-2 space-x-1 items-center">
-          <MyImage className=" size-6" src={icon} />
-          <h5 className=" basic-title text-my">{title}</h5>
+          <MyLink loading href={link}>
+            <MyImage className=" size-6" src={icon} />
+          </MyLink>
+          <MyLink className=" underline-offset-0" loading href={link}>
+            <h5 className=" basic-title text-my">{title}</h5>
+          </MyLink>
         </CardTitle>
-        <Button library="daisy" size="sm" variant="ghost" shape="circle">
-          <BsThreeDots />
-        </Button>
       </CardHeader>
       <CardContent>
         <div className=" flex items-center space-x-4">
-          <div className=" font-semibold text-3xl" >{total}</div>
+          <div className=" font-semibold text-3xl">{total}</div>
           <Link
-            href={`/${lang}/school-staff/people`}
+            href={link}
             className=" font-medium link-hover text-myGray text-sm"
           >
             {role}{" "}

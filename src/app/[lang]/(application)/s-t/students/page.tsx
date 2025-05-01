@@ -51,7 +51,7 @@ const SchoolStaffStudentPage = async (props: props) => {
       <div className=" flex space-x-4">
         <StaffPeople
           icon="/icons/student.png"
-          lang={lang}
+          link={`/${lang}/s-t/students`}
           total={allStudents.data?.length ?? 0}
           title="Students"
           Ftotal={
@@ -66,8 +66,8 @@ const SchoolStaffStudentPage = async (props: props) => {
         />
         <StaffPeople
           icon="/icons/primary.png"
-          lang={lang}
-          total={345}
+          link={`/${lang}/s-t/students?educationLevel=primary`} // TODO add search params for get student in primary in this school
+          total={345} 
           title="Primary"
           Ftotal={100}
           Mtotal={233}
@@ -75,7 +75,7 @@ const SchoolStaffStudentPage = async (props: props) => {
         />
         <StaffPeople
           icon="/icons/OLevel.png"
-          lang={lang}
+          link={`/${lang}/s-t/students?educationLevel=OLevel`}
           total={345}
           title="Ordinary_level"
           Ftotal={100}

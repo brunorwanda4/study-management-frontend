@@ -4,10 +4,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import MyLink from "@/components/myComponents/myLink";
 import MyImage from "@/components/myComponents/myImage";
 import { studentImage } from "@/lib/context/images";
-import { studentsAndOther } from "@/lib/schema/school/student.dto"; // Ensure this path is correct
-import { Locale } from "@/i18n"; // Ensure this path is correct
+import { studentsAndOther } from "@/lib/schema/school/student.dto";
+import { Locale } from "@/i18n";
 
-// Helper function to calculate age (can be placed outside the component or in a utils file)
 const calculateAge = (
   dob: { year: number; month: number; day: number } | undefined
 ): number | null => {
@@ -17,7 +16,7 @@ const calculateAge = (
     typeof dob.month !== "number" ||
     typeof dob.day !== "number"
   ) {
-    return null; // Return null if dob is missing or invalid
+    return null;
   }
   try {
     // Create date in UTC to avoid timezone issues affecting the date part
