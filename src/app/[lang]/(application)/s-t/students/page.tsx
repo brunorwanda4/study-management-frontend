@@ -6,7 +6,7 @@ import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";
 import { redirect } from "next/navigation";
 import NotFoundPage from "@/components/page/not-found";
 import { getAllStudentBySchoolId } from "@/service/school/student-service";
-import { getClassesBySchoolId, getClassesBySchoolIdViewData } from "@/service/class/class.service";
+import { getClassesBySchoolIdViewData } from "@/service/class/class.service";
 
 interface props {
   params: Promise<{ lang: Locale }>;
@@ -78,7 +78,7 @@ const SchoolStaffStudentPage = async (props: props) => {
         />
       </div>
       <div>
-        <SchoolStudentTable lang={lang} schoolStudents={allStudents?.data ? allStudents.data : [] } />
+        <SchoolStudentTable lang={lang} students={allStudents?.data ? allStudents.data : [] } />
       </div>
     </div>
   );
