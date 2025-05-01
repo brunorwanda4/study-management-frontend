@@ -1,5 +1,7 @@
 import * as z from "zod";
-import { AgeSchema, GenderEnum } from "../user.dto";
+import { AgeSchema, GenderEnum, UserDto } from "../user.dto";
+import { SchoolDto } from "../school.dto";
+import { ClassDto } from "../class/class.schema";
 export const StudentSchema = z.object({
   id: z.string(),
   userId: z.string(),
@@ -15,3 +17,9 @@ export const StudentSchema = z.object({
   updatedAt: z.date().optional(),
 });
 export type StudentDto = z.infer<typeof StudentSchema>;
+
+export interface studentsAndOther extends StudentDto {
+school : SchoolDto,
+user: UserDto,
+class : ClassDto
+}

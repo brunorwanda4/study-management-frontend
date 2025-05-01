@@ -5,7 +5,11 @@ import { BsArrowLeft } from "react-icons/bs";
 import { useRouter } from "next/navigation";
 import MyImage from "../myComponents/myImage";
 
-const NotFoundPage = () => {
+interface props {
+  message?: string;
+}
+
+const NotFoundPage = ({ message }: props) => {
   const router = useRouter();
 
   const handleRefresh = () => {
@@ -24,7 +28,9 @@ const NotFoundPage = () => {
           <div className="text-center">
             <h4 className="  font-medium"> Not found item</h4>
             <p className=" text-myGray">
-              Check your internet connection or your params for this page.
+              {message
+                ? message
+                : "Check your internet connection or your params for this page."}
             </p>
           </div>
           <div className="flex space-x-2 mt-2 justify-center items-center">
