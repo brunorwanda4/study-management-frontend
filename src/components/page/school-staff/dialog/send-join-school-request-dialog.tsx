@@ -23,7 +23,7 @@ const SendJoinSchoolRequest = async ({ currentSchool }: Props) => {
     <Dialog>
       <DialogTrigger asChild>
         <Button size={"sm"} library="daisy" variant="info">
-          Send join request
+          New People
         </Button>
       </DialogTrigger>
       <DialogContent>

@@ -1,7 +1,6 @@
 import SendJoinSchoolRequest from "@/components/page/school-staff/dialog/send-join-school-request-dialog";
 import MyImage from "@/components/myComponents/myImage";
 import MyLink from "@/components/myComponents/myLink";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -40,9 +39,14 @@ export default async function JoinSchoolTable({ lang, currentSchool }: props) {
         </CardTitle>
         <div className=" space-x-4">
           <SendJoinSchoolRequest currentSchool={currentSchool} lang={lang} />
-          <Button variant={"ghost"} shape={"circle"} library="daisy">
-            <HiOutlineDotsHorizontal size={24} />
-          </Button>
+          <MyLink
+            href={`/${lang}/s-t/join-school-requests`}
+            type="button"
+            loading
+            button={{ variant: "outline", size: "sm", library: "daisy" }}
+          >
+            All Request
+          </MyLink>
         </div>
       </CardHeader>
       <CardContent className=" p-0 justify-between flex flex-col">
@@ -60,42 +64,43 @@ export default async function JoinSchoolTable({ lang, currentSchool }: props) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {requests.data.slice(0, 4).map((item) => { 
-                if (item.status !== "pending") return null
-                return(
-                <TableRow key={item.id}>
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      <MyImage
-                        className="rounded-full size-12"
-                        classname="mask mask-squircle"
-                        src={
-                          item.user?.image
-                            ? item.user.image || "/images/p.jpg"
-                            : item.role === "STUDENT"
-                            ? studentImage
-                            : teacherImage
-                        }
-                        alt={item.name}
-                      />
-                      <div>
-                        <div className="font-medium">{item.name}</div>
-                        <span className="text-muted-foreground mt-0.5 text-xs">
-                          {item.email}
-                        </span>
+              {requests.data.slice(0, 4).map((item) => {
+                if (item.status !== "pending") return null;
+                return (
+                  <TableRow key={item.id}>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <MyImage
+                          className="rounded-full size-12"
+                          classname="mask mask-squircle"
+                          src={
+                            item.user?.image
+                              ? item.user.image || "/images/p.jpg"
+                              : item.role === "STUDENT"
+                              ? studentImage
+                              : teacherImage
+                          }
+                          alt={item.name}
+                        />
+                        <div>
+                          <div className="font-medium">{item.name}</div>
+                          <span className="text-muted-foreground mt-0.5 text-xs">
+                            {item.email}
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>{item.role}</TableCell>
-                  {/* 2 day ago */}
-                  <TableCell className="text-right">
-                    {formatTimeAgo(item.createAt)}
-                  </TableCell>
-                  <TableCell>
-                    <HiOutlineDotsHorizontal />
-                  </TableCell>
-                </TableRow>
-              )})}
+                    </TableCell>
+                    <TableCell>{item.role}</TableCell>
+                    {/* 2 day ago */}
+                    <TableCell className="text-right">
+                      {formatTimeAgo(item.createAt)}
+                    </TableCell>
+                    <TableCell>
+                      <HiOutlineDotsHorizontal />
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         )}

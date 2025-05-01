@@ -1,6 +1,5 @@
 import MyImage from "@/components/myComponents/myImage";
 import MyLink from "@/components/myComponents/myLink";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -72,15 +71,13 @@ export default function TeachersDashboardTable({ lang }: props) {
       <CardHeader className=" flex justify-between">
         <CardTitle className="text-lg font-semibold">Teachers</CardTitle>
         <div className=" space-x-4">
-          <Button library="daisy" variant="info">
-            View all teachers
-          </Button>
-          <Button library="daisy" variant="info">
-            Add teacher
-          </Button>
-          <Button variant={"ghost"} shape={"circle"} library="daisy">
-            <HiOutlineDotsHorizontal size={24} />
-          </Button>
+          <MyLink
+            href={`/${lang}/s-t/teachers`}
+            type="button"
+            button={{ library: "daisy", variant: "outline", size: "sm" }}
+          >
+            All teachers
+          </MyLink>
         </div>
       </CardHeader>
       <CardContent className=" p-0">

@@ -13,8 +13,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { Button } from "../ui/button";
-import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { useTheme } from "next-themes";
 import { ViewDataClassDto } from "@/lib/schema/class/view-data-class.dto";
 
@@ -41,7 +39,6 @@ function extractClassName(fullName: string) {
 export default function SchoolStudentAndClassChart({ classes }: SchoolStudentAndClassChartProps) {
   const { theme } = useTheme();
 
-  // ✅ Clean the class names when building chartData
   const chartData = classes.map(cls => ({
     class: extractClassName(cls.name),
     students: cls._count.students,
@@ -49,11 +46,11 @@ export default function SchoolStudentAndClassChart({ classes }: SchoolStudentAnd
 
   return (
     <Card className="w-2/3">
-      <CardHeader className="flex flex-row justify-between items-center pb-0 border-b border-base-content/20">
+      <CardHeader className="flex flex-row justify-between items-center pb-4 border-b border-base-content/20">
         <CardTitle>Class & Students</CardTitle>
-        <Button variant={"ghost"} shape={"circle"} library="daisy">
+        {/* <Button variant={"ghost"} shape={"circle"} library="daisy">
           <HiOutlineDotsHorizontal size={24} />
-        </Button>
+        </Button> */}
       </CardHeader>
       <CardContent>
         <ChartContainer data-theme={theme} config={chartConfig} className="min-h-[200px] w-full">

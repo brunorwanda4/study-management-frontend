@@ -1,6 +1,5 @@
 import MyImage from "@/components/myComponents/myImage";
 import MyLink from "@/components/myComponents/myLink";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -17,58 +16,18 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Locale } from "@/i18n";
+import { studentImage } from "@/lib/context/images";
+import { studentsAndOther } from "@/lib/schema/school/student.dto";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
-
-const items = [
-  {
-    id: "1",
-    name: "Alex Thompson",
-    class: "S1",
-    image:
-      "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358071/avatar-40-02_upqrxi.jpg",
-    email: "alex.t@company.com",
-    role: "Student",
-    gender: "Male",
-  },
-  {
-    id: "2",
-    name: "Sarah Chen",
-    class: "S1",
-    image:
-      "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358073/avatar-40-01_ij9v7j.jpg",
-    email: "sarah.c@company.com",
-    role: "Teacher",
-    gender: "Female",
-  },
-  {
-    id: "4",
-    name: "Maria Garcia",
-    class: "S1",
-    image:
-      "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358072/avatar-40-03_dkeufx.jpg",
-    email: "m.garcia@company.com",
-    role: "School Staff",
-    gender: "Female",
-  },
-  {
-    id: "5",
-    name: "David Kim",
-    class: "S1",
-    image:
-      "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358070/avatar-40-05_cmz0mg.jpg",
-    email: "d.kim@company.com",
-    role: "Teacher",
-    gender: "Female",
-  },
-];
 
 interface props {
   lang: Locale;
+  students: studentsAndOther[];
 }
 
-export default function StudentDashboardTable({ lang }: props) {
+export default function StudentDashboardTable({ lang, students }: props) {
   return (
-    <Card className="w-1/2 pb-2">
+    <Card className="w-1/2 pb-2 flex">
       <CardHeader className=" flex justify-between">
         <CardTitle className="text-lg font-semibold">Students</CardTitle>
         <div className=" space-x-4">
@@ -76,14 +35,11 @@ export default function StudentDashboardTable({ lang }: props) {
             loading
             href={`/${lang}/s-t/students`}
             type="button"
-            button={{ variant: "info", library: "daisy" , size : "sm"}}
+            button={{ variant: "outline", library: "daisy", size: "sm" }}
             className=" w-fit"
           >
-            View all students
+            All students
           </MyLink>
-          <Button variant={"ghost"} shape={"circle"} library="daisy">
-            <HiOutlineDotsHorizontal size={24} />
-          </Button>
         </div>
       </CardHeader>
       <CardContent className=" p-0">
@@ -96,14 +52,14 @@ export default function StudentDashboardTable({ lang }: props) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {items.map((item) => (
+            {students.map((item) => (
               <TableRow key={item.id}>
                 <TableCell>
                   <div className="flex items-center gap-3">
                     <MyImage
                       className="rounded-full size-12"
                       classname="mask mask-squircle"
-                      src={item.image}
+                      src={item.image || studentImage}
                       alt={item.name}
                     />
                     <div>
@@ -114,7 +70,7 @@ export default function StudentDashboardTable({ lang }: props) {
                     </div>
                   </div>
                 </TableCell>
-                <TableCell>{item.class}</TableCell>
+                <TableCell>{item.class.name}</TableCell>
                 <TableCell className="text-start">{item.gender}</TableCell>
                 <TableCell>
                   <HiOutlineDotsHorizontal />
@@ -129,10 +85,11 @@ export default function StudentDashboardTable({ lang }: props) {
           loading
           type="button"
           button={{ library: "daisy", variant: "ghost" }}
-          href={`/${lang}/s-t/classes/activities`}
+          href={`/${lang}/s-t/students`}
+          classname=" w-full"
           className=" w-full"
         >
-          See others 400
+          See others {students.length}
         </MyLink>
       </CardFooter>
     </Card>

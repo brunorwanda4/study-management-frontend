@@ -1,6 +1,5 @@
 import MyImage from "@/components/myComponents/myImage";
 import MyLink from "@/components/myComponents/myLink";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -17,7 +16,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Locale } from "@/i18n";
-import { HiOutlineDotsHorizontal } from "react-icons/hi";
 
 const items = [
   {
@@ -74,9 +72,13 @@ export default function ClassActivitiesTable({ lang }: props) {
           Classes activities
         </CardTitle>
         <div className=" space-x-4">
-          <Button variant={"ghost"} shape={"circle"} library="daisy">
-            <HiOutlineDotsHorizontal size={24} />
-          </Button>
+          <MyLink
+            type="button"
+            button={{ library: "daisy", variant: "outline", size: "sm" }}
+            href={`/${lang}/s-t/classes-activities`}
+          >
+            All activities
+          </MyLink>
         </div>
       </CardHeader>
       <CardContent className=" p-0">
