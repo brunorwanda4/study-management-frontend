@@ -70,12 +70,10 @@ export default function SendJoinSchoolRequestForm({
       // Reset classId ONLY if the role changes AWAY from STUDENT
       form.resetField("classId", { defaultValue: undefined });
     }
-    // Trigger validation when role changes to potentially show required fields
     if (selectedRole) {
-         form.trigger(['staffRole', 'classId']); // Trigger validation for dependent fields
+      form.trigger(["staffRole", "classId"]); // Trigger validation for dependent fields
     }
   }, [selectedRole, form]);
-
 
   function onSubmit(data: SendJoinSchoolRequestDto) {
     setError(null);
@@ -84,8 +82,10 @@ export default function SendJoinSchoolRequestForm({
     startTransition(async () => {
       const sendRequest = await CreateSchoolJoinRequest(data);
       if (sendRequest.data) {
-        setSuccess(`Request sent successfully for ${sendRequest.data.name}! ☺️`);
-        form.reset(); // Reset the entire form on success
+        setSuccess(
+          `Request sent successfully for ${sendRequest.data.name}! ☺️`
+        );
+        form.reset(); 
       } else {
         setError(
           sendRequest.message || "An error occurred while sending the request."
@@ -101,7 +101,6 @@ export default function SendJoinSchoolRequestForm({
     icon: UsersIcon, // Use the imported icon
     number: classItem._count.students, // Display student count
   }));
-  // --- End Data Preparation ---
 
 
   return (
@@ -138,7 +137,7 @@ export default function SendJoinSchoolRequestForm({
             <FormItem className=" space-y-2 flex flex-col">
               <FormLabel className=" ">Select Role *</FormLabel>
               <Select
-                 // Use field.onChange directly for simpler state update
+                // Use field.onChange directly for simpler state update
                 onValueChange={field.onChange}
                 value={field.value || ""} // Ensure value is controlled
                 disabled={isPending}
@@ -199,26 +198,28 @@ export default function SendJoinSchoolRequestForm({
             render={({ field }) => (
               <FormItem className=" space-y-2 flex flex-col">
                 <FormLabel className=" ">Select Class *</FormLabel>
-                 {/* Use FormControl to wrap the custom component for label association etc. */}
+                {/* Use FormControl to wrap the custom component for label association etc. */}
                 <FormControl>
-                    <ClassCombobox
-                        // id={field.id} // RHF usually handles id via FormItem/Label
-                        items={classItems}
-                        value={field.value} // Pass the field's current value
-                        onChange={field.onChange} // Pass the field's change handler
-                        placeholder="Select student's class"
-                        searchPlaceholder="Search classes..."
-                        emptyMessage={classes.length === 0 ? "No classes available." : "No class found."}
-                        disabled={isPending || classes.length === 0}
-                    />
+                  <ClassCombobox
+                    // id={field.id} // RHF usually handles id via FormItem/Label
+                    items={classItems}
+                    value={field.value} // Pass the field's current value
+                    onChange={field.onChange} // Pass the field's change handler
+                    placeholder="Select student's class"
+                    searchPlaceholder="Search classes..."
+                    emptyMessage={
+                      classes.length === 0
+                        ? "No classes available."
+                        : "No class found."
+                    }
+                    disabled={isPending || classes.length === 0}
+                  />
                 </FormControl>
                 <FormMessage /> {/* Shows validation errors for classId */}
               </FormItem>
             )}
           />
         )}
-        {/* --- End Class Field --- */}
-
 
         {/* Error/Success Messages */}
         <div className=" ">
@@ -226,7 +227,6 @@ export default function SendJoinSchoolRequestForm({
           <FormSuccess message={success} />
         </div>
 
-        {/* Submit Button */}
         <Button
           library="daisy" // Removed if not standard Shadcn/Radix prop
           disabled={isPending}

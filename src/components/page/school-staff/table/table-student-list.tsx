@@ -47,6 +47,8 @@ import { Locale } from "@/i18n";
 import MyImage from "@/components/myComponents/myImage";
 import { studentImage } from "@/lib/context/images";
 import MyLink from "@/components/myComponents/myLink";
+import { SendStudentRequestToJoinSchool } from "../dialog/CreateStudentModal";
+import { ViewDataClassDto } from "@/lib/schema/class/view-data-class.dto";
 
 declare module "@tanstack/react-table" {
   //allows us to define custom properties for our columns
@@ -173,9 +175,16 @@ const columns = (lang: Locale): ColumnDef<studentsAndOther>[] => {
 interface props {
   students: studentsAndOther[];
   lang: Locale;
+  Classes: ViewDataClassDto[];
+  schoolId: string;
 }
 
-export default function SchoolStudentTable({ students, lang }: props) {
+export default function SchoolStudentTable({
+  students,
+  lang,
+  Classes,
+  schoolId,
+}: props) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([
     {
@@ -204,8 +213,12 @@ export default function SchoolStudentTable({ students, lang }: props) {
 
   return (
     <div className="space-y-6 basic-card-no-p">
+      <div className=" pt-4 px-4 pb-0 flex">
+        <h3 className=" title-page">Students</h3>
+        <SendStudentRequestToJoinSchool schoolId={schoolId} Classes={Classes} />
+      </div>
       {/* Filters */}
-      <div className="flex flex-wrap gap-3 p-4">
+      <div className="flex flex-wrap gap-3 px-4 py-2">
         {/* Search input */}
         <div className="w-44">
           <Filter column={table.getColumn("name")!} />

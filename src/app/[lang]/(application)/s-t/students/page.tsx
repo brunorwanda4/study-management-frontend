@@ -41,10 +41,10 @@ const SchoolStaffStudentPage = async (props: props) => {
   }
   if (!currentSchool)
     return <NotFoundPage message="You need to have school to view this page" />;
-  const [allStudents ,cls]= await Promise.all([
+  const [allStudents, cls] = await Promise.all([
     getAllStudentBySchoolId(currentSchool.schoolId),
-    getClassesBySchoolIdViewData(currentSchool.schoolId)
-  ])
+    getClassesBySchoolIdViewData(currentSchool.schoolId),
+  ]);
   return (
     <div className="p-4 space-y-4">
       <h2 className=" title-page">Students</h2>
@@ -52,10 +52,16 @@ const SchoolStaffStudentPage = async (props: props) => {
         <StaffPeople
           icon="/icons/student.png"
           lang={lang}
-          total={762}
+          total={allStudents.data?.length ?? 0}
           title="Students"
-          Ftotal={60}
-          Mtotal={37}
+          Ftotal={
+            allStudents.data?.filter((student) => student.gender === "FEMALE")
+              .length ?? 0
+          }
+          Mtotal={
+            allStudents.data?.filter((student) => student.gender === "MALE")
+              .length ?? 0
+          }
           role="Total students"
         />
         <StaffPeople
@@ -78,7 +84,12 @@ const SchoolStaffStudentPage = async (props: props) => {
         />
       </div>
       <div>
-        <SchoolStudentTable lang={lang} students={allStudents?.data ? allStudents.data : [] } />
+        <SchoolStudentTable
+          schoolId={currentSchool.schoolId}
+          Classes={cls.data || []}
+          lang={lang}
+          students={allStudents?.data ? allStudents.data : []}
+        />
       </div>
     </div>
   );
