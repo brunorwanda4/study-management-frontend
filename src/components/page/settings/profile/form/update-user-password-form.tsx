@@ -1,8 +1,5 @@
 "use client";
-import {
-  updateUserPassword,
-  updateUserPasswordType,
-} from "@/utils/schema/user-schema";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -16,12 +13,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  FormMessageError,
-  FormMessageSuccess,
-} from "@/components/form/formError";
 import { Button } from "@/components/ui/button";
 import { LockKeyholeIcon, LockKeyholeOpen } from "lucide-react";
+import { FormError, FormSuccess } from "@/components/myComponents/form-message";
+import { updateUserPasswordDto, updateUserPasswordSchema } from "@/lib/schema/user/user-password.dto";
 
 const UpdateUserPasswordForm = () => {
   const [error, setError] = useState<string>("");
@@ -30,14 +25,14 @@ const UpdateUserPasswordForm = () => {
     isPending,
     //  startTransition
     ] = useTransition();
-  const form = useForm<updateUserPasswordType>({
-    resolver: zodResolver(updateUserPassword),
+  const form = useForm<updateUserPasswordDto>({
+    resolver: zodResolver(updateUserPasswordSchema),
     defaultValues: {
       password: "",
       currentPassword: ""
     },
   });
-  const handleSubmit = (values: updateUserPasswordType) => {
+  const handleSubmit = (values: updateUserPasswordDto) => {
     setError("");
     setSuccess("");
 
@@ -114,11 +109,11 @@ const UpdateUserPasswordForm = () => {
             )}
           />
           <div>
-            <FormMessageError message={error} />
-            <FormMessageSuccess message={success} />
+            <FormError message={error} />
+            <FormSuccess message={success} />
           </div>
         </div>
-        <Button variant="info" size="sm" className=" w-40">
+        <Button  library={"daisy"} variant="info" size="sm" className=" w-40">
           Change Password
         </Button>
       </form>

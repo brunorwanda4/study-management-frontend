@@ -6,7 +6,7 @@ import { Locale } from "@/i18n";
 import MyImage from "../myComponents/myImage";
 import MyLink from "../myComponents/myLink";
 import { redirectContents } from "@/lib/hooks/redirect";
-import { UserRoleDto } from "@/lib/schema/user.dto";
+import { UserRoleDto } from "@/lib/schema/user/user.dto";
 
 interface props {
   lang: Locale;

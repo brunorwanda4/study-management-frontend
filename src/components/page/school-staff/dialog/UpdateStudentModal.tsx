@@ -33,7 +33,7 @@ import {
 } from "@/components/ui/form";
 import { StudentDto } from "@/lib/schema/school/student.dto"; // Use the full DTO here
 import { ViewDataClassDto } from "@/lib/schema/class/view-data-class.dto";
-import { GenderEnum } from "@/lib/schema/user.dto";
+import { GenderEnum } from "@/lib/schema/user/user.dto";
 
 // Schema for *updating* a student. Often similar to create or the main DTO.
 // Make sure it includes the 'id'.

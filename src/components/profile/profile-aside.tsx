@@ -20,8 +20,9 @@ const ProfileAside = ({ lang }: props) => {
           <MyLink
             type="button"
             classname=" w-full"
+            loading
             button={{ variant: "primary", library: "daisy" }}
-            href={`/${lang}/settings/profile`}
+            href={`/${lang}/setting/profile`}
           >
             Edit Profile
           </MyLink>

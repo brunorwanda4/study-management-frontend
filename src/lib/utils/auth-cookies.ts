@@ -1,5 +1,5 @@
 "use server"
-import { UserRoleDto } from '@/lib/schema/user.dto';
+import { UserRoleDto } from '@/lib/schema/user/user.dto';
 import { cookies } from "next/headers";
 import { schoolStaffAccessTokenSchool, SchoolTokenKey, StudentAccessTokenSchool, TeacherAccessTokenSchool, TOKEN_KEY, UserId, } from "../env";
 const expiresOneWeek = new Date(Date.now() + (7 * 24 * 60 * 60 * 1000))

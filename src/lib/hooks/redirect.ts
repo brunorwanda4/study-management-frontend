@@ -1,5 +1,5 @@
 import { Locale } from "@/i18n";
-import { UserRoleDto } from "../schema/user.dto";
+import { UserRoleDto } from "../schema/user/user.dto";
 
 type RedirectContentsProps = {
   lang: Locale;

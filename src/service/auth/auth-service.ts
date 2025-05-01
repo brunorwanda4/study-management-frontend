@@ -1,4 +1,4 @@
-import { AuthUserDto, CreateUserDto, LoginUserDto, onboardingDto, UserDto } from "@/lib/schema/user.dto";
+import { AuthUserDto, CreateUserDto, LoginUserDto, onboardingDto, UserDto } from "@/lib/schema/user/user.dto";
 import apiRequest from "../api-client";
 import { getUserToken, setAuthCookie, setSchoolCookies } from "@/lib/utils/auth-cookies";
 

@@ -1,9 +1,5 @@
 "use client";
-
-import {
-  updateUserEmailSchema,
-  updateUserEmailSchemaType,
-} from "@/utils/schema/user-schema";
+  
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -16,11 +12,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  FormMessageError,
-  FormMessageSuccess,
-} from "@/components/form/formError";
+
 import { Checkbox } from "@/components/ui/checkbox";
+import { updateUserEmailDto, updateUserEmailSchema, } from "@/lib/schema/user/user-email.dto";
+import { FormError, FormSuccess } from "@/components/myComponents/form-message";
 
 const UpdateAccountPrivacyForm = () => {
   const [error, setError] = useState<string>("");
@@ -28,13 +23,13 @@ const UpdateAccountPrivacyForm = () => {
    const [isPending, 
      // startTransition
    ] = useTransition();
-  const form = useForm<updateUserEmailSchemaType>({
+  const form = useForm<updateUserEmailDto>({
     resolver: zodResolver(updateUserEmailSchema),
     defaultValues: {
       email: "",
     },
   });
-  const handleSubmit = (values: updateUserEmailSchemaType) => {
+  const handleSubmit = (values: updateUserEmailDto) => {
     setError("");
     setSuccess("");
 
@@ -61,8 +56,8 @@ const UpdateAccountPrivacyForm = () => {
             )}
           />
           <div>
-            <FormMessageError message={error} />
-            <FormMessageSuccess message={success} />
+            <FormError message={error} />
+            <FormSuccess message={success} />
           </div>
         </div>
       </form>

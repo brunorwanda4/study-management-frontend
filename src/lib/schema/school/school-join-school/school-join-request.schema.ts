@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { SchoolDto } from "../../school.dto";
 import { validSchoolStaffRoles } from "@/lib/context/school.context";
-import { UserDto } from "../../user.dto";
+import { UserDto } from "../../user/user.dto";
 
 export const SchoolJoinRequestSchema = z.object({
     id: z.string(),

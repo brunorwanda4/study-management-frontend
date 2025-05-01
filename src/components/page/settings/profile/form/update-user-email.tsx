@@ -1,8 +1,4 @@
 "use client";
-import {
-  updateUserEmailSchema,
-  updateUserEmailSchemaType,
-} from "@/utils/schema/user-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -16,12 +12,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  FormMessageError,
-  FormMessageSuccess,
-} from "@/components/form/formError";
 import { Button } from "@/components/ui/button";
 import { AtSign } from "lucide-react";
+import { FormError, FormSuccess } from "@/components/myComponents/form-message";
+import { updateUserEmailDto, updateUserEmailSchema } from "@/lib/schema/user/user-email.dto";
 
 const UpdateUserEmailForm = () => {
   const [error, setError] = useState<string>("");
@@ -29,14 +23,14 @@ const UpdateUserEmailForm = () => {
   const [isPending, 
     // startTransition
   ] = useTransition();
-  const form = useForm<updateUserEmailSchemaType>({
+  const form = useForm<updateUserEmailDto>({
     resolver: zodResolver(updateUserEmailSchema),
     defaultValues: {
       email: "",
     },
   });
 
-  const handleSubmit = (values: updateUserEmailSchemaType) => {
+  const handleSubmit = (values: updateUserEmailDto) => {
     setError("");
     setSuccess("");
 
@@ -69,7 +63,7 @@ const UpdateUserEmailForm = () => {
                         <AtSign size={16} strokeWidth={2} aria-hidden="true" />
                       </div>
                     </div>
-                    <Button variant="info" size="sm">
+                    <Button library={"daisy"} variant="info" size="sm">
                       Update email
                     </Button>
                   </div>
@@ -83,8 +77,8 @@ const UpdateUserEmailForm = () => {
             )}
           />
           <div>
-            <FormMessageError message={error} />
-            <FormMessageSuccess message={success} />
+            <FormError message={error} />
+            <FormSuccess message={success} />
           </div>
         </div>
       </form>

@@ -26,7 +26,7 @@ import { Locale } from "@/i18n";
 import { CountriesContext } from "@/lib/data/locations";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { onboardingDto, OnboardingSchema } from "@/lib/schema/user.dto";
+import { onboardingDto, OnboardingSchema } from "@/lib/schema/user/user.dto";
 import { useTheme } from "next-themes";
 import MyImage from "@/components/myComponents/myImage";
 import { FormError, FormSuccess } from "@/components/myComponents/form-message";

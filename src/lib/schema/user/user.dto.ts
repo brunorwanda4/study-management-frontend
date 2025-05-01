@@ -24,6 +24,20 @@ export const AddressSchema = z.object({
     googleMapUrl: z.string().url({ message: "Invalid URL" }).optional(),
 });
 
+export const AgeSchema = z.object({
+    year: z.number({
+        required_error: "Year is required",
+        invalid_type_error: "Year must be a number",
+    }),
+    month: z.number({
+        required_error: "Month is required",
+        invalid_type_error: "Month must be a number",
+    }),
+    day: z.number({
+        required_error: "Day is required",
+        invalid_type_error: "Day must be a number",
+    }),
+});
 
 export const CreateUserSchema = z.object({
     name: z.string().min(1, {
@@ -44,6 +58,10 @@ export const UpdateUserSchema = z.object({
         message: "Maximum characters are 50"
     }).optional(),
     email: z.string().email().optional(),
+    image: z.string().optional().nullable(),
+    bio: z.string().optional(),
+    phone: z.string().optional(),
+    age: AgeSchema,
     password: z.string().optional().optional(),
     username: string().min(1, {
         message: "Username is required"
@@ -131,21 +149,6 @@ export const OnboardingSchema = z.object({
 
 export type onboardingDto = z.infer<typeof OnboardingSchema>;
 
-// Nested types
-export const AgeSchema = z.object({
-    year: z.number({
-        required_error: "Year is required",
-        invalid_type_error: "Year must be a number",
-    }),
-    month: z.number({
-        required_error: "Month is required",
-        invalid_type_error: "Month must be a number",
-    }),
-    day: z.number({
-        required_error: "Day is required",
-        invalid_type_error: "Day must be a number",
-    }),
-});
 
 export const UserSchema = z.object({
     name: z.string().min(1, { message: "Name is required" }).max(50, {

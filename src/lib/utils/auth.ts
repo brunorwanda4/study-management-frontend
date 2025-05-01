@@ -2,7 +2,7 @@
 import { Locale } from '@/i18n';
 import { jwtDecode } from 'jwt-decode';
 import { getSchoolToken, getUserToken, removeUserToken } from './auth-cookies';
-import { UserRoleDto } from '../schema/user.dto';
+import { UserRoleDto } from '../schema/user/user.dto';
 import { redirect } from 'next/navigation';
 
 export interface AuthUserDto {

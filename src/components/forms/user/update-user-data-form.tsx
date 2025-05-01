@@ -1,14 +1,7 @@
 "use client";
-import {
-  updateUserDataSchema,
-  updateUserDataSchemaType,
-} from "@/utils/schema/user-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-import {
-  FormMessageError,
-  FormMessageSuccess,
-} from "@/components/form/formError";
+
 import {
   Form,
   FormControl,
@@ -19,7 +12,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useState, useTransition } from "react";
-import { useDropzone } from "react-dropzone";
+// import { useDropzone } from "react-dropzone";
 import {
   Button as ButtonDate,
   Calendar,
@@ -36,7 +29,6 @@ import {
   Heading,
   Popover,
 } from "react-aria-components";
-import UseTheme from "@/context/theme/use-theme";
 import { CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
 import { getLocalTimeZone, today, toZoned } from "@internationalized/date";
 import { cn } from "@/lib/utils";
@@ -45,13 +37,21 @@ import {
   CountrySelect,
   FlagComponent,
   PhoneInput,
-} from "./component-form-need";
-import { Textarea } from "../ui/textarea";
-import { User } from "../../../prisma/prisma/generated";
+} from "../component-form-need";
 import { Input } from "@/components/ui/input";
+import {
+  UpdateUserDto,
+  UpdateUserSchema,
+  UserDto,
+} from "@/lib/schema/user/user.dto";
+import { useTheme } from "next-themes";
+import { Textarea } from "@/components/ui/textarea";
+import MyImage from "@/components/myComponents/myImage";
+import { FormError, FormSuccess } from "@/components/myComponents/form-message";
+import { Button } from "@/components/ui/button";
 
 interface props {
-  currentUser: User;
+  currentUser: UserDto;
 }
 
 const UserUserDataForm = ({ currentUser }: props) => {
@@ -61,8 +61,9 @@ const UserUserDataForm = ({ currentUser }: props) => {
     isPending,
     //  startTransition
   ] = useTransition();
-  const form = useForm<updateUserDataSchemaType>({
-    resolver: zodResolver(updateUserDataSchema),
+  const { theme } = useTheme();
+  const form = useForm<UpdateUserDto>({
+    resolver: zodResolver(UpdateUserSchema),
     defaultValues: {
       name: currentUser.name ? currentUser.name : "",
       image: currentUser.image ? currentUser.image : "",
@@ -77,35 +78,35 @@ const UserUserDataForm = ({ currentUser }: props) => {
     reValidateMode: "onChange",
     mode: "onChange",
   });
-  const onDrop = (acceptedFiles: File[]) => {
-    setError("");
-    const file = acceptedFiles[0];
-    if (!file) return;
+  // const onDrop = (acceptedFiles: File[]) => {
+  //   setError("");
+  //   const file = acceptedFiles[0];
+  //   if (!file) return;
 
-    if (!file.type.includes("image")) {
-      return setError("Please select an image file.");
-    }
+  //   if (!file.type.includes("image")) {
+  //     return setError("Please select an image file.");
+  //   }
 
-    if (file.size > 10 * 1024 * 1024) {
-      return setError("Image size exceeds 10MB.");
-    }
+  //   if (file.size > 10 * 1024 * 1024) {
+  //     return setError("Image size exceeds 10MB.");
+  //   }
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const imageDataUrl = event.target?.result as string;
-      form.setValue("image", imageDataUrl);
-    };
-    reader.onerror = () => setError("Failed to read image file.");
-    reader.readAsDataURL(file);
-  };
+  //   const reader = new FileReader();
+  //   reader.onload = (event) => {
+  //     const imageDataUrl = event.target?.result as string;
+  //     form.setValue("image", imageDataUrl);
+  //   };
+  //   reader.onerror = () => setError("Failed to read image file.");
+  //   reader.readAsDataURL(file);
+  // };
 
-  const { getInputProps } = useDropzone({
-    onDrop,
-    // accept: "image/*",
-    maxFiles: 1,
-  });
+  // const { getInputProps } = useDropzone({
+  //   onDrop,
+  //   // accept: "image/*",
+  //   maxFiles: 1,
+  // });
   const now = today(getLocalTimeZone());
-  const handleSubmit = (values: updateUserDataSchemaType) => {
+  const handleSubmit = (values: UpdateUserDto) => {
     setError("");
     setSuccess("");
 
@@ -238,7 +239,7 @@ const UserUserDataForm = ({ currentUser }: props) => {
                           <Popover
                             className="z-50 rounded-lg border border-base-300 bg-base-200 shadow-lg shadow-black/5 outline-none data-[entering]:animate-in data-[exiting]:animate-out data-[entering]:fade-in-0 data-[exiting]:fade-out-0 data-[entering]:zoom-in-95 data-[exiting]:zoom-out-95 data-[placement=bottom]:slide-in-from-top-2 data-[placement=left]:slide-in-from-right-2 data-[placement=right]:slide-in-from-left-2 data-[placement=top]:slide-in-from-bottom-2"
                             offset={4}
-                            data-theme={UseTheme()}
+                            data-theme={theme}
                           >
                             <Dialog className="max-h-[inherit] overflow-auto p-2">
                               <Calendar className="w-fit">
@@ -370,11 +371,11 @@ const UserUserDataForm = ({ currentUser }: props) => {
                         />
                       </div>
                       <FormControl>
-                        <input
+                        {/* <input
                           disabled={isPending}
                           {...getInputProps()}
                           id="image"
-                        />
+                        /> */}
                       </FormControl>
                     </div>
                   </FormLabel>
@@ -390,11 +391,23 @@ const UserUserDataForm = ({ currentUser }: props) => {
           </div>
         </div>
         <div className=" mt-2">
-          <FormMessageError message={error} />
-          <FormMessageSuccess message={success} />
+          <FormError message={error} />
+          <FormSuccess message={success} />
         </div>
-        <Button variant="info" className=" w-32">
-          Update profile
+        <Button
+          library={"daisy"}
+          disabled={isPending}
+          variant="info"
+          className=" w-32"
+        >
+          Update profile{" "}
+          {isPending && (
+            <div
+              role="status"
+              aria-label="Loading"
+              className={cn("loading loading-spinner")}
+            />
+          )}
         </Button>
       </form>
     </Form>

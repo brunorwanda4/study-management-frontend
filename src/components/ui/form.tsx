@@ -93,10 +93,8 @@ function FormLabel({
   ...props
 }: React.ComponentProps<typeof LabelPrimitive.Root>) {
   const { error, formItemId } = useFormField();
-  const { theme } = useTheme();
   return (
     <Label
-      data-theme={theme}
       data-slot="form-label"
       data-error={!!error}
       className={cn("data-[error=true]:text-error", className)}

@@ -1,5 +1,5 @@
 import * as z from "zod"
-import { AgeSchema, GenderEnum } from "../user.dto";
+import { AgeSchema, GenderEnum } from "../user/user.dto";
 export const SchoolStaffSchema = z.object({
   id: z.string(),
   userId: z.string(),

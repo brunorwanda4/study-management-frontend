@@ -1,6 +1,6 @@
 "use client";
 
-import { LoginUserDto, LoginUserSchema } from "@/lib/schema/user.dto";
+import { LoginUserDto, LoginUserSchema } from "@/lib/schema/user/user.dto";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
