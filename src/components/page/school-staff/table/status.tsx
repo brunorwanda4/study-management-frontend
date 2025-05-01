@@ -23,7 +23,7 @@ interface props {
         <div className=" flex justify-between px-4 py-2 border-b border-b-border">
           <div className="   flex gap-2 space-x-1 items-center">
             <MyImage className=" size-6" src="/icons/group.png" />
-            <h5 className=" happy-title-base text-my">{title}</h5>
+            <h5 className=" basic-title text-my">{title}</h5>
           </div>
           <Button size="sm" variant="ghost"  >
             <BsThreeDots />

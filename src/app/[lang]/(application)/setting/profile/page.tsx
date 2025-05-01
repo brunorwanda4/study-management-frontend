@@ -20,15 +20,15 @@ const SettingProfilePage = async (props: props) => {
   if (!getCurrentUser) return <NotFoundPage />;
   return (
     <div className=" happy-page p-4">
-      <h1 className=" happy-title-head">Profile setting</h1>
+      <h1 className=" title-page">Profile setting</h1>
       <Separator />
       <div>
-        <h2 className=" happy-title-base">General setting</h2>
+        <h2 className=" basic-title">General setting</h2>
         <UserUserDataForm currentUser={getCurrentUser} />
       </div>
       <Separator />
       <div>
-        <h2 className=" happy-title-base">Privacy & Security</h2>
+        <h2 className=" basic-title">Privacy & Security</h2>
         <SettingPrivacyBody />
       </div>
     </div>
