@@ -70,20 +70,46 @@ export default async function JoinSchoolTable({ lang, currentSchool }: props) {
                   <TableRow key={item.id}>
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        <MyImage
-                          className="rounded-full size-12"
-                          classname="mask mask-squircle"
-                          src={
-                            item.user?.image
-                              ? item.user.image || "/images/p.jpg"
-                              : item.role === "STUDENT"
-                              ? studentImage
-                              : teacherImage
-                          }
-                          alt={item.name ?? undefined}
-                        />
+                        {item.user?.image && item.userId ? (
+                          <MyLink loading href={`/${lang}/p/${item.userId}`}>
+                            <MyImage
+                              className="rounded-full size-12"
+                              role="AVATAR"
+                              src={
+                                item.user?.image
+                                  ? item.user.image || "/images/p.jpg"
+                                  : item.role === "STUDENT"
+                                  ? studentImage
+                                  : teacherImage
+                              }
+                              alt={item.name ?? undefined}
+                            />
+                          </MyLink>
+                        ) : (
+                          <MyImage
+                            className="rounded-full size-12"
+                            role="AVATAR"
+                            src={
+                              item.user?.image
+                                ? item.user.image || "/images/p.jpg"
+                                : item.role === "STUDENT"
+                                ? studentImage
+                                : teacherImage
+                            }
+                            alt={item.name ?? undefined}
+                          />
+                        )}
+
                         <div>
-                          <div className="font-medium">{item.name}</div>
+                          {item.user?.name && item.userId && (
+                            <MyLink
+                              loading
+                              href={`/${lang}/p/${item.userId}`}
+                              className="font-medium"
+                            >
+                              {item.user.name}
+                            </MyLink>
+                          )}
                           <span className="text-muted-foreground mt-0.5 text-xs">
                             {item.email}
                           </span>
@@ -93,7 +119,7 @@ export default async function JoinSchoolTable({ lang, currentSchool }: props) {
                     <TableCell>{item.role}</TableCell>
                     {/* 2 day ago */}
                     <TableCell className="text-right">
-                      {formatTimeAgo(item.createdAt.toString())}
+                      {formatTimeAgo(item.updatedAt)}
                     </TableCell>
                     <TableCell>
                       <HiOutlineDotsHorizontal />
