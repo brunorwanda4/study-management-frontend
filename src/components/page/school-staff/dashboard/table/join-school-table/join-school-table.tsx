@@ -18,10 +18,10 @@ import {
 } from "@/components/ui/table";
 import { Locale } from "@/i18n";
 import { UserSchool } from "@/lib/utils/auth";
-import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { GetAllSchoolJoinRequestBySchoolId } from "@/service/school/school-join-request.service";
 import { formatTimeAgo } from "@/lib/functions/change-time";
 import { studentImage, teacherImage } from "@/lib/context/images";
+import JoinSchoolTableDropdown from "./join-school-table-dropdown";
 interface props {
   lang: Locale;
   currentSchool: UserSchool;
@@ -122,7 +122,7 @@ export default async function JoinSchoolTable({ lang, currentSchool }: props) {
                       {formatTimeAgo(item.updatedAt)}
                     </TableCell>
                     <TableCell>
-                      <HiOutlineDotsHorizontal />
+                      <JoinSchoolTableDropdown />
                     </TableCell>
                   </TableRow>
                 );

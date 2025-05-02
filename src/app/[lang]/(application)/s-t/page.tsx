@@ -13,8 +13,8 @@ import { GetAllJoinSchoolRequestByCurrentUserEmail } from "@/service/school/scho
 import { getSchoolByIdService } from "@/service/school/school.service";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
-import JoinSchoolTable from "../../../../components/page/school-staff/dashboard/table/join-school-table";
-import ClassActivitiesTable from "../../../../components/page/school-staff/dashboard/table/classes-activities-table";
+import JoinSchoolTable from "@/components/page/school-staff/dashboard/table/join-school-table/join-school-table";
+import ClassActivitiesTable from "@/components/page/school-staff/dashboard/table/classes-activities-table";
 import StudentDashboardTable from "@/components/page/school-staff/dashboard/table/student-dashboard-table";
 import TeachersDashboardTable from "@/components/page/school-staff/dashboard/table/teacher-dashboard-table";
 import { getClassesBySchoolIdViewData } from "@/service/class/class.service";
@@ -49,7 +49,7 @@ const SchoolStaffPage = async (props: props) => {
     const [school, classes, students] = await Promise.all([
       getSchoolByIdService(currentSchool.schoolId),
       getClassesBySchoolIdViewData(currentSchool.schoolId),
-      getAllStudentBySchoolId(currentSchool.schoolId)
+      getAllStudentBySchoolId(currentSchool.schoolId),
     ]);
     if (!school.data) return <NotFoundPage />;
     return (
