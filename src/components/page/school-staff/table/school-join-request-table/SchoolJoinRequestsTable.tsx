@@ -222,7 +222,6 @@ const columnsFunction = (
       filterFn: (row, id, filterValue) => {
         const rowValue = row.getValue(id); // boolean
         if (filterValue === undefined || filterValue === "all") return true;
-        // Convert string "true"/"false" from select filter back to boolean
         return rowValue === (filterValue === "true");
       },
     },
@@ -235,7 +234,7 @@ const columnsFunction = (
           "secondary";
         let Icon = Clock;
         if (status === SchoolJoinRequestStatus.Approved) {
-          variant = "default"; // Or maybe a success variant if you add one
+          variant = "default";
           Icon = UserCheck;
         } else if (status === SchoolJoinRequestStatus.Rejected) {
           variant = "destructive";
