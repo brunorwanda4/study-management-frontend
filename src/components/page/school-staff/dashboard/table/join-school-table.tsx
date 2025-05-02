@@ -80,7 +80,7 @@ export default async function JoinSchoolTable({ lang, currentSchool }: props) {
                               ? studentImage
                               : teacherImage
                           }
-                          alt={item.name}
+                          alt={item.name ?? undefined}
                         />
                         <div>
                           <div className="font-medium">{item.name}</div>
@@ -93,7 +93,7 @@ export default async function JoinSchoolTable({ lang, currentSchool }: props) {
                     <TableCell>{item.role}</TableCell>
                     {/* 2 day ago */}
                     <TableCell className="text-right">
-                      {formatTimeAgo(item.createAt)}
+                      {formatTimeAgo(item.createdAt.toString())}
                     </TableCell>
                     <TableCell>
                       <HiOutlineDotsHorizontal />
