@@ -53,6 +53,7 @@ const SchoolStudents = ({ lang, currentUser, students, onThePage }: props) => {
               role="s"
               lang={lang}
               userRole="STUDENT"
+              userId={item.userId}
             />
           );
         })}
