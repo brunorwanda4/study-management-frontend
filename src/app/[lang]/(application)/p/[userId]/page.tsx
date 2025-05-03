@@ -22,7 +22,7 @@ const ProfilePageById = async (props: Props) => {
   }
   return (
     <div className=" px-4 py-2 space-x-4 md:space-y-4 flex">
-      <ProfileAside lang={lang} />
+      {/* <ProfileAside lang={lang} /> */}
       <div className=" w-2/3 space-y-4">
         <UserFavoriteSubjects />
         <StudentPerformanceCard />

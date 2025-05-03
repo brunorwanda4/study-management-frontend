@@ -39,7 +39,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { studentsAndOther } from "@/lib/schema/school/student.dto";
+import { TeacherDto } from "@/lib/schema/school/teacher.dto";
 import { Locale } from "@/i18n";
 import { ViewDataClassDto } from "@/lib/schema/class/view-data-class.dto";
 import { TeacherTableColumns } from "./teacher-table-columns";
@@ -55,16 +55,14 @@ declare module "@tanstack/react-table" {
 
 
 interface props {
-  teachers: studentsAndOther[];
+  teachers: TeacherDto[];
   lang: Locale;
-  Classes: ViewDataClassDto[];
   schoolId: string;
 }
 
 export default function SchoolTeacherTable({
   teachers,
-  lang,
-  Classes, // Keep Classes prop if needed for the "Send Request" modal
+  lang, // Keep Classes prop if needed for the "Send Request" modal
   schoolId,
 }: props) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -108,7 +106,7 @@ export default function SchoolTeacherTable({
       <div className=" pt-4 px-4 pb-0 flex justify-between items-center">
         <h3 className=" title-page">Teachers</h3>
         {/* Pass Classes data if the modal needs it */}
-        <SendTeacherRequestToJoinSchool schoolId={schoolId} Classes={Classes} />
+        <SendTeacherRequestToJoinSchool schoolId={schoolId}  />
       </div>
       {/* Filters */}
       <div className="flex flex-wrap gap-3 px-4 py-2 border-b"> {/* Add border */}

@@ -1,22 +1,48 @@
 import StaffPeople from "@/components/page/school-staff/dashboard/staff-people";
 import { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Teacher management",
-  description: "Teacher page",
-  icons: {
-    icon: "/favicon.ico",
-  },
-};
-
 import type { Locale } from "@/i18n";
+import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";
+import { redirect } from "next/navigation";
+import NotFoundPage from "@/components/page/not-found";
+import { getAllTeacherBySchoolId } from "@/service/school/teacher-service";
 import SchoolTeacherTable from "@/components/page/school-staff/table/teacher-table/table-teacher";
+
+interface props {
+  params: Promise<{ lang: Locale }>;
+}
+
+export const generateMetadata = async (): Promise<Metadata> => {
+  const school = await getSchoolServer();
+  return {
+    title: school?.name
+      ? `All Teacher in ${school?.schoolName}`
+      : "School not found",
+    description: school?.name
+      ? `All Teacher in ${school?.schoolName}`
+      : "school not found",
+  };
+};
 
 interface props {
   lang: Locale;
 }
 
-const SchoolStaffStudentPage = ({ lang }: props) => {
+const SchoolStaffTeacherPage = async (props: props) => {
+  const params = await props.params;
+  const { lang } = params;
+  const [currentUser, currentSchool] = await Promise.all([
+    getAuthUserServer(),
+    getSchoolServer(),
+  ]);
+
+  if (!currentUser) {
+    redirect(`/${lang}/auth/login`);
+  }
+  if (!currentSchool)
+    return <NotFoundPage message="You need to have school to view this page" />;
+  const [allTeachers] = await Promise.all([
+    getAllTeacherBySchoolId(currentSchool.schoolId),
+  ]);
   return (
     <div className="p-4 space-y-4 ">
       <h2 className=" title-page">Teachers</h2>
@@ -51,13 +77,12 @@ const SchoolStaffStudentPage = ({ lang }: props) => {
       </div>
       <div>
         <SchoolTeacherTable
-          schoolId={"schoolId"}
-          Classes={ []}
+          schoolId={currentSchool.schoolId}
           lang={lang}
-          teachers={ []}
+          teachers={ allTeachers.data ?? [] }
         />
       </div>
     </div>
   );
 };
-export default SchoolStaffStudentPage;
+export default SchoolStaffTeacherPage;

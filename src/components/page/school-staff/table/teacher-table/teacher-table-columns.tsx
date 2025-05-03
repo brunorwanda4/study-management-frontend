@@ -4,52 +4,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import MyLink from "@/components/myComponents/myLink";
 import MyImage from "@/components/myComponents/myImage";
 import { studentImage } from "@/lib/context/images";
-import { studentsAndOther } from "@/lib/schema/school/student.dto";
+import { TeacherDto } from "@/lib/schema/school/teacher.dto";
 import { Locale } from "@/i18n";
 
-const calculateAge = (
-  dob: { year: number; month: number; day: number } | undefined
-): number | null => {
-  if (
-    !dob ||
-    typeof dob.year !== "number" ||
-    typeof dob.month !== "number" ||
-    typeof dob.day !== "number"
-  ) {
-    return null;
-  }
-  try {
-    // Create date in UTC to avoid timezone issues affecting the date part
-    const birthDate = new Date(Date.UTC(dob.year, dob.month - 1, dob.day)); // month is 0-indexed
-    // Check if the date components resulted in a valid date
-    if (
-      isNaN(birthDate.getTime()) ||
-      birthDate.getUTCFullYear() !== dob.year ||
-      birthDate.getUTCMonth() !== dob.month - 1 ||
-      birthDate.getUTCDate() !== dob.day
-    ) {
-      console.warn("Invalid date components for age calculation:", dob);
-      return null;
-    }
 
-    const today = new Date();
-    // Use UTC dates for comparison to avoid timezone shifts affecting age calculation
-    const todayUTC = new Date(
-      Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate())
-    );
-
-    let age = todayUTC.getUTCFullYear() - birthDate.getUTCFullYear();
-    const m = todayUTC.getUTCMonth() - birthDate.getUTCMonth();
-
-    if (m < 0 || (m === 0 && todayUTC.getUTCDate() < birthDate.getUTCDate())) {
-      age--;
-    }
-    return age < 0 ? 0 : age; // Ensure age isn't negative due to future date
-  } catch (e) {
-    console.error("Error calculating age:", e, "Input:", dob);
-    return null; // Handle potential errors during date creation/calculation
-  }
-};
 
 // Extend ColumnMeta - This should be done outside the function, typically in a declaration file (.d.ts)
 // or at the top level of your module if not using a separate declaration file.
@@ -67,7 +25,7 @@ declare module "@tanstack/react-table" {
 // ========================================================================
 export const TeacherTableColumns = (
   lang: Locale
-): ColumnDef<studentsAndOther>[] => {
+): ColumnDef<TeacherDto>[] => {
   return [
     // --- 1. Selection Column ---
     {
@@ -190,32 +148,7 @@ export const TeacherTableColumns = (
     // --- 5. Age Column ---
    
 
-    // --- 6. Class Column ---
-    {
-      id: "className", // <--- ADD THIS EXPLICIT ID
-      header: "Class",
-      accessorKey: "class.name", // Keep this for data access
-      cell: ({ row }) => {
-        return (
-          <MyLink href={`/${lang}/c/${row.original.classId}`} loading className="text-sm">
-            {row.original.class?.name || (
-              <span className="text-muted-foreground">Unassigned</span>
-            )}
-          </MyLink>
-        );
-      },
-      enableSorting: true,
-      meta: {
-        filterVariant: "select",
-      },
-      filterFn: (row, id, filterValue) => {
-        const rowValue = row.original.class?.name;
-        if (!filterValue) return true;
-        if (!rowValue) return false;
-        return rowValue === filterValue;
-      },
-      size: 180,
-    }, // <-- End of Class column definition
+    
 
     // --- 7. Phone Column ---
     {
