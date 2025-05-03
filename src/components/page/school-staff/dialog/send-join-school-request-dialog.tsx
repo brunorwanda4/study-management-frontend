@@ -10,6 +10,7 @@ import { Locale } from "@/i18n";
 import { UserSchool } from "@/lib/utils/auth";
 import SendJoinSchoolRequestForm from "../../../table/school/send-join-school-request-form";
 import { getClassesBySchoolIdViewData } from "@/service/class/class.service";
+import { Plus } from "lucide-react";
 
 interface Props {
   lang: Locale;
@@ -23,7 +24,7 @@ const SendJoinSchoolRequest = async ({ currentSchool }: Props) => {
     <Dialog>
       <DialogTrigger asChild>
         <Button size={"sm"} library="daisy" variant="info">
-          New People
+       <Plus />   New People
         </Button>
       </DialogTrigger>
       <DialogContent>

@@ -13,12 +13,12 @@ import { GetAllJoinSchoolRequestByCurrentUserEmail } from "@/service/school/scho
 import { getSchoolByIdService } from "@/service/school/school.service";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
-import JoinSchoolTable from "@/components/page/school-staff/dashboard/table/join-school-table/join-school-table";
 import ClassActivitiesTable from "@/components/page/school-staff/dashboard/table/classes-activities-table";
 import StudentDashboardTable from "@/components/page/school-staff/dashboard/table/student-dashboard-table";
 import TeachersDashboardTable from "@/components/page/school-staff/dashboard/table/teacher-dashboard-table";
 import { getClassesBySchoolIdViewData } from "@/service/class/class.service";
 import { getAllStudentBySchoolId } from "@/service/school/student-service";
+import JoinSchoolTableWrapper from "@/components/page/school-staff/dashboard/table/join-school-table/join-school-table-wrapper";
 
 interface props {
   params: Promise<{ lang: Locale }>;
@@ -73,7 +73,7 @@ const SchoolStaffPage = async (props: props) => {
           <SchoolStudentAndClassChart classes={classes.data || []} />
         </div>
         <div className=" flex space-x-4 w-full">
-          <JoinSchoolTable currentSchool={currentSchool} lang={lang} />
+          <JoinSchoolTableWrapper currentSchool={currentSchool} lang={lang} />
           <ClassActivitiesTable lang={lang} />
         </div>
         <div className=" flex space-x-4 w-full">

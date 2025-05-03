@@ -51,6 +51,9 @@ const SchoolTeachers = ({ lang, onThePage, currentUser, teachers }: props) => {
             role="t"
             lang={lang}
             userRole="TEACHER"
+            name={item.name}
+            image={item.image}
+            userId = {item.userId}
           />
         );
       })}

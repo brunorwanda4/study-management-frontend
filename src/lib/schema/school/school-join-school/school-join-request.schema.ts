@@ -14,8 +14,8 @@ export const SchoolJoinRequestSchema = z.object({
     classId: z.string().nullable().optional(),
     fromUser: z.boolean().default(false),
     status: z.enum(["pending", "approved", "rejected"]).default("pending"), // Use enum for clarity
-    createdAt: z.string(), // Use date object initially
-    updatedAt: z.string(),
+    createAt: z.string(), // Use date object initially
+    updateAt: z.string(),
 });
 
 export type SchoolJoinRequestDto = z.infer<typeof SchoolJoinRequestSchema>

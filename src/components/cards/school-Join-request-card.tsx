@@ -47,7 +47,6 @@ const SchoolJoinRequestCard = ({
         setError(`message :${approve.message} , error:${approve.error}`);
       }
     });
-    console.log("approve", request.id);
   };
 
   const onReject = async () => {

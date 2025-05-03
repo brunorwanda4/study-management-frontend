@@ -1,12 +1,12 @@
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Button } from "../ui/button";
 import { LuMessageCircle } from "react-icons/lu";
-import Link from "next/link";
 import { Locale } from "@/i18n";
 import { Dot } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TextTooltip } from "../myComponents/text-tooltip";
 import { toLowerCase } from "@/lib/functions/characters";
+import MyLink from "../myComponents/myLink";
+import { userImage } from "@/lib/context/images";
 
 interface props {
   userRole: string;
@@ -16,6 +16,7 @@ interface props {
   id?: string;
   role?: "s-t" | "s" | "t" | "a";
   image?: string;
+  userId: string;
 }
 
 const UserCardSmall = ({
@@ -26,30 +27,53 @@ const UserCardSmall = ({
   lang,
   className,
   image,
+  userId,
 }: props) => {
   return (
     <div
       className={cn("flex justify-between items-center  space-y-2", className)}
     >
       <div className=" flex space-x-2">
-        <Link href={`/${lang}/profile/${id ? id : 12334}${role && `?role=${role}`}`}>
+        <MyLink
+          loading
+          className=" underline-offset-0"
+          href={`/${lang}/p/${userId}?${
+            role === "t"
+              ? `teacherId=${id}`
+              : role === "s"
+              ? `studentId=${id}`
+              : role === "s-t"
+              ? `school-staff=${id}`
+              : null
+          }`}
+        >
           <Avatar className=" size-12">
             <AvatarImage
               src={
                 image
                   ? image
-                  : "https://i.pinimg.com/1200x/5d/0c/d8/5d0cd81e76339b484605c2b2a5bb681f.jpg"
+                  : userImage
               }
             />
             <AvatarFallback>PR</AvatarFallback>
           </Avatar>
-        </Link>
+        </MyLink>
         <div>
-          <Link
-            href={`/${lang}/profile/${id ? id : 12334}${role && `?role=${role}`}`}
+          <MyLink
+            loading
+            className=" underline-offset-0"
+            href={`/${lang}/p/${userId}?${
+              role === "t"
+                ? `teacherId=${id}`
+                : role === "s"
+                ? `studentId=${id}`
+                : role === "s-t"
+                ? `school-staff=${id}`
+                : null
+            }`}
           >
             <h4 className=" ">{name ? name : "Murekezi Hindiro"}</h4>
-          </Link>
+          </MyLink>
           <div className=" flex items-center">
             <span className=" text-myGray capitalize text-sm">
               {toLowerCase(userRole)}
@@ -66,16 +90,16 @@ const UserCardSmall = ({
           </div>
         </div>
       </div>
-      <Link
-        href={`/${lang}/messages/${role === "s-t" ? "s-t" : "user"}/${
-          id ? id : 12334
-        }`}
+      <MyLink
+        loading
+        className=" underline-offset-0"
+        href={`/${lang}/messages/${id}`}
+        type="button"
+        button={{ library: "daisy", variant: "info", size: "sm" }}
       >
-        <Button library="daisy" variant="info" size="sm">
-          <LuMessageCircle />
-          Message
-        </Button>
-      </Link>
+        <LuMessageCircle />
+        Message
+      </MyLink>
     </div>
   );
 };
