@@ -27,9 +27,7 @@ const JoinSchoolRequestPage = async (props: props) => {
   return (
     <div className="p-4 space-y-2 max-w-full">
       <h2 className=" title-page">School Join Request</h2>
-      <div>
-        <SchoolJoinRequestsTable requests={requests.data || []} lang={lang} />
-      </div>
+      <SchoolJoinRequestsTable currentSchool={currentSchool} requests={requests.data || []} lang={lang} />
     </div>
   );
 };

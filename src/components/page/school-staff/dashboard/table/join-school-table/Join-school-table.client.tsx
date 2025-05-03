@@ -109,7 +109,7 @@ export default function JoinSchoolTable({ lang, currentSchool }: Props) {
                     </TableCell>
                     <TableCell>{item.role}</TableCell>
                     <TableCell className="text-right">
-                      {formatTimeAgo(item.updatedAt)}
+                      {formatTimeAgo(item.updateAt)}
                     </TableCell>
                     <TableCell>
                       <JoinSchoolTableDropdown requestId={item.id} />

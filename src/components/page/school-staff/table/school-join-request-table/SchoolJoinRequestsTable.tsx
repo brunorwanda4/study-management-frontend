@@ -25,9 +25,6 @@ import {
   UserCheck, // Example icon for Approved
   UserX, // Example icon for Rejected
   Clock, // Example icon for Pending
-  User as UserIcon, // Icon for Name/User
-  Mail, // Icon for Email
-  Phone as PhoneIcon, // Icon for Phone
   Users, // Icon for Role
   LogIn, // Icon for Source (From User)
   LogOut, // Icon for Source (Invite)
@@ -70,6 +67,11 @@ import {
   SchoolJoinRequestDto,
   SchoolJoinRequestStatus,
 } from "@/lib/schema/school/school-join-school/school-join-request.schema";
+import { formatTimeAgo } from "@/lib/functions/change-time";
+import MyImage from "@/components/myComponents/myImage";
+import { studentImage, teacherImage } from "@/lib/context/images";
+import SendJoinSchoolRequest from "../../dialog/send-join-school-request-dialog";
+import { UserSchool } from "@/lib/utils/auth";
 
 // --- Prisma Schema related types ---
 declare module "@tanstack/react-table" {
@@ -79,10 +81,8 @@ declare module "@tanstack/react-table" {
   }
 }
 
-// --- Column Definitions for School Join Requests ---
 const columnsFunction = (
   lang: Locale,
-  // Pass action handlers as props if they trigger server actions
   onApprove?: (id: string) => void,
   onReject?: (id: string) => void
 ): ColumnDef<SchoolJoinRequestAndOther>[] => {
@@ -115,45 +115,53 @@ const columnsFunction = (
       header: "Applicant", // Combines Name/Email for brevity, or keep separate
       accessorKey: "name", // Sort/Filter primarily by name
       cell: ({ row }) => {
-        const request = row.original;
-        const displayName = request.name || request.email || "No Identifier";
-        const profileLink = request.userId
-          ? `/${lang}/users/${request.userId}`
-          : undefined;
-        const content = (
-          <div className="flex flex-col">
-            <span className="font-medium flex items-center gap-1">
-              <UserIcon className="h-4 w-4 text-muted-foreground" />
-              {displayName}
-            </span>
-            {request.email &&
-              request.name && ( // Show email only if name exists
-                <span className="text-xs text-muted-foreground flex items-center gap-1">
-                  <Mail className="h-3 w-3" />
-                  {request.email}
-                </span>
-              )}
-            {request.phone && (
-              <span className="text-xs text-muted-foreground flex items-center gap-1">
-                <PhoneIcon className="h-3 w-3" />
-                {request.phone}
-              </span>
+        const item = row.original;
+        return (
+          <div className="flex items-center gap-3">
+            {item.user?.image && item.userId ? (
+              <MyLink loading href={`/${lang}/p/${item.userId}`}>
+                <MyImage
+                  className="rounded-full size-12"
+                  role="AVATAR"
+                  src={
+                    item.user.image ||
+                    (item.role === "STUDENT" ? studentImage : teacherImage)
+                  }
+                  alt={item.name ?? undefined}
+                />
+              </MyLink>
+            ) : (
+              <MyImage
+                className="rounded-full size-12"
+                role="AVATAR"
+                src={
+                  item.user?.image ||
+                  (item.role === "STUDENT" ? studentImage : teacherImage)
+                }
+                alt={item.name ?? undefined}
+              />
             )}
+            <div>
+              {item.user?.name && item.userId && (
+                <MyLink
+                  loading
+                  href={`/${lang}/p/${item.userId}`}
+                  className="font-medium"
+                >
+                  {item.user.name}
+                </MyLink>
+              )}
+              <span className="text-muted-foreground mt-0.5 text-xs">
+                {item.email}
+              </span>
+            </div>
           </div>
-        );
-        return profileLink ? (
-          <MyLink href={profileLink}>{content}</MyLink>
-        ) : (
-          content
         );
       },
       meta: {
         filterVariant: "text",
       },
     },
-    // Optional: Separate Email/Phone columns if needed
-    // { header: "Email", accessorKey: "email", meta: { filterVariant: 'text' } },
-    // { header: "Phone", accessorKey: "phone", meta: { filterVariant: 'text' } },
     {
       header: "Role",
       accessorKey: "role",
@@ -264,12 +272,9 @@ const columnsFunction = (
       header: "Requested",
       accessorKey: "createdAt",
       cell: ({ row }) => {
-        // const date = new Date(dateStr); // Attempt to parse the string
-        return <time >{`${row.original.createdAt}`}</time>;
+        return <time>{formatTimeAgo(row.original.createAt)}</time>;
       },
-      // Enable sorting, but date filtering is complex, skip for now
       enableSorting: true,
-      //   enableFiltering: false,
     },
     {
       id: "actions",
@@ -354,7 +359,8 @@ interface SchoolJoinRequestsTableProps {
   // Add handlers for actions
   onApproveRequest?: (id: string) => void;
   onRejectRequest?: (id: string) => void;
-  isLoading?: boolean; // Optional loading state
+  isLoading?: boolean;
+  currentSchool: UserSchool;
 }
 
 // --- React Component ---
@@ -364,6 +370,7 @@ export default function SchoolJoinRequestsTable({
   onApproveRequest,
   onRejectRequest,
   isLoading = false,
+  currentSchool,
 }: SchoolJoinRequestsTableProps) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([
@@ -403,33 +410,37 @@ export default function SchoolJoinRequestsTable({
     // meta: {
     //   approveRequest: onApproveRequest,
     //   rejectRequest: onRejectRequest,
-    // }
+    // },
   });
-
-  // ----- Date Formatting -----
-  // You'll need a date formatting library like date-fns
-  // npm install date-fns
-  // Example using date-fns (adapt locale import as needed)
-//   const { format, isValid } = require("date-fns");
-//   const { enUS, fr } = require("date-fns/locale"); // Import locales you need
-//   const currentLocale = lang === "en" ? fr : enUS; // Example locale mapping
-//   // ----- End Date Formatting -----
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>School Join Requests</CardTitle>
-        {/* Optional: Add description or global actions (e.g., bulk approve/reject) */}
-        {/* {table.getFilteredSelectedRowModel().rows.length > 0 && (
+      <CardHeader className=" flex justify-between  w-full">
+        <div>
+          <CardTitle>School Join Requests</CardTitle>
+          {/* Optional: Add description or global actions (e.g., bulk approve/reject) */}
+          {table.getFilteredSelectedRowModel().rows.length > 0 && (
             <div className="mt-2 flex gap-2">
-                 <Button variant="outline" size="sm" onClick={() => console.log("Bulk Approve", rowSelection)}>
-                     Approve Selected ({table.getFilteredSelectedRowModel().rows.length})
-                </Button>
-                 <Button variant="destructive" size="sm" onClick={() => console.log("Bulk Reject", rowSelection)}>
-                     Reject Selected ({table.getFilteredSelectedRowModel().rows.length})
-                </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => console.log("Bulk Approve", rowSelection)}
+              >
+                Approve Selected (
+                {table.getFilteredSelectedRowModel().rows.length})
+              </Button>
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={() => console.log("Bulk Reject", rowSelection)}
+              >
+                Reject Selected (
+                {table.getFilteredSelectedRowModel().rows.length})
+              </Button>
             </div>
-        )} */}
+          )}
+        </div>
+        <SendJoinSchoolRequest lang={lang} currentSchool={currentSchool} />
       </CardHeader>
 
       {/* Filters */}
@@ -493,23 +504,25 @@ export default function SchoolJoinRequestsTable({
                                 header.column.columnDef.header,
                                 header.getContext()
                               )}
-                          {header.column.getCanSort() &&
-                            ({
-                              asc: (
-                                <ChevronUpIcon
-                                  className="shrink-0 opacity-60"
-                                  size={16}
-                                />
-                              ),
-                              desc: (
-                                <ChevronDownIcon
-                                  className="shrink-0 opacity-60"
-                                  size={16}
-                                />
-                              ),
-                            }[header.column.getIsSorted() as string] ?? (
-                              <span className="size-4" />
-                            )) /* Placeholder */}
+                          {
+                            header.column.getCanSort() &&
+                              ({
+                                asc: (
+                                  <ChevronUpIcon
+                                    className="shrink-0 opacity-60"
+                                    size={16}
+                                  />
+                                ),
+                                desc: (
+                                  <ChevronDownIcon
+                                    className="shrink-0 opacity-60"
+                                    size={16}
+                                  />
+                                ),
+                              }[header.column.getIsSorted() as string] ?? (
+                                <span className="size-4" />
+                              )) /* Placeholder */
+                          }
                         </div>
                       </TableHead>
                     );
@@ -576,8 +589,8 @@ export default function SchoolJoinRequestsTable({
           {/* TODO: Add total count from server if using server-side pagination */}
         </div>
         {/* Placeholder for TanStack Table Pagination component */}
-        {/* <Button variant="outline" size="sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>Previous</Button>
-           <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>Next</Button> */}
+        <Button variant="outline" size="sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>Previous</Button>
+           <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>Next</Button>
       </div>
     </Card>
   );
