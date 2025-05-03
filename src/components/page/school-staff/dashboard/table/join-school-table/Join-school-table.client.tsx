@@ -1,12 +1,11 @@
-import SendJoinSchoolRequest from "@/components/page/school-staff/dialog/send-join-school-request-dialog";
+'use client';
+
+import { useEffect, useState } from "react";
 import MyImage from "@/components/myComponents/myImage";
 import MyLink from "@/components/myComponents/myLink";
 import {
-  Card,
   CardContent,
   CardFooter,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import {
   Table,
@@ -22,40 +21,41 @@ import { GetAllSchoolJoinRequestBySchoolId } from "@/service/school/school-join-
 import { formatTimeAgo } from "@/lib/functions/change-time";
 import { studentImage, teacherImage } from "@/lib/context/images";
 import JoinSchoolTableDropdown from "./join-school-table-dropdown";
-interface props {
+import { SchoolJoinRequestAndOther } from "@/lib/schema/school/school-join-school/school-join-request.schema";
+
+interface Props {
   lang: Locale;
   currentSchool: UserSchool;
 }
 
-export default async function JoinSchoolTable({ lang, currentSchool }: props) {
-  const requests = await GetAllSchoolJoinRequestBySchoolId(
-    currentSchool.schoolId
-  );
+export default function JoinSchoolTable({ lang, currentSchool }: Props) {
+  const [requests, setRequests] = useState<SchoolJoinRequestAndOther[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchRequests = async () => {
+      try {
+        const res = await GetAllSchoolJoinRequestBySchoolId(currentSchool.schoolId);
+        setRequests(res.data || []);
+      } catch (err) {
+        console.error("Failed to fetch join requests:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRequests();
+  }, [currentSchool.schoolId]);
+
   return (
-    <Card className=" w-1/2 pb-2">
-      <CardHeader className=" flex justify-between">
-        <CardTitle className="text-lg font-semibold">
-          Join School Requests
-        </CardTitle>
-        <div className=" space-x-4">
-          <SendJoinSchoolRequest currentSchool={currentSchool} lang={lang} />
-          <MyLink
-            href={`/${lang}/s-t/join-school-requests`}
-            type="button"
-            loading
-            button={{ variant: "outline", size: "sm", library: "daisy" }}
-          >
-            All Request
-          </MyLink>
-        </div>
-      </CardHeader>
-      <CardContent className=" p-0 justify-between flex flex-col">
-        {!requests.data ? (
-          <div>no data found</div>
-        ) : requests.data.length === 0 ? (
+    <>
+      <CardContent className="p-0 justify-between flex flex-col">
+        {loading ? (
+          <div>Loading...</div>
+        ) : requests.length === 0 ? (
           <div>No School request found</div>
         ) : (
-          <Table className="">
+          <Table>
             <TableHeader>
               <TableRow className="hover:bg-transparent">
                 <TableHead>Name</TableHead>
@@ -64,7 +64,7 @@ export default async function JoinSchoolTable({ lang, currentSchool }: props) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {requests.data.slice(0, 4).map((item) => {
+              {requests.slice(0, 4).map((item) => {
                 if (item.status !== "pending") return null;
                 return (
                   <TableRow key={item.id}>
@@ -76,11 +76,7 @@ export default async function JoinSchoolTable({ lang, currentSchool }: props) {
                               className="rounded-full size-12"
                               role="AVATAR"
                               src={
-                                item.user?.image
-                                  ? item.user.image || "/images/p.jpg"
-                                  : item.role === "STUDENT"
-                                  ? studentImage
-                                  : teacherImage
+                                item.user.image || (item.role === "STUDENT" ? studentImage : teacherImage)
                               }
                               alt={item.name ?? undefined}
                             />
@@ -90,16 +86,11 @@ export default async function JoinSchoolTable({ lang, currentSchool }: props) {
                             className="rounded-full size-12"
                             role="AVATAR"
                             src={
-                              item.user?.image
-                                ? item.user.image || "/images/p.jpg"
-                                : item.role === "STUDENT"
-                                ? studentImage
-                                : teacherImage
+                              item.user?.image || (item.role === "STUDENT" ? studentImage : teacherImage)
                             }
                             alt={item.name ?? undefined}
                           />
                         )}
-
                         <div>
                           {item.user?.name && item.userId && (
                             <MyLink
@@ -117,12 +108,11 @@ export default async function JoinSchoolTable({ lang, currentSchool }: props) {
                       </div>
                     </TableCell>
                     <TableCell>{item.role}</TableCell>
-                    {/* 2 day ago */}
                     <TableCell className="text-right">
                       {formatTimeAgo(item.updatedAt)}
                     </TableCell>
                     <TableCell>
-                      <JoinSchoolTableDropdown requestId={item.id}/>
+                      <JoinSchoolTableDropdown requestId={item.id} />
                     </TableCell>
                   </TableRow>
                 );
@@ -131,22 +121,21 @@ export default async function JoinSchoolTable({ lang, currentSchool }: props) {
           </Table>
         )}
       </CardContent>
-      {requests.data ? (
+
+      {requests.length > 0 && (
         <CardFooter>
-          {requests.data.length !== 0 ? (
-            <MyLink
-              loading
-              type="button"
-              button={{ library: "daisy", variant: "ghost" }}
-              href={`/${lang}/s-t/join-school-requests`}
-              className=" w-full"
-              classname=" w-full"
-            >
-              See others {requests.data.length}
-            </MyLink>
-          ) : null}
+          <MyLink
+            loading
+            type="button"
+            button={{ library: "daisy", variant: "ghost" }}
+            href={`/${lang}/s-t/join-school-requests`}
+            className="w-full"
+            classname=" w-full"
+          >
+            See others {requests.length}
+          </MyLink>
         </CardFooter>
-      ) : null}
-    </Card>
+      )}
+    </>
   );
 }

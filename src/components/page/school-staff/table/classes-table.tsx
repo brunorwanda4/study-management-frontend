@@ -96,7 +96,7 @@ const columsFunction = (lang : Locale) => {
       header: "Name",
       accessorKey: "name",
       cell: ({ row }) => (
-        <MyLink href={`/${lang}/c/${row.original.id}`} className="font-medium flex items-center gap-2">
+        <MyLink loading href={`/${lang}/c/${row.original.id}`} className="font-medium flex items-center gap-2">
           {row.original.image && <MyImage src={row.original.image} alt={row.getValue("name")} className="h-8 w-8 rounded-full object-cover" />}
           <span>{row.getValue("name")}</span>
         </MyLink>
