@@ -49,3 +49,7 @@ export const CreateSchoolJoinRequest = async (schoolJoinRequestDto: SendJoinScho
 export const GetAllSchoolJoinRequestBySchoolId = async (schoolId: string) => {
     return await apiRequest<void, SchoolJoinRequestAndOther[]>("get", `/school-join-requests?schoolId=${schoolId}`)
 }
+
+export const deleteSchoolJoinRequestById = async (id: string) => {
+    return await apiRequest<void, SchoolJoinRequestDto>("delete", `/school-join-requests/${id}`)
+}

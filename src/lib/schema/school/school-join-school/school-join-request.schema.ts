@@ -1,22 +1,38 @@
 import { z } from "zod";
 import { SchoolDto } from "../../school.dto";
-import { validSchoolStaffRoles } from "@/lib/context/school.context";
 import { UserDto } from "../../user/user.dto";
+import { ClassDto } from "../../class/class.schema";
 
 export const SchoolJoinRequestSchema = z.object({
     id: z.string(),
     userId: z.string().nullable().optional(),
     schoolId: z.string(),
-    role: z.enum(validSchoolStaffRoles), // extend with other roles if needed
-    name: z.string().optional(),
-    email: z.string().email().optional(),
-    phone: z.string().optional(), // You can add regex for validation if needed
-    status: z.enum(["pending", "approved", "rejected"]), // extend as needed
-    createAt: z.string().datetime(),
-    updatedAt: z.string().datetime(),
+    role: z.string(),
+    name: z.string().nullable().optional(),
+    email: z.string().email().nullable().optional(),
+    phone: z.string().nullable().optional(),
+    classId: z.string().nullable().optional(),
+    fromUser: z.boolean().default(false),
+    status: z.enum(["pending", "approved", "rejected"]).default("pending"), // Use enum for clarity
+    createdAt: z.string(), // Use date object initially
+    updatedAt: z.string(),
 });
 
 export type SchoolJoinRequestDto = z.infer<typeof SchoolJoinRequestSchema>
+
+
+export enum SchoolJoinRequestStatus {
+  Pending = "pending",
+  Approved = "approved",
+  Rejected = "rejected",
+}
+
+export enum UserRole { // Example roles - adjust as needed
+  Student = "student",
+  Teacher = "teacher",
+  Admin = "admin",
+  Parent = "parent",
+}
 
 export interface SchoolJoinRequestAndSchool extends SchoolJoinRequestDto {
     school: SchoolDto
@@ -24,7 +40,8 @@ export interface SchoolJoinRequestAndSchool extends SchoolJoinRequestDto {
 
 export interface SchoolJoinRequestAndOther extends SchoolJoinRequestDto {
     school?: SchoolDto,
-    user?: UserDto
+    user?: UserDto,
+    class?: ClassDto
 }
 
 export interface SchoolJoinRequestAndToken extends SchoolJoinRequestDto {

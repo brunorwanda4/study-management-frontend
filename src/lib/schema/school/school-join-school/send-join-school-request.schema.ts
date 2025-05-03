@@ -50,15 +50,14 @@ export const sendJoinSchoolRequestSchema = z
       // }
     }
 
-     // Optional: Clear conditional fields if role is TEACHER (or others)
-     if (data.role === "TEACHER") {
-        // // Consider clearing in useEffect instead for better UX
-        // data.staffRole = undefined;
-        // data.classId = undefined;
-     }
+    // Optional: Clear conditional fields if role is TEACHER (or others)
+    if (data.role === "TEACHER") {
+      // // Consider clearing in useEffect instead for better UX
+      // data.staffRole = undefined;
+      // data.classId = undefined;
+    }
   });
 
 export type SendJoinSchoolRequestDto = z.infer<
   typeof sendJoinSchoolRequestSchema
 >;
-
