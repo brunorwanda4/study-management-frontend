@@ -16,6 +16,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Locale } from "@/i18n";
+import { TeacherDto } from "@/lib/schema/school/teacher.dto";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 
 const items = [
@@ -63,6 +64,7 @@ const items = [
 
 interface props {
   lang: Locale;
+  teachers: TeacherDto
 }
 
 export default function TeachersDashboardTable({ lang }: props) {
