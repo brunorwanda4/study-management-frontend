@@ -38,7 +38,9 @@ const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
 const DEFAULT_DURATION = 5000;
 
-export const ToastManager: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const ToastManager: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [toastProps, setToastProps] = useState<ShowToastProps | null>(null);
   const [open, setOpen] = useState(false);
   const [currentDuration, setCurrentDuration] = useState(DEFAULT_DURATION);
@@ -90,8 +92,7 @@ export const ToastManager: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   return (
     <ToastContext.Provider value={{ showToast, dismissToast: handleDismiss }}>
-      <ShadcnToastProvider swipeDirection="left">
-        {children}
+      <ShadcnToastProvider swipeDirection="up">
         {toastProps && (
           <CustomToast
             key={toastProps.id}
@@ -107,7 +108,8 @@ export const ToastManager: React.FC<{ children: ReactNode }> = ({ children }) =>
             action={toastProps.action}
           />
         )}
-        <ToastViewport className="sm:right-auto sm:left-0" />
+        <ToastViewport className=" sm:top-11 sm:right-0" />
+        {children}
       </ShadcnToastProvider>
     </ToastContext.Provider>
   );

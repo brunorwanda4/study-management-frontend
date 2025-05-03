@@ -46,7 +46,7 @@ export default async function RootLayout({
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
-        >
+          >
           <ToastManager>{children}</ToastManager>
         </ThemeProvider>
       </body>

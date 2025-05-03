@@ -7,8 +7,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 
-import { ToastAction } from "@/components/ui/toast"; // Import if needed for actions
+// import { ToastAction } from "@/components/ui/toast"; // Import if needed for actions
 import { useToast } from "@/lib/context/toast/ToastContext";
+import { deleteSchoolJoinRequestById } from "@/service/school/school-join-request.service";
+import { useState, useTransition } from "react";
 // import { useToast } from "@/hooks/use-toast";
 
 interface props {
@@ -16,53 +18,65 @@ interface props {
 }
 
 const JoinSchoolTableDropdown = ({ requestId }: props) => {
-  //   const handleDelete = async () => {
-  //     const deleteRequest = await deleteSchoolJoinRequestById(requestId)
-  //   };
+  const [isPending, startTransition] = useTransition();
+  const [isDelete, setIsDelete] = useState(false);
   const { showToast } = useToast();
-
-  const handleSuccess = () => {
-    showToast({
-      type: "success",
-      title: "Success!",
-      description: "Your profile was updated successfully.",
-      duration: 3000, // Optional: override default duration
+  const handleDelete = () => {
+    startTransition(async () => {
+      setIsDelete(true);
+      const deleteRequest = await deleteSchoolJoinRequestById(requestId);
+      if (deleteRequest.data) {
+        showToast({
+          type: "warning",
+          title: "Success!",
+          description: "You have been delete request!",
+          duration: 2000,
+        });
+      } else {
+        showToast({
+          type: "error",
+          title: "Some thing went wrong to delete request",
+          description: deleteRequest.message,
+          duration: 3000,
+        });
+      }
+      setIsDelete(false);
     });
   };
 
-  const handleError = () => {
-    showToast({
-      type: "error",
-      title: "Update Failed",
-      description: "Could not save changes. Please try again.",
-      // Example with an action
-      action: (
-        <ToastAction
-          altText="Retry"
-          onClick={() => console.log("Retry clicked!")}
-        >
-          Retry
-        </ToastAction>
-      ),
-    }); // Uses default duration
-  };
+  // const handleError = () => {
+  //   showToast({
+  //     type: "error",
+  //     title: "Update Failed",
+  //     description: "Could not save changes. Please try again.",
+  //     // Example with an action
+  //     action: (
+  //       <ToastAction
+  //         altText="Retry"
+  //         onClick={() => console.log("Retry clicked!")}
+  //       >
+  //         Retry
+  //       </ToastAction>
+  //     ),
+  //   }); // Uses default duration
+  // };
 
-  const handleWarning = () => {
-    showToast({
-      type: "warning",
-      title: "Session Expiring",
-      description: "Your session will expire in 5 minutes.",
-    });
-  };
+  // const handleWarning = () => {
+  //   showToast({
+  //     type: "warning",
+  //     title: "Session Expiring",
+  //     description: "Your session will expire in 5 minutes.",
+  //   });
+  // };
 
-  const handleInfo = () => {
-    showToast({
-      type: "info",
-      title: "Did you know?",
-      description: "You can customize your dashboard widgets.",
-      duration: 7000,
-    });
-  };
+  // const handleInfo = () => {
+  //   showToast({
+  //     type: "info",
+  //     title: "Did you know?",
+  //     description: "You can customize your dashboard widgets.",
+  //     duration: 7000,
+  //   });
+  // };
 
   return (
     <DropdownMenu>
@@ -72,7 +86,8 @@ const JoinSchoolTableDropdown = ({ requestId }: props) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className=" px-2 py-1 flex flex-col space-y-2">
-        {/* <Button
+        <Button
+          disabled={isPending}
           size={"xs"}
           library="daisy"
           variant={"ghost"}
@@ -81,6 +96,7 @@ const JoinSchoolTableDropdown = ({ requestId }: props) => {
           Reject
         </Button>
         <Button
+          disabled={isPending}
           size={"xs"}
           library="daisy"
           variant={"warning"}
@@ -89,22 +105,21 @@ const JoinSchoolTableDropdown = ({ requestId }: props) => {
           Cancel
         </Button>
         <Button
+          disabled={isPending}
           size={"xs"}
           library="daisy"
           variant={"error"}
           className=" justify-start"
+          onClick={() => handleDelete()}
         >
-          Delete
-        </Button> */}
-        <Button onClick={handleSuccess}>Show Success Toast</Button>
-        <Button variant="destructive" onClick={handleError}>
-          Show Error Toast
-        </Button>
-        <Button variant="outline" onClick={handleWarning}>
-          Show Warning Toast
-        </Button>
-        <Button variant="secondary" onClick={handleInfo}>
-          Show Info Toast
+          Delete{" "}
+          {isDelete && (
+            <div
+              role="status"
+              aria-label="Loading"
+              className="loading loading-spinner"
+            />
+          )}
         </Button>
       </DropdownMenuContent>
     </DropdownMenu>
