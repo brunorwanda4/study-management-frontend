@@ -19,6 +19,7 @@ import TeachersDashboardTable from "@/components/page/school-staff/dashboard/tab
 import { getClassesBySchoolIdViewData } from "@/service/class/class.service";
 import { getAllStudentBySchoolId } from "@/service/school/student-service";
 import JoinSchoolTableWrapper from "@/components/page/school-staff/dashboard/table/join-school-table/join-school-table-wrapper";
+import { getAllTeacherBySchoolId } from "@/service/school/teacher-service";
 
 interface props {
   params: Promise<{ lang: Locale }>;
@@ -46,10 +47,11 @@ const SchoolStaffPage = async (props: props) => {
 
   // page which shown base on user
   if (currentSchool) {
-    const [school, classes, students] = await Promise.all([
+    const [school, classes, students, teachers] = await Promise.all([
       getSchoolByIdService(currentSchool.schoolId),
       getClassesBySchoolIdViewData(currentSchool.schoolId),
       getAllStudentBySchoolId(currentSchool.schoolId),
+      getAllTeacherBySchoolId(currentSchool.schoolId)
     ]);
     if (!school.data) return <NotFoundPage />;
     return (
@@ -78,7 +80,7 @@ const SchoolStaffPage = async (props: props) => {
         </div>
         <div className=" flex space-x-4 w-full">
           <StudentDashboardTable students={students.data || []} lang={lang} />
-          <TeachersDashboardTable lang={lang} />
+          <TeachersDashboardTable teachers={teachers.data || []} lang={lang} />
         </div>
       </div>
     );

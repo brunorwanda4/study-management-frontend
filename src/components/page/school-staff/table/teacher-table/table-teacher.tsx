@@ -41,7 +41,6 @@ import {
 } from "@/components/ui/table";
 import { TeacherDto } from "@/lib/schema/school/teacher.dto";
 import { Locale } from "@/i18n";
-import { ViewDataClassDto } from "@/lib/schema/class/view-data-class.dto";
 import { TeacherTableColumns } from "./teacher-table-columns";
 import { SendTeacherRequestToJoinSchool } from "../../dialog/createTeacherModal";
 
