@@ -9,9 +9,17 @@ import { Locale } from "@/i18n";
 
 interface props {
   lang: Locale;
+  username: string;
+  role: string;
+  email: string;
+  phone: string;
+  school: string;
+  classes: string;
+  biography: string;
+
 }
 
-const ProfileAside = ({ lang }: props) => {
+const ProfileAside = ({ lang, username, role, email, phone, school, classes, biography }: props) => {
   return (
     <aside className=" space-y-4 w-1/3">
       <div className=" flex flex-col space-y-2">
@@ -26,33 +34,30 @@ const ProfileAside = ({ lang }: props) => {
           >
             Edit Profile
           </MyLink>
-          <h3 className=" basic-title">User name</h3>
-          <span className=" link-hover">@ username</span>
+          <h3 className=" basic-title">{username}</h3>
+          <span className=" link-hover">@ {username}</span>
           <div className=" flex space-x-1">
-            <User size={18} /> <span className=" font-medium">Student</span>
+            <User size={18} /> <span className=" font-medium">{role}</span>
           </div>
           <div className=" flex items-center space-x-2">
             <MdEmail size={16} />
-            <span>example@mail.com</span>
+            <span>{email}</span>
           </div>
           <div className=" flex items-center space-x-2">
             <Phone size={16} />
-            <span>0788765239</span>
+            <span>{phone}</span>
           </div>
           <div className=" flex items-center space-x-2">
             <FaSchool size={16} />
-            <span>excella high school</span>
+            <span>{school}</span>
           </div>
           <div className=" flex items-center space-x-2">
             <MdClass size={16} />
-            <span>L5 SOD execella school</span>
+            <span>{classes}</span>
           </div>
         </div>
         <p className=" mt-4">
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sint
-          possimus fugiat eos cupiditate, facere laudantium nam beatae iusto?
-          Inventore fugit dolor harum tempora modi numquam eius illo non
-          repudiandae suscipit!
+          {biography}
         </p>
       </div>
       <Separator />

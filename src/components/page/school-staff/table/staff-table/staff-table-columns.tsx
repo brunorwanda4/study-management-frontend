@@ -4,8 +4,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import MyLink from "@/components/myComponents/myLink";
 import MyImage from "@/components/myComponents/myImage";
 import { studentImage } from "@/lib/context/images";
-import { studentsAndOther } from "@/lib/schema/school/student.dto";
 import { Locale } from "@/i18n";
+import { SchoolStaffDto } from "@/lib/schema/school/school-staff.schema";
 
 
 
@@ -22,7 +22,7 @@ declare module "@tanstack/react-table" {
 // ========================================================================
 export const StaffTableColumns = (
   lang: Locale
-): ColumnDef<studentsAndOther>[] => {
+): ColumnDef<SchoolStaffDto>[] => {
   return [
     // --- 1. Selection Column ---
     {

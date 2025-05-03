@@ -24,26 +24,19 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { ViewDataClassDto } from "@/lib/schema/class/view-data-class.dto"; // Needed for class dropdown
 import {
   SendJoinSchoolRequestDto,
   sendJoinSchoolRequestSchema,
 } from "@/lib/schema/school/school-join-school/send-join-school-request.schema";
-import {
-  ClassCombobox,
-  ComboboxItem,
-} from "@/components/table/school/class-combobox";
 import { CreateSchoolJoinRequest } from "@/service/school/school-join-request.service";
 import { Plus, UsersIcon } from "lucide-react";
 import { FormError, FormSuccess } from "@/components/myComponents/form-message";
 
 interface CreateStudentModalProps {
   schoolId: string;
-  Classes: ViewDataClassDto[];
 }
 
 export function SendStaffRequestToJoinSchool({
-  Classes,
   schoolId,
 }: CreateStudentModalProps) {
   const [error, setError] = useState<undefined | null | string>("");
@@ -80,12 +73,7 @@ export function SendStaffRequestToJoinSchool({
     });
   }
 
-  const classItems: ComboboxItem[] = Classes.map((classItem) => ({
-    value: classItem.id,
-    label: classItem.name,
-    icon: UsersIcon,
-    number: classItem._count.students,
-  }));
+ 
 
   return (
     <Dialog>
