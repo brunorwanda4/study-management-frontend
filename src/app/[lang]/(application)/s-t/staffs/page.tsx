@@ -9,14 +9,25 @@ export const metadata : Metadata= {
   },
 }
 
-import StaffList from "@/components/page/school-staff/table/table-staff-list";
+
+import SchoolStaffTable from "@/components/page/school-staff/table/staff-table/table-staff";
+import { Locale } from "@/i18n";
+
+interface props {
+  lang: Locale;
+}
 
 
-const SchoolStaffStudentPage = () => {
+const SchoolStaffStudentPage = ({lang}: props) => {
   return (
     <div className="p-4 space-y-4 ">
       <div>
-      <StaffList/>
+      <SchoolStaffTable
+         schoolId={"schoolId"}
+         Classes={ []}
+         lang={lang}
+         staffs={ []}
+      />
       </div>
     </div>
   );

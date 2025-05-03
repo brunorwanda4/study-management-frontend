@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 import type { Locale } from "@/i18n";
-import TeacherList from "@/components/page/school-staff/table/table-teacher-list";
+import SchoolTeacherTable from "@/components/page/school-staff/table/teacher-table/table-teacher";
 
 interface props {
   lang: Locale;
@@ -23,7 +23,7 @@ const SchoolStaffStudentPage = ({ lang }: props) => {
       <div className=" flex space-x-4">
         <StaffPeople
           icon="/icons/teacher.png"
-          lang={lang}
+          link=""
           total={762}
           title="Teacher"
           Ftotal={60}
@@ -32,7 +32,7 @@ const SchoolStaffStudentPage = ({ lang }: props) => {
         />
         <StaffPeople
           icon="/icons/primary.png"
-          lang={lang}
+          link=""
           total={345}
           title="Primary"
           Ftotal={100}
@@ -41,7 +41,7 @@ const SchoolStaffStudentPage = ({ lang }: props) => {
         />
         <StaffPeople
           icon="/icons/OLevel.png"
-          lang={lang}
+          link=""
           total={345}
           title="Ordinary_level"
           Ftotal={100}
@@ -50,7 +50,12 @@ const SchoolStaffStudentPage = ({ lang }: props) => {
         />
       </div>
       <div>
-        <TeacherList />
+        <SchoolTeacherTable
+          schoolId={"schoolId"}
+          Classes={ []}
+          lang={lang}
+          teachers={ []}
+        />
       </div>
     </div>
   );
