@@ -16,56 +16,17 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Locale } from "@/i18n";
+import { teacherImage } from "@/lib/context/images";
+import { TeacherDto } from "@/lib/schema/school/teacher.dto";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 
-const items = [
-  {
-    id: "1",
-    name: "Alex Thompson",
-    phone: "078898861",
-    image:
-      "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358071/avatar-40-02_upqrxi.jpg",
-    email: "alex.t@company.com",
-    role: "Student",
-    gender: "Male",
-  },
-  {
-    id: "2",
-    name: "Sarah Chen",
-    phone: "078898861",
-    image:
-      "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358073/avatar-40-01_ij9v7j.jpg",
-    email: "sarah.c@company.com",
-    role: "Teacher",
-    gender: "Female",
-  },
-  {
-    id: "4",
-    name: "Maria Garcia",
-    phone: "078898861",
-    image:
-      "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358072/avatar-40-03_dkeufx.jpg",
-    email: "m.garcia@company.com",
-    role: "School Staff",
-    gender: "Female",
-  },
-  {
-    id: "5",
-    name: "David Kim",
-    phone: "078898861",
-    image:
-      "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358070/avatar-40-05_cmz0mg.jpg",
-    email: "d.kim@company.com",
-    role: "Teacher",
-    gender: "Female",
-  },
-];
 
 interface props {
   lang: Locale;
+  teachers: TeacherDto[]
 }
 
-export default function TeachersDashboardTable({ lang }: props) {
+export default function TeachersDashboardTable({ lang, teachers }: props) {
   return (
     <Card className="w-1/2 pb-2">
       <CardHeader className=" flex justify-between">
@@ -90,14 +51,14 @@ export default function TeachersDashboardTable({ lang }: props) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {items.map((item) => (
+            {teachers.map((item) => (
               <TableRow key={item.id}>
                 <TableCell>
                   <div className="flex items-center gap-3">
                     <MyImage
                       className="rounded-full size-12"
                       classname="mask mask-squircle"
-                      src={item.image}
+                      src={item.image || teacherImage}
                       alt={item.name}
                     />
                     <div>
@@ -123,10 +84,11 @@ export default function TeachersDashboardTable({ lang }: props) {
           loading
           type="button"
           button={{ library: "daisy", variant: "ghost" }}
-          href={`/${lang}/s-t/classes/activities`}
+          href={`/${lang}/s-t/classes`}
           className=" w-full"
+          classname=" w-full"
         >
-          See others 400
+          See others {teachers.length}
         </MyLink>
       </CardFooter>
     </Card>

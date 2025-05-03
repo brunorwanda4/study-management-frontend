@@ -1,4 +1,3 @@
-// app/providers/ToastManager.tsx
 "use client";
 
 import React, {
@@ -51,7 +50,7 @@ export const ToastManager: React.FC<{ children: ReactNode }> = ({
     setOpen(false);
     dismissTimeout.current = setTimeout(() => {
       setToastProps(null);
-    }, 300); // match your animation time
+    }, 300);
   }, []);
 
   useEffect(() => {
