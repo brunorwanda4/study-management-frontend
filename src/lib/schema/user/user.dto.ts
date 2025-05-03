@@ -1,4 +1,6 @@
 import z, { string } from "zod";
+import { SchoolDto } from "../school.dto";
+import { ClassDto } from "../class/class.schema";
 
 export const UserRoleEnum = z.enum(["STUDENT", "TEACHER", "ADMIN", "SCHOOLSTAFF"], {
     required_error: "User role is required",
@@ -101,6 +103,10 @@ export const AuthUserSchema = z.object({
     }),
     image: z.string().optional(),
     role: UserRoleEnum.optional(),
+    currentSchoolId: z.string().optional(),
+    bio: z.string().max(500, {
+        message: "Bio cannot exceed 500 characters",
+    }).optional(),
     accessToken: z.string().optional(),
     schoolAccessToken: z.string().optional(),
 })
@@ -151,6 +157,7 @@ export type onboardingDto = z.infer<typeof OnboardingSchema>;
 
 
 export const UserSchema = z.object({
+    Id: z.string(),
     name: z.string().min(1, { message: "Name is required" }).max(50, {
         message: "Maximum characters allowed for name is 50",
     }),
@@ -167,6 +174,7 @@ export const UserSchema = z.object({
     gender: GenderEnum.optional(),
     age: AgeSchema.optional(),
     address: AddressSchema.optional(),
+    currentSchoolId: z.string().optional(),
     bio: z.string().max(500, {
         message: "Bio cannot exceed 500 characters",
     }).optional(),
@@ -175,3 +183,8 @@ export const UserSchema = z.object({
 });
 
 export type UserDto = z.infer<typeof UserSchema>;
+
+export interface userAndOther extends UserDto {
+    school ?: SchoolDto,
+    cls ?: ClassDto,
+}

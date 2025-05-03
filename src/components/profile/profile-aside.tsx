@@ -6,24 +6,21 @@ import { FaSchool } from "react-icons/fa6";
 import { MdClass, MdEmail } from "react-icons/md";
 import MyLink from "../myComponents/myLink";
 import { Locale } from "@/i18n";
+import { userAndOther, UserRoleDto } from "@/lib/schema/user/user.dto";
+import { SchoolDto } from "@/lib/schema/school.dto";
+import { userImage } from "@/lib/context/images";
 
 interface props {
   lang: Locale;
-  username: string;
-  role: string;
-  email: string;
-  phone: string;
-  school: string;
-  classes: string;
-  biography: string;
+ user : userAndOther
 
 }
 
-const ProfileAside = ({ lang, username, role, email, phone, school, classes, biography }: props) => {
+const ProfileAside = ({ lang, user }: props) => {
   return (
     <aside className=" space-y-4 w-1/3">
       <div className=" flex flex-col space-y-2">
-        <MyImage className=" size-64 w-full" role="AVATAR" src={"/images/p.jpg"} />
+        <MyImage className=" size-64 w-full" role="AVATAR" src={user.image || userImage} />
         <div className=" flex flex-col space-y-2">
           <MyLink
             type="button"
@@ -34,30 +31,30 @@ const ProfileAside = ({ lang, username, role, email, phone, school, classes, bio
           >
             Edit Profile
           </MyLink>
-          <h3 className=" basic-title">{username}</h3>
-          <span className=" link-hover">@ {username}</span>
+          <h3 className=" basic-title">{user.username}</h3>
+          <span className=" link-hover">@ {user.username}</span>
           <div className=" flex space-x-1">
-            <User size={18} /> <span className=" font-medium">{role}</span>
+            <User size={18} /> <span className=" font-medium">{user.role}</span>
           </div>
           <div className=" flex items-center space-x-2">
             <MdEmail size={16} />
-            <span>{email}</span>
+            <span>{user.email}</span>
           </div>
           <div className=" flex items-center space-x-2">
             <Phone size={16} />
-            <span>{phone}</span>
+            <span>{user.phone}</span>
           </div>
           <div className=" flex items-center space-x-2">
             <FaSchool size={16} />
-            <span>{school}</span>
+            <span>{user.school?.name}</span>
           </div>
-          <div className=" flex items-center space-x-2">
+          {user.cls && <div className=" flex items-center space-x-2">
             <MdClass size={16} />
-            <span>{classes}</span>
-          </div>
+            <span>{user.cls.name}</span>
+          </div>}
         </div>
         <p className=" mt-4">
-          {biography}
+          {user.bio}
         </p>
       </div>
       <Separator />
@@ -88,16 +85,16 @@ const ProfileAside = ({ lang, username, role, email, phone, school, classes, bio
             <span className=" ">Country:</span>
             <div className=" flex items-center space-x-1">
               <MyImage src="/icons/rwanda.png" role="ICON" />
-              <span>Rwanda</span>
+              <span>{user.address?.country}</span>
             </div>
           </div>
           <div className=" space-x-2">
             <span>Province:</span>
-            <span>Kigali</span>
+            <span>{user.address?.province}</span>
           </div>
           <div className=" space-x-2">
             <span>District:</span>
-            <span>Gasabo</span>
+            <span>{user.address?.district}</span>
           </div>
         </div>
       </div>
