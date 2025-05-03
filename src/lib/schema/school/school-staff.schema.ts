@@ -13,11 +13,7 @@ export const SchoolStaffSchema = z.object({
   age: AgeSchema.optional(),
   gender: GenderEnum.optional(),
   createAt: z.date().optional(),
-  updatedAt: z.date().optional(),
-
-  // Optional relation references (can be expanded with real schemas if needed)
-  school: z.any().optional(),
-  user: z.any().optional(),
+  updatedAt: z.date().optional()
 });
 
 export type SchoolStaffDto = z.infer<typeof SchoolStaffSchema>;
