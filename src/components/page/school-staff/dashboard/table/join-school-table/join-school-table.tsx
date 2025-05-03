@@ -122,7 +122,7 @@ export default async function JoinSchoolTable({ lang, currentSchool }: props) {
                       {formatTimeAgo(item.updatedAt)}
                     </TableCell>
                     <TableCell>
-                      <JoinSchoolTableDropdown />
+                      <JoinSchoolTableDropdown requestId={item.id}/>
                     </TableCell>
                   </TableRow>
                 );
