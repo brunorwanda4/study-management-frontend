@@ -19,7 +19,7 @@ export const AffiliationTypeEnum = z.enum([
 
 // Subschemas
 const googleMapsUrlRegex = /^https?:\/\/(www\.)?google\.[a-z]{2,}(\.[a-z]{2,})?\/maps([\/@?].*)?$/i;
-const AddressSchema = z.object({
+export const SchoolAddress = z.object({
   street: z.string().min(1, "Street is required"),
   city: z.string().min(1, "City is required"),
   state: z.string().min(1, "State is required"),
@@ -30,12 +30,12 @@ const AddressSchema = z.object({
     .regex(googleMapsUrlRegex, { message: "URL must be a valid Google Maps link" })
 }).optional();
 
-const ContactSchema = z.object({
+export const ContactSchema = z.object({
   phone: z.string().min(1, "Phone is required"),
   email: z.string().email("Invalid email format"),
 }).optional();
 
-const SocialMediaSchema = z.object({
+export const SocialMediaSchema = z.object({
   platform: z.string().min(1, "Platform is required"),
   link: z.string().url("Must be a valid URL"),
 });
@@ -63,7 +63,7 @@ export const CreateSchoolSchema = z.object({
   accreditationNumber: z.string().optional(),
   affiliation: AffiliationTypeEnum.optional(),
 
-  address: AddressSchema,
+  address: SchoolAddress,
   contact: ContactSchema,
   website: z.string().url("Website must be a valid URL").optional(),
   socialMedia: z.array(SocialMediaSchema).optional(),
@@ -119,7 +119,7 @@ export const CreateSchoolSchemaBackend = z.object({
   accreditationNumber: z.string().optional(),
   affiliation: AffiliationTypeEnum.optional(),
 
-  address: AddressSchema,
+  address: SchoolAddress,
   contact: ContactSchema,
   website: z.string().url("Website must be a valid URL").optional(),
   socialMedia: z.array(SocialMediaSchema).optional(),
@@ -326,7 +326,7 @@ export const SchoolSchema = z.object({
   affiliation: z.string().optional(),
 
   // location
-  address: AddressSchema.optional(),
+  address: SchoolAddress.optional(),
   contact: ContactSchema.optional(),
   website: z.string().url({ message: "Invalid website URL" }).optional(),
   socialMedia: z.array(SocialMediaSchema).optional(),

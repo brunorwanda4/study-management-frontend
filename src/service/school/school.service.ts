@@ -1,6 +1,16 @@
-import { CreateSchoolDto, CreateSchoolDtoBackend, SchoolAcademicCreationDto, schoolAcademicDto, SchoolAcademicDtoBackend, SchoolAdministrationDto, SchoolAndOthers, sendAdministrationJoinRequestsDto } from "@/lib/schema/school.dto";
+import {
+    CreateSchoolDto,
+    CreateSchoolDtoBackend,
+    SchoolAcademicCreationDto,
+    schoolAcademicDto,
+    SchoolAcademicDtoBackend,
+    SchoolAdministrationDto,
+    SchoolAndOthers,
+    sendAdministrationJoinRequestsDto
+} from "@/lib/schema/school.dto";
 import { SchoolDto } from "@/lib/schema/school.dto";
 import apiRequest from "../api-client";
+import { PublicSchoolUpdateDto } from '@/components/page/school-staff/school-setting/froms/schema/update-school-public-info';
 
 export const createSchoolService = async (input: CreateSchoolDto) => {
     const data: CreateSchoolDtoBackend = {
@@ -61,8 +71,11 @@ export const academicSchoolService = async (input: schoolAcademicDto) => {
 }
 
 
-export const administrationSchoolRequestToJoinSchool = async (input : SchoolAdministrationDto) => {
+export const administrationSchoolRequestToJoinSchool = async (input: SchoolAdministrationDto) => {
     return await apiRequest<SchoolAdministrationDto, sendAdministrationJoinRequestsDto>("post", `/school/administration`, input);
 }
 
 
+export const updateSchoolSchoolService = async (id: string, input: PublicSchoolUpdateDto) => {
+    return await apiRequest<PublicSchoolUpdateDto, SchoolDto>("patch", `/school/${id}`, input)
+}

@@ -14,6 +14,8 @@ export const GenderEnum = z.enum(["FEMALE", "MALE"], {
     invalid_type_error: "Invalid gender",
 });
 
+const googleMapsUrlRegex = /^https?:\/\/(www\.)?google\.[a-z]{2,}(\.[a-z]{2,})?\/maps([\/@?].*)?$/i;
+
 export const AddressSchema = z.object({
     country: z.string().min(1, { message: "Country is required" }),
     province: z.string().optional(),
@@ -23,7 +25,7 @@ export const AddressSchema = z.object({
     village: z.string().optional(),
     state: z.string().optional(),
     postalCode: z.string().optional(),
-    googleMapUrl: z.string().url({ message: "Invalid URL" }).optional(),
+    googleMapUrl: z.string().url({ message: "Invalid URL" }).regex(googleMapsUrlRegex, { message: "URL must be a valid Google Maps link" }).optional(),
 });
 
 export const AgeSchema = z.object({
