@@ -6,6 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import MyImage from "../myComponents/myImage"
 
 const items = [
   {
@@ -72,11 +73,9 @@ export default function SimpleTable() {
             <TableRow key={item.id}>
               <TableCell>
                 <div className="flex items-center gap-3">
-                  <img
-                    className="rounded-full"
+                  <MyImage
+                    className="rounded-full size-10"
                     src={item.image}
-                    width={40}
-                    height={40}
                     alt={item.name}
                   />
                   <div>

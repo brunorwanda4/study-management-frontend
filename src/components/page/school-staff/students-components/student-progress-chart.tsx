@@ -70,9 +70,9 @@ export function StudentProgressChart({title}: props) {
 
   const chartData = examData[examType]
 
-  const totalPercentage = React.useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + curr.percentage, 0)
-  }, [chartData])
+  // const totalPercentage = React.useMemo(() => {
+  //   return chartData.reduce((acc, curr) => acc + curr.percentage, 0)
+  // }, [chartData])
 
   return (
     <Card className="flex flex-col">

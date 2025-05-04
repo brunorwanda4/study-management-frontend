@@ -2,7 +2,6 @@ import SchoolContacts from "@/components/page/school/school-contacts";
 import SchoolHeader from "@/components/page/school/school-header";
 import SchoolHomeAbout from "@/components/page/school/school-home-about";
 import SchoolImages from "@/components/page/school/school-images";
-import SchoolStaff from "@/components/page/school/school-staff";
 import { Separator } from "@/components/ui/separator";
 import { Locale } from "@/i18n";
 import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";

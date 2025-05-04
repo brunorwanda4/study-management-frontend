@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import { useState, useEffect } from "react"
@@ -30,6 +31,7 @@ import {
 } from "@/lib/schema/table-forms/staff-forms"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import StaffForm from "@/components/table/s-t/dialogs/staff-form"
+import MyImage from "@/components/myComponents/myImage"
 
 // Initial staff data
 const initialStaff = [
@@ -163,19 +165,19 @@ export default function StaffList() {
   }
 
   // Handle adding a new staff member
-  const handleAddStaff = (data: NewStaffForm) => {
-    const newId = (staff.length + 1).toString()
-    const staffToAdd = {
-      ...data,
-      id: newId,
-      age: data.age + " Years",
-      image: "/placeholder.svg?height=40&width=40",
-    }
+  // const handleAddStaff = (data: NewStaffForm) => {
+  //   const newId = (staff.length + 1).toString()
+  //   const staffToAdd = {
+  //     ...data,
+  //     id: newId,
+  //     age: data.age + " Years",
+  //     image: "/placeholder.svg?height=40&width=40",
+  //   }
 
-    setStaff([...staff, staffToAdd])
-    setIsAddDialogOpen(false)
-    addStaffForm.reset()
-  }
+  //   setStaff([...staff, staffToAdd])
+  //   setIsAddDialogOpen(false)
+  //   addStaffForm.reset()
+  // }
 
   // Prepare staff for editing
   const prepareStaffForEdit = (staffMember: (typeof initialStaff)[0]) => {
@@ -494,11 +496,10 @@ export default function StaffList() {
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-3">
-                    <img
-                      className="rounded-full"
+                    <MyImage
+                      className="size-10"
+                      role="AVATAR"
                       src={staffMember.image || "/placeholder.svg"}
-                      width={40}
-                      height={40}
                       alt={staffMember.name}
                     />
                     <div>

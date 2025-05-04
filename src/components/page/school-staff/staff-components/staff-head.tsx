@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import { Download } from "lucide-react"
@@ -8,7 +9,9 @@ import { RegisterStaffDialog } from "./register-staff-dialog"
 
 export function StaffHeader() {
   const [openRegisterDialog, setOpenRegisterDialog] = useState(false)
-  const [selectedStaff, setSelectedStaff] = useState<any>(null)
+  const [selectedStaff,
+    //  setSelectedStaff
+    ] = useState<any>(null)
 
   return (
     <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b  px-6">

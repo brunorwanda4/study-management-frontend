@@ -29,7 +29,7 @@ import {
   sendJoinSchoolRequestSchema,
 } from "@/lib/schema/school/school-join-school/send-join-school-request.schema";
 import { CreateSchoolJoinRequest } from "@/service/school/school-join-request.service";
-import { Plus, UsersIcon } from "lucide-react";
+import { Plus } from "lucide-react";
 import { FormError, FormSuccess } from "@/components/myComponents/form-message";
 
 interface CreateStudentModalProps {

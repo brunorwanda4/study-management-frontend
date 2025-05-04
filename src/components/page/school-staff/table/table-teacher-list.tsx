@@ -1,15 +1,49 @@
-"use client"
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
 
-import { useState, useEffect } from "react"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Checkbox } from "@/components/ui/checkbox"
-import { MoreHorizontal, Edit, Trash2, UserPlus, ChevronLeft, ChevronRight, Search } from "lucide-react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useState, useEffect } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  MoreHorizontal,
+  Edit,
+  Trash2,
+  UserPlus,
+  ChevronLeft,
+  ChevronRight,
+  Search,
+} from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,20 +53,28 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
+} from "@/components/ui/alert-dialog";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   newTeacherFormSchema,
   editTeacherFormSchema,
   type NewTeacherForm,
   type EditTeacherForm,
-} from "@/lib/schema/table-forms/teacher-forms"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Badge } from "@/components/ui/badge"
+} from "@/lib/schema/table-forms/teacher-forms";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Badge } from "@/components/ui/badge";
+import MyImage from "@/components/myComponents/myImage";
 
 // Available classes and subjects
-const availableClasses = ["L1", "L2", "L3"]
+const availableClasses = ["L1", "L2", "L3"];
 const availableSubjects = [
   "Mathematics",
   "Science",
@@ -43,7 +85,7 @@ const availableSubjects = [
   "Chemistry",
   "Biology",
   "Computer Science",
-]
+];
 
 // Initial teacher data
 const initialTeachers = [
@@ -102,33 +144,33 @@ const initialTeachers = [
     phone: "0788729026",
     image: "/placeholder.svg?height=40&width=40",
   },
-]
+];
 
 export default function TeacherList() {
   // State for selected teachers
-  const [selectedTeachers, setSelectedTeachers] = useState<string[]>([])
+  const [selectedTeachers, setSelectedTeachers] = useState<string[]>([]);
 
   // State for teacher data
-  const [teachers, setTeachers] = useState(initialTeachers)
+  const [teachers, setTeachers] = useState(initialTeachers);
 
   // State for pagination
-  const [currentPage, setCurrentPage] = useState(1)
-  const teachersPerPage = 5
+  const [currentPage, setCurrentPage] = useState(1);
+  const teachersPerPage = 5;
 
   // State for filters
-  const [searchTerm, setSearchTerm] = useState("")
-  const [genderFilter, setGenderFilter] = useState("All gender")
-  const [classFilter, setClassFilter] = useState("All classes")
-  const [subjectFilter, setSubjectFilter] = useState("All subjects")
-  const [minExperience, setMinExperience] = useState("")
-  const [maxExperience, setMaxExperience] = useState("")
+  const [searchTerm, setSearchTerm] = useState("");
+  const [genderFilter, setGenderFilter] = useState("All gender");
+  const [classFilter, setClassFilter] = useState("All classes");
+  const [subjectFilter, setSubjectFilter] = useState("All subjects");
+  const [minExperience, setMinExperience] = useState("");
+  const [maxExperience, setMaxExperience] = useState("");
 
   // State for dialog open status
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-  const [teacherToDelete, setTeacherToDelete] = useState<string | null>(null)
-  const [isBulkDeleteDialogOpen, setIsBulkDeleteDialogOpen] = useState(false)
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [teacherToDelete, setTeacherToDelete] = useState<string | null>(null);
+  const [isBulkDeleteDialogOpen, setIsBulkDeleteDialogOpen] = useState(false);
 
   // Form for adding a new teacher
   const addTeacherForm = useForm<NewTeacherForm>({
@@ -142,7 +184,7 @@ export default function TeacherList() {
       subjects: [],
       phone: "",
     },
-  })
+  });
 
   // Form for editing a teacher
   const editTeacherForm = useForm<EditTeacherForm>({
@@ -157,7 +199,7 @@ export default function TeacherList() {
       subjects: [],
       phone: "",
     },
-  })
+  });
 
   // Form for filters
   const filterForm = useForm({
@@ -169,40 +211,44 @@ export default function TeacherList() {
       minExperience: "",
       maxExperience: "",
     },
-  })
+  });
 
   // Toggle teacher selection
   const toggleTeacher = (id: string) => {
-    setSelectedTeachers((prev) => (prev.includes(id) ? prev.filter((teacherId) => teacherId !== id) : [...prev, id]))
-  }
+    setSelectedTeachers((prev) =>
+      prev.includes(id)
+        ? prev.filter((teacherId) => teacherId !== id)
+        : [...prev, id]
+    );
+  };
 
   // Toggle all teachers selection
   const toggleAllTeachers = () => {
     if (selectedTeachers.length === currentTeachers.length) {
-      setSelectedTeachers([])
+      setSelectedTeachers([]);
     } else {
-      setSelectedTeachers(currentTeachers.map((teacher) => teacher.id))
+      setSelectedTeachers(currentTeachers.map((teacher) => teacher.id));
     }
-  }
+  };
 
   // Handle adding a new teacher
   const handleAddTeacher = (data: NewTeacherForm) => {
-    const newId = (teachers.length + 1).toString()
+    const newId = (teachers.length + 1).toString();
     const teacherToAdd = {
       ...data,
       id: newId,
       experience: data.experience + " Years",
       image: "/placeholder.svg?height=40&width=40",
-    }
+    };
 
-    setTeachers([...teachers, teacherToAdd])
-    setIsAddDialogOpen(false)
-    addTeacherForm.reset()
-  }
+    setTeachers([...teachers, teacherToAdd]);
+    setIsAddDialogOpen(false);
+    addTeacherForm.reset();
+  };
 
   // Prepare teacher for editing
   const prepareTeacherForEdit = (teacher: (typeof initialTeachers)[0]) => {
-    const experience = teacher.experience.replace(" Years", "")
+    const experience = teacher.experience.replace(" Years", "");
     editTeacherForm.reset({
       id: teacher.id,
       name: teacher.name,
@@ -212,9 +258,9 @@ export default function TeacherList() {
       classes: teacher.classes,
       subjects: teacher.subjects,
       phone: teacher.phone,
-    })
-    setIsEditDialogOpen(true)
-  }
+    });
+    setIsEditDialogOpen(true);
+  };
 
   // Handle editing a teacher
   const handleEditTeacher = (data: EditTeacherForm) => {
@@ -226,104 +272,132 @@ export default function TeacherList() {
               name: data.name,
               email: data.email,
               gender: data.gender,
-              experience: data.experience.includes("Years") ? data.experience : data.experience + " Years",
+              experience: data.experience.includes("Years")
+                ? data.experience
+                : data.experience + " Years",
               classes: data.classes,
               subjects: data.subjects,
               phone: data.phone,
             }
-          : teacher,
-      ),
-    )
+          : teacher
+      )
+    );
 
-    setIsEditDialogOpen(false)
-  }
+    setIsEditDialogOpen(false);
+  };
 
   // Handle deleting a teacher
   const handleDeleteTeacher = (id: string) => {
-    setTeachers(teachers.filter((teacher) => teacher.id !== id))
-    setSelectedTeachers(selectedTeachers.filter((teacherId) => teacherId !== id))
-    setTeacherToDelete(null)
-  }
+    setTeachers(teachers.filter((teacher) => teacher.id !== id));
+    setSelectedTeachers(
+      selectedTeachers.filter((teacherId) => teacherId !== id)
+    );
+    setTeacherToDelete(null);
+  };
 
   // Handle bulk delete
   const handleBulkDelete = () => {
-    setTeachers(teachers.filter((teacher) => !selectedTeachers.includes(teacher.id)))
-    setSelectedTeachers([])
-    setIsBulkDeleteDialogOpen(false)
-  }
+    setTeachers(
+      teachers.filter((teacher) => !selectedTeachers.includes(teacher.id))
+    );
+    setSelectedTeachers([]);
+    setIsBulkDeleteDialogOpen(false);
+  };
 
   // Apply filters from form
   const applyFilters = (data: any) => {
-    setSearchTerm(data.searchTerm || "")
-    setGenderFilter(data.genderFilter)
-    setClassFilter(data.classFilter)
-    setSubjectFilter(data.subjectFilter)
-    setMinExperience(data.minExperience || "")
-    setMaxExperience(data.maxExperience || "")
-    setCurrentPage(1) // Reset to first page on filter change
-  }
+    setSearchTerm(data.searchTerm || "");
+    setGenderFilter(data.genderFilter);
+    setClassFilter(data.classFilter);
+    setSubjectFilter(data.subjectFilter);
+    setMinExperience(data.minExperience || "");
+    setMaxExperience(data.maxExperience || "");
+    setCurrentPage(1); // Reset to first page on filter change
+  };
 
   // Filter teachers based on search and filters
   const filteredTeachers = teachers.filter((teacher) => {
     // Search filter
     const matchesSearch =
       teacher.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      teacher.email.toLowerCase().includes(searchTerm.toLowerCase())
+      teacher.email.toLowerCase().includes(searchTerm.toLowerCase());
 
     // Gender filter
-    const matchesGender = genderFilter === "All gender" || teacher.gender === genderFilter
+    const matchesGender =
+      genderFilter === "All gender" || teacher.gender === genderFilter;
 
     // Class filter
-    const matchesClass = classFilter === "All classes" || teacher.classes.includes(classFilter)
+    const matchesClass =
+      classFilter === "All classes" || teacher.classes.includes(classFilter);
 
     // Subject filter
-    const matchesSubject = subjectFilter === "All subjects" || teacher.subjects.includes(subjectFilter)
+    const matchesSubject =
+      subjectFilter === "All subjects" ||
+      teacher.subjects.includes(subjectFilter);
 
     // Experience filter
-    const teacherExperience = Number.parseInt(teacher.experience.split(" ")[0])
-    const matchesMinExperience = !minExperience || teacherExperience >= Number.parseInt(minExperience)
-    const matchesMaxExperience = !maxExperience || teacherExperience <= Number.parseInt(maxExperience)
+    const teacherExperience = Number.parseInt(teacher.experience.split(" ")[0]);
+    const matchesMinExperience =
+      !minExperience || teacherExperience >= Number.parseInt(minExperience);
+    const matchesMaxExperience =
+      !maxExperience || teacherExperience <= Number.parseInt(maxExperience);
 
     return (
-      matchesSearch && matchesGender && matchesClass && matchesSubject && matchesMinExperience && matchesMaxExperience
-    )
-  })
+      matchesSearch &&
+      matchesGender &&
+      matchesClass &&
+      matchesSubject &&
+      matchesMinExperience &&
+      matchesMaxExperience
+    );
+  });
 
   // Calculate pagination
-  const indexOfLastTeacher = currentPage * teachersPerPage
-  const indexOfFirstTeacher = indexOfLastTeacher - teachersPerPage
-  const currentTeachers = filteredTeachers.slice(indexOfFirstTeacher, indexOfLastTeacher)
-  const totalPages = Math.ceil(filteredTeachers.length / teachersPerPage)
+  const indexOfLastTeacher = currentPage * teachersPerPage;
+  const indexOfFirstTeacher = indexOfLastTeacher - teachersPerPage;
+  const currentTeachers = filteredTeachers.slice(
+    indexOfFirstTeacher,
+    indexOfLastTeacher
+  );
+  const totalPages = Math.ceil(filteredTeachers.length / teachersPerPage);
 
   // Reset to first page when filtered results change
   useEffect(() => {
     if (currentPage > Math.max(1, totalPages)) {
-      setCurrentPage(Math.max(1, totalPages))
+      setCurrentPage(Math.max(1, totalPages));
     }
-  }, [filteredTeachers.length, totalPages, currentPage])
+  }, [filteredTeachers.length, totalPages, currentPage]);
 
   // Handle pagination
   const goToNextPage = () => {
     if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1)
+      setCurrentPage(currentPage + 1);
     }
-  }
+  };
 
   const goToPreviousPage = () => {
     if (currentPage > 1) {
-      setCurrentPage(currentPage - 1)
+      setCurrentPage(currentPage - 1);
     }
-  }
+  };
 
   // Update filter form when filter state changes
   useEffect(() => {
-    filterForm.setValue("searchTerm", searchTerm)
-    filterForm.setValue("genderFilter", genderFilter as any)
-    filterForm.setValue("classFilter", classFilter as any)
-    filterForm.setValue("subjectFilter", subjectFilter as any)
-    filterForm.setValue("minExperience", minExperience)
-    filterForm.setValue("maxExperience", maxExperience)
-  }, [searchTerm, genderFilter, classFilter, subjectFilter, minExperience, maxExperience, filterForm])
+    filterForm.setValue("searchTerm", searchTerm);
+    filterForm.setValue("genderFilter", genderFilter as any);
+    filterForm.setValue("classFilter", classFilter as any);
+    filterForm.setValue("subjectFilter", subjectFilter as any);
+    filterForm.setValue("minExperience", minExperience);
+    filterForm.setValue("maxExperience", maxExperience);
+  }, [
+    searchTerm,
+    genderFilter,
+    classFilter,
+    subjectFilter,
+    minExperience,
+    maxExperience,
+    filterForm,
+  ]);
 
   return (
     <div className="w-full rounded-md basic-card-no-p border shadow-md">
@@ -332,7 +406,12 @@ export default function TeacherList() {
 
         <div className="flex gap-2">
           {selectedTeachers.length > 0 && (
-            <Button variant="destructive" size="sm" onClick={() => setIsBulkDeleteDialogOpen(true)} className="mr-2">
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={() => setIsBulkDeleteDialogOpen(true)}
+              className="mr-2"
+            >
               <Trash2 className="h-4 w-4 mr-2" />
               Delete Selected
             </Button>
@@ -340,12 +419,15 @@ export default function TeacherList() {
           <Dialog
             open={isAddDialogOpen}
             onOpenChange={(open) => {
-              setIsAddDialogOpen(open)
-              if (!open) addTeacherForm.reset()
+              setIsAddDialogOpen(open);
+              if (!open) addTeacherForm.reset();
             }}
           >
             <DialogTrigger asChild>
-              <Button variant="outline" className="basic-title-sm hover:bg-gray-100">
+              <Button
+                variant="outline"
+                className="basic-title-sm hover:bg-gray-100"
+              >
                 <UserPlus className="h-4 w-4 mr-2" />
                 Add new Teacher
               </Button>
@@ -355,7 +437,10 @@ export default function TeacherList() {
                 <DialogTitle>Add New Teacher</DialogTitle>
               </DialogHeader>
               <Form {...addTeacherForm}>
-                <form onSubmit={addTeacherForm.handleSubmit(handleAddTeacher)} className="space-y-4">
+                <form
+                  onSubmit={addTeacherForm.handleSubmit(handleAddTeacher)}
+                  className="space-y-4"
+                >
                   <div className="grid grid-cols-2 gap-4">
                     <FormField
                       control={addTeacherForm.control}
@@ -364,7 +449,10 @@ export default function TeacherList() {
                         <FormItem>
                           <FormLabel>Full Name</FormLabel>
                           <FormControl>
-                            <Input {...field} placeholder="Enter teacher name" />
+                            <Input
+                              {...field}
+                              placeholder="Enter teacher name"
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -377,7 +465,11 @@ export default function TeacherList() {
                         <FormItem>
                           <FormLabel>Email</FormLabel>
                           <FormControl>
-                            <Input {...field} type="email" placeholder="Enter email address" />
+                            <Input
+                              {...field}
+                              type="email"
+                              placeholder="Enter email address"
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -392,7 +484,10 @@ export default function TeacherList() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Gender</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
                             <FormControl>
                               <SelectTrigger>
                                 <SelectValue placeholder="Select gender" />
@@ -414,7 +509,10 @@ export default function TeacherList() {
                         <FormItem>
                           <FormLabel>Phone Number</FormLabel>
                           <FormControl>
-                            <Input {...field} placeholder="Enter phone number" />
+                            <Input
+                              {...field}
+                              placeholder="Enter phone number"
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -430,7 +528,11 @@ export default function TeacherList() {
                         <FormItem>
                           <FormLabel>Experience (Years)</FormLabel>
                           <FormControl>
-                            <Input {...field} type="number" placeholder="Enter years of experience" />
+                            <Input
+                              {...field}
+                              type="number"
+                              placeholder="Enter years of experience"
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -447,11 +549,13 @@ export default function TeacherList() {
                           <FormLabel>Classes</FormLabel>
                           <Select
                             onValueChange={(value) => {
-                              const currentValues = field.value || []
+                              const currentValues = field.value || [];
                               if (currentValues.includes(value)) {
-                                field.onChange(currentValues.filter((v) => v !== value))
+                                field.onChange(
+                                  currentValues.filter((v) => v !== value)
+                                );
                               } else {
-                                field.onChange([...currentValues, value])
+                                field.onChange([...currentValues, value]);
                               }
                             }}
                           >
@@ -459,7 +563,9 @@ export default function TeacherList() {
                               <SelectTrigger>
                                 <SelectValue placeholder="Select classes">
                                   {field.value?.length > 0
-                                    ? `${field.value.length} class${field.value.length > 1 ? "es" : ""} selected`
+                                    ? `${field.value.length} class${
+                                        field.value.length > 1 ? "es" : ""
+                                      } selected`
                                     : "Select classes"}
                                 </SelectValue>
                               </SelectTrigger>
@@ -468,7 +574,9 @@ export default function TeacherList() {
                               {availableClasses.map((cls) => (
                                 <SelectItem key={cls} value={cls}>
                                   <div className="flex items-center gap-2">
-                                    <Checkbox checked={field.value?.includes(cls)} />
+                                    <Checkbox
+                                      checked={field.value?.includes(cls)}
+                                    />
                                     <span>{cls}</span>
                                   </div>
                                 </SelectItem>
@@ -477,13 +585,21 @@ export default function TeacherList() {
                           </Select>
                           <div className="flex flex-wrap gap-1 mt-2">
                             {field.value?.map((cls) => (
-                              <Badge key={cls} variant="outline" className="bg-slate-700">
+                              <Badge
+                                key={cls}
+                                variant="outline"
+                                className="bg-slate-700"
+                              >
                                 {cls}
                                 <button
                                   type="button"
                                   className="ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
                                   onClick={() => {
-                                    field.onChange(field.value.filter((value) => value !== cls))
+                                    field.onChange(
+                                      field.value.filter(
+                                        (value) => value !== cls
+                                      )
+                                    );
                                   }}
                                 >
                                   ×
@@ -506,11 +622,13 @@ export default function TeacherList() {
                           <FormLabel>Subjects</FormLabel>
                           <Select
                             onValueChange={(value) => {
-                              const currentValues = field.value || []
+                              const currentValues = field.value || [];
                               if (currentValues.includes(value)) {
-                                field.onChange(currentValues.filter((v) => v !== value))
+                                field.onChange(
+                                  currentValues.filter((v) => v !== value)
+                                );
                               } else {
-                                field.onChange([...currentValues, value])
+                                field.onChange([...currentValues, value]);
                               }
                             }}
                           >
@@ -518,7 +636,9 @@ export default function TeacherList() {
                               <SelectTrigger>
                                 <SelectValue placeholder="Select subjects">
                                   {field.value?.length > 0
-                                    ? `${field.value.length} subject${field.value.length > 1 ? "s" : ""} selected`
+                                    ? `${field.value.length} subject${
+                                        field.value.length > 1 ? "s" : ""
+                                      } selected`
                                     : "Select subjects"}
                                 </SelectValue>
                               </SelectTrigger>
@@ -527,7 +647,9 @@ export default function TeacherList() {
                               {availableSubjects.map((subject) => (
                                 <SelectItem key={subject} value={subject}>
                                   <div className="flex items-center gap-2">
-                                    <Checkbox checked={field.value?.includes(subject)} />
+                                    <Checkbox
+                                      checked={field.value?.includes(subject)}
+                                    />
                                     <span>{subject}</span>
                                   </div>
                                 </SelectItem>
@@ -536,13 +658,21 @@ export default function TeacherList() {
                           </Select>
                           <div className="flex flex-wrap gap-1 mt-2">
                             {field.value?.map((subject) => (
-                              <Badge key={subject} variant="outline" className="bg-slate-700">
+                              <Badge
+                                key={subject}
+                                variant="outline"
+                                className="bg-slate-700"
+                              >
                                 {subject}
                                 <button
                                   type="button"
                                   className="ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
                                   onClick={() => {
-                                    field.onChange(field.value.filter((value) => value !== subject))
+                                    field.onChange(
+                                      field.value.filter(
+                                        (value) => value !== subject
+                                      )
+                                    );
                                   }}
                                 >
                                   ×
@@ -557,7 +687,11 @@ export default function TeacherList() {
                   </div>
 
                   <DialogFooter>
-                    <Button variant="outline" type="button" onClick={() => setIsAddDialogOpen(false)}>
+                    <Button
+                      variant="outline"
+                      type="button"
+                      onClick={() => setIsAddDialogOpen(false)}
+                    >
                       Cancel
                     </Button>
                     <Button type="submit">Add Teacher</Button>
@@ -588,9 +722,9 @@ export default function TeacherList() {
                       placeholder="Search by name or email"
                       className="w-full pl-8"
                       onChange={(e) => {
-                        field.onChange(e)
-                        setSearchTerm(e.target.value)
-                        setCurrentPage(1) // Reset to first page on search
+                        field.onChange(e);
+                        setSearchTerm(e.target.value);
+                        setCurrentPage(1); // Reset to first page on search
                       }}
                     />
                   </FormControl>
@@ -607,9 +741,9 @@ export default function TeacherList() {
                 <FormLabel className="text-white">Gender</FormLabel>
                 <Select
                   onValueChange={(value) => {
-                    field.onChange(value)
-                    setGenderFilter(value)
-                    setCurrentPage(1)
+                    field.onChange(value);
+                    setGenderFilter(value);
+                    setCurrentPage(1);
                   }}
                   defaultValue={field.value}
                 >
@@ -636,9 +770,9 @@ export default function TeacherList() {
                 <FormLabel className="text-white">Class</FormLabel>
                 <Select
                   onValueChange={(value) => {
-                    field.onChange(value)
-                    setClassFilter(value)
-                    setCurrentPage(1)
+                    field.onChange(value);
+                    setClassFilter(value);
+                    setCurrentPage(1);
                   }}
                   defaultValue={field.value}
                 >
@@ -668,9 +802,9 @@ export default function TeacherList() {
                 <FormLabel className="text-white">Subject</FormLabel>
                 <Select
                   onValueChange={(value) => {
-                    field.onChange(value)
-                    setSubjectFilter(value)
-                    setCurrentPage(1)
+                    field.onChange(value);
+                    setSubjectFilter(value);
+                    setCurrentPage(1);
                   }}
                   defaultValue={field.value}
                 >
@@ -709,9 +843,9 @@ export default function TeacherList() {
                         placeholder="Min"
                         type="number"
                         onChange={(e) => {
-                          field.onChange(e)
-                          setMinExperience(e.target.value)
-                          setCurrentPage(1)
+                          field.onChange(e);
+                          setMinExperience(e.target.value);
+                          setCurrentPage(1);
                         }}
                       />
                     </FormControl>
@@ -731,9 +865,9 @@ export default function TeacherList() {
                         placeholder="Max"
                         type="number"
                         onChange={(e) => {
-                          field.onChange(e)
-                          setMaxExperience(e.target.value)
-                          setCurrentPage(1)
+                          field.onChange(e);
+                          setMaxExperience(e.target.value);
+                          setCurrentPage(1);
                         }}
                       />
                     </FormControl>
@@ -751,7 +885,10 @@ export default function TeacherList() {
           <TableRow className="border-none">
             <TableHead className="w-[50px]">
               <Checkbox
-                checked={currentTeachers.length > 0 && selectedTeachers.length === currentTeachers.length}
+                checked={
+                  currentTeachers.length > 0 &&
+                  selectedTeachers.length === currentTeachers.length
+                }
                 onCheckedChange={toggleAllTeachers}
               />
             </TableHead>
@@ -767,7 +904,10 @@ export default function TeacherList() {
         <TableBody>
           {currentTeachers.length > 0 ? (
             currentTeachers.map((teacher) => (
-              <TableRow key={teacher.id} className="text-white border-t border-slate-400">
+              <TableRow
+                key={teacher.id}
+                className="text-white border-t border-slate-400"
+              >
                 <TableCell className="p-2">
                   <Checkbox
                     checked={selectedTeachers.includes(teacher.id)}
@@ -776,16 +916,17 @@ export default function TeacherList() {
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-3">
-                    <img
-                      className="rounded-full"
+                    <MyImage
+                      className=" size-10"
                       src={teacher.image || "/placeholder.svg"}
-                      width={40}
-                      height={40}
+                      role="AVATAR"
                       alt={teacher.name}
                     />
                     <div>
                       <div className="font-medium">{teacher.name}</div>
-                      <span className="text-muted-foreground mt-0.5 text-xs">{teacher.email}</span>
+                      <span className="text-muted-foreground mt-0.5 text-xs">
+                        {teacher.email}
+                      </span>
                     </div>
                   </div>
                 </TableCell>
@@ -794,7 +935,11 @@ export default function TeacherList() {
                 <TableCell>
                   <div className="flex flex-wrap gap-1">
                     {teacher.classes.map((cls) => (
-                      <Badge key={cls} variant="outline" className="bg-slate-700">
+                      <Badge
+                        key={cls}
+                        variant="outline"
+                        className="bg-slate-700"
+                      >
                         {cls}
                       </Badge>
                     ))}
@@ -803,7 +948,11 @@ export default function TeacherList() {
                 <TableCell>
                   <div className="flex flex-wrap gap-1">
                     {teacher.subjects.map((subject) => (
-                      <Badge key={subject} variant="outline" className="bg-slate-700">
+                      <Badge
+                        key={subject}
+                        variant="outline"
+                        className="bg-slate-700"
+                      >
                         {subject}
                       </Badge>
                     ))}
@@ -813,16 +962,23 @@ export default function TeacherList() {
                 <TableCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="text-white hover:bg-slate-500">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-white hover:bg-slate-500"
+                      >
                         <MoreHorizontal className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="bg-slate-800 text-white border-slate-700">
+                    <DropdownMenuContent
+                      align="end"
+                      className="bg-slate-800 text-white border-slate-700"
+                    >
                       <DropdownMenuItem
                         className="hover:bg-slate-700 focus:bg-slate-700"
                         onSelect={(e) => {
-                          e.preventDefault()
-                          prepareTeacherForEdit(teacher)
+                          e.preventDefault();
+                          prepareTeacherForEdit(teacher);
                         }}
                       >
                         <Edit className="h-4 w-4 mr-2" />
@@ -831,9 +987,9 @@ export default function TeacherList() {
                       <DropdownMenuItem
                         className="text-red-500 hover:bg-slate-700 focus:bg-slate-700"
                         onSelect={(e) => {
-                          e.preventDefault()
-                          setTeacherToDelete(teacher.id)
-                          setIsDeleteDialogOpen(true)
+                          e.preventDefault();
+                          setTeacherToDelete(teacher.id);
+                          setIsDeleteDialogOpen(true);
                         }}
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
@@ -858,7 +1014,8 @@ export default function TeacherList() {
         <div>
           {filteredTeachers.length > 0 && (
             <p>
-              Showing {indexOfFirstTeacher + 1} to {Math.min(indexOfLastTeacher, filteredTeachers.length)} of{" "}
+              Showing {indexOfFirstTeacher + 1} to{" "}
+              {Math.min(indexOfLastTeacher, filteredTeachers.length)} of{" "}
               {filteredTeachers.length} teachers
             </p>
           )}
@@ -889,8 +1046,8 @@ export default function TeacherList() {
       <Dialog
         open={isEditDialogOpen}
         onOpenChange={(open) => {
-          setIsEditDialogOpen(open)
-          if (!open) editTeacherForm.reset()
+          setIsEditDialogOpen(open);
+          if (!open) editTeacherForm.reset();
         }}
       >
         <DialogContent>
@@ -898,7 +1055,10 @@ export default function TeacherList() {
             <DialogTitle>Edit Teacher</DialogTitle>
           </DialogHeader>
           <Form {...editTeacherForm}>
-            <form onSubmit={editTeacherForm.handleSubmit(handleEditTeacher)} className="space-y-4">
+            <form
+              onSubmit={editTeacherForm.handleSubmit(handleEditTeacher)}
+              className="space-y-4"
+            >
               <div className="grid grid-cols-2 gap-4">
                 <FormField
                   control={editTeacherForm.control}
@@ -920,7 +1080,11 @@ export default function TeacherList() {
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input {...field} type="email" placeholder="Enter email address" />
+                        <Input
+                          {...field}
+                          type="email"
+                          placeholder="Enter email address"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -935,7 +1099,10 @@ export default function TeacherList() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Gender</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select gender" />
@@ -973,7 +1140,11 @@ export default function TeacherList() {
                     <FormItem>
                       <FormLabel>Experience (Years)</FormLabel>
                       <FormControl>
-                        <Input {...field} type="number" placeholder="Enter years of experience" />
+                        <Input
+                          {...field}
+                          type="number"
+                          placeholder="Enter years of experience"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -990,11 +1161,13 @@ export default function TeacherList() {
                       <FormLabel>Classes</FormLabel>
                       <Select
                         onValueChange={(value) => {
-                          const currentValues = field.value || []
+                          const currentValues = field.value || [];
                           if (currentValues.includes(value)) {
-                            field.onChange(currentValues.filter((v) => v !== value))
+                            field.onChange(
+                              currentValues.filter((v) => v !== value)
+                            );
                           } else {
-                            field.onChange([...currentValues, value])
+                            field.onChange([...currentValues, value]);
                           }
                         }}
                       >
@@ -1002,7 +1175,9 @@ export default function TeacherList() {
                           <SelectTrigger>
                             <SelectValue placeholder="Select classes">
                               {field.value?.length > 0
-                                ? `${field.value.length} class${field.value.length > 1 ? "es" : ""} selected`
+                                ? `${field.value.length} class${
+                                    field.value.length > 1 ? "es" : ""
+                                  } selected`
                                 : "Select classes"}
                             </SelectValue>
                           </SelectTrigger>
@@ -1011,7 +1186,9 @@ export default function TeacherList() {
                           {availableClasses.map((cls) => (
                             <SelectItem key={cls} value={cls}>
                               <div className="flex items-center gap-2">
-                                <Checkbox checked={field.value?.includes(cls)} />
+                                <Checkbox
+                                  checked={field.value?.includes(cls)}
+                                />
                                 <span>{cls}</span>
                               </div>
                             </SelectItem>
@@ -1020,13 +1197,19 @@ export default function TeacherList() {
                       </Select>
                       <div className="flex flex-wrap gap-1 mt-2">
                         {field.value?.map((cls) => (
-                          <Badge key={cls} variant="outline" className="bg-slate-700">
+                          <Badge
+                            key={cls}
+                            variant="outline"
+                            className="bg-slate-700"
+                          >
                             {cls}
                             <button
                               type="button"
                               className="ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
                               onClick={() => {
-                                field.onChange(field.value.filter((value) => value !== cls))
+                                field.onChange(
+                                  field.value.filter((value) => value !== cls)
+                                );
                               }}
                             >
                               ×
@@ -1049,11 +1232,13 @@ export default function TeacherList() {
                       <FormLabel>Subjects</FormLabel>
                       <Select
                         onValueChange={(value) => {
-                          const currentValues = field.value || []
+                          const currentValues = field.value || [];
                           if (currentValues.includes(value)) {
-                            field.onChange(currentValues.filter((v) => v !== value))
+                            field.onChange(
+                              currentValues.filter((v) => v !== value)
+                            );
                           } else {
-                            field.onChange([...currentValues, value])
+                            field.onChange([...currentValues, value]);
                           }
                         }}
                       >
@@ -1061,7 +1246,9 @@ export default function TeacherList() {
                           <SelectTrigger>
                             <SelectValue placeholder="Select subjects">
                               {field.value?.length > 0
-                                ? `${field.value.length} subject${field.value.length > 1 ? "s" : ""} selected`
+                                ? `${field.value.length} subject${
+                                    field.value.length > 1 ? "s" : ""
+                                  } selected`
                                 : "Select subjects"}
                             </SelectValue>
                           </SelectTrigger>
@@ -1070,7 +1257,9 @@ export default function TeacherList() {
                           {availableSubjects.map((subject) => (
                             <SelectItem key={subject} value={subject}>
                               <div className="flex items-center gap-2">
-                                <Checkbox checked={field.value?.includes(subject)} />
+                                <Checkbox
+                                  checked={field.value?.includes(subject)}
+                                />
                                 <span>{subject}</span>
                               </div>
                             </SelectItem>
@@ -1079,13 +1268,21 @@ export default function TeacherList() {
                       </Select>
                       <div className="flex flex-wrap gap-1 mt-2">
                         {field.value?.map((subject) => (
-                          <Badge key={subject} variant="outline" className="bg-slate-700">
+                          <Badge
+                            key={subject}
+                            variant="outline"
+                            className="bg-slate-700"
+                          >
                             {subject}
                             <button
                               type="button"
                               className="ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
                               onClick={() => {
-                                field.onChange(field.value.filter((value) => value !== subject))
+                                field.onChange(
+                                  field.value.filter(
+                                    (value) => value !== subject
+                                  )
+                                );
                               }}
                             >
                               ×
@@ -1100,7 +1297,11 @@ export default function TeacherList() {
               </div>
 
               <DialogFooter>
-                <Button variant="outline" type="button" onClick={() => setIsEditDialogOpen(false)}>
+                <Button
+                  variant="outline"
+                  type="button"
+                  onClick={() => setIsEditDialogOpen(false)}
+                >
                   Cancel
                 </Button>
                 <Button type="submit">Save Changes</Button>
@@ -1111,23 +1312,29 @@ export default function TeacherList() {
       </Dialog>
 
       {/* Delete Confirmation Dialog */}
-      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+      <AlertDialog
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+      >
         <AlertDialogContent className="bg-slate-800 text-white border-slate-700">
           <AlertDialogHeader>
             <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
             <AlertDialogDescription className="text-slate-300">
-              Are you sure you want to delete this teacher? This action cannot be undone.
+              Are you sure you want to delete this teacher? This action cannot
+              be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="bg-slate-700 text-white hover:bg-slate-600">Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="bg-slate-700 text-white hover:bg-slate-600">
+              Cancel
+            </AlertDialogCancel>
             <AlertDialogAction
               className="bg-red-600 text-white hover:bg-red-700"
               onClick={() => {
                 if (teacherToDelete) {
-                  handleDeleteTeacher(teacherToDelete)
+                  handleDeleteTeacher(teacherToDelete);
                 }
-                setIsDeleteDialogOpen(false)
+                setIsDeleteDialogOpen(false);
               }}
             >
               Delete
@@ -1137,22 +1344,31 @@ export default function TeacherList() {
       </AlertDialog>
 
       {/* Bulk Delete Confirmation Dialog */}
-      <AlertDialog open={isBulkDeleteDialogOpen} onOpenChange={setIsBulkDeleteDialogOpen}>
+      <AlertDialog
+        open={isBulkDeleteDialogOpen}
+        onOpenChange={setIsBulkDeleteDialogOpen}
+      >
         <AlertDialogContent className="bg-slate-800 text-white border-slate-700">
           <AlertDialogHeader>
             <AlertDialogTitle>Confirm Bulk Deletion</AlertDialogTitle>
             <AlertDialogDescription className="text-slate-300">
-              Are you sure you want to delete {selectedTeachers.length} selected teachers? This action cannot be undone.
+              Are you sure you want to delete {selectedTeachers.length} selected
+              teachers? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="bg-slate-700 text-white hover:bg-slate-600">Cancel</AlertDialogCancel>
-            <AlertDialogAction className="bg-red-600 text-white hover:bg-red-700" onClick={handleBulkDelete}>
+            <AlertDialogCancel className="bg-slate-700 text-white hover:bg-slate-600">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-red-600 text-white hover:bg-red-700"
+              onClick={handleBulkDelete}
+            >
               Delete All
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </div>
-  )
+  );
 }

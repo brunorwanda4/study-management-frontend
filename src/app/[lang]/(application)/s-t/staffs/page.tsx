@@ -10,7 +10,7 @@ interface props {
   params: Promise<{ lang: Locale }>;
 }
 
-export const generateMetadata = async (): Promise<Metadata> => {
+export const metadata = async (): Promise<Metadata> => {
   const school = await getSchoolServer();
   return {
     title: school?.name

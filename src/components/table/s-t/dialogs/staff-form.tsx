@@ -5,9 +5,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import React, { useState } from 'react'
 import {
     newStaffFormSchema,
-    editStaffFormSchema,
     type NewStaffForm,
-    type EditStaffForm,
   } from "@/lib/schema/table-forms/staff-forms"
   import { useForm } from "react-hook-form"
   import { zodResolver } from "@hookform/resolvers/zod"
@@ -69,11 +67,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 const StaffForm = () => {
 
-      const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
-        const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
-        const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-        const [staffToDelete, setStaffToDelete] = useState<string | null>(null)
-        const [isBulkDeleteDialogOpen, setIsBulkDeleteDialogOpen] = useState(false)
+      const [
+        // isAddDialogOpen,
+         setIsAddDialogOpen] = useState(false)
+        // const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+        // const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+        // const [staffToDelete, setStaffToDelete] = useState<string | null>(null)
+        // const [isBulkDeleteDialogOpen, setIsBulkDeleteDialogOpen] = useState(false)
       const [staff, setStaff] = useState(initialStaff)
 
       

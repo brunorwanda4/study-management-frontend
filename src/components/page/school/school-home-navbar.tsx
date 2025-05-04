@@ -4,7 +4,6 @@ import { FaPeopleGroup, FaSignsPost } from "react-icons/fa6";
 import { FaSchool } from "react-icons/fa6";
 import { MdClass } from "react-icons/md";
 import { Locale } from "@/i18n";
-import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import MyLink from "@/components/myComponents/myLink";
 

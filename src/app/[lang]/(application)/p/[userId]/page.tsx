@@ -1,4 +1,3 @@
-import ProfileAside from "@/components/profile/profile-aside";
 import ProfileStudentClassesCard from "@/components/profile/student/profile-student-classes-card";
 import StudentPerformanceCard from "@/components/profile/student/student-perfomance-card";
 import UserFavoriteSubjects from "@/components/profile/user-favorite-subjects";

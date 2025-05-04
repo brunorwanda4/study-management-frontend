@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import type React from "react"
@@ -33,7 +34,7 @@ export function RegisterStaffDialog({ open, onOpenChange, selectedStaff }: Regis
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
-        <Button size="sm" variant="primary" className="h-8 gap-1 ">
+        <Button library="daisy" size="sm" variant="primary" className="h-8 gap-1 ">
           <UserPlus className="h-4 w-4" />
           Register Staff
         </Button>

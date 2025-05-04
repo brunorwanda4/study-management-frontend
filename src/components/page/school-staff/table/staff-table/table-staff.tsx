@@ -40,7 +40,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Locale } from "@/i18n";
-import { ViewDataClassDto } from "@/lib/schema/class/view-data-class.dto";
 import { SendStaffRequestToJoinSchool } from "../../dialog/createStaffModal";
 import { StaffTableColumns } from "./staff-table-columns";
 import { SchoolStaffDto } from "@/lib/schema/school/school-staff.schema";
