@@ -6,8 +6,7 @@ import { FaSchool } from "react-icons/fa6";
 import { MdClass, MdEmail } from "react-icons/md";
 import MyLink from "../myComponents/myLink";
 import { Locale } from "@/i18n";
-import { userAndOther, UserRoleDto } from "@/lib/schema/user/user.dto";
-import { SchoolDto } from "@/lib/schema/school.dto";
+import { userAndOther} from "@/lib/schema/user/user.dto";
 import { userImage } from "@/lib/context/images";
 
 interface props {

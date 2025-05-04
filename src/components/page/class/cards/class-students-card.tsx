@@ -1,4 +1,5 @@
 import MyImage from "@/components/myComponents/myImage";
+import MyLink from "@/components/myComponents/myLink";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Locale } from "@/i18n";
@@ -8,11 +9,11 @@ import React from "react";
 import { BsGear, BsPlusCircle } from "react-icons/bs";
 
 interface props {
-  lang : Locale
-  student : studentsAndOther[]
+  lang: Locale;
+  student: studentsAndOther[];
 }
 
-const ClassStudentCard = ({ lang, student} : props) => {
+const ClassStudentCard = ({ lang, student }: props) => {
   return (
     <Card>
       <CardHeader className=" flex justify-between">
@@ -29,17 +30,29 @@ const ClassStudentCard = ({ lang, student} : props) => {
               className=" flex w-full justify-between hover:bg-base-300 card flex-row duration-200 p-2"
             >
               <div className=" flex space-x-2">
-                <MyImage
-                  role="AVATAR"
-                  src={item.image || studentImage}
-                  className=" size-12"
-                  classname=" mask mask-squircle"
-                />
+                <MyLink
+                  loading
+                  href={`/${lang}/p/${item.userId}?studentId=${item.id}`}
+                >
+                  <MyImage
+                    role="AVATAR"
+                    src={item.image || studentImage}
+                    className=" size-12"
+                    classname=" mask mask-squircle"
+                  />
+                </MyLink>
                 <div>
-                  <span className=" small-title">{item.name}</span>
+                  <MyLink
+                    loading
+                    href={`/${lang}/p/${item.userId}?studentId=${item.id}`}
+                    className=" small-title underline-offset-0"
+                  >
+                    {item.name}
+                  </MyLink>
                   <p>{item.gender}</p>
                 </div>
               </div>
+              {/* TODO: make dialog for managing student */}
               <Button shape={"circle"} library="daisy" variant={"ghost"}>
                 <BsGear size={24} />
               </Button>

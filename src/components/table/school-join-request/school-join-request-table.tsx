@@ -133,7 +133,6 @@ export default function SchoolJoinTable({
     if (onRejectRequest) {
       onRejectRequest(request);
     }
-    // Add logic here to update status via API call etc.
   }, [onRejectRequest]);
 
   // Memoize columns to include action handlers
