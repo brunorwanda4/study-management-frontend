@@ -5,18 +5,6 @@ import { useForm } from "react-hook-form"; // Import useFieldArray if handling s
 import { ChangeEvent, useState, useTransition } from "react";
 import { useTheme } from "next-themes";
 
-// Import Schemas and Types
-// import {
-//     PublicSchoolUpdateSchema,
-//     PublicSchoolUpdateDto,
-//     AttendanceSystemEnum,
-//     ContactSchema, // Assuming these are defined elsewhere if not directly in school.dto
-//     SchoolMembers,
-//     SchoolTypeEnum,
-//     SocialMediaSchema, // Assuming this exists
-//     AffiliationTypeEnum, // Assuming this exists
-// } from "@/lib/schema/school.dto"; // Adjust import path as needed
-// import { AddressSchema } from "@/lib/schema/user/user.dto"; // Adjust import path
 import { Locale } from "@/i18n"; // Assuming you might need this
 
 // Import Shadcn UI Components
@@ -42,16 +30,12 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator"; // For visual separation
-
-// Import Custom Components (Ensure these exist)
 import MyImage from "@/components/myComponents/myImage"; // Assuming this exists
 import { FormError, FormSuccess } from "@/components/myComponents/form-message"; // Assuming this exists
-// import MultipleSelector, { Option } from "@/components/ui/multiple-selector"; // Ensure correct import
 import {
   schoolEducationLevel,
   schoolLabs,
   SchoolSportsExtracurricular,
-  // Assuming these contexts export arrays of Option type { label: string, value: string }
 } from "@/lib/context/school.context"; // Adjust import path
 import { AffiliationTypeEnum, AttendanceSystemEnum, SchoolDto, SchoolMembers, SchoolTypeEnum } from "@/lib/schema/school.dto";
 import MultipleSelector, { Option } from "@/components/ui/multiselect";
@@ -62,50 +46,8 @@ import {
 import { updateSchoolSchoolService } from "@/service/school/school.service";
 import { schoolLogoImage } from "@/lib/context/images";
 
-// --- You need to create this service ---
-// import { updateSchoolPublicInfoService, getSchoolPublicInfoService } from "@/service/school/school.service"; // Adjust import path
-
-// // Define the structure of the initial data expected (adjust based on your actual School type/interface)
-// interface SchoolPublicInfo {
-//     id: string;
-//     logo?: string | null;
-//     name?: string | null;
-//     username?: string | null;
-//     description?: string | null;
-//     schoolType?: SchoolTypeEnum | null;
-//     schoolMembers?: SchoolMembers | null;
-//     curriculum?: string[] | null;
-//     educationLevel?: string[] | null;
-//     accreditationNumber?: string | null;
-//     affiliation?: AffiliationTypeEnum | null; // Use the correct enum if defined
-//     address?: {
-//         street?: string | null;
-//         city?: string | null;
-//         state?: string | null;
-//         postalCode?: string | null;
-//         country?: string | null;
-//         googleMapUrl?: string | null;
-//     } | null;
-//     contact?: {
-//         phone?: string | null;
-//         email?: string | null;
-//     } | null;
-//     website?: string | null;
-//     socialMedia?: Array<{ platform: string; url: string }> | null; // Match SocialMediaSchema structure
-//     studentCapacity?: number | null;
-//     uniformRequired?: boolean | null;
-//     attendanceSystem?: AttendanceSystemEnum | null;
-//     scholarshipAvailable?: boolean | null;
-//     classrooms?: number | null;
-//     library?: boolean | null;
-//     labs?: string[] | null;
-//     sportsExtracurricular?: string[] | null;
-//     onlineClasses?: boolean | null;
-// }
-
 interface Props {
   lang: Locale;
-  // Pass initial data fetched server-side or fetch client-side
   initialData: SchoolDto;
 }
 
@@ -126,20 +68,15 @@ const UpdateSchoolPublicInfoForm = ({  initialData }: Props) => {
   const [success, setSuccess] = useState<string | null | undefined>("");
   const [isPending, startTransition] = useTransition();
   const { theme } = useTheme();
-  // const router = useRouter();
-
-  // --- Form Definition ---
   const form = useForm<PublicSchoolUpdateDto>({
     resolver: zodResolver(PublicSchoolUpdateSchema),
     defaultValues: {
-      // Populate with initialData or fallbacks
       logo: initialData?.logo ?? undefined,
       name: initialData?.name ?? undefined,
       username: initialData?.username ?? undefined, // Make sure username is in initialData
       description: initialData?.description ?? undefined,
       schoolType: initialData?.schoolType ?? undefined,
       schoolMembers: initialData?.schoolMembers ?? undefined,
-      // For MultipleSelector, ensure value is Option[]
       curriculum: initialData?.curriculum ?? [], // Should be string[] | undefined
       educationLevel: initialData?.educationLevel ?? [], // Should be string[] | undefined
       accreditationNumber: initialData?.accreditationNumber ?? undefined,
@@ -169,32 +106,6 @@ const UpdateSchoolPublicInfoForm = ({  initialData }: Props) => {
       onlineClasses: initialData?.onlineClasses ?? undefined,
     },
   });
-
-  // Fetch data client-side if not provided initially (optional)
-  /*
-     useEffect(() => {
-         if (!initialData && schoolId) {
-             const fetchData = async () => {
-                 const result = await getSchoolPublicInfoService(schoolId); // Create this service
-                 if (result?.data) {
-                     // Reset form with fetched data
-                     form.reset({
-                         logo: result.data.logo ?? undefined,
-                         name: result.data.name ?? undefined,
-                         // ... map all other fields similarly ...
-                         curriculum: stringsToOptions(result.data.curriculum),
-                         // ... etc ...
-                     });
-                 } else {
-                     setError("Failed to load school data.");
-                 }
-             };
-             fetchData();
-         }
-     }, [schoolId, initialData, form.reset]); // form.reset added to dependency array
-     */
-
-  // --- Logo Handler (same as Create form) ---
   const handleLogoChange = (
     e: ChangeEvent<HTMLInputElement>,
     fieldChange: (value: string) => void
@@ -220,15 +131,12 @@ const UpdateSchoolPublicInfoForm = ({  initialData }: Props) => {
     }
   };
 
-  // --- Submit Handler ---
   const onSubmit = (values: PublicSchoolUpdateDto) => {
     setSuccess(null);
     setError(null);
 
-    // Prepare data: Convert Option[] back to string[] for arrays
     const dataToSubmit: PublicSchoolUpdateDto = {
       ...values,
-      // Ensure numeric fields that might be empty strings from input are handled
       studentCapacity: values.studentCapacity
         ? Number(values.studentCapacity)
         : undefined,
