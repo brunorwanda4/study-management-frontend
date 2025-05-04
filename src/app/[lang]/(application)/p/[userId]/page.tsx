@@ -1,8 +1,11 @@
+import ProfileAside from "@/components/profile/profile-aside";
 import ProfileStudentClassesCard from "@/components/profile/student/profile-student-classes-card";
 import StudentPerformanceCard from "@/components/profile/student/student-perfomance-card";
 import UserFavoriteSubjects from "@/components/profile/user-favorite-subjects";
 import { Locale } from "@/i18n";
+import { userImage } from "@/lib/context/images";
 import { getAuthUserServer } from "@/lib/utils/auth";
+import { getUserById } from "@/service/school/user-service";
 import { redirect } from "next/navigation";
 
 interface Props {
@@ -19,9 +22,16 @@ const ProfilePageById = async (props: Props) => {
   if (!currentUser.role) {
     return redirect(`/${lang}/auth/onboarding`);
   }
+
+  const [user] = await Promise.all(
+    [getUserById(currentUser.id)]
+  )
+  if (!user.data) {
+    return <NotFoundPage />;
+  }
   return (
     <div className=" px-4 py-2 space-x-4 md:space-y-4 flex">
-      {/* <ProfileAside lang={lang} /> */}
+      <ProfileAside lang={lang} user = {user.data}  />
       <div className=" w-2/3 space-y-4">
         <UserFavoriteSubjects />
         <StudentPerformanceCard />
