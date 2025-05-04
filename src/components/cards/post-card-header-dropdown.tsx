@@ -13,7 +13,7 @@ const PostCardHeaderDropdown = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" shape="circle">
+        <Button library="daisy" variant="ghost" size="sm" shape="circle">
           <BsThreeDotsVertical />
         </Button>
       </DropdownMenuTrigger>

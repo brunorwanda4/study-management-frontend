@@ -17,14 +17,14 @@ const SettingProfilePage = async (props: props) => {
     return redirect(`/${lang}/auth/login`);
   }
   const getCurrentUser = await getUserById(currentUser.id);
-  if (!getCurrentUser) return <NotFoundPage />;
+  if (!getCurrentUser.data) return <NotFoundPage />;
   return (
     <div className=" space-y-2 p-4 ">
       <h1 className=" title-page">Profile setting</h1>
       <Separator />
       <div className=" space-y-4">
         <h2 className=" basic-title">General setting</h2>
-        <UserUserDataForm currentUser={getCurrentUser} />
+        <UserUserDataForm currentUser={getCurrentUser.data} />
       </div>
       <Separator />
       <div className=" space-y-4">

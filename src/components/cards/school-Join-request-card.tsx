@@ -102,7 +102,7 @@ const SchoolJoinRequestCard = ({
         </div>
         <div className=" flex justify-end">
           <span className=" text-sm text-gray-500">
-            {formatTimeAgo(request.updatedAt)}
+            {formatTimeAgo(request.updateAt)}
           </span>
         </div>
       </div>

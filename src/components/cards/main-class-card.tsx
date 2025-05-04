@@ -3,12 +3,12 @@ import { Separator } from "../ui/separator";
 import { Dot } from "lucide-react";
 import Link from "next/link";
 import { Locale } from "@/i18n";
-import { ClassRoom } from "../../../prisma/prisma/generated";
 import { Button } from "../ui/button";
+import { ClassDto } from "@/lib/schema/class/class.schema";
 
 interface props {
   lang: Locale;
-  mainClass?: ClassRoom | null;
+  mainClass?: ClassDto | null;
 }
 
 const MainClassCard = ({ lang, mainClass }: props) => {
@@ -18,7 +18,7 @@ const MainClassCard = ({ lang, mainClass }: props) => {
         <div className=" p-4 flex items-center gap-2">
           <Avatar className=" size-20">
             <AvatarImage
-              src={mainClass?.symbol ? mainClass.symbol : "/images/19.jpg"}
+              src={mainClass?.image ? mainClass.image : "/images/19.jpg"}
             />
             <AvatarFallback>LOGO</AvatarFallback>
           </Avatar>
@@ -41,7 +41,7 @@ const MainClassCard = ({ lang, mainClass }: props) => {
       {/* description of main class */}
       <div className="  text-sm line-clamp-2 px-4">
         <p>
-          {mainClass?.description }
+          {/* {mainClass?.description } */}
         </p>
       </div>
       <div className=" px-4">
@@ -66,7 +66,7 @@ const MainClassCard = ({ lang, mainClass }: props) => {
       <Separator />
       <div className=" p-4">
         <Link href={`/${lang}/admin/main-classes/${mainClass?.id ?  mainClass.id : 123}`}>
-          <Button variant={"info"} className=" w-full">
+          <Button library="daisy" variant={"info"} className=" w-full">
             Join main class
           </Button>
         </Link>

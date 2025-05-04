@@ -23,10 +23,6 @@ export const generateMetadata = async (): Promise<Metadata> => {
   };
 };
 
-interface props {
-  lang: Locale;
-}
-
 const SchoolStaffTeacherPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;

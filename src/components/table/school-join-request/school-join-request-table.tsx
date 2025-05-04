@@ -136,7 +136,6 @@ export default function SchoolJoinTable({
   }, [onRejectRequest]);
 
   // Memoize columns to include action handlers
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const tableColumns = useMemo(
     () => SchoolJoinRequestTableColumns(handleAccept, handleReject),
     [handleAccept, handleReject]

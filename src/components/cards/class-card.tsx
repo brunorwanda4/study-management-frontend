@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 import { TextTooltip } from "../myComponents/text-tooltip";
 import { getAuthUserServer } from "@/lib/utils/auth";
-import { ClassDto } from "@/lib/schema/class.dto";
+import { ClassDto } from "@/lib/schema/class/class.schema";
 
 interface props {
   lang: Locale;

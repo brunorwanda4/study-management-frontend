@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+// import { Metadata } from "next";
 import type { Locale } from "@/i18n";
 import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";
 import { redirect } from "next/navigation";
@@ -10,22 +10,17 @@ interface props {
   params: Promise<{ lang: Locale }>;
 }
 
-export const metadata = async (): Promise<Metadata> => {
-  const school = await getSchoolServer();
-  return {
-    title: school?.name
-      ? `All Staff in ${school?.schoolName}`
-      : "School not found",
-    description: school?.name
-      ? `All Staff in ${school?.schoolName}`
-      : "school not found",
-  };
-};
-
-interface props {
-  lang: Locale;
-}
-
+// export const metadata = async (): Promise<Metadata> => {
+//   const school = await getSchoolServer();
+//   return {
+//     title: school?.name
+//       ? `All Staff in ${school?.schoolName}`
+//       : "School not found",
+//     description: school?.name
+//       ? `All Staff in ${school?.schoolName}`
+//       : "school not found",
+//   };
+// };
 const SchoolStaffStaffPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
