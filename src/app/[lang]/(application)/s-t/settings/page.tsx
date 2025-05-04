@@ -24,7 +24,7 @@ const SchoolSettingsPage = async (props: props) => {
   return (
     <div>
       <h2 className=" title-page">School Public Information</h2>
-      <UpdateSchoolPublicInfo lang={lang} school={school.data} />
+      <UpdateSchoolPublicInfo lang={lang} initialData={school.data} />
     </div>
   );
 };
