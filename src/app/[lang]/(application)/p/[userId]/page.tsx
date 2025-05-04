@@ -1,9 +1,9 @@
+import NotFoundPage from "@/components/page/not-found";
 import ProfileAside from "@/components/profile/profile-aside";
 import ProfileStudentClassesCard from "@/components/profile/student/profile-student-classes-card";
 import StudentPerformanceCard from "@/components/profile/student/student-perfomance-card";
 import UserFavoriteSubjects from "@/components/profile/user-favorite-subjects";
 import { Locale } from "@/i18n";
-import { userImage } from "@/lib/context/images";
 import { getAuthUserServer } from "@/lib/utils/auth";
 import { getUserById } from "@/service/school/user-service";
 import { redirect } from "next/navigation";

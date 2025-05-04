@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import {
   Column,
   ColumnDef,
@@ -120,27 +120,27 @@ export default function SchoolJoinTable({
 
   // --- Action Handlers ---
   // Use passed callbacks or default loggers
-  const handleAccept = (request: SchoolJoinRequestDto) => {
+  const handleAccept = useCallback((request: SchoolJoinRequestDto) => {
     console.log("Accepting:", request);
     if (onAcceptRequest) {
       onAcceptRequest(request);
     }
     // Add logic here to update status via API call etc.
-  };
+  }, [onAcceptRequest]);
 
-  const handleReject = (request: SchoolJoinRequestDto) => {
+  const handleReject = useCallback((request: SchoolJoinRequestDto) => {
     console.log("Rejecting:", request);
     if (onRejectRequest) {
       onRejectRequest(request);
     }
     // Add logic here to update status via API call etc.
-  };
+  }, [onRejectRequest]);
 
   // Memoize columns to include action handlers
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const tableColumns = useMemo(
     () => SchoolJoinRequestTableColumns(handleAccept, handleReject),
-    [onAcceptRequest, onRejectRequest]
+    [handleAccept, handleReject]
   );
 
   const table = useReactTable({
