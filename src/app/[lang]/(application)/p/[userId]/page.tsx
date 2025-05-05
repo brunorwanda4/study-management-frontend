@@ -9,11 +9,11 @@ import { getUserById } from "@/service/school/user-service";
 import { redirect } from "next/navigation";
 
 interface Props {
-  params: Promise<{ lang: Locale; classId: string }>;
+  params: Promise<{ lang: Locale; userId: string }>;
 }
 const ProfilePageById = async (props: Props) => {
   const params = await props.params;
-  const { lang } = params;
+  const { lang, userId } = params;
   const [currentUser] = await Promise.all([getAuthUserServer()]);
 
   if (!currentUser) {
@@ -23,15 +23,13 @@ const ProfilePageById = async (props: Props) => {
     return redirect(`/${lang}/auth/onboarding`);
   }
 
-  const [user] = await Promise.all(
-    [getUserById(currentUser.id)]
-  )
+  const [user] = await Promise.all([getUserById(userId)]);
   if (!user.data) {
     return <NotFoundPage />;
   }
   return (
     <div className=" px-4 py-2 space-x-4 md:space-y-4 flex">
-      <ProfileAside lang={lang} user = {user.data}  />
+      <ProfileAside lang={lang} user={user.data} />
       <div className=" w-2/3 space-y-4">
         <UserFavoriteSubjects />
         <StudentPerformanceCard />

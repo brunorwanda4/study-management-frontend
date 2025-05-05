@@ -20,10 +20,9 @@ import { teacherImage } from "@/lib/context/images";
 import { TeacherDto } from "@/lib/schema/school/teacher.dto";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 
-
 interface props {
   lang: Locale;
-  teachers: TeacherDto[]
+  teachers: TeacherDto[];
 }
 
 export default function TeachersDashboardTable({ lang, teachers }: props) {
@@ -55,14 +54,18 @@ export default function TeachersDashboardTable({ lang, teachers }: props) {
               <TableRow key={item.id}>
                 <TableCell>
                   <div className="flex items-center gap-3">
-                    <MyImage
-                      className="rounded-full size-12"
-                      classname="mask mask-squircle"
-                      src={item.image || teacherImage}
-                      alt={item.name}
-                    />
+                    <MyLink loading
+                      href={`/${lang}/p/${item.userId}?teacherId=${item.id}`}
+                    >
+                      <MyImage
+                        className="rounded-full size-12"
+                        classname="mask mask-squircle"
+                        src={item.image || teacherImage}
+                        alt={item.name}
+                      />
+                    </MyLink>
                     <div>
-                      <div className="font-medium">{item.name}</div>
+                      <MyLink loading href={`/${lang}/p/${item.userId}?teacherId=${item.id}`}  className="font-medium">{item.name}</MyLink>
                       <span className="text-muted-foreground mt-0.5 text-xs">
                         {item.email}
                       </span>

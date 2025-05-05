@@ -56,21 +56,36 @@ export default function StudentDashboardTable({ lang, students }: props) {
               <TableRow key={item.id}>
                 <TableCell>
                   <div className="flex items-center gap-3">
-                    <MyImage
-                      className="rounded-full size-12"
-                      classname="mask mask-squircle"
-                      src={item.image || studentImage}
-                      alt={item.name}
-                    />
+                    <MyLink
+                      loading
+                      href={`/${lang}/p/${item.userId}?studentId=${item.id}`}
+                    >
+                      <MyImage
+                        className="rounded-full size-12"
+                        classname="mask mask-squircle"
+                        src={item.image || studentImage}
+                        alt={item.name}
+                      />
+                    </MyLink>
                     <div>
-                      <div className="font-medium">{item.name}</div>
+                      <MyLink
+                        loading
+                        href={`/${lang}/p/${item.userId}?studentId=${item.id}`}
+                        className="font-medium"
+                      >
+                        {item.name}
+                      </MyLink>
                       <span className="text-muted-foreground mt-0.5 text-xs">
                         {item.email}
                       </span>
                     </div>
                   </div>
                 </TableCell>
-                <TableCell>{item.class.name}</TableCell>
+                <TableCell>
+                  <MyLink loading className=" underline-offset-0" href={`/${lang}/c/${item.classId}`}>
+                    {item.class.name}
+                  </MyLink>
+                </TableCell>
                 <TableCell className="text-start">{item.gender}</TableCell>
                 <TableCell>
                   <HiOutlineDotsHorizontal />
