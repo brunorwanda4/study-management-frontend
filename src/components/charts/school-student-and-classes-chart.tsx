@@ -46,7 +46,7 @@ export default function SchoolStudentAndClassChart({ classes }: SchoolStudentAnd
 
   return (
     <Card className="w-2/3">
-      <CardHeader className="flex flex-row justify-between items-center pb-4 border-b border-base-content/20">
+      <CardHeader className="flex flex-row justify-between items-center pb-4 border-b border-base-300">
         <CardTitle>Class & Students</CardTitle>
         {/* <Button variant={"ghost"} shape={"circle"} library="daisy">
           <HiOutlineDotsHorizontal size={24} />

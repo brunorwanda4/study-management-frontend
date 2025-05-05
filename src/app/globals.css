@@ -126,7 +126,7 @@
 
 @layer base {
   * {
-    @apply border-base-content/20 outline-ring/50;
+    @apply border-base-300 outline-ring/50;
   }
   body {
     @apply bg-base-200;
@@ -145,10 +145,10 @@
 }
 
 .basic-card {
-  @apply bg-base-100 p-4 card border border-base-content/20;
+  @apply bg-base-100 p-4 card border border-base-300 shadow-sm shadow-base-300;
 }
 
 .basic-card-no-p {
-  @apply bg-base-100 card border border-base-content/20;
+  @apply bg-base-100 card border border-base-300;
 }
 

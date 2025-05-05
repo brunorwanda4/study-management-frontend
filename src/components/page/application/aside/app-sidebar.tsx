@@ -207,7 +207,7 @@ interface props {
 export function AppSidebar({ items, lang, otherData1 }: props) {
   return (
     <Sidebar className=" pt-14" collapsible="offcanvas">
-      <SidebarContent className=" border-r shrink-0 border-base-content/20">
+      <SidebarContent className=" border-r border-base-300">
         <div className=" overflow-y-auto max-h-[calc(100vh-5.5rem) space-y-1">
           {items.map((group, index) => (
             <SidebarGroupComponent

@@ -66,7 +66,7 @@ export function ClassCombobox({
           aria-label={placeholder} // Improved accessibility
           disabled={disabled}
           className={cn(
-            " hover:bg-base-300 border-base-content/20 w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]",
+            " hover:bg-base-300 border-base-300 w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]",
             className // Allow external styling
           )}
         >
@@ -86,7 +86,7 @@ export function ClassCombobox({
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className="border-base-content/20 w-full min-w-[var(--radix-popper-anchor-width)] p-0"
+        className="border-base-300 w-full min-w-[var(--radix-popper-anchor-width)] p-0"
         align="start"
         // Avoid portal issues if needed, though usually fine
         // portal={false}

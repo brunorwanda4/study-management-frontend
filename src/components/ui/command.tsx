@@ -62,7 +62,7 @@ function CommandInput({
 }: React.ComponentProps<typeof CommandPrimitive.Input>) {
   return (
     <div
-      className="border-base-content/20 flex items-center border-b px-5"
+      className="border-base-300 flex items-center border-b px-5"
       cmdk-input-wrapper=""
     >
       <SearchIcon size={20} className=" /80 me-3" />
