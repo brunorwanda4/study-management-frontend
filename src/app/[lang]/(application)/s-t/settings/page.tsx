@@ -1,5 +1,9 @@
 import NotFoundPage from "@/components/page/not-found";
-import UpdateSchoolPublicInfo from "@/components/page/school-staff/school-setting/froms/update-school-public-info-form";
+import { AcademicDetailsForm } from "@/components/page/school-staff/school-setting/forms/academic-details";
+import { BasicInformationForm } from "@/components/page/school-staff/school-setting/forms/basic-information";
+import { ContactLocationForm } from "@/components/page/school-staff/school-setting/forms/contact-location";
+import { FacilitiesOperationsForm } from "@/components/page/school-staff/school-setting/forms/facilities-operations";
+// import UpdateSchoolPublicInfo from "@/components/page/school-staff/school-setting/forms/update-school-public-info-form";
 import { Locale } from "@/i18n";
 import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";
 import { getSchoolByIdService } from "@/service/school/school.service";
@@ -24,7 +28,18 @@ const SchoolSettingsPage = async (props: props) => {
   return (
     <div>
       <h2 className=" title-page">School Public Information</h2>
-      <UpdateSchoolPublicInfo lang={lang} initialData={school.data} />
+      <BasicInformationForm initialData={school.data} />
+      <AcademicDetailsForm
+        initialData={{
+          ...school.data,
+          affiliation: ["Government", "Religious", "NGO", "independent"].includes(school.data.affiliation || "")
+            ? (school.data.affiliation as "Government" | "Religious" | "NGO" | "independent")
+            : undefined,
+        }}
+      />
+      <ContactLocationForm initialData={school.data}/>
+      <FacilitiesOperationsForm initialData={school.data}/>
+      {/* <UpdateSchoolPublicInfo lang={lang} initialData={school.data} /> */}
     </div>
   );
 };

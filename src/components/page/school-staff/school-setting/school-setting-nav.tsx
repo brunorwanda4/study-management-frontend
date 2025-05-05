@@ -23,7 +23,7 @@ const SchoolSettingsNav = ({ lang}: props) => {
             variant: pathname === `/${lang}/s-t/settings` ? "info" : "default",
             library: "daisy",
           }}
-          href={`/${lang}/s-t/setting`}
+          href={`/${lang}/s-t/settings`}
         >
           <RxActivityLog />
           Public Information
@@ -36,7 +36,7 @@ const SchoolSettingsNav = ({ lang}: props) => {
             variant: pathname === `/${lang}/s-t/settings/education` ? "info" : "default",
             library: "daisy",
           }}
-          href={`/${lang}/s-t/setting/education`}
+          href={`/${lang}/s-t/settings/education`}
         >
           <BookA size={16}/>
           Education

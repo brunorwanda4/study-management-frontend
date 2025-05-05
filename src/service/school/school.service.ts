@@ -10,7 +10,7 @@ import {
 } from "@/lib/schema/school.dto";
 import { SchoolDto } from "@/lib/schema/school.dto";
 import apiRequest from "../api-client";
-import { PublicSchoolUpdateDto } from '@/components/page/school-staff/school-setting/froms/schema/update-school-public-info';
+import { PublicSchoolUpdateDto } from '@/components/page/school-staff/school-setting/forms/schema/update-school-public-info';
 
 export const createSchoolService = async (input: CreateSchoolDto) => {
     const data: CreateSchoolDtoBackend = {
