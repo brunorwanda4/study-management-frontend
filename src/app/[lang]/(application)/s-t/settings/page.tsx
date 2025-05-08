@@ -1,8 +1,6 @@
 import NotFoundPage from "@/components/page/not-found";
 import { BasicInformationForm } from "@/components/page/school-staff/school-setting/forms/basic-information";
 import { ContactLocationForm } from "@/components/page/school-staff/school-setting/forms/contact-location";
-import { FacilitiesOperationsForm } from "@/components/page/school-staff/school-setting/forms/facilities-operations";
-// import UpdateSchoolPublicInfo from "@/components/page/school-staff/school-setting/forms/update-school-public-info-form";
 import { Locale } from "@/i18n";
 import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";
 import { getSchoolByIdService } from "@/service/school/school.service";
@@ -37,7 +35,7 @@ const SchoolSettingsPage = async (props: props) => {
         }}
       /> */}
       <ContactLocationForm schoolId={school.data.id} initialData={school.data}/>
-      <FacilitiesOperationsForm initialData={school.data}/>
+      {/* <FacilitiesOperationsForm initialData={school.data}/> */}
       {/* <UpdateSchoolPublicInfo lang={lang} initialData={school.data} /> */}
     </div>
   );

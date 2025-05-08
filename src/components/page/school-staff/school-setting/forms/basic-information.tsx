@@ -111,12 +111,10 @@ export const BasicInformationForm = ({
   };
 
   return (
-    <Card className=" p-4">
+    <Card className=" p-6">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className=" space-y-4">
-          <h3 className="text-xl font-semibold mb-4 pb-2">
-            Basic Information
-          </h3>
+          <h3 className="text-xl font-semibold mb-4 pb-2">Basic Information</h3>
           <div className="space-x-6 flex w-full">
             <div className="flex flex-col space-y-4">
               <FormField
@@ -311,7 +309,10 @@ export const BasicInformationForm = ({
             className="w-full md:w-auto"
             library={"daisy"}
             variant={"info"}
-            disabled={isPending}
+            disabled={
+              isPending ||
+              (!form.formState.isDirty && !form.formState.isSubmitSuccessful)
+            }
           >
             {isPending ? "Saving..." : "Save Basic Information"}
           </Button>

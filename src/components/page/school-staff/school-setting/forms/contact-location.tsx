@@ -1,9 +1,22 @@
 // Ensure this is at the top of your .tsx file for Next.js App Router client components
 "use client";
 
-import React, { useState } from "react";
+import React, {
+  useState,
+  useMemo,
+  useCallback,
+  useId,
+  useTransition,
+} from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, useFieldArray } from "react-hook-form";
+import {
+  useForm,
+  useFieldArray,
+  Control,
+  UseFormSetValue,
+  UseFormGetValues,
+  UseFormWatch,
+} from "react-hook-form";
 import {
   Form,
   FormControl,
@@ -15,9 +28,8 @@ import {
 } from "@/components/ui/form"; // Assume these are shadcn/ui components
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { PlusCircle, Trash2 } from "lucide-react"; // Using lucide for these
+import { PlusCircle, Trash2 } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -26,84 +38,100 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  BsFacebook,
-  BsInstagram,
-  BsLink45Deg,
-  BsLinkedin,
-  BsTwitter,
-  BsYoutube,
-} from "react-icons/bs";
-import {
   ContactLocationDto,
   ContactLocationSchema,
-} from "./schema/contact-location";
+} from "./schema/contact-location"; // Make sure SocialMediaLink type is available
+import { useToast } from "@/lib/context/toast/ToastContext";
+import { updateSchoolSchoolService } from "@/service/school/school.service";
+import MyImage from "@/components/myComponents/myImage";
 
-const detectSocialMediaPlatform = (url: string): string => {
-  if (!url || typeof url !== "string") return "Other";
-  for (const platform of socialMediaPlatformsList) {
-    if (platform.urlRegex.test(url)) {
-      return platform.name;
-    }
-  }
-  return "Other";
-};
+// Define a type for social media platform configuration
+interface SocialMediaPlatform {
+  name: string;
+  urlRegex: RegExp;
+  urlTemplate: string;
+  icon: string;
+}
 
-// Define social media platforms and their properties
-const socialMediaPlatformsList = [
+// Moved outside components as it's static configuration
+const SOCIAL_MEDIA_PLATFORMS_LIST: SocialMediaPlatform[] = [
   {
     name: "Facebook",
     urlRegex: /facebook\.com/i,
-    icon: <BsFacebook className="w-5 h-5" />,
+    urlTemplate: "https://www.facebook.com/{username}",
+    icon: "/icons/facebook.png",
   },
   {
     name: "Twitter",
     urlRegex: /twitter\.com|x\.com/i,
-    icon: <BsTwitter className="w-5 h-5" />,
-  }, // Added x.com
+    urlTemplate: "https://www.twitter.com/{username}",
+    icon: "/icons/twitter.png",
+  },
   {
     name: "Instagram",
     urlRegex: /instagram\.com/i,
-    icon: <BsInstagram className="w-5 h-5" />,
+    urlTemplate: "https://www.instagram.com/{username}",
+    icon: "/icons/instagram.png",
   },
   {
     name: "LinkedIn",
     urlRegex: /linkedin\.com/i,
-    icon: <BsLinkedin className="w-5 h-5" />,
+    urlTemplate: "https://www.linkedin.com/in/{username}",
+    icon: "/icons/linkedin.png",
   },
   {
     name: "YouTube",
     urlRegex: /youtube\.com|youtu\.be/i,
-    icon: <BsYoutube className="w-5 h-5" />,
+    urlTemplate: "https://www.youtube.com/@{username}", // Corrected YouTube template
+    icon: "/icons/youtube.png",
   },
-  { name: "Other", urlRegex: /.*/i, icon: <BsLink45Deg className="w-5 h-5" /> }, // Catch-all
+  {
+    name: "Threads",
+    urlRegex: /threads\.com|threads\.be/i,
+    urlTemplate: "https://www.youtube.com/@{username}", // Corrected YouTube template
+    icon: "/icons/threads.png",
+  },
+  {
+    name: "Other",
+    urlRegex: /.*/i, // Catch-all, should be last
+    urlTemplate: "{username}", // Or just the direct link
+    icon: "/icons/chain.png",
+  },
 ];
 
-// Function to get the social media icon component based on platform name
-const getSocialMediaIconComponent = (platformName?: string) => {
-  if (!platformName)
-    return socialMediaPlatformsList.find((p) => p.name === "Other")?.icon;
-  const platform = socialMediaPlatformsList.find(
-    (p) => p.name.toLowerCase() === platformName.toLowerCase()
-  );
-  return platform
-    ? platform.icon
-    : socialMediaPlatformsList.find((p) => p.name === "Other")?.icon;
+const DEFAULT_PLATFORM = "Other";
+const OTHER_PLATFORM_ICON =
+  SOCIAL_MEDIA_PLATFORMS_LIST.find((p) => p.name === DEFAULT_PLATFORM)?.icon ||
+  "/icons/linkedin.png";
+
+const detectSocialMediaPlatform = (url: string): string => {
+  if (!url || typeof url !== "string") return DEFAULT_PLATFORM;
+  for (const platform of SOCIAL_MEDIA_PLATFORMS_LIST) {
+    // Ensure 'Other' regex doesn't prematurely match if it's not the last one checked
+    if (platform.name !== DEFAULT_PLATFORM && platform.urlRegex.test(url)) {
+      return platform.name;
+    }
+  }
+  return DEFAULT_PLATFORM; // Default if no specific platform matches
 };
 
+const getSocialMediaIconComponent = (platformName?: string): string => {
+  if (!platformName) return OTHER_PLATFORM_ICON;
+  const platform = SOCIAL_MEDIA_PLATFORMS_LIST.find(
+    (p) => p.name.toLowerCase() === platformName.toLowerCase()
+  );
+  return platform ? platform.icon : OTHER_PLATFORM_ICON;
+};
 
-
-
-// Interface for individual Social Media Item props
 interface SocialMediaItemProps {
   index: number;
-  control: any;
+  control: Control<ContactLocationDto>; // Strongly typed control
   remove: (index: number) => void;
-  setValue: Function; // From useForm
-  getValues: Function; // From useForm
-  watch: Function; // From useForm
+  setValue: UseFormSetValue<ContactLocationDto>; // Strongly typed setValue
+  getValues: UseFormGetValues<ContactLocationDto>; // Strongly typed getValues
+  watch: UseFormWatch<ContactLocationDto>; // Strongly typed watch
 }
 
-// Sub-component for managing a single social media entry
 const SocialMediaItem: React.FC<SocialMediaItemProps> = ({
   index,
   control,
@@ -112,60 +140,249 @@ const SocialMediaItem: React.FC<SocialMediaItemProps> = ({
   getValues,
   watch,
 }) => {
-  const platformValue = watch(`socialMedia.${index}.platform`); // Watch the platform value for this item
-  const currentIcon = getSocialMediaIconComponent(platformValue);
+  // Watch the specific platform value for this item
+  const platformValue =
+    watch(`socialMedia.${index}.platform` as const) || DEFAULT_PLATFORM;
+
+  const currentIcon = useMemo(
+    () => getSocialMediaIconComponent(platformValue),
+    [platformValue]
+  );
+
+  const [inputMode, setInputMode] = useState<"url" | "username">("url");
+
+  const currentPlatformConfig = useMemo(
+    () =>
+      SOCIAL_MEDIA_PLATFORMS_LIST.find((p) => p.name === platformValue) ||
+      SOCIAL_MEDIA_PLATFORMS_LIST.find((p) => p.name === DEFAULT_PLATFORM)!,
+    [platformValue]
+  );
+  const urlTemplate = currentPlatformConfig.urlTemplate;
+
+  const handleUsernameChange = useCallback(
+    (username: string) => {
+      if (username.trim() === "") {
+        setValue(`socialMedia.${index}.link`, "", { shouldValidate: true });
+        return;
+      }
+      if (urlTemplate.includes("{username}")) {
+        const constructedUrl = urlTemplate.replace("{username}", username);
+        setValue(`socialMedia.${index}.link`, constructedUrl, {
+          shouldValidate: true,
+        });
+      } else {
+        // If no {username} in template (e.g. for 'Other' if it's just a direct link)
+        // This case might need refinement based on how 'Other' should behave with username input
+        setValue(`socialMedia.${index}.link`, username, {
+          shouldValidate: true,
+        });
+      }
+    },
+    [setValue, index, urlTemplate]
+  );
+
+  const extractUsername = useCallback(
+    (url: string): string => {
+      if (
+        !url ||
+        platformValue === DEFAULT_PLATFORM ||
+        !urlTemplate.includes("{username}")
+      )
+        return "";
+
+      const platform = SOCIAL_MEDIA_PLATFORMS_LIST.find(
+        (p) => p.name === platformValue
+      );
+      if (!platform) return "";
+
+      // Attempt to extract username based on the template structure
+      // This is a simplified extraction; more robust parsing might be needed for complex templates
+      const prefix = platform.urlTemplate.substring(
+        0,
+        platform.urlTemplate.indexOf("{username}")
+      );
+      const suffix = platform.urlTemplate.substring(
+        platform.urlTemplate.indexOf("{username}") + "{username}".length
+      );
+
+      if (url.startsWith(prefix) && url.endsWith(suffix)) {
+        return url.substring(prefix.length, url.length - suffix.length);
+      }
+
+      // Fallback for simple path-based usernames if direct template match fails
+      // (e.g. https://twitter.com/username)
+      try {
+        const urlObj = new URL(url.startsWith("http") ? url : `https://${url}`);
+        const pathParts = urlObj.pathname.split("/").filter((part) => part);
+        // This logic might need to be platform-specific if paths are not consistent
+        if (
+          platform.name === "LinkedIn" &&
+          pathParts[0] === "in" &&
+          pathParts.length > 1
+        )
+          return pathParts[1];
+        return pathParts[0] || "";
+      } catch {
+        return ""; // Invalid URL
+      }
+    },
+    [platformValue, urlTemplate]
+  );
+
+  const handleUrlInputChange = useCallback(
+    (newUrl: string) => {
+      setValue(`socialMedia.${index}.link`, newUrl, {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
+      const detectedPlatform = detectSocialMediaPlatform(newUrl);
+      const currentPlatform = getValues(
+        `socialMedia.${index}.platform` as const
+      );
+      if (currentPlatform !== detectedPlatform) {
+        setValue(`socialMedia.${index}.platform`, detectedPlatform, {
+          shouldValidate: true,
+          shouldDirty: true,
+        });
+      }
+    },
+    [setValue, getValues, index]
+  );
 
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 p-3 border rounded-md bg-gray-50 dark:bg-gray-800 shadow-sm">
-      <div className="flex-none w-8 h-8 flex items-center justify-center text-gray-500 dark:text-gray-400 mb-2 sm:mb-0">
-        {currentIcon}
+      <div className="flex-none">
+        <MyImage src={currentIcon} className=" size-10" role="ICON" />
       </div>
-      <FormField
-        control={control}
-        name={`socialMedia.${index}.link`}
-        render={({ field }) => (
-          <FormItem className="flex-grow w-full sm:w-auto">
-            <FormLabel className="sr-only">Social Media Link</FormLabel>
-            <FormControl>
-              <Input
-                type="url"
-                placeholder="https://www.example.com/username"
-                {...field}
-                onChange={(e) => {
-                  const url = e.target.value;
-                  field.onChange(url); // Update form value for link
-                  const detectedPlatform = detectSocialMediaPlatform(url);
-                  // Update platform field if detection changes it
-                  if (
-                    getValues(`socialMedia.${index}.platform`) !==
-                    detectedPlatform
-                  ) {
-                    setValue(
-                      `socialMedia.${index}.platform`,
-                      detectedPlatform,
-                      { shouldValidate: true, shouldDirty: true }
-                    );
-                  }
-                }}
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
+
+      <div className="flex-grow space-y-3">
+        {platformValue !== DEFAULT_PLATFORM && ( // Only show toggle if not "Other" or if "Other" supports username
+          <div className="flex space-x-2">
+            <Button
+              type="button"
+              library={"daisy"}
+              variant={inputMode === "url" ? "info" : "outline"}
+              size="sm"
+              onClick={() => setInputMode("url")}
+            >
+              Enter URL
+            </Button>
+            <Button
+              type="button"
+              library={"daisy"}
+              variant={inputMode === "username" ? "info" : "outline"}
+              size="sm"
+              onClick={() => setInputMode("username")}
+              disabled={!urlTemplate.includes("{username}")} // Disable if platform template doesn't use username
+            >
+              Enter Username
+            </Button>
+          </div>
         )}
-      />
+
+        {inputMode === "url" ||
+        !urlTemplate.includes("{username}") ||
+        platformValue === DEFAULT_PLATFORM ? (
+          <FormField
+            control={control}
+            name={`socialMedia.${index}.link` as const}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="sr-only">Social Media Link</FormLabel>
+                <FormControl>
+                  <Input
+                    type="url"
+                    placeholder="https://www.example.com/username"
+                    {...field}
+                    onChange={(e) => handleUrlInputChange(e.target.value)}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        ) : (
+          <FormField
+            control={control}
+            // Still bind to link, but display/interact with username
+            name={`socialMedia.${index}.link` as const}
+            render={(
+              { field } // field.value here is the full link
+            ) => (
+              <FormItem>
+                <FormLabel className="sr-only">Username</FormLabel>
+                <FormControl>
+                  <div className="flex items-center">
+                    <span className="mr-1 text-sm text-gray-500 dark:text-gray-400 text-nowrap">
+                      {urlTemplate.split("{username}")[0]}
+                    </span>
+                    <Input
+                      type="text"
+                      placeholder="username"
+                      value={extractUsername(field.value)}
+                      onChange={(e) => handleUsernameChange(e.target.value)}
+                      className="flex-1"
+                    />
+                    {urlTemplate.split("{username}")[1] && (
+                      <span className="ml-1 text-sm text-gray-500 dark:text-gray-400 text-nowrap">
+                        {urlTemplate.split("{username}")[1]}
+                      </span>
+                    )}
+                  </div>
+                </FormControl>
+                <FormMessage />{" "}
+                {/* Will show validation messages for the 'link' field */}
+              </FormItem>
+            )}
+          />
+        )}
+      </div>
+
       <FormField
         control={control}
-        name={`socialMedia.${index}.platform`}
-        render={(
-          { field: platformField } // Renamed field to platformField for clarity
-        ) => (
-          <FormItem className="w-full sm:w-48">
-            <FormLabel className="sr-only">Social Media Platform</FormLabel>
+        name={`socialMedia.${index}.platform` as const}
+        render={({ field: platformField }) => (
+          <FormItem className="w-full sm:w-48 mt-2 sm:mt-0">
+            <FormLabel className="sr-only">Platform</FormLabel>
             <Select
               onValueChange={(value) => {
-                platformField.onChange(value); // Update platform value
+                platformField.onChange(value);
+                // If in username mode and we have a username, reconstruct URL
+                if (inputMode === "username" && value !== DEFAULT_PLATFORM) {
+                  const currentLink = getValues(
+                    `socialMedia.${index}.link` as const
+                  );
+                  const username = extractUsername(currentLink);
+                  if (username) {
+                    const newPlatformConfig = SOCIAL_MEDIA_PLATFORMS_LIST.find(
+                      (p) => p.name === value
+                    );
+                    if (newPlatformConfig?.urlTemplate.includes("{username}")) {
+                      const newUrl = newPlatformConfig.urlTemplate.replace(
+                        "{username}",
+                        username
+                      );
+                      setValue(`socialMedia.${index}.link`, newUrl, {
+                        shouldValidate: true,
+                      });
+                    } else if (newPlatformConfig) {
+                      // If new platform doesn't use username, set link to username itself or clear?
+                      // This depends on desired behavior. For now, let's assume it keeps username as the link.
+                      setValue(`socialMedia.${index}.link`, username, {
+                        shouldValidate: true,
+                      });
+                    }
+                  }
+                } else if (
+                  value === DEFAULT_PLATFORM &&
+                  inputMode === "username"
+                ) {
+                  // If switching to 'Other' in username mode, clear the link or set to username?
+                  // Let's clear it to force URL input for 'Other'
+                  //setValue(`socialMedia.${index}.link`, '', { shouldValidate: true });
+                }
               }}
-              value={platformField.value || "Other"} // Ensure a value is always present for Select
+              value={platformField.value || DEFAULT_PLATFORM}
             >
               <FormControl>
                 <SelectTrigger className="bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600">
@@ -173,7 +390,7 @@ const SocialMediaItem: React.FC<SocialMediaItemProps> = ({
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                {socialMediaPlatformsList.map((p) => (
+                {SOCIAL_MEDIA_PLATFORMS_LIST.map((p) => (
                   <SelectItem key={p.name} value={p.name}>
                     {p.name}
                   </SelectItem>
@@ -184,12 +401,13 @@ const SocialMediaItem: React.FC<SocialMediaItemProps> = ({
           </FormItem>
         )}
       />
+
       <Button
         type="button"
-        variant="ghost" // More subtle than destructive for remove action within a form item
+        variant="ghost"
         size="icon"
         onClick={() => remove(index)}
-        className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-600 mt-2 sm:mt-0 self-end sm:self-center"
+        className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-600 mt-2 sm:mt-0 self-center sm:self-start"
         aria-label="Remove social media link"
       >
         <Trash2 className="h-5 w-5" />
@@ -198,12 +416,11 @@ const SocialMediaItem: React.FC<SocialMediaItemProps> = ({
   );
 };
 
-
 interface ContactLocationFormProps {
-  schoolId: string; // Added schoolId
+  schoolId: string;
   initialData?: ContactLocationDto | null;
-  // The onSubmitForm prop is removed, actual submission logic will be inside this component
-  // If you need to notify parent on success/error, you can add specific callbacks like onSuccess, onError
+  onSuccess?: (data: ContactLocationDto) => void; // Optional: Callback for successful submission
+  onError?: (error: Error) => void; // Optional: Callback for error
 }
 
 export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
@@ -212,8 +429,8 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
 }) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [isPending, startTransition] = useTransition();
+  const { showToast } = useToast();
   const form = useForm<ContactLocationDto>({
     resolver: zodResolver(ContactLocationSchema),
     defaultValues: {
@@ -222,14 +439,15 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
         city: "",
         state: "",
         postalCode: "",
-        country: "Rwanda",
+        country: "Rwanda", // Default country
         googleMapUrl: "",
       },
       contact: initialData?.contact ?? { phone: "", email: "" },
       website: initialData?.website ?? "",
       socialMedia:
         initialData?.socialMedia?.map((sm) => ({
-          ...sm,
+          id: useId, // Assuming `id` is part of SocialMediaLink for key prop if it's from DB
+          link: sm.link || "",
           platform: sm.platform || detectSocialMediaPlatform(sm.link || ""),
         })) ?? [],
     },
@@ -240,47 +458,42 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
     control: form.control,
   });
 
-  // Actual submission logic
   const handleFormSubmit = async (values: ContactLocationDto) => {
     setErrorMessage(null);
     setSuccessMessage(null);
-    setIsSubmitting(true);
 
-    console.log("Updating school data for school ID:", schoolId);
-    console.log("Form Values:", values);
+    startTransition(async () => {
+      const res = await updateSchoolSchoolService(schoolId, values);
+      if (res.data) {
+        showToast({
+          type: "success",
+          title: "To update school basic information success!",
+          description: "You have been update school basic information",
+          duration: 3000,
+        });
 
-    try {
-      // Replace with your actual API call
-      // Example: const response = await fetch(`/api/schools/${schoolId}/contact`, {
-      // method: 'PUT', // or 'PATCH'
-      // headers: { 'Content-Type': 'application/json' },
-      // body: JSON.stringify(values),
-      // });
-      // if (!response.ok) {
-      // const errorData = await response.json();
-      // throw new Error(errorData.message || 'Failed to update school contact information.');
-      // }
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      // const result = await response.json(); // If your API returns data
-
-      setSuccessMessage("School contact information updated successfully!");
-      // Optionally reset form if needed, or redirect, or update UI
-      // form.reset(values); // Resets dirty state, keeps new values
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      console.error("Submission error:", error);
-      setErrorMessage(
-        error?.message || "An unexpected error occurred. Please try again."
-      );
-    } finally {
-      setIsSubmitting(false);
-    }
+        form.reset(res.data, {
+          // Reset form with new values, clears dirty state
+          keepValues: true, // Keeps the current UI values (which should be `result`)
+          keepDirty: false,
+          keepErrors: false,
+          keepTouched: false,
+          keepIsValid: true, // Assume submission makes it valid
+          keepSubmitCount: true,
+        });
+      } else {
+        showToast({
+          type: "error",
+          title: "Some thing went wrong to update school information",
+          description: res.message,
+          duration: 4000,
+        });
+      }
+    });
   };
 
   return (
-    <Card className="p-4 md:p-6 shadow-lg rounded-xl bg-white dark:bg-gray-900">
+    <Card className=" p-6">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleFormSubmit)}
@@ -291,11 +504,11 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
           </h3>
 
           {/* Address Fields */}
-          <div className="space-y-4 p-4 border rounded-lg bg-slate-50 dark:bg-slate-800/50">
-            <h4 className="text-lg font-medium text-gray-700 dark:text-gray-300">
+          <fieldset className="space-y-4 p-4 border rounded-lg bg-slate-50 dark:bg-slate-800/50">
+            <legend className="text-lg font-medium text-gray-700 dark:text-gray-300 px-1">
               Address Details
-            </h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            </legend>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
               <FormField
                 control={form.control}
                 name="address.street"
@@ -309,6 +522,7 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
                   </FormItem>
                 )}
               />
+              {/* ... other address fields (city, state, postalCode, country) ... */}
               <FormField
                 control={form.control}
                 name="address.city"
@@ -340,9 +554,12 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
                 name="address.postalCode"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Postal Code</FormLabel>
+                    <FormLabel>
+                      Postal Code{" "}
+                      <span className="text-xs text-gray-500">(Optional)</span>
+                    </FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., 5000 (Optional)" {...field} />
+                      <Input placeholder="e.g., 5000" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -358,7 +575,7 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
                       <Input
                         placeholder="e.g., Rwanda"
                         {...field}
-                        value={field.value || "Rwanda"}
+                        // Value is handled by defaultValues and field state
                       />
                     </FormControl>
                     <FormMessage />
@@ -370,11 +587,14 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
                 name="address.googleMapUrl"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Google Maps URL</FormLabel>
+                    <FormLabel>
+                      Google Maps URL{" "}
+                      <span className="text-xs text-gray-500">(Optional)</span>
+                    </FormLabel>
                     <FormControl>
                       <Input
                         type="url"
-                        placeholder="https://maps.google.com/... (Optional)"
+                        placeholder="https://maps.google.com/?q=..."
                         {...field}
                       />
                     </FormControl>
@@ -383,14 +603,14 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
                 )}
               />
             </div>
-          </div>
+          </fieldset>
 
           {/* Contact Fields */}
-          <div className="space-y-4 p-4 border rounded-lg bg-slate-50 dark:bg-slate-800/50">
-            <h4 className="text-lg font-medium text-gray-700 dark:text-gray-300">
+          <fieldset className="space-y-4 p-4 border rounded-lg bg-slate-50 dark:bg-slate-800/50">
+            <legend className="text-lg font-medium text-gray-700 dark:text-gray-300 px-1">
               Contact Information
-            </h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            </legend>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
               <FormField
                 control={form.control}
                 name="contact.phone"
@@ -426,23 +646,26 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
                 )}
               />
             </div>
-          </div>
+          </fieldset>
 
           {/* Website Field */}
-          <div className="space-y-4 p-4 border rounded-lg bg-slate-50 dark:bg-slate-800/50">
-            <h4 className="text-lg font-medium text-gray-700 dark:text-gray-300">
+          <fieldset className="space-y-4 p-4 border rounded-lg bg-slate-50 dark:bg-slate-800/50">
+            <legend className="text-lg font-medium text-gray-700 dark:text-gray-300 px-1">
               Online Presence
-            </h4>
+            </legend>
             <FormField
               control={form.control}
               name="website"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Website</FormLabel>
+                  <FormLabel>
+                    Website{" "}
+                    <span className="text-xs text-gray-500">(Optional)</span>
+                  </FormLabel>
                   <FormControl>
                     <Input
                       type="url"
-                      placeholder="https://www.schoolwebsite.com (Optional)"
+                      placeholder="https://www.schoolwebsite.com"
                       {...field}
                     />
                   </FormControl>
@@ -450,13 +673,14 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
                 </FormItem>
               )}
             />
-          </div>
+          </fieldset>
 
           {/* Social Media Section */}
-          <div className="space-y-4 p-4 border rounded-lg bg-slate-50 dark:bg-slate-800/50">
-            <Label className="text-lg font-medium text-gray-700 dark:text-gray-300 block mb-1">
-              Social Media
-            </Label>
+          <fieldset className="space-y-4 p-4 border rounded-lg bg-slate-50 dark:bg-slate-800/50">
+            <legend className="text-lg font-medium text-gray-700 dark:text-gray-300 px-1 mb-1">
+              Social Media{" "}
+              <span className="text-xs text-gray-500">(Optional)</span>
+            </legend>
             <FormDescription className="text-sm text-gray-600 dark:text-gray-400">
               Add social media links. The platform will be auto-detected, or you
               can select it manually.
@@ -464,7 +688,7 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
             <div className="space-y-4 mt-3">
               {fields.map((item, index) => (
                 <SocialMediaItem
-                  key={item.id}
+                  key={item.id} // item.id is provided by useFieldArray
                   index={index}
                   control={form.control}
                   remove={remove}
@@ -476,13 +700,20 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
             </div>
             <Button
               type="button"
-              variant="outline"
-              onClick={() => append({ platform: "Other", link: "" })}
-             library="daisy"
+              variant="outline" // Standard shadcn variant
+              onClick={
+                () =>
+                  append({
+                    platform: DEFAULT_PLATFORM,
+                    link: "",
+                    // id: crypto.randomUUID(),
+                  }) // Ensure new item matches SocialMediaLink type
+              }
+              className="gap-2" // For spacing between icon and text
             >
               <PlusCircle className="h-4 w-4" /> Add Social Media
             </Button>
-          </div>
+          </fieldset>
 
           {/* Success and Error Message Display */}
           {successMessage && (
@@ -498,17 +729,19 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
 
           <Button
             type="submit"
-            library="daisy"
-            variant={"info"}
+            library={"daisy"}
+            variant={"info"} // Standard shadcn variant, e.g., "default" or "destructive" or "secondary"
+            // disabled={isPending}
             disabled={
-              isSubmitting ||
+              isPending ||
               (!form.formState.isDirty && !form.formState.isSubmitSuccessful)
-            } // Keep enabled after successful submit if you want to allow multiple submits without changes
+            }
+            className="min-w-[120px]" // Give button a min width for consistent look
           >
-            {isSubmitting ? (
+            {isPending ? (
               <div className="flex items-center justify-center">
                 <svg
-                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-current" // Use text-current for spinner color
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
