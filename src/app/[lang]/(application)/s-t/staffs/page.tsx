@@ -10,17 +10,17 @@ interface props {
   params: Promise<{ lang: Locale }>;
 }
 
-// export const metadata = async (): Promise<Metadata> => {
-//   const school = await getSchoolServer();
-//   return {
-//     title: school?.name
-//       ? `All Staff in ${school?.schoolName}`
-//       : "School not found",
-//     description: school?.name
-//       ? `All Staff in ${school?.schoolName}`
-//       : "school not found",
-//   };
-// };
+export const metadata = async (): Promise<Metadata> => {
+  const school = await getSchoolServer();
+  return {
+    title: school?.name
+      ? `All Staff in ${school?.schoolName}`
+      : "School not found",
+    description: school?.name
+      ? `All Staff in ${school?.schoolName}`
+      : "school not found",
+  };
+};
 const SchoolStaffStaffPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;

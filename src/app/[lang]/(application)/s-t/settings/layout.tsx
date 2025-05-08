@@ -4,7 +4,7 @@ import { getAuthUserServer } from "@/lib/utils/auth";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 export const metadata: Metadata = {
-  title: "School setting",
+  title: "School Setting",
   description: "Join School Requests",
 };
 interface props {

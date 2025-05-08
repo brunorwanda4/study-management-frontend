@@ -1,9 +1,8 @@
-// components/forms/basic-information.tsx
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState, useTransition } from "react";
 import { useTheme } from "next-themes";
 
 import {
@@ -29,18 +28,28 @@ import { Label } from "@/components/ui/label";
 import MyImage from "@/components/myComponents/myImage";
 import { schoolLogoImage } from "@/lib/context/images";
 import { SchoolMembers, SchoolTypeEnum } from "@/lib/schema/school.dto";
-import { BasicInformationDto, BasicInformationSchema } from "./schema/basic-information";
+import {
+  BasicInformationDto,
+  BasicInformationSchema,
+} from "./schema/basic-information";
+import { Card } from "@/components/ui/card";
+import { updateSchoolSchoolService } from "@/service/school/school.service";
+import { useToast } from "@/lib/context/toast/ToastContext";
+import { FormError } from "@/components/myComponents/form-message";
 
 interface BasicInformationFormProps {
   initialData: BasicInformationDto;
+  schoolId: string;
 }
 
 export const BasicInformationForm = ({
   initialData,
+  schoolId,
 }: BasicInformationFormProps) => {
   const [error, setError] = useState<string | null>("");
-  const [isPending, startTransition] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const { theme } = useTheme();
+  const { showToast } = useToast();
 
   const form = useForm<BasicInformationDto>({
     resolver: zodResolver(BasicInformationSchema),
@@ -81,181 +90,233 @@ export const BasicInformationForm = ({
 
   const handleSubmit = (values: BasicInformationDto) => {
     setError(null);
-    startTransition(true);
-
-    console.log(values)
+    startTransition(async () => {
+      const res = await updateSchoolSchoolService(schoolId, values);
+      if (res.data) {
+        showToast({
+          type: "success",
+          title: "To update school basic information success!",
+          description: "You have been update school basic information",
+          duration: 3000,
+        });
+      } else {
+        showToast({
+          type: "error",
+          title: "Some thing went wrong to update school information",
+          description: res.message,
+          duration: 4000,
+        });
+      }
+    });
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
-        <div className="space-y-6">
-          <h3 className="text-xl font-semibold mb-4 border-b pb-2">Basic Information</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>School Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="e.g., Green Hills Academy" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="username"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>School Username</FormLabel>
-                  <FormControl>
-                    <Input placeholder="e.g., greenhills" {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    Unique identifier (usually cannot be changed).
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="schoolType"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>School Type</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value ?? ""}>
+    <Card className=" p-4">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleSubmit)} className=" space-y-4">
+          <h3 className="text-xl font-semibold mb-4 pb-2">
+            Basic Information
+          </h3>
+          <div className="space-x-6 flex w-full">
+            <div className="flex flex-col space-y-4">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>School Name</FormLabel>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select school type" />
-                      </SelectTrigger>
+                      <Input
+                        className=" w-[30rem]"
+                        placeholder="e.g., Green Hills Academy"
+                        {...field}
+                      />
                     </FormControl>
-                    <SelectContent data-theme={theme}>
-                      {SchoolTypeEnum.options.map((type) => (
-                        <SelectItem key={type} value={type}>
-                          {type}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    <FormDescription>
+                      Full legal or commonly used name of your school.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>School Username</FormLabel>
+                    <FormControl>
+                      <Input
+                        className=" w-[30rem]"
+                        placeholder="e.g., greenhills"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Unique identifier for the school. Used in URLs or login;
+                      usually cannot be changed later.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
+              <FormField
+                control={form.control}
+                name="schoolType"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>School Type</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value ?? ""}
+                    >
+                      <FormControl>
+                        <SelectTrigger className=" w-40">
+                          <SelectValue placeholder="Select school type" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent data-theme={theme}>
+                        {SchoolTypeEnum.options.map((type) => (
+                          <SelectItem key={type} value={type}>
+                            {type}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormDescription>
+                      Defines the educational level or specialization of your
+                      institution (e.g., Primary, Secondary, Vocational).
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="schoolMembers"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Student Body</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value ?? ""}
+                    >
+                      <FormControl>
+                        <SelectTrigger className=" w-40">
+                          <SelectValue placeholder="Select student body type" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent data-theme={theme}>
+                        {SchoolMembers.options.map((type) => (
+                          <SelectItem key={type} value={type}>
+                            {type}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormDescription>
+                      Gender composition of students your school enrolls (e.g.,
+                      Co-educational, Boys only, Girls only).
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem className="mt-4">
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Tell us a little bit about the school"
+                        className="resize-y min-h-[100px] w-[30rem]"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Provide an overview including history, values, mission, or
+                      key achievements.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             <FormField
               control={form.control}
-              name="schoolMembers"
+              name="logo"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Student Body</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value ?? ""}>
+                <FormItem className="mt-4 flex flex-col gap-2 items-center">
+                  <FormLabel>School Logo</FormLabel>
+                  <div className="flex items-center gap-4 flex-col">
+                    <Label htmlFor="logo-upload" className="cursor-pointer">
+                      <MyImage
+                        src={field.value || schoolLogoImage}
+                        className="size-48 border border-base-300 shadow-sm"
+                        classname="object-contain"
+                        alt="School Logo Preview"
+                      />
+                    </Label>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select student body type" />
-                      </SelectTrigger>
+                      <Input
+                        id="logo-upload"
+                        disabled={isPending}
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onClick={(e) => (e.currentTarget.value = "")}
+                        onChange={(e) => handleLogoChange(e, field.onChange)}
+                      />
                     </FormControl>
-                    <SelectContent data-theme={theme}>
-                      {SchoolMembers.options.map((type) => (
-                        <SelectItem key={type} value={type}>
-                          {type}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        document.getElementById("logo-upload")?.click()
+                      }
+                      disabled={isPending}
+                    >
+                      {field.value ? "Change Logo" : "Upload Logo"}
+                    </Button>
+                    {field.value && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => field.onChange(undefined)}
+                        disabled={isPending}
+                        className="text-destructive hover:text-destructive"
+                      >
+                        Remove
+                      </Button>
+                    )}
+                  </div>
                   <FormDescription>
-                    Gender mix of students the school accepts.
+                    Upload your school’s logo (max 2MB). Preferably square
+                    dimensions for best display.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
-
-          <FormField
-            control={form.control}
-            name="logo"
-            render={({ field }) => (
-              <FormItem className="mt-4 flex flex-col gap-2">
-                <FormLabel>School Logo</FormLabel>
-                <div className="flex items-center gap-4">
-                  <Label htmlFor="logo-upload" className="cursor-pointer">
-                    <MyImage
-                      src={field.value || schoolLogoImage}
-                      className="size-24 border rounded"
-                      classname="object-contain"
-                      alt="School Logo Preview"
-                    />
-                  </Label>
-                  <FormControl>
-                    <Input
-                      id="logo-upload"
-                      disabled={isPending}
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onClick={(e) => (e.currentTarget.value = "")}
-                      onChange={(e) => handleLogoChange(e, field.onChange)}
-                    />
-                  </FormControl>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => document.getElementById("logo-upload")?.click()}
-                    disabled={isPending}
-                  >
-                    {field.value ? "Change Logo" : "Upload Logo"}
-                  </Button>
-                  {field.value && (
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => field.onChange(undefined)}
-                      disabled={isPending}
-                      className="text-destructive hover:text-destructive"
-                    >
-                      Remove
-                    </Button>
-                  )}
-                </div>
-                <FormDescription>
-                  Max 2MB. Recommended: square aspect ratio.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem className="mt-4">
-                <FormLabel>Description</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Tell us a little bit about the school"
-                    className="resize-y min-h-[100px]"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <Button type="submit" className="w-full md:w-auto" disabled={isPending}>
-          {isPending ? "Saving..." : "Save Basic Information"}
-        </Button>
-      </form>
-    </Form>
+          <FormError message={error} />
+          <Button
+            type="submit"
+            className="w-full md:w-auto"
+            library={"daisy"}
+            variant={"info"}
+            disabled={isPending}
+          >
+            {isPending ? "Saving..." : "Save Basic Information"}
+          </Button>
+        </form>
+      </Form>
+    </Card>
   );
 };

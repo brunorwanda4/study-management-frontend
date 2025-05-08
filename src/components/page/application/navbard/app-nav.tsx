@@ -18,7 +18,7 @@ const AppNav = async ({ lang }: props) => {
     redirect(`/${lang}/auth/login`);
   }
   return (
-    <nav className=" w-full h-14 max-h-14 fixed border-b border-base-300 p-2 flex justify-between z-50 bg-base-100 shadow">
+    <nav className=" w-full h-14 max-h-14 fixed border-b border-base-300 p-2 flex justify-between z-50 bg-base-100 shadow-sm">
       <div className=" flex space-x-2  items-center">
         <SidebarTrigger className=" size-12 btn btn-circle rounded-full btn-ghost" />
         <AppLogo />

@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 
 const chartData = [
-  { subject: "Math", score: 85 },
+  { subject: "Math", score: 23 },
   { subject: "Science", score: 78 },
   { subject: "History", score: 92 },
   { subject: "English", score: 88 },

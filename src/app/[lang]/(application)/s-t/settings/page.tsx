@@ -1,5 +1,4 @@
 import NotFoundPage from "@/components/page/not-found";
-import { AcademicDetailsForm } from "@/components/page/school-staff/school-setting/forms/academic-details";
 import { BasicInformationForm } from "@/components/page/school-staff/school-setting/forms/basic-information";
 import { ContactLocationForm } from "@/components/page/school-staff/school-setting/forms/contact-location";
 import { FacilitiesOperationsForm } from "@/components/page/school-staff/school-setting/forms/facilities-operations";
@@ -26,18 +25,18 @@ const SchoolSettingsPage = async (props: props) => {
   const school = await getSchoolByIdService(currentSchool.schoolId);
   if (!school.data) return <NotFoundPage />
   return (
-    <div>
+    <div className=" space-y-4">
       <h2 className=" title-page">School Public Information</h2>
-      <BasicInformationForm initialData={school.data} />
-      <AcademicDetailsForm
+      <BasicInformationForm schoolId={school.data.id} initialData={school.data} />
+      {/* <AcademicDetailsForm
         initialData={{
           ...school.data,
           affiliation: ["Government", "Religious", "NGO", "independent"].includes(school.data.affiliation || "")
             ? (school.data.affiliation as "Government" | "Religious" | "NGO" | "independent")
             : undefined,
         }}
-      />
-      <ContactLocationForm initialData={school.data}/>
+      /> */}
+      <ContactLocationForm schoolId={school.data.id} initialData={school.data}/>
       <FacilitiesOperationsForm initialData={school.data}/>
       {/* <UpdateSchoolPublicInfo lang={lang} initialData={school.data} /> */}
     </div>

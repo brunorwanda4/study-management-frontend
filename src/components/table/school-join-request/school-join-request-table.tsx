@@ -156,7 +156,6 @@ export default function SchoolJoinTable({
     onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(), // This handles global filtering when globalFilter state is set
-    // REMOVE THIS LINE: getGlobalFilteredRowModel: getGlobalFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
@@ -178,9 +177,6 @@ export default function SchoolJoinTable({
 
   return (
     <div className="space-y-4">
-      {" "}
-      {/* Reduced space */}
-      {/* Filters */}
       <div className="flex flex-wrap items-end gap-3">
         {" "}
         {/* Use items-end for better alignment */}
