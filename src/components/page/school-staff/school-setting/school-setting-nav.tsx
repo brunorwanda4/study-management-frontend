@@ -49,7 +49,7 @@ const SchoolSettingsNav = ({ lang}: props) => {
             variant: pathname === `/${lang}/s-t/settings/security` ? "info" : "default",
             library: "daisy",
           }}
-          href={`/${lang}/s-t/setting/security`}
+          href={`/${lang}/s-t/settings/security`}
         >
           <BsShield size={16}/>
           Security

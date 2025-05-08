@@ -29,6 +29,41 @@ import { useTheme } from "next-themes";
 import MyImage from "@/components/myComponents/myImage";
 import { LoadingIndicator } from "@/components/myComponents/myLink";
 
+// Helper function to check if path starts with URL
+const isActivePath = (
+  currentPath: string,
+  targetUrl: string | undefined,
+  lang?: Locale
+) => {
+  if (!targetUrl) return false;
+  
+  const normalizedTarget = lang ? `/${lang}${targetUrl}` : targetUrl;
+  
+  // Special cases that require exact match
+  const exactMatchRoutes = [
+    '/admin/',
+    '/admin', // in case there's no trailing slash
+    '/s-t',
+    '/s-t/', // school staff dashboard
+    // Add any other routes that should only match exactly
+  ];
+
+  // Check if this is an exact match route
+  const requiresExactMatch = exactMatchRoutes.some(route => 
+    route === targetUrl || `/${lang}${route}` === normalizedTarget
+  );
+
+  if (requiresExactMatch) {
+    return currentPath === normalizedTarget || 
+           currentPath === `${normalizedTarget}/`;
+  }
+
+  // For all other routes, use startsWith
+  return currentPath.startsWith(normalizedTarget) &&
+         // Ensure we don't match partial segments
+         (currentPath === normalizedTarget ||
+          currentPath.startsWith(`${normalizedTarget}/`));
+};
 // Reusable component for rendering sidebar groups
 const SidebarGroupComponent = ({
   label,
@@ -72,11 +107,9 @@ const SidebarGroupComponent = ({
                       <AccordionTrigger
                         className={cn(
                           "hover:no-underline btn btn-sm btn-ghost py-0 rounded-l-none",
-                          path === item.url ||
-                            (path === `/${lang}${item.url}` &&
-                              `bg-base-300 ${
-                                theme === "dark" && "bg-white/10"
-                              }`)
+                          item.url &&
+                            isActivePath(path, item.url, lang) &&
+                            `bg-base-300 ${theme === "dark" && "bg-white/10"}`
                         )}
                       >
                         {item.url ? (
@@ -89,10 +122,10 @@ const SidebarGroupComponent = ({
                             {item.icon && (
                               <MyImage className=" size-6" src={item.icon} />
                             )}
-                           <div className=" flex justify-between">
-                             <span>{item.title}</span>
-                            <LoadingIndicator /> 
-                           </div>
+                            <div className=" flex justify-between">
+                              <span>{item.title}</span>
+                              <LoadingIndicator />
+                            </div>
                           </Link>
                         ) : (
                           <div className="flex items-center gap-2 font-normal">
@@ -137,14 +170,13 @@ const SidebarGroupComponent = ({
                                 }
                                 className={cn(
                                   "ml-8 flex items-center gap-2  rounded-md",
-                                  path === subItem.url ||
-                                    (path === `/${lang}${subItem.url}` &&
-                                      "btn-info")
+                                  isActivePath(path, subItem.url, lang) &&
+                                    "btn-info"
                                 )}
                               >
                                 <div className=" flex justify-between">
-                                 <span className=" "> {subItem.title}</span>
-                                <LoadingIndicator />
+                                  <span className=" "> {subItem.title}</span>
+                                  <LoadingIndicator />
                                 </div>
                               </Link>
                             ) : (
@@ -167,9 +199,8 @@ const SidebarGroupComponent = ({
                       href={cn(lang ? `/${lang}${item.url}` : item.url)}
                       className={cn(
                         "flex items-center gap-2  font-normal rounded-l-none",
-                        path === item.url ||
-                          (path === `/${lang}${item.url}` &&
-                            `bg-base-300 ${theme === "dark" && "bg-white/10"}`)
+                        isActivePath(path, item.url, lang) &&
+                          `bg-base-300 ${theme === "dark" && "bg-white/10"}`
                       )}
                     >
                       {item.icon && (
@@ -177,7 +208,7 @@ const SidebarGroupComponent = ({
                       )}
                       <div className=" justify-between flex ">
                         {item.title}
-                      <LoadingIndicator />
+                        <LoadingIndicator />
                       </div>
                     </Link>
                   ) : (
