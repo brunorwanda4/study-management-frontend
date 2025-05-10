@@ -98,7 +98,7 @@ const SchoolContacts: React.FC<SchoolContactsProps> = ({ school }) => {
                 ) => (
                   <Link
                     href={item.link || "#"} // Provide a fallback href
-                    key={item.link || index} // Prefer a stable unique ID if available
+                    key={index} 
                     className="group flex items-center gap-2 text-myGray hover:text-blue-600 transition-colors duration-150" // Added hover effect and group for potential parent styling
                     target="_blank"
                     rel="noopener noreferrer"

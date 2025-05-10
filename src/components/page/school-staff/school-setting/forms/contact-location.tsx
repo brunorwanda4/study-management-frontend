@@ -250,7 +250,7 @@ const SocialMediaItem: React.FC<SocialMediaItemProps> = ({
   );
 
   return (
-    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 p-3 border rounded-md bg-gray-50 dark:bg-gray-800 shadow-sm">
+    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 p-3    ">
       <div className="flex-none">
         <MyImage src={currentIcon} className=" size-10" role="ICON" />
       </div>
@@ -313,7 +313,7 @@ const SocialMediaItem: React.FC<SocialMediaItemProps> = ({
                 <FormLabel className="sr-only">Username</FormLabel>
                 <FormControl>
                   <div className="flex items-center">
-                    <span className="mr-1 text-sm text-gray-500 dark:text-gray-400 text-nowrap">
+                    <span className="mr-1 text-sm   text-nowrap">
                       {urlTemplate.split("{username}")[0]}
                     </span>
                     <Input
@@ -324,7 +324,7 @@ const SocialMediaItem: React.FC<SocialMediaItemProps> = ({
                       className="flex-1"
                     />
                     {urlTemplate.split("{username}")[1] && (
-                      <span className="ml-1 text-sm text-gray-500 dark:text-gray-400 text-nowrap">
+                      <span className="ml-1 text-sm   text-nowrap">
                         {urlTemplate.split("{username}")[1]}
                       </span>
                     )}
@@ -385,7 +385,7 @@ const SocialMediaItem: React.FC<SocialMediaItemProps> = ({
               value={platformField.value || DEFAULT_PLATFORM}
             >
               <FormControl>
-                <SelectTrigger className="bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600">
+                <SelectTrigger className="   ">
                   <SelectValue placeholder="Select Platform" />
                 </SelectTrigger>
               </FormControl>
@@ -407,7 +407,7 @@ const SocialMediaItem: React.FC<SocialMediaItemProps> = ({
         variant="ghost"
         size="icon"
         onClick={() => remove(index)}
-        className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-600 mt-2 sm:mt-0 self-center sm:self-start"
+        className=" mt-2 sm:mt-0 self-center sm:self-start"
         aria-label="Remove social media link"
       >
         <Trash2 className="h-5 w-5" />
@@ -499,13 +499,13 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
           onSubmit={form.handleSubmit(handleFormSubmit)}
           className="space-y-8"
         >
-          <h3 className="text-2xl font-semibold mb-6 pb-3 border-b border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-100">
+          <h3 className="text-2xl font-semibold mb-6 pb-3  ">
             Update School Contact & Location
           </h3>
 
           {/* Address Fields */}
-          <fieldset className="space-y-4 p-4 border rounded-lg bg-slate-50 dark:bg-slate-800/50">
-            <legend className="text-lg font-medium text-gray-700 dark:text-gray-300 px-1">
+          <fieldset className="space-y-4 p-4  rounded-lg ">
+            <legend className="text-lg font-medium   px-1">
               Address Details
             </legend>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
@@ -556,7 +556,7 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
                   <FormItem>
                     <FormLabel>
                       Postal Code{" "}
-                      <span className="text-xs text-gray-500">(Optional)</span>
+                      <span className="text-xs ">(Optional)</span>
                     </FormLabel>
                     <FormControl>
                       <Input placeholder="e.g., 5000" {...field} />
@@ -589,7 +589,7 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
                   <FormItem>
                     <FormLabel>
                       Google Maps URL{" "}
-                      <span className="text-xs text-gray-500">(Optional)</span>
+                      <span className="text-xs ">(Optional)</span>
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -606,8 +606,8 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
           </fieldset>
 
           {/* Contact Fields */}
-          <fieldset className="space-y-4 p-4 border rounded-lg bg-slate-50 dark:bg-slate-800/50">
-            <legend className="text-lg font-medium text-gray-700 dark:text-gray-300 px-1">
+          <fieldset className="space-y-4 p-4 rounded-lg ">
+            <legend className="text-lg font-medium   px-1">
               Contact Information
             </legend>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
@@ -669,8 +669,8 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
           </fieldset>
 
           {/* Website Field */}
-          <fieldset className="space-y-4 p-4 border rounded-lg bg-slate-50 dark:bg-slate-800/50">
-            <legend className="text-lg font-medium text-gray-700 dark:text-gray-300 px-1">
+          <fieldset className="space-y-4 p-4 rounded-lg ">
+            <legend className="text-lg font-medium   px-1">
               Online Presence
             </legend>
             <FormField
@@ -680,7 +680,7 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
                 <FormItem>
                   <FormLabel>
                     Website{" "}
-                    <span className="text-xs text-gray-500">(Optional)</span>
+                    <span className="text-xs ">(Optional)</span>
                   </FormLabel>
                   <FormControl>
                     <Input
@@ -696,12 +696,12 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
           </fieldset>
 
           {/* Social Media Section */}
-          <fieldset className="space-y-4 p-4 border rounded-lg bg-slate-50 dark:bg-slate-800/50">
-            <legend className="text-lg font-medium text-gray-700 dark:text-gray-300 px-1 mb-1">
+          <fieldset className="space-y-4 p-4  rounded-lg ">
+            <legend className="text-lg font-medium   px-1 mb-1">
               Social Media{" "}
-              <span className="text-xs text-gray-500">(Optional)</span>
+              <span className="text-xs ">(Optional)</span>
             </legend>
-            <FormDescription className="text-sm text-gray-600 dark:text-gray-400">
+            <FormDescription className="text-sm  ">
               Add social media links. The platform will be auto-detected, or you
               can select it manually.
             </FormDescription>
@@ -737,12 +737,12 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
 
           {/* Success and Error Message Display */}
           {successMessage && (
-            <p className="text-sm font-medium text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30 p-3 rounded-md">
+            <p className="text-sm font-medium text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30 p-3 ">
               {successMessage}
             </p>
           )}
           {errorMessage && (
-            <p className="text-sm font-medium text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 p-3 rounded-md">
+            <p className="text-sm font-medium text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 p-3 ">
               {errorMessage}
             </p>
           )}
