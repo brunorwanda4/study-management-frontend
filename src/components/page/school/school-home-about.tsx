@@ -1,156 +1,354 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Option } from "@/components/ui/multiselect";
 import { Locale } from "@/i18n";
+import {
+  AdvancedLevels,
+  OptionalSubjects,
+  TvetPrograms,
+} from "@/lib/context/school.context";
 import { SchoolDto } from "@/lib/schema/school.dto";
-import { Dot } from "lucide-react";
+import { Dot, BookOpen } from "lucide-react"; // Added BookOpen for variety
 import Link from "next/link";
 import { FaSchool } from "react-icons/fa6";
 import { MdOutlineSchool, MdSchool } from "react-icons/md";
 
-interface props {
+interface SchoolHomeAboutProps {
   lang: Locale;
   isAboutSchool?: boolean;
   school: SchoolDto;
 }
 
-const SchoolHomeAbout = ({ lang, isAboutSchool, school }: props) => {
+// Helper function to map subject values to labels
+const getSubjectLabels = (
+  subjectValues?: string[],
+  subjectOptions?: Option[]
+): string[] => {
+  if (!subjectValues || subjectValues.length === 0) {
+    return [];
+  }
+  // If no specific options list is provided, return the values themselves (or handle as error)
+  if (!subjectOptions || subjectOptions.length === 0) {
+    return subjectValues;
+  }
+  return subjectValues
+    .map((value) => {
+      const option = subjectOptions.find((opt) => opt.value === value);
+      return option ? option.label : value; // Fallback to the value itself if not found
+    })
+    .filter((label) => label != null) as string[]; // Ensure all are strings
+};
+
+const SchoolHomeAbout = ({
+  lang,
+  isAboutSchool,
+  school,
+}: SchoolHomeAboutProps) => {
+  const { academicProfile } = school;
+
   return (
-    <div className=" w-full basic-card space-y-4">
-      <div className=" space-y-1">
-        <div className=" flex space-x-2 items-center">
-          <FaSchool /> <h3 className=" font-semibold">About School</h3>
+    <Card className="w-full space-y-4 p-4 md:p-6">
+      {/* School Description Section */}
+      <CardHeader className=" border-0 space-y-1">
+        <div className="flex space-x-2 items-center">
+          <FaSchool className="text-xl " />
+          <h3 className="font-semibold text-lg ">About School</h3>
         </div>
-        <p>{school.description}</p>
-      </div>
-      <div className=" space-y-4">
-        {/* school education */}
-        <div className=" space-y-1">
-          <div className=" flex space-x-2 items-center text-myGray">
-            <MdSchool /> <h4 className=" font-semibold">School Education</h4>
+        {school.description && <p className="text-sm">{school.description}</p>}
+      </CardHeader>
+
+      <CardContent className="space-y-6">
+        {" "}
+        {/* Increased spacing for better separation */}
+        {/* School Curriculum Section */}
+        <div className="space-y-2">
+          <div className="flex space-x-2 items-center text-myGray">
+            {" "}
+            {/* Assuming myGray is a custom color */}
+            <MdSchool className="text-xl   " />
+            <h4 className="font-semibold text-md   ">School Curriculum</h4>
           </div>
-          <div className=" space-y-2">
-            {school.curriculum.map((item) => {
-              return (
-                <div key={item} className=" flex -space-x-1 items-center">
-                  <Dot size={32} />
-                  <div className=" flex space-x-2 items-center">
-                    <Avatar className=" size-8">
-                      <AvatarImage
-                        src={`/images/${
-                          item === "TVET" ? "/images/logortb.jpg" : "REB_Logo.png"
-                        }`}
-                      />
-                      <AvatarFallback>LOGO</AvatarFallback>
-                    </Avatar>
-                    <h6 className=" font-medium">{item}</h6>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-        {/* schooling */}
-        <div className=" space-y-1">
-          <div className=" flex space-x-2 items-center text-myGray">
-            <MdOutlineSchool /> <h4 className=" font-semibold">Schooling</h4>
-          </div>
-          <div className=" space-y-2">
-            <div className=" flex -space-x-1 items-center">
-              <Dot size={32} />
-              <div className=" flex space-x-2 items-center">
-                <h6 className=" font-medium">Boarding</h6>
+          <div className="space-y-2 pl-2">
+            {school.curriculum.map((item) => (
+              <div key={item} className="flex items-center space-x-2">
+                <Dot size={28} className="   -ml-1" />{" "}
+                {/* Adjusted dot styling */}
+                {/* <Avatar className="size-8 border border-gray-200">
+                  <AvatarImage
+                    src={
+                      item === "TVET"
+                        ? "/images/logortb.jpg" // Ensure this path is correct relative to your `public` folder
+                        : item === "REB"
+                        ? "/images/REB_Logo.png" // Ensure this path is correct
+                        : "/images/default_curriculum_logo.png" // Fallback logo
+                    }
+                    alt={`${item} curriculum logo`}
+                    // onError={(e) =>
+                    //   (e.currentTarget.src =
+                    //     "https://placehold.co/32x32/E0E0E0/B0B0B0?text=Logo")
+                    // }
+                  />
+                  <AvatarFallback>LOGO</AvatarFallback>
+                </Avatar> */}
+                <h6 className="font-medium    text-sm">{item}</h6>
               </div>
+            ))}
+          </div>
+        </div>
+        {/* Schooling Type Section (Boarding/Days) - Static as per original */}
+        <div className="space-y-2">
+          <div className="flex space-x-2 items-center text-myGray">
+            <MdOutlineSchool className="text-xl   " />
+            <h4 className="font-semibold text-md   ">Schooling Type</h4>
+          </div>
+          <div className="space-y-1 pl-2">
+            <div className="flex items-center space-x-2">
+              <Dot size={28} className="   -ml-1" />
+              <h6 className="font-medium    text-sm">Boarding</h6>
             </div>
-            <div className=" flex -space-x-1 items-center">
-              <Dot size={32} />
-              <div className=" flex space-x-2 items-center">
-                <h6 className=" font-medium">Days</h6>
-              </div>
+            <div className="flex items-center space-x-2">
+              <Dot size={28} className="   -ml-1" />
+              <h6 className="font-medium    text-sm">Day Scholars</h6>
             </div>
           </div>
         </div>
-        {/* other this about school */}
+        {/* Detailed Academic Information (conditionally rendered) */}
         {isAboutSchool && (
-          // TODO: add tooltip when you hover it you see the meaning for item
-          <div>
-            {/* sectors */}
-            <div className=" space-y-2">
-              <div className=" flex space-x-2 items-center text-myGray">
-                <MdOutlineSchool />{" "}
-                <h4 className=" font-semibold">Sectors school have</h4>
-              </div>
-              {/* all sectors */}
-              <div className=" flex -space-x-1 items-center">
-                <Dot size={32} />
-                <div className=" flex space-x-2 items-center">
-                  <h6 className=" font-medium">Primary</h6>
-                  <span className=" text-sm text-myGray">P1 --- P6</span>
+          <div className="space-y-6">
+            {" "}
+            {/* Increased spacing for better separation */}
+            {/* Education Levels Offered Section */}
+            {school.educationLevel && school.educationLevel.length > 0 && (
+              <div className="space-y-2">
+                <div className="flex space-x-2 items-center text-myGray">
+                  <BookOpen className="text-xl   " />{" "}
+                  {/* Using a different icon */}
+                  <h4 className="font-semibold text-md   ">
+                    Education Levels Offered
+                  </h4>
+                </div>
+                <div className="space-y-1 pl-2">
+                  {school.educationLevel.map((level) => (
+                    <div key={level} className="flex items-center space-x-2">
+                      <Dot size={28} className="   -ml-1" />
+                      <h6 className="font-medium    text-sm">{level}</h6>
+                      <span className="text-xs   ">
+                        {level === "Primary"
+                          ? "(P1 - P6)"
+                          : level === "OLevel"
+                          ? "(S1 - S3)"
+                          : level === "ALevel"
+                          ? "(S4 - S6)"
+                          : null}
+                      </span>
+                    </div>
+                  ))}
                 </div>
               </div>
-              <div className=" flex -space-x-1 items-center">
-                <Dot size={32} />
-                <div className=" flex space-x-2 items-center">
-                  <h6 className=" font-medium">Ordinary Level</h6>
-                  <span className=" text-sm text-myGray">S1 --- S3</span>
-                </div>
-              </div>
-              <div className=" flex -space-x-1 items-center">
-                <Dot size={32} />
-                <div className=" flex space-x-2 items-center">
-                  <h6 className=" font-medium">Adicantance Level</h6>
-                  <span className=" text-sm text-myGray">S4 --- S6 (4)</span>
-                </div>
-              </div>
-            </div>
-            {/* school trades */}
-            <div className=" space-y-2">
-              <div className=" flex space-x-2 items-center text-myGray">
-                <MdOutlineSchool /> <h4 className=" font-semibold">Trades</h4>
-              </div>
-              {/* all trades */}
-              <div className=" flex -space-x-1 items-center">
-                <Dot size={32} />
-                <div className=" flex space-x-2 items-center">
-                  <h6 className=" font-medium">Math Physic Geography (MPG)</h6>
-                  <span className=" text-sm text-myGray">S4MPG --- S6MPG</span>
-                </div>
-              </div>
-              <div className=" flex -space-x-1 items-center">
-                <Dot size={32} />
-                <div className=" flex space-x-2 items-center">
-                  <h6 className=" font-medium">Math Physic Computer (MPC)</h6>
-                  <span className=" text-sm text-myGray">S4MPC --- S6MPC</span>
-                </div>
-              </div>
-              <div className=" flex -space-x-1 items-center">
-                <Dot size={32} />
-                <div className=" flex space-x-2 items-center">
-                  <h6 className=" font-medium">
-                    Kinyarwanda English Kiswahili (KEK)
-                  </h6>
-                  <span className=" text-sm text-myGray">S4KEK --- S6KEK</span>
-                </div>
-              </div>
-              <div className=" flex -space-x-1 items-center">
-                <Dot size={32} />
-                <div className=" flex space-x-2 items-center">
-                  <h6 className=" font-medium">Software Development (SOD)</h6>
-                  <span className=" text-sm text-myGray">L3SOD --- L5SOD</span>
-                </div>
-              </div>
-            </div>
+            )}
+            {/* Academic Programs Section */}
+            {academicProfile && (
+              <>
+                {/* Primary School Subjects */}
+                {/* {academicProfile.primarySubjectsOffered &&
+                  academicProfile.primarySubjectsOffered.length > 0 && (
+                    <div className="space-y-2">
+                      <div className="flex space-x-2 items-center text-myGray">
+                        <MdSchool className="text-xl " />
+                        <h4 className="font-semibold text-md   ">
+                          Primary School Subjects
+                        </h4>
+                      </div>
+                      <div className="space-y-1 pl-2">
+                        {getSubjectLabels(
+                          academicProfile.primarySubjectsOffered,
+                          PrimarySubjects
+                        ).map((label) => (
+                          <div
+                            key={`primary-${label}`}
+                            className="flex items-center space-x-2"
+                          >
+                            <Dot size={28} className=" -ml-1" />
+                            <h6 className="font-medium    text-sm">
+                              {label}
+                            </h6>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )} */}
+
+                {/* O-Level Subjects */}
+                {/* {(academicProfile.oLevelOptionSubjects?.length || 0) > 0 && (
+                  <div className="space-y-2">
+                    <div className="flex space-x-2 items-center text-myGray">
+                      <MdOutlineSchool className="text-xl" />
+                      <h4 className="font-semibold text-md   ">
+                        O-Level Subjects
+                      </h4>
+                    </div>
+                    {academicProfile.oLevelCoreSubjects &&
+                      academicProfile.oLevelCoreSubjects.length > 0 && (
+                        <div className="ml-4 space-y-1 mt-1">
+                          <p className="text-xs font-semibold   ">
+                            Core Subjects:
+                          </p>
+                          {getSubjectLabels(
+                            academicProfile.oLevelCoreSubjects,
+                            OLevelSubjects
+                          ).map((label) => (
+                            <div
+                              key={`olevel-core-${label}`}
+                              className="flex items-center space-x-2"
+                            >
+                              <Dot
+                                size={24}
+                                className="   -ml-1"
+                              />
+                              <h6 className="font-medium    text-sm">
+                                {label}
+                              </h6>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    {academicProfile.oLevelOptionSubjects &&
+                      academicProfile.oLevelOptionSubjects.length > 0 && (
+                        <div className="ml-4 space-y-1 mt-2">
+                          <p className="text-xs font-semibold   ">
+                            Optional Subjects:
+                          </p>
+                          {getSubjectLabels(
+                            academicProfile.oLevelOptionSubjects,
+                            OptionalSubjects
+                          ).map((label) => (
+                            <div
+                              key={`olevel-opt-${label}`}
+                              className="flex items-center space-x-2"
+                            >
+                              <Dot
+                                size={24}
+                                className="   -ml-1"
+                              />
+                              <h6 className="font-medium    text-sm">
+                                {label}
+                              </h6>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                  </div>
+                )} */}
+
+                {/* A-Level Combinations & Optional Subjects */}
+                {(academicProfile.aLevelOptionSubjects?.length || 0) > 0 && (
+                  <div className="space-y-2">
+                    <div className="flex space-x-2 items-center text-myGray">
+                      <BookOpen className="text-xl   " />
+                      <h4 className="font-semibold text-md   ">
+                        A-Level Programs
+                      </h4>
+                    </div>
+                    {academicProfile.aLevelSubjectCombination &&
+                      academicProfile.aLevelSubjectCombination.length > 0 && (
+                        <div className="ml-4 space-y-1 mt-1">
+                          <p className="text-xs font-semibold   ">
+                            Subject Combinations:
+                          </p>
+                          {getSubjectLabels(
+                            academicProfile.aLevelSubjectCombination,
+                            AdvancedLevels
+                          ).map((label) => (
+                            <div
+                              key={`alevel-combo-${label}`}
+                              className="flex items-center space-x-2"
+                            >
+                              <Dot size={24} className="   -ml-1" />
+                              <h6 className="font-medium    text-sm">
+                                {label}
+                              </h6>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                  </div>
+                )}
+
+                {/* TVET Programs */}
+                {(academicProfile.tvetSpecialization?.length || 0) > 0 ||
+                  ((academicProfile.tvetOptionSubjects?.length || 0) > 0 && (
+                    <div className="space-y-2">
+                      <div className="flex space-x-2 items-center text-myGray">
+                        <FaSchool className="text-xl   " />{" "}
+                        {/* Changed icon for TVET */}
+                        <h4 className="font-semibold text-md   ">
+                          TVET Programs
+                        </h4>
+                      </div>
+                      {academicProfile.tvetSpecialization &&
+                        academicProfile.tvetSpecialization.length > 0 && (
+                          <div className="ml-4 space-y-1 mt-1">
+                            <p className="text-xs font-semibold   ">
+                              Specializations:
+                            </p>
+                            {getSubjectLabels(
+                              academicProfile.tvetSpecialization,
+                              TvetPrograms
+                            ).map((label) => (
+                              <div
+                                key={`tvet-spec-${label}`}
+                                className="flex items-center space-x-2"
+                              >
+                                <Dot size={24} className="     -ml-1" />
+                                <h6 className="font-medium    text-sm">
+                                  {label}
+                                </h6>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      {academicProfile.tvetOptionSubjects &&
+                        academicProfile.tvetOptionSubjects.length > 0 && (
+                          <div className="ml-4 space-y-1 mt-2">
+                            <p className="text-xs font-semibold   ">
+                              Optional Subjects (TVET):
+                            </p>
+                            {/* Ensure you have a relevant list for TVET optional subjects, using OptionalSubjects as a placeholder */}
+                            {getSubjectLabels(
+                              academicProfile.tvetOptionSubjects,
+                              OptionalSubjects
+                            ).map((label) => (
+                              <div
+                                key={`tvet-opt-${label}`}
+                                className="flex items-center space-x-2"
+                              >
+                                <Dot size={24} className="     -ml-1" />
+                                <h6 className="font-medium    text-sm">
+                                  {label}
+                                </h6>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                    </div>
+                  ))}
+              </>
+            )}
           </div>
         )}
-      </div>
-      {/* to check is in on about school it will not show it */}
+      </CardContent>
+
+      {/* "See more" Button Section */}
       {!isAboutSchool && (
-        <Link href={`/${lang}/school/about`} className=" ">
-          <Button variant="ghost" size="sm" className=" w-full">
-            See more
+        <Link href={`/${lang}/school/about`} className="block mt-6">
+          {" "}
+          {/* Added margin top */}
+          <Button variant="ghost" size="sm" className="w-full">
+            See more about school
           </Button>
         </Link>
       )}
-    </div>
+    </Card>
   );
 };
 

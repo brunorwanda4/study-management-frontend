@@ -3,6 +3,7 @@ import { TeacherDto } from "./school/teacher.dto";
 import { StudentDto } from "./school/student.dto";
 import { SchoolStaffDto } from "./school/school-staff.schema";
 import { SchoolJoinRequestDto } from "./school/school-join-school/school-join-request.schema";
+import { AcademicProfileDtoSchema } from "./school/AcademicProfileDto";
 
 export const SchoolMembers = z.enum(["Mixed", "Boys", "Girls"]);
 export const SchoolTypeEnum = z.enum([
@@ -40,6 +41,8 @@ export const SocialMediaSchema = z.object({
   platform: z.string().min(1, "Platform is required"),
   link: z.string().url("Must be a valid URL"),
 });
+
+export type SocialMediaDto = z.infer<typeof SocialMediaSchema>
 
 export const CreateSchoolSchema = z.object({
   creatorId: z.string().min(1, "Creator ID is required"),
@@ -344,7 +347,7 @@ export const SchoolSchema = z.object({
   labs: z.array(z.string()).optional(),
   sportsExtracurricular: z.array(z.string()).optional(),
   onlineClasses: z.boolean().optional(),
-
+academicProfile : AcademicProfileDtoSchema.optional(),
   // metadata
   createAt: z.date().optional(),
   updatedAt: z.date().optional(),
