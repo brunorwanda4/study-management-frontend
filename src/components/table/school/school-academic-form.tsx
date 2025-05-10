@@ -34,7 +34,7 @@ import { academicSchoolService } from "@/service/school/school.service";
 import { FormError, FormSuccess } from "@/components/myComponents/form-message";
 import { useRouter } from "next/navigation";
 import { Locale } from "@/i18n";
-// import { academicSchoolService } from "@/service/school/school.service";
+import { useToast } from "@/lib/context/toast/ToastContext";
 interface props {
   school: SchoolDto;
   lang: Locale;
@@ -45,6 +45,7 @@ export function SchoolAcademicForm({ school, lang }: props) {
   const [success, setSuccess] = useState<string | null | undefined>("");
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const { showToast } = useToast();
   const hasPrimary = useMemo(
     () => school.educationLevel?.includes("Primary"),
     [school.educationLevel]
@@ -104,8 +105,20 @@ export function SchoolAcademicForm({ school, lang }: props) {
         setSuccess(
           `Successfully created ${academic.data?.totalClasses} classes and ${academic.data?.totalModule} module instances for school ${school.name}.`
         );
+        showToast({
+          type: "success",
+          title: "School Academic have been update successful 🌻",
+          description: `Successfully created ${academic.data?.totalClasses} classes and ${academic.data?.totalModule} module instances for school ${school.name}.`,
+          duration: 4000,
+        });
         router.push(`/${lang}/s-t/new/${school.id}/administration`);
       } else {
+        showToast({
+          type: "error",
+          title: "Some thing went wrong to update school academic 🌋",
+          description: academic.message,
+          duration: 3000,
+        });
         setError(`Error setting up academic structure: ${academic.message}`);
       }
     });

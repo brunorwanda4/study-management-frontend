@@ -159,8 +159,8 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
         router.push(`/${lang}/s-t/new/${create.data.id}/academic`);
       } else if (create?.message) {
         showToast({
-          type: "success",
-          title: "Some thing went wrong to create school",
+          type: "error",
+          title: "Some thing went wrong to create school 🌋",
           description: create.message,
           duration: 3000,
         });
