@@ -50,6 +50,7 @@ import {
 } from "@/lib/context/school.context";
 import { useRouter } from "next/navigation";
 import { createSchoolService } from "@/service/school/school.service";
+import { useToast } from "@/lib/context/toast/ToastContext";
 
 interface Props {
   lang: Locale;
@@ -62,6 +63,7 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
   const [isPending, startTransition] = useTransition();
   const { theme } = useTheme();
   const router = useRouter();
+  const { showToast } = useToast();
   const form = useForm<CreateSchoolDto>({
     resolver: zodResolver(CreateSchoolSchema),
     defaultValues: {
@@ -135,9 +137,34 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
       const create = await createSchoolService(values);
       if (create?.data?.id) {
         setSuccess("School is registered successful ☺️");
+        showToast({
+          type: "success",
+          title: (
+            <div>
+              <MyImage src={"/logo.png"} className=" size-10" />
+              <h3>space-together</h3>
+            </div>
+          ),
+          description: (
+            <div>
+              {create.data.logo && (
+                <MyImage src={create.data.logo} role="ICON" />
+              )}
+              <h3 className=" text-lg">{create.data.name}</h3>
+              Has been created successful 🌻
+            </div>
+          ),
+          duration: 4000,
+        });
         router.push(`/${lang}/s-t/new/${create.data.id}/academic`);
-      } else if (create?.error) {
-        setError(`error: ${create.error}, message : ${create.message}`);
+      } else if (create?.message) {
+        showToast({
+          type: "success",
+          title: "Some thing went wrong to create school",
+          description: create.message,
+          duration: 3000,
+        });
+        setError(`message : ${create.message}`);
       }
     });
   };
