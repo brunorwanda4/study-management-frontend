@@ -645,6 +645,26 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="contact.whatsappNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className=" flex space-x-2">
+                      <MyImage src="/icons/whatsapp.png" role="ICON" />
+                      <span> Whatsapp number</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="+250 7925 3727"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
           </fieldset>
 

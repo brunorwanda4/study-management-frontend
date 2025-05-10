@@ -25,7 +25,7 @@ const SchoolIdPage = async (props: props) => {
       <Separator />
       <div className=" flex space-x-4 ">
         <div className=" w-1/2  space-y-2">
-          <SchoolHomeAbout isAboutSchool lang={lang} />
+          <SchoolHomeAbout school={} isAboutSchool lang={lang} />
           <SchoolImages />
         </div>
         <div className=" w-1/2 space-y-2">

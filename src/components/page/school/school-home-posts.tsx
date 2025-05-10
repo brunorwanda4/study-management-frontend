@@ -2,7 +2,6 @@
 import { FaSignsPost } from "react-icons/fa6";
 import PostCard from "@/components/cards/post-card";
 import { Locale } from "@/i18n";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 interface props {
@@ -28,14 +27,6 @@ const SchoolHomePosts = ({ lang, isOnSchoolPost, className }: props) => {
           <PostCard lang={lang} postRole="IMAGE" />
           <PostCard lang={lang} postRole="TEXT" />
         </div>
-        {!isOnSchoolPost && (
-          <Link
-            href={`/${lang}/school/posts`}
-            className=" basic-card justify-center items-center flex-row "
-          >
-            <span className=" link">See More</span>
-          </Link>
-        )}
       </div>
     </div>
   );

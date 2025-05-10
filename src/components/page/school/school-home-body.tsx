@@ -5,7 +5,6 @@ import SchoolContacts from "./school-contacts";
 import SchoolStaff from "./school-staff";
 import SchoolTeachers from "./school-teachers";
 import SchoolStudents from "./school-student";
-import SchoolClasses from "./school-classese";
 import { SchoolAndOthers } from "@/lib/schema/school.dto";
 import { AuthUserDto } from "@/lib/utils/auth";
 
@@ -21,11 +20,10 @@ const SchoolHomeBody = ({ lang,school , currentUser}: props) => {
       <div className=" flex space-x-4 justify-between w-full">
         <div className=" w-3/5  space-y-4">
           <SchoolHomePosts lang={lang} />
-          <SchoolClasses lang={lang}/>
         </div>
         <div className=" w-2/5 space-y-4">
-          <SchoolHomeAbout lang={lang}/>
-          <SchoolContacts />
+          <SchoolHomeAbout school={school} lang={lang}/>
+          <SchoolContacts school={school}/>
           <SchoolStaff schoolStaff={school.SchoolStaff} lang={lang} />
           <SchoolTeachers currentUser={currentUser}  teachers={school.Teacher} lang={lang} />
           <SchoolStudents currentUser={currentUser} students={school.Student} lang={lang} />

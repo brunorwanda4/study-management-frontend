@@ -1,3 +1,4 @@
+import DevelopingPage from "@/components/page/developing-page";
 import NotFoundPage from "@/components/page/not-found";
 import ProfileAside from "@/components/profile/profile-aside";
 import ProfileStudentClassesCard from "@/components/profile/student/profile-student-classes-card";
@@ -30,11 +31,15 @@ const ProfilePageById = async (props: Props) => {
   return (
     <div className=" px-4 py-2 space-x-4 md:space-y-4 flex">
       <ProfileAside lang={lang} user={user.data} />
-      <div className=" w-2/3 space-y-4">
-        <UserFavoriteSubjects />
-        <StudentPerformanceCard />
-        <ProfileStudentClassesCard lang="en" />
-      </div>
+      {user.data.role === "STUDENT" ? (
+        <div className=" w-2/3 space-y-4">
+          <UserFavoriteSubjects />
+          <StudentPerformanceCard />
+          <ProfileStudentClassesCard lang="en" />
+        </div>
+      ) : (
+        <DevelopingPage role={currentUser.role} lang={lang} />
+      )}
     </div>
   );
 };

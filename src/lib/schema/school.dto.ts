@@ -33,6 +33,7 @@ export const SchoolAddress = z.object({
 export const ContactSchema = z.object({
   phone: z.string().min(1, "Phone is required"),
   email: z.string().email("Invalid email format"),
+  whatsappNumber: z.string().optional()
 }).optional();
 
 export const SocialMediaSchema = z.object({
@@ -244,14 +245,14 @@ export const SchoolAcademicSchemaBackend = z.object({
 export type SchoolAcademicDtoBackend = z.infer<typeof SchoolAcademicSchemaBackend>;
 
 export const SchoolAcademicCreation = z.object({
-    totalClasses: z.number(),
-    totalModule: z.number()
+  totalClasses: z.number(),
+  totalModule: z.number()
 })
 
 export type SchoolAcademicCreationDto = z.infer<typeof SchoolAcademicCreation>
 
 export const SchoolAdministrationSchema = z.object({
-  schoolId : z.string().min(1),
+  schoolId: z.string().min(1),
   headmasterName: z
     .string()
     .min(2, { message: "Headmaster name is required." }),
@@ -352,8 +353,8 @@ export const SchoolSchema = z.object({
 export type SchoolDto = z.infer<typeof SchoolSchema>;
 
 export interface SchoolAndOthers extends SchoolDto {
-  Teacher : TeacherDto[],
-  Student : StudentDto[],
-  SchoolStaff : SchoolStaffDto[],
-  SchoolJoinRequest : SchoolJoinRequestDto[]
+  Teacher: TeacherDto[],
+  Student: StudentDto[],
+  SchoolStaff: SchoolStaffDto[],
+  SchoolJoinRequest: SchoolJoinRequestDto[]
 }
