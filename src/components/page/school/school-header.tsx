@@ -45,7 +45,11 @@ const SchoolHeader = ({
             </Avatar>
           </MyLink>
           <div className=" space-y-1">
-            <MyLink className=" underline-offset-0" loading href={`/${lang}/school`}>
+            <MyLink
+              className=" underline-offset-0"
+              loading
+              href={`/${lang}/school`}
+            >
               <h1 className=" basic-title">
                 {school?.name ? school.name : "School name"}
               </h1>
@@ -75,17 +79,19 @@ const SchoolHeader = ({
             </div> */}
           </div>
         </div>
-        <div className=" flex space-x-2 items-center">
-          <MyImage
-            className=" size-20"
-            classname="mask mask-squircle"
-            src={currentUser?.image ? currentUser.image : schoolImage}
-          />
-          <div>
-            <h4 className=" basic-title">{currentUser.name}</h4>
-            <span>{currentSchool?.role}</span>
+        {school?.id === currentSchool?.schoolId && (
+          <div className=" flex space-x-2 items-center">
+            <MyImage
+              className=" size-20"
+              classname="mask mask-squircle"
+              src={currentUser?.image ? currentUser.image : schoolImage}
+            />
+            <div>
+              <h4 className=" basic-title">{currentUser.name}</h4>
+              <span>{currentSchool?.role}</span>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

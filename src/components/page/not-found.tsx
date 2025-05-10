@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react"; 
+import { useState } from "react";
 import { Button } from "../ui/button";
 import { RefreshCcw } from "lucide-react";
 import { BsArrowLeft } from "react-icons/bs";
@@ -15,7 +15,7 @@ const NotFoundPage = ({ message }: props) => {
   const [isLoading, setIsLoading] = useState(false); // Add loading state
 
   const handleRefresh = () => {
-    setIsLoading(true); 
+    setIsLoading(true);
     window.location.reload();
   };
 
@@ -37,22 +37,23 @@ const NotFoundPage = ({ message }: props) => {
             </p>
           </div>
           <div className="flex space-x-2 mt-2 justify-center items-center">
-            <Button library="daisy" variant="outline" onClick={handleGoBack} disabled={isLoading}>
+            <Button library="daisy" variant="outline" onClick={handleGoBack}>
               <BsArrowLeft /> Go back
             </Button>
             <Button
               library="daisy"
               variant="info"
               onClick={handleRefresh}
-              disabled={isLoading} 
+              disabled={isLoading}
             >
               {isLoading ? (
                 <>
-                  <RefreshCcw size={12} className="animate-spin mr-2" /> Loading... 
+                  <RefreshCcw size={12} className="animate-spin mr-2" />{" "}
+                  Refresh...
                 </>
               ) : (
                 <>
-                  Refresh <RefreshCcw size={12} /> 
+                  Refresh <RefreshCcw size={12} />
                 </>
               )}
             </Button>

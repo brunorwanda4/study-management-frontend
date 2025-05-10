@@ -31,7 +31,7 @@ const DevelopingPage = ({lang , role} : props) => {
            <div className="text-center">
              <p className=" ">{ "Sorry this page we are developing it try again later 😔"}</p>
              <div className="flex space-x-2 mt-2 justify-center">
-              <MyLink button={{ library :"daisy", variant :"default"}} type="button" href={redirectContents({lang, role})}>
+              <MyLink loading button={{ library :"daisy", variant :"default"}} type="button" href={redirectContents({lang, role})}>
                <MyImage role="ICON" src="/icons/3d-house.png"/> Go Home
               </MyLink>
               <Button library="daisy" variant="info" onClick={() =>handleGoBack()}>

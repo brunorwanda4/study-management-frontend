@@ -140,7 +140,7 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
         showToast({
           type: "success",
           title: (
-            <div>
+            <div className=" flex space-x-2">
               <MyImage src={"/logo.png"} className=" size-10" />
               <h3>space-together</h3>
             </div>
