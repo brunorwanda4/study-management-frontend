@@ -1,6 +1,6 @@
 "use client";
 import { useTheme } from "next-themes";
-import { BsCheck2Circle, BsPaintBucket } from "react-icons/bs";
+import { BsCheck2Circle, BsPalette } from "react-icons/bs";
 const SettingTheme = () => {
   const { setTheme, theme } = useTheme();
   const themes = [
@@ -19,12 +19,13 @@ const SettingTheme = () => {
   ];
   return (
     <div className=" basic-card">
-      <div>
+      <div className=" space-y-2">
         <div className="  flex  justify-between w-full">
           <h2 className=" basic-title">Application Theme</h2>
-          <span className=" text-myGray">
-            <BsPaintBucket /> {theme}
-          </span>
+          <div className=" space-x-2 flex items-center">
+            <BsPalette className=" text-primary"/>
+            <span className=" text-gray-500"> {theme}</span>
+          </div>
         </div>
         <p>
           Application theme we provide change theme by click them and all

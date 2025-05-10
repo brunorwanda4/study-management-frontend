@@ -13,7 +13,7 @@ const AuthButton = ({ lang }: props) => {
     <div className=" flex flex-col space-y-4 w-96">
       <Button library="daisy" size={"lg"} variant={"default"}>
         <MyImage
-          src="https://cdn-icons-png.flaticon.com/512/300/300221.png"
+          src="/icons/google.png"
           role="ICON"
           className=" size-6"
         />

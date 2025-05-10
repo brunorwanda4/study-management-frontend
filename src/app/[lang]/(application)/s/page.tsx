@@ -6,6 +6,7 @@ import { GetAllJoinSchoolRequestByCurrentUserEmail } from "@/service/school/scho
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import DevelopingPage from "@/components/page/developing-page";
+import JoinClassDialog from "@/components/page/student/dialogs/join-class-dialog";
 
 export const metadata: Metadata = {
   title: "School Dashboard",
@@ -33,11 +34,14 @@ const StudentPage = async (props: props) => {
     currentUser.email
   );
   if (currentSchool) {
-    return <DevelopingPage lang={lang} role={currentUser.role}/>
+    return <DevelopingPage lang={lang} role={currentUser.role} />;
   }
   return (
     <div className="w-full px-4 py-2 space-y-4 grid place-content-center h-full">
-      <JoinSchoolDialog />
+      <div className=" flex space-x-4">
+        <JoinSchoolDialog />
+        <JoinClassDialog />
+      </div>
       {getSchoolJoinRequest.data && (
         <JoinSchoolRequestBody
           lang={lang}
