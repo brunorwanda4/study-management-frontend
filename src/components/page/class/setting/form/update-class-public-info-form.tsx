@@ -3,8 +3,24 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState, useTransition } from "react";
+import { ClassDto } from "@/lib/schema/class/class.schema";
+import { ClassType } from "@/lib/schema/class/create-class.dto";
+import { updateClassPublicInfo } from "@/service/class/class.service";
+import { useToast } from "@/lib/context/toast/ToastContext";
 
+// Components
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { ImageUpload } from "@/components/myComponents/image-upload";
+import { FormError, FormSuccess } from "@/components/myComponents/form-message";
 import {
   Form,
   FormControl,
@@ -13,199 +29,192 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { FormError, FormSuccess } from "@/components/myComponents/form-message";
-import { ClassDto, ClassSchema } from "@/lib/schema/class/class.schema";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { ClassType } from "@/lib/schema/class/create-class.dto";
-import { ImageUpload } from "@/components/myComponents/image-upload";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { ClassUpdateDto, ClassUpdateSchema } from "@/lib/schema/class/update-class-schema";
 
-interface Props {
+interface UpdateClassPublicInfoFormProps {
   classData: ClassDto;
 }
 
-export default function UpdateClassPublicInfoForm({ classData }: Props) {
+export default function UpdateClassPublicInfoForm({
+  classData,
+}: UpdateClassPublicInfoFormProps) {
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
   const [isPending, startTransition] = useTransition();
+  const { showToast } = useToast();
 
-  const form = useForm<ClassDto>({
-    resolver: zodResolver(ClassSchema),
+  const form = useForm<ClassUpdateDto>({
+    resolver: zodResolver(ClassUpdateSchema),
     defaultValues: {
-      ...classData,
-      schoolId: classData.schoolId || undefined,
-      creatorId: classData.creatorId || undefined,
+      name: classData.name || undefined,
+      code: classData.code || undefined,
+      username: classData.username || undefined,
       image: classData.image || undefined,
       classType: classData.classType || undefined,
       educationLever: classData.educationLever || undefined,
       curriculum: classData.curriculum || undefined,
-      classTeacherId: classData.classTeacherId || undefined,
+      // Omit fields that shouldn't be updated like id, createdAt, etc.
     },
     mode: "onChange",
   });
 
-  async function onSubmit(data: ClassDto) {
+  const handleSubmit = async (data: ClassUpdateDto) => {
     setError(undefined);
     setSuccess(undefined);
 
     startTransition(async () => {
-      //   const result = await updateClassPublicInfo(data);
-      //   if (result.data) {
-      //     setSuccess("Class information updated successfully!");
-      //     if (onSuccess) {
-      //       onSuccess(result.data);
-      //     }
-      //   } else {
-      //     setError(result.message || "Failed to update class information");
-      //   }
-    });
+      try {
+        const result = await updateClassPublicInfo(data, classData.id);
 
-    console.log(data);
-  }
+        if (result.data) {
+          setSuccess("Class information updated successfully!");
+          showToast({
+            type: "success",
+            title: "Class update successful 🌻",
+            description: `${result.data.name} update class successful`,
+            duration: 4000,
+          });
+          // Reset form to new values
+          form.reset({
+            ...data,
+            // Ensure we don't reset to undefined values
+            name: result.data.name,
+            code: result.data.code,
+            username: result.data.username,
+            image: result.data.image || undefined,
+            classType: result.data.classType || undefined,
+            educationLever: result.data.educationLever || undefined,
+            curriculum: result.data.curriculum || undefined,
+          });
+        } else {
+          throw new Error(
+            result.message || "Failed to update class information"
+          );
+        }
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : "An unknown error occurred";
+        showToast({
+          type: "error",
+          title: "Something went wrong to update class 🌋",
+          description: errorMessage,
+          duration: 3000,
+        });
+        setError(errorMessage);
+      }
+    });
+  };
+
+  const renderFormField = (
+    name: keyof ClassUpdateDto,
+    label: string,
+    placeholder: string,
+    isRequired = false,
+    isSelect = false,
+    selectItems?: { value: string; label: string }[]
+  ) => (
+    <FormField
+      control={form.control}
+      name={name}
+      render={({ field }) => {
+        // Convert field value to string if it's a Date or other non-string type
+        const stringValue = field.value?.toString() ?? "";
+
+        return (
+          <FormItem className="space-y-2 flex flex-col">
+            <FormLabel>
+              {label} {isRequired && "*"}
+            </FormLabel>
+            <FormControl>
+              {isSelect ? (
+                <Select
+                  onValueChange={field.onChange}
+                  value={stringValue}
+                  disabled={isPending}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue
+                        placeholder={`Select ${label.toLowerCase()}`}
+                      />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {selectItems?.map((item) => (
+                      <SelectItem key={item.value} value={item.value}>
+                        {item.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              ) : (
+                <Input
+                  disabled={isPending}
+                  placeholder={placeholder}
+                  {...field}
+                  value={stringValue}
+                />
+              )}
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        );
+      }}
+    />
+  );
 
   return (
-    <Card className=" p-4">
-      <CardHeader className=" border-b-0">
-        <CardTitle>
-          Class public information
-        </CardTitle>
+    <Card className="p-4">
+      <CardHeader className="border-b-0">
+        <CardTitle>Class public information</CardTitle>
       </CardHeader>
+
       <Form {...form}>
         <form
-          className="w-full  space-y-4"
-          onSubmit={form.handleSubmit(onSubmit)}
+          className="w-full space-y-4"
+          onSubmit={form.handleSubmit(handleSubmit)}
         >
-          {/* Class Name Field */}
-          <div className="space-x-4 md:flex-row flex-col flex  w-full">
-            <div className=" md:w-1/2 space-y-4">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem className="space-y-2 flex flex-col">
-                    <FormLabel>Class Name *</FormLabel>
-                    <FormControl>
-                      <Input
-                        disabled={isPending}
-                        placeholder="Enter class name"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+          <div className="space-y-4 md:flex md:space-x-4 md:space-y-0">
+            {/* Left Column */}
+            <div className="md:w-1/2 space-y-4">
+              {renderFormField("name", "Class Name", "Enter class name", true)}
+              {renderFormField("code", "Class Code", "Enter class code", true)}
+              {renderFormField(
+                "username",
+                "Class Username",
+                "Enter class username",
+                true
+              )}
 
-              {/* Class Code Field */}
-              <FormField
-                control={form.control}
-                name="code"
-                render={({ field }) => (
-                  <FormItem className="space-y-2 flex flex-col">
-                    <FormLabel>Class Code *</FormLabel>
-                    <FormControl>
-                      <Input
-                        disabled={isPending}
-                        placeholder="Enter class code"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Class Username Field */}
-              <FormField
-                control={form.control}
-                name="username"
-                render={({ field }) => (
-                  <FormItem className="space-y-2 flex flex-col">
-                    <FormLabel>Class Username *</FormLabel>
-                    <FormControl>
-                      <Input
-                        disabled={isPending}
-                        placeholder="Enter class username"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Class Type Field */}
-              <FormField
-                control={form.control}
-                name="classType"
-                render={({ field }) => (
-                  <FormItem className="space-y-2 flex flex-col">
-                    <FormLabel>Class Type</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      value={field.value || ""}
-                      disabled={isPending}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select class type" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {Object.values(ClassType).map((type) => (
-                          <SelectItem key={type} value={type}>
-                            {type}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {renderFormField(
+                "classType",
+                "Class Type",
+                "Select class type",
+                false,
+                true,
+                Object.values(ClassType).map((type) => ({
+                  value: type,
+                  label: type,
+                }))
+              )}
             </div>
 
-            {/* Education Level Field */}
-            <div className=" md:w-1/2  space-y-4">
+            {/* Right Column */}
+            <div className="md:w-1/2 space-y-4">
               <FormField
                 control={form.control}
                 name="image"
                 render={({ field }) => (
-                  <FormItem className="space-y-2 md:w-96 flex flex-col">
+                  <FormItem className="space-y-2 flex flex-col">
                     <FormLabel>Class Image</FormLabel>
                     <FormControl>
                       <ImageUpload
-                        value={field.value || ""}
+                        value={field.value?.toString() ?? ""}
                         onChange={field.onChange}
                         disabled={isPending}
                         className="w-full"
-                        imageClassName="h-32 w-32 rounded-lg border-2 "
-                        maxSize={3 * 1024 * 1024} // 3MB for this specific case
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="educationLever"
-                render={({ field }) => (
-                  <FormItem className="space-y-2 flex flex-col">
-                    <FormLabel>Education Level</FormLabel>
-                    <FormControl>
-                      <Input
-                        disabled={isPending}
-                        placeholder="Enter education level"
-                        {...field}
-                        value={field.value || ""}
+                        imageClassName="h-32 w-32 rounded-lg border-2"
+                        maxSize={3 * 1024 * 1024}
                       />
                     </FormControl>
                     <FormMessage />
@@ -213,38 +222,27 @@ export default function UpdateClassPublicInfoForm({ classData }: Props) {
                 )}
               />
 
-              {/* Curriculum Field */}
-              <FormField
-                control={form.control}
-                name="curriculum"
-                render={({ field }) => (
-                  <FormItem className="space-y-2 flex flex-col">
-                    <FormLabel>Curriculum</FormLabel>
-                    <FormControl>
-                      <Input
-                        disabled={isPending}
-                        placeholder="Enter curriculum"
-                        {...field}
-                        value={field.value || ""}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {renderFormField(
+                "educationLever",
+                "Education Level",
+                "Enter education level"
+              )}
+              {renderFormField("curriculum", "Curriculum", "Enter curriculum")}
             </div>
           </div>
 
-          {/* Error/Success Messages */}
-          <div className="">
+          <div>
             <FormError message={error} />
             <FormSuccess message={success} />
           </div>
 
           <Button
-            disabled={isPending}
+            disabled={
+              isPending ||
+              (!form.formState.isDirty && !form.formState.isSubmitSuccessful)
+            }
             library="daisy"
-            variant={"info"}
+            variant="info"
             className="w-full"
             type="submit"
           >

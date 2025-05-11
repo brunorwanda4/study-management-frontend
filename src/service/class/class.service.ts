@@ -1,6 +1,7 @@
 import { ClassAndOthers, ClassDto } from "@/lib/schema/class/class.schema"
 import apiRequest from "../api-client"
 import { ViewDataClassDto } from "@/lib/schema/class/view-data-class.dto"
+import { ClassUpdateDto } from "@/lib/schema/class/update-class-schema"
 
 export const getClassesBySchoolId = async (schoolId: string) => {
     return await apiRequest<void, ClassDto[]>("get", `/class?schoolId=${schoolId}`)
@@ -16,4 +17,6 @@ export const getClassById = async (classId: string) => {
     return await apiRequest<void, ClassAndOthers>("get", `/class/${classId}`)
 }
 
-// export const updateClassById = 
+export const updateClassPublicInfo = async (data: ClassUpdateDto, classId : string) => {
+    return await apiRequest<ClassUpdateDto, ClassDto>("patch", `/class/${classId}`, data)
+}

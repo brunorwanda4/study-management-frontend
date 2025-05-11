@@ -1,3 +1,4 @@
+"use client";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
@@ -37,6 +38,7 @@ const MyImage = ({
         blurDataURL={`${src}?w=10&q=10`}
         quality={90}
         priority
+        onError={(e) => (e.currentTarget.src = "/images/p.jpg")}
       />
     </div>
   );

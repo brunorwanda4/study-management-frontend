@@ -37,7 +37,13 @@ import {
   schoolLabs,
   SchoolSportsExtracurricular,
 } from "@/lib/context/school.context"; // Adjust import path
-import { AffiliationTypeEnum, AttendanceSystemEnum, SchoolDto, SchoolMembers, SchoolTypeEnum } from "@/lib/schema/school.dto";
+import {
+  AffiliationTypeEnum,
+  AttendanceSystemEnum,
+  SchoolDto,
+  SchoolMembers,
+  SchoolTypeEnum,
+} from "@/lib/schema/school.dto";
 import MultipleSelector, { Option } from "@/components/ui/multiselect";
 import {
   PublicSchoolUpdateDto,
@@ -63,7 +69,7 @@ const optionsToStrings = (options: Option[] | null | undefined): string[] => {
   return options.map((option) => option.value);
 };
 
-const UpdateSchoolPublicInfoForm = ({  initialData }: Props) => {
+const UpdateSchoolPublicInfoForm = ({ initialData }: Props) => {
   const [error, setError] = useState<string | null | undefined>("");
   const [success, setSuccess] = useState<string | null | undefined>("");
   const [isPending, startTransition] = useTransition();
@@ -291,10 +297,7 @@ const UpdateSchoolPublicInfoForm = ({  initialData }: Props) => {
                     className="cursor-pointer"
                   >
                     <MyImage
-                      src={
-                        field.value ||
-                        schoolLogoImage
-                      } // Placeholder
+                      src={field.value || schoolLogoImage} // Placeholder
                       className="size-24 border rounded"
                       classname="object-contain"
                       alt="School Logo Preview"
@@ -974,7 +977,14 @@ const UpdateSchoolPublicInfoForm = ({  initialData }: Props) => {
         <FormSuccess message={success} />
         <FormError message={error} />
 
-        <Button type="submit" className="w-full md:w-auto" disabled={isPending}>
+        <Button
+          type="submit"
+          className="w-full md:w-auto"
+          disabled={
+            isPending ||
+            (!form.formState.isDirty && !form.formState.isSubmitSuccessful)
+          }
+        >
           {isPending ? "Saving Changes..." : "Save Changes"}
         </Button>
       </form>
