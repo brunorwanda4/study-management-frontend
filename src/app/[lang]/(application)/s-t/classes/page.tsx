@@ -1,3 +1,4 @@
+'use cache'
 import NotFoundPage from "@/components/page/not-found";
 import PermissionPage from "@/components/page/permission-page";
 import ClassesSchoolTable from "@/components/page/school-staff/table/classes-table";

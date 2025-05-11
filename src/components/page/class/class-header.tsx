@@ -34,7 +34,11 @@ const ClassHeader = ({
           <h4 className=" basic-title">{currentCls.name}</h4>
           <span>@ {currentCls.username}</span>
           {currentCls.teacher && (
-            <div className=" flex gap-2">
+            <MyLink
+              loading
+              href={`/${lang}/p/${currentCls.teacher.userId}?teacherId=${currentCls.classTeacherId}`}
+              className=" flex gap-2"
+            >
               <MyImage
                 src={
                   currentCls.teacher?.image
@@ -45,7 +49,7 @@ const ClassHeader = ({
                 className=" size-6"
               />
               {currentCls.teacher.name}
-            </div>
+            </MyLink>
           )}
         </div>
       </div>

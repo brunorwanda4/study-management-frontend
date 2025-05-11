@@ -60,11 +60,9 @@ export const TeacherTableColumns = (
       accessorKey: "name", // Used for sorting/filtering by name
       cell: ({ row }) => (
         <div className="flex space-x-3 items-center">
-          {" "}
-          {/* Increased space */}
           <MyLink
             loading
-            href={`/${lang}/p/${row.original.userId}?studentId=${row.original.id}`}
+            href={`/${lang}/p/${row.original.userId}teacherId=${row.original.id}`}
             className="flex-shrink-0" // Prevent avatar shrinking
           >
             <MyImage
@@ -80,7 +78,7 @@ export const TeacherTableColumns = (
             <MyLink
               loading
               className="font-medium truncate hover:underline" // Truncate long names
-              href={`/${lang}/p/${row.original.userId}?studentId=${row.original.id}`}
+              href={`/${lang}/p/${row.original.userId}teacherId=${row.original.id}`}
               //   title={row.original.name || 'View Profile'} // Add title attribute
             >
               {row.original.name || "N/A"} {/* Fallback for name */}

@@ -25,7 +25,7 @@ const ProfileAside = ({ lang, user }: props) => {
             type="button"
             classname=" w-full"
             loading
-            button={{ variant: "primary", library: "daisy" }}
+            button={{ variant: "info", library: "daisy" }}
             href={`/${lang}/setting/profile`}
           >
             Edit Profile
