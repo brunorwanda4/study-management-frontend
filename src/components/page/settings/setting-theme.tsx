@@ -24,7 +24,7 @@ const SettingTheme = () => {
           <h2 className=" basic-title">Application Theme</h2>
           <div className=" space-x-2 flex items-center">
             <BsPalette className=" text-primary"/>
-            <span className=" text-gray-500"> {theme}</span>
+            <span className=" text-primary"> {theme}</span>
           </div>
         </div>
         <p>

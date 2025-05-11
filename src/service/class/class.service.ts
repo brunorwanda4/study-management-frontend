@@ -15,3 +15,5 @@ export const getClassesBySchoolIdViewData = async (schoolId: string) => {
 export const getClassById = async (classId: string) => {
     return await apiRequest<void, ClassAndOthers>("get", `/class/${classId}`)
 }
+
+// export const updateClassById = 
