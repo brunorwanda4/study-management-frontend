@@ -68,7 +68,7 @@ declare module "@tanstack/react-table" {
 }
 
 // --- Column Definitions for Classes ---
-const columsFunction = (lang : Locale) => {
+const columsFunction = (lang: Locale) => {
   const columns: ColumnDef<ClassDto>[] = [
     {
       id: "select",
@@ -96,8 +96,18 @@ const columsFunction = (lang : Locale) => {
       header: "Name",
       accessorKey: "name",
       cell: ({ row }) => (
-        <MyLink loading href={`/${lang}/c/${row.original.id}`} className="font-medium flex items-center gap-2">
-          {row.original.image && <MyImage src={row.original.image} alt={row.getValue("name")} className="h-8 w-8 rounded-full object-cover" />}
+        <MyLink
+          loading
+          href={`/${lang}/c/${row.original.id}`}
+          className="font-medium flex items-center gap-2"
+        >
+          {row.original.image && (
+            <MyImage
+              src={row.original.image}
+              alt={row.getValue("name")}
+              className="h-8 w-8 rounded-full object-cover"
+            />
+          )}
           <span>{row.getValue("name")}</span>
         </MyLink>
       ),
@@ -155,11 +165,7 @@ const columsFunction = (lang : Locale) => {
       header: "Level",
       accessorKey: "educationLever",
       cell: ({ row }) => {
-        return (
-          <div>
-            {row.getValue("educationLever")}
-          </div>
-        )
+        return <div>{row.getValue("educationLever")}</div>;
       },
       meta: {
         filterVariant: "select", // Or 'text' if many unique levels
@@ -177,9 +183,7 @@ const columsFunction = (lang : Locale) => {
       cell: ({ row }) => {
         const curriculum = row.getValue("curriculum") as string | null;
         return curriculum ? (
-          <div className="flex items-center gap-1 text-sm">
-            {curriculum}
-          </div>
+          <div className="flex items-center gap-1 text-sm">{curriculum}</div>
         ) : (
           <span className="text-muted-foreground">-</span>
         );
@@ -267,15 +271,14 @@ const columsFunction = (lang : Locale) => {
   ];
 
   return columns;
-}
+};
 
 interface ClassTableProps {
   classes: ClassDto[];
-  lang : Locale
+  lang: Locale;
 }
 // --- React Component ---
 export default function ClassesTable({ classes, lang }: ClassTableProps) {
-  // Renamed for clarity
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([
     {
@@ -287,7 +290,7 @@ export default function ClassesTable({ classes, lang }: ClassTableProps) {
 
   const table = useReactTable({
     data: classes, // Use the new classes data
-    columns : columsFunction(lang),
+    columns: columsFunction(lang),
     state: {
       sorting,
       columnFilters,
