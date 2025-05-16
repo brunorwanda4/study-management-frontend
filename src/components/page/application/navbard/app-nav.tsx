@@ -1,5 +1,5 @@
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import React from "react";
+import React, { Suspense } from "react";
 import AppLogo from "./app-logo";
 import MyImage from "@/components/myComponents/myImage";
 import NavMessageDropDown from "./nav-message-drop-down";
@@ -28,11 +28,13 @@ const AppNav = async ({ lang }: props) => {
         <div role="button" className=" btn btn-circle btn-ghost">
           <MyImage
             className=" size-8"
-            src="https://cdn-icons-png.flaticon.com/512/1827/1827312.png"
+            src="/icons/bell.png"
           />
         </div>
         <NavMessageDropDown lang={lang} />
-        <NavProfileDropDown user={currentUser} lang={lang} />
+        <Suspense fallback={<div className=" size-8 skeleton"/>}>
+          <NavProfileDropDown user={currentUser} lang={lang} />
+        </Suspense>
       </div>
     </nav>
   );

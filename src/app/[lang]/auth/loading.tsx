@@ -1,5 +1,5 @@
 import React from 'react'
-import AuthLoadingPage from '../(application)/loading/auth/page'
+import AuthLoadingPage from '../loading/auth/page'
 
 const AuthLoading = () => {
   return (<AuthLoadingPage /> 
