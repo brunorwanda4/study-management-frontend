@@ -113,7 +113,7 @@ const MyImage = ({
       blurDataURL={TINY_TRANSPARENT_GIF} // Fast, reliable, generic blur
       quality={quality}
       priority={priority}
-      onLoadingComplete={handleLoadingComplete}
+      onLoad={handleLoadingComplete}
       onError={handleError}
       // Don't attempt to optimize data URLs or our tiny placeholder GIF.
       // Also, don't optimize if the fallback is a data URL (though less common).

@@ -16,10 +16,10 @@ const LoginPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
   return (
-    <div className="">
+    <div className=" space-y-4">
       <div className=" mt-4 flex w-full space-x-4 lg:flex-row flex-col-reverse space-y-4 lg:space-y-0">
         <div className=" space-y-2">
-          <h4 className=" basic-title">User your email:</h4>
+          <h4 className=" basic-title">Use your email:</h4>
           <LoginForm lang={lang} />
         </div>
       </div>

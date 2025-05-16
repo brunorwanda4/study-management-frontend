@@ -120,7 +120,7 @@ const SidebarGroupComponent = ({
                             )}
                           >
                             {item.icon && (
-                              <MyImage className=" size-6" src={item.icon} />
+                              <MyImage  className=" size-6" src={item.icon} />
                             )}
                             <div className=" flex justify-between">
                               <span>{item.title}</span>

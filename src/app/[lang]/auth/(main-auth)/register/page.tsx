@@ -18,7 +18,7 @@ const RegisterPage = async (props: props) => {
   const { lang } = params;
   return (
     <main className=" flex flex-col">
-      <div className="">
+      <div className=" space-y-4">
         <div className=" space-y-1 text-center">
         </div>
         <div className=" mt-4 flex w-full space-x-4 lg:flex-row flex-col-reverse space-y-4 lg:space-y-0">

@@ -6,7 +6,7 @@ const AuthProvider = () => {
   return (
     <div className=" flex flex-col space-y-3">
       <AuthLogo />
-      <p>Welcome to your space-together account! ☺️</p>
+      <p className=" text-center">Welcome to your space-together account! ☺️</p>
 
       <div className=" flex flex-col space-y-2">
         <MyLink
