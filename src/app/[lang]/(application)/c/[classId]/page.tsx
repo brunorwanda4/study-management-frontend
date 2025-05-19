@@ -1,6 +1,5 @@
-import PostCard from "@/components/cards/post-card";
+import DevelopingPage from "@/components/page/developing-page";
 import NotFoundPage from "@/components/page/not-found";
-import ClassTimetable from "@/components/page/school-staff/class-components/time-table";
 import { Locale } from "@/i18n";
 import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";
 import { getClassById } from "@/service/class/class.service";
@@ -35,31 +34,36 @@ const ClassIdPage = async (props: Props) => {
   if (!currentUser) {
     return redirect(`/${lang}/auth/login`);
   }
+  if (!currentUser.role) {
+    return redirect(`/${lang}/auth/onboarding`);
+  }
 
   if (!currentCls.data) {
     return <NotFoundPage />;
   }
 
-  return (
-    <div className="space-y-4">
-      <div className="flex space-x-4">
-        <div className=" w-1/2 space-y-4">
-          <h3 className=" basic-title">Class activities</h3>
-          <div className=" space-y-2">
-            {[...Array(2)].map((_, index) => {
-              return <PostCard postRole="NOTES" key={index} lang={lang} />;
-            })}
-            {[...Array(3)].map((_, index) => {
-              return <PostCard postRole="IMAGE" key={index} lang={lang} />;
-            })}
-          </div>
-        </div>
-        <div className=" w-1/2 space-y-4">
-          <ClassTimetable />
-        </div>
-      </div>
-    </div>
-  );
+  return <DevelopingPage lang={lang} role={currentUser.role} />;
+
+  // return (
+  //   <div className="space-y-4">
+  //     <div className="flex space-x-4">
+  //       <div className=" w-1/2 space-y-4">
+  //         <h3 className=" basic-title">Class activities</h3>
+  //         <div className=" space-y-2">
+  //           {[...Array(2)].map((_, index) => {
+  //             return <PostCard postRole="NOTES" key={index} lang={lang} />;
+  //           })}
+  //           {[...Array(3)].map((_, index) => {
+  //             return <PostCard postRole="IMAGE" key={index} lang={lang} />;
+  //           })}
+  //         </div>
+  //       </div>
+  //       <div className=" w-1/2 space-y-4">
+  //         <ClassTimetable />
+  //       </div>
+  //     </div>
+  //   </div>
+  // );
 };
 
 export default ClassIdPage;
