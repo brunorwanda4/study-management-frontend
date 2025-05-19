@@ -27,7 +27,10 @@ import { Button } from "@/components/ui/button";
 import MultipleSelector, { Option } from "@/components/ui/multiselect";
 import { schoolEducationLevel } from "@/lib/context/school.context";
 import { AffiliationTypeEnum } from "@/lib/schema/school.dto";
-import { AcademicDetailsDto, AcademicDetailsSchema } from "./schema/academic-details";
+import {
+  AcademicDetailsDto,
+  AcademicDetailsSchema,
+} from "./schema/academic-details";
 
 interface AcademicDetailsFormProps {
   initialData: AcademicDetailsDto;
@@ -64,7 +67,7 @@ export const AcademicDetailsForm = ({
     setError(null);
     startTransition(true);
 
-    console.log(values)
+    console.log(values);
   };
 
   return (
@@ -74,6 +77,7 @@ export const AcademicDetailsForm = ({
           <h3 className="text-xl font-semibold mb-4 border-b pb-2">
             Academic Details
           </h3>
+          {error && <div className=" alert alert-error">{error}</div>}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField
               control={form.control}
