@@ -29,6 +29,7 @@ const LoginPage = async (props: props) => {
           <MyLink
             href={`/${lang}/auth/register`}
             type="link"
+            loading
             className=" link text-info ml-1"
           >
             Register

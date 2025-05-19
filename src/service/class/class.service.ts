@@ -4,7 +4,6 @@ import { ViewDataClassDto } from "@/lib/schema/class/view-data-class.dto"
 import { ClassUpdateDto } from "@/lib/schema/class/update-class-schema"
 
 export const getClassesBySchoolId = async (schoolId: string) => {
-    "use cache"
     return await apiRequest<void, ClassDto[]>("get", `/class?schoolId=${schoolId}`)
 }
 export const getClassesBySchoolIdViewData = async (schoolId: string) => {

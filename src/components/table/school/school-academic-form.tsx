@@ -122,6 +122,8 @@ export function SchoolAcademicForm({ school, lang }: props) {
         setError(`Error setting up academic structure: ${academic.message}`);
       }
     });
+
+    console.log(values)
   }
 
   return (

@@ -12,58 +12,58 @@ export const SchoolCurriculum: Option[] = [
 ]
 
 export const SchoolStaffRoles: Option[] = [
-  {
-    value: "HeadTeacher",
-    label: "Head Teacher",
-  },
-  {
-    value: "DeputyHeadTeacher",
-    label: "Deputy Head Teacher",
-  },
-  // {
-  //   value: "DirectorOfStudies",
-  //   label: "Director of Studies", // Often responsible for academic affairs
-  // },
-   {
-    value: "HeadOfDepartment",
-    label: "Head of Department", // For specific subjects or faculties
-  },
-  // {
-  //   value: "Librarian",
-  //   label: "Librarian",
-  // },
-  {
-    value: "SchoolSecretary",
-    label: "School Secretary", // Administrative support
-  },
-  // {
-  //   value: "Accountant",
-  //   label: "Accountant", // School finances
-  // },
-  // {
-  //   value: "SchoolCounselor",
-  //   label: "School Counselor", // Guidance and counselling
-  // },
-  // {
-  //   value: "Janitor",
-  //   label: "Janitor", // Cleaning and maintenance
-  // },
-  // {
-  //   value: "SecurityGuard",
-  //   label: "Security Guard", // School security
-  // },
-  //  {
-  //   value: "Cook",
-  //   label: "Cook", // For schools with feeding programs
-  // },
-  //  {
-  //   value: "Nurse",
-  //   label: "Nurse", // School health services
-  // },
-  //  {
-  //   value: "LabTechnician",
-  //   label: "Lab Technician", // For science labs
-  // },
+    {
+        value: "HeadTeacher",
+        label: "Head Teacher",
+    },
+    {
+        value: "DeputyHeadTeacher",
+        label: "Deputy Head Teacher",
+    },
+    // {
+    //   value: "DirectorOfStudies",
+    //   label: "Director of Studies", // Often responsible for academic affairs
+    // },
+    {
+        value: "HeadOfDepartment",
+        label: "Head of Department", // For specific subjects or faculties
+    },
+    // {
+    //   value: "Librarian",
+    //   label: "Librarian",
+    // },
+    {
+        value: "SchoolSecretary",
+        label: "School Secretary", // Administrative support
+    },
+    // {
+    //   value: "Accountant",
+    //   label: "Accountant", // School finances
+    // },
+    // {
+    //   value: "SchoolCounselor",
+    //   label: "School Counselor", // Guidance and counselling
+    // },
+    // {
+    //   value: "Janitor",
+    //   label: "Janitor", // Cleaning and maintenance
+    // },
+    // {
+    //   value: "SecurityGuard",
+    //   label: "Security Guard", // School security
+    // },
+    //  {
+    //   value: "Cook",
+    //   label: "Cook", // For schools with feeding programs
+    // },
+    //  {
+    //   value: "Nurse",
+    //   label: "Nurse", // School health services
+    // },
+    //  {
+    //   value: "LabTechnician",
+    //   label: "Lab Technician", // For science labs
+    // },
 ];
 export const validSchoolStaffRoles = SchoolStaffRoles.map(role => role.value) as [string, ...string[]];
 
@@ -138,29 +138,29 @@ export const PrimarySubjects: Option[] = [
     { value: "math", label: "Mathematics" },
     { value: "english", label: "English Language" },
     { value: "kinyarwanda", label: "Kinyarwanda" },
-    { value: "french", label: "French Language" },
     { value: "science", label: "General Science" },
     { value: "socialStudies", label: "Social Studies" },
-    { value: "ict", label: "Information and Communication Technology (ICT)" },
-    { value: "re", label: "Religious Education" },
-    { value: "creativeArts", label: "Creative Arts" },
-    { value: "pe", label: "Physical Education" },
     { value: "entrepreneurship", label: "Entrepreneurship" },
-    { value: "specialNeeds", label: "Special Needs and Inclusive Education" },
+    { value: "french", label: "French Language" },
+    { value: "ict", label: "Information and Communication Technology (ICT)" },
+    // { value: "re", label: "Religious Education" },
+    // { value: "creativeArts", label: "Creative Arts" },
+    // { value: "specialNeeds", label: "Special Needs and Inclusive Education" },
+    // { value: "pe", label: "Physical Education" },
 ];
 
 export const PrimaryAssessment: Option[] = [
-    { value: "classTest", label: "Class Test" },
     { value: "homework", label: "Homework" },
-    { value: "project", label: "Project Work" },
-    { value: "groupWork", label: "Group Work" },
-    { value: "presentation", label: "Presentation" },
     { value: "quiz", label: "Quiz" },
-    { value: "midtermExam", label: "Midterm Exam" },
-    { value: "endTermExam", label: "End of Term Exam" },
-    { value: "nationalInP6", label: "National Exam (P6)" },
-    { value: "practical", label: "Practical Assessment" },
-    { value: "oral", label: "Oral Assessment" },
+    { value: "classTest", label: "Class Test" },
+    { value: "groupWork", label: "Group Work" },
+    // { value: "project", label: "Project Work" },
+    // { value: "presentation", label: "Presentation" },
+    // { value: "midtermExam", label: "Midterm Exam" },
+    // { value: "endTermExam", label: "End of Term Exam" },
+    // { value: "nationalInP6", label: "National Exam (P6)" },
+    // { value: "practical", label: "Practical Assessment" },
+    // { value: "oral", label: "Oral Assessment" },
 ];
 
 
@@ -178,20 +178,20 @@ export const OLevelSubjects: Option[] = [
     { value: "kiswahili", label: "Kiswahili" },
     { value: "ict", label: "Information and Communication Technology (ICT)" },
     // { value: "re", label: "Religious Education" },
-    { value: "literature", label: "Literature in English" },
+    // { value: "literature", label: "Literature in English" },
     // { value: "music", label: "Music" },
     // { value: "fineArt", label: "Fine Art" },
-    { value: "pe", label: "Physical Education" },
+    // { value: "pe", label: "Physical Education" },
 ];
 
 export const OptionalSubjects: Option[] = [
-    { value: "computerScience", label: "Computer Science" },
+    // { value: "computerScience", label: "Computer Science" },
     // { value: "agriculture", label: "Agriculture" },
-    { value: "fineArts", label: "Fine Arts" },
-    { value: "homeScience", label: "Home Science" },
+    // { value: "fineArts", label: "Fine Arts" },
+    // { value: "homeScience", label: "Home Science" },
+    // { value: "literature", label: "Literature in English" },
     { value: "music", label: "Music" },
     { value: "drama", label: "Drama" },
-    { value: "literature", label: "Literature in English" },
     // { value: "entrepreneurship", label: "Entrepreneurship" },
     // { value: "technicalDrawing", label: "Technical Drawing" },
     { value: "re", label: "Religious Education" },
@@ -314,8 +314,8 @@ export const TvetPrograms: Option[] = [
     { value: "CREATIVE_ARTS", label: "Creative Arts (Advanced Diploma)" },
 ];
 
-export const TevetLevels : Option[] = [
-    {value : "L3", label : "Level 3 (Certificate of Vocation Training)"},
-    {value : "L4", label : "Level 4 (Advance Certificate)"},
-    {value : "L5", label : "Level 5 (Diploma)"},
+export const TevetLevels: Option[] = [
+    { value: "L3", label: "Level 3 (Certificate of Vocation Training)" },
+    { value: "L4", label: "Level 4 (Advance Certificate)" },
+    { value: "L5", label: "Level 5 (Diploma)" },
 ]

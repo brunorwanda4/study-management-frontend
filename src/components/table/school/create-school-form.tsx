@@ -146,7 +146,7 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
             </div>
           ),
           description: (
-            <div>
+            <div className=" flex space-x-2">
               {create.data.logo && (
                 <MyImage src={create.data.logo} role="ICON" />
               )}
