@@ -1,3 +1,4 @@
+import UpdateClassMembers from "@/components/page/class/setting/form/update-class-members";
 import UpdateClassPublicInfoForm from "@/components/page/class/setting/form/update-class-public-info-form";
 import NotFoundPage from "@/components/page/not-found";
 import { Locale } from "@/i18n";
@@ -26,6 +27,7 @@ const ClassSettingPage = async (props: Props) => {
       <h2 className=" title-page">Class Setting</h2>
       {/* TODO: make school management where to add class subjects and class teacher management */}
       <UpdateClassPublicInfoForm classData={cls.data} />
+      <UpdateClassMembers />
     </div>
   );
 };

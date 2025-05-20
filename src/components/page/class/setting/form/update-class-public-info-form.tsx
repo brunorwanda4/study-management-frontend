@@ -243,7 +243,6 @@ export default function UpdateClassPublicInfoForm({
             }
             library="daisy"
             variant="info"
-            className="w-full"
             type="submit"
           >
             {isPending ? "Updating..." : "Update Class Information"}
