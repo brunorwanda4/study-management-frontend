@@ -1,6 +1,5 @@
-import MyImage from "@/components/myComponents/myImage";
-import MyLink from "@/components/myComponents/myLink";
-import React from "react";
+import MyImage from '@/components/myComponents/myImage';
+import MyLink from '@/components/myComponents/myLink';
 
 const LoadingPage = () => {
   return (
@@ -18,18 +17,14 @@ const LoadingPage = () => {
           <div className=" mt-10 flex flex-col justify-center items-center space-y-1">
             <h1 className=" text-2xl">
               Welcome to
-              <span className=" font-medium font-mono leading-1">
-                space-together
-              </span>
+              <span className=" font-medium font-mono leading-1">space-together</span>
             </h1>
-            <p className="">
-              Study smarter, collaborate better, manage easier — start now!
-            </p>
+            <p className="">Study smarter, collaborate better, manage easier — start now!</p>
           </div>
           <div className=" w-full skeleton h-40" />
           <div className=" text-center">
             <p>
-              By continuing you agree to <span>space together</span>{" "}
+              By continuing you agree to <span>space together</span>{' '}
               <MyLink href="/">Terms and Conditions</MyLink>
             </p>
           </div>
