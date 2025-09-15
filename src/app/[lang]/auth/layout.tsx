@@ -1,5 +1,5 @@
-import AuthLang from "@/components/lang/auth-lang";
-import AuthTheme from "@/components/theme/auth-theme";
+import AuthLang from '@/components/lang/auth-lang';
+import AuthTheme from '@/components/theme/auth-theme';
 
 interface props {
   children: React.ReactNode;
@@ -10,8 +10,8 @@ const AuthLayout = ({ children }: props) => {
       <nav className=" flex justify-end ">
         <AuthTheme />
       </nav>
-      <div className=" grid place-content-center space-y-4 max-lg:w-full">
-        <section className=" bg-base-100 card p-6 shadow">{children}</section>
+      <div className=" grid place-content-center space-y-4 max-lg:w-full min-h-screen">
+        <section className=" bg-base-100 card lg:px-12 px-8 py-4 shadow">{children}</section>
         <AuthLang />
       </div>
     </main>

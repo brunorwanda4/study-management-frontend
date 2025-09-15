@@ -6,7 +6,8 @@ import WelcomeImage from "@/components/page/welcome/welcome-images";
 import AuthTheme from "@/components/theme/auth-theme";
 import { Locale } from "@/i18n";
 import { redirectContents } from "@/lib/hooks/redirect";
-import { getAuthUserServer } from "@/lib/utils/auth";
+import { authUser } from "@/lib/utils/auth-user";
+;
 
 interface props {
   params: Promise<{ lang: Locale }>;
@@ -15,7 +16,7 @@ interface props {
 const WelcomePage = async (props: props) => {
   const [params, currentUser] = await Promise.all([
     props.params,
-    await getAuthUserServer(),
+    (await authUser())?.user,
   ]);
   const { lang } = params;
   return (

@@ -2,7 +2,7 @@ import NotFoundPage from "@/components/page/not-found";
 import { BasicInformationForm } from "@/components/page/school-staff/school-setting/forms/basic-information";
 import { ContactLocationForm } from "@/components/page/school-staff/school-setting/forms/contact-location";
 import { Locale } from "@/i18n";
-import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";
+import { getSchoolServer } from "@/lib/utils/auth";
 import { getSchoolByIdService } from "@/service/school/school.service";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
@@ -17,7 +17,7 @@ interface props {
 const SchoolSettingsPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
-  const [currentUser, currentSchool] = await Promise.all([getAuthUserServer(), getSchoolServer()]);
+  const [currentUser, currentSchool] = await Promise.all([authUser(), getSchoolServer()]);
   if (!currentUser?.role) return redirect(`/${lang}/auth/login`);
   if (!currentSchool) return <NotFoundPage message="You need to have school to access this page"/>
   const school = await getSchoolByIdService(currentSchool.schoolId);

@@ -2,7 +2,7 @@ import ConversationBody from "@/components/page/messages/conversation-body";
 import ConversationNavbar from "@/components/page/messages/conversation-navbar";
 import MessageFooter from "@/components/page/messages/message-footer";
 import { Locale } from "@/i18n";
-import { getAuthUserServer } from "@/lib/utils/auth";
+import { authUser } from "@/lib/utils/auth-user";;
 import { redirect } from "next/navigation";
  interface props {
   params: Promise<{ lang: Locale }>;
@@ -11,7 +11,7 @@ import { redirect } from "next/navigation";
 const MessageConversationPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
-  const user = await getAuthUserServer()
+  const user = await authUser()
   if (!user) {
     return redirect(`/${lang}/auth/login`);
   }

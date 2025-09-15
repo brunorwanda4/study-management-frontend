@@ -1,8 +1,6 @@
 import SchoolClasses from '@/components/page/school/school-classese';
 import { Locale } from '@/i18n';
-import { getAuthUserServer } from '@/lib/utils/auth';
 import { redirect } from 'next/navigation';
-import React from 'react'
 interface props {
   params: Promise<{ lang: Locale }>;
 }
@@ -10,7 +8,7 @@ interface props {
 const SchoolClassesPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
-  const user = await getAuthUserServer()
+  const user = await authUser()
   if (!user) {
     return redirect(`/${lang}/auth/login`);
   }

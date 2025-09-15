@@ -1,5 +1,5 @@
 // import { env } from '@/lib/env';
-import axios, {  AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 type HttpMethod = 'get' | 'post' | 'put' | 'delete' | 'patch';
 
@@ -23,7 +23,7 @@ async function apiRequest<TRequest = unknown, TResponse = unknown>(
   url: string,
   data?: TRequest,
   token?: string,
-  role?: string 
+  role?: string,
 ): Promise<APIResponse<TResponse>> {
   try {
     if (data && typeof data !== 'object') {
@@ -32,11 +32,11 @@ async function apiRequest<TRequest = unknown, TResponse = unknown>(
 
     const config: AxiosRequestConfig = {
       method,
-      url: `http://localhost:4666${url}`,
+      url: `http://127.0.0.1:4646${url}`,
       headers: {
         'Content-Type': 'application/json',
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        ...(role ? { role } : {})
+        ...(role ? { role } : {}),
       },
       ...(method !== 'get' && data ? { data } : {}),
     };

@@ -1,6 +1,6 @@
 import DevelopingPage from "@/components/page/developing-page";
 import { Locale } from "@/i18n";
-import { getAuthUserServer } from "@/lib/utils/auth";
+import { authUser } from "@/lib/utils/auth-user";;
 import { redirect } from "next/navigation";
 
 interface Props {
@@ -9,7 +9,7 @@ interface Props {
 const ProfilePage = async (props: Props) => {
   const params = await props.params;
   const { lang } = params;
-  const [currentUser] = await Promise.all([getAuthUserServer()]);
+  const [currentUser] = await Promise.all([authUser()]);
 
   if (!currentUser) {
     return redirect(`/${lang}/auth/login`);

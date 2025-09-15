@@ -3,7 +3,6 @@ import NotFoundPage from "@/components/page/not-found";
 import SettingPrivacyBody from "@/components/page/settings/profile/setting-privacy-body";
 import { Separator } from "@/components/ui/separator";
 import { Locale } from "@/i18n";
-import { getAuthUserServer } from "@/lib/utils/auth";
 import { getUserById } from "@/service/user/user-service";
 import { redirect } from "next/navigation";
 interface props {
@@ -12,7 +11,7 @@ interface props {
 const SettingProfilePage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
-  const currentUser = await getAuthUserServer()
+  const currentUser = await authUser()
   if (!currentUser || !currentUser.id) {
     return redirect(`/${lang}/auth/login`);
   }

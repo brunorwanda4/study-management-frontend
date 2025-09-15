@@ -1,12 +1,12 @@
-import StaffPeople from "@/components/page/school-staff/dashboard/staff-people";
-import { Metadata } from "next";
-import type { Locale } from "@/i18n";
-import SchoolStudentTable from "@/components/page/school-staff/table/student-table/table-student-list";
-import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";
-import { redirect } from "next/navigation";
 import NotFoundPage from "@/components/page/not-found";
-import { getAllStudentBySchoolId } from "@/service/school/student-service";
+import StaffPeople from "@/components/page/school-staff/dashboard/staff-people";
+import SchoolStudentTable from "@/components/page/school-staff/table/student-table/table-student-list";
+import type { Locale } from "@/i18n";
+import { getSchoolServer } from "@/lib/utils/auth";
 import { getClassesBySchoolIdViewData } from "@/service/class/class.service";
+import { getAllStudentBySchoolId } from "@/service/school/student-service";
+import { Metadata } from "next";
+import { redirect } from "next/navigation";
 
 interface props {
   params: Promise<{ lang: Locale }>;
@@ -28,7 +28,7 @@ const SchoolStaffStudentPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
   const [currentUser, currentSchool] = await Promise.all([
-    getAuthUserServer(),
+    authUser(),
     getSchoolServer(),
   ]);
 
@@ -63,7 +63,7 @@ const SchoolStaffStudentPage = async (props: props) => {
         <StaffPeople
           icon="/icons/primary.png"
           link={`/${lang}/s-t/students?educationLevel=primary`} // TODO add search params for get student in primary in this school
-          total={345} 
+          total={345}
           title="Primary"
           Ftotal={100}
           Mtotal={233}

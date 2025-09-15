@@ -1,10 +1,9 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 import { i18n, Locale } from "@/i18n";
 import { match as matchLocale } from "@formatjs/intl-localematcher";
 import Negotiator from "negotiator";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { apiAuthPrefix, authRoutes, publicRoutes } from "./router";
-import { getAuthUserServer } from "./lib/utils/auth";
 
 function getLocale(request: NextRequest): Locale {
   const negotiatorHeaders: Record<string, string> = {};
@@ -40,7 +39,7 @@ async function authMiddleware(req: NextRequest) {
 //   const isLoggedIn = await getUserFromSession();
 const { nextUrl } = req;
 const pathname = nextUrl.pathname;
-const isLoggedIn =await getAuthUserServer(); // Check if the user is authenticated
+const isLoggedIn =await authUser(); // Check if the user is authenticated
 const detectedLocale = extractLocaleFromPath(pathname) || getLocale(req);
 
 // Step 1: Handle API auth routes (always allowed)

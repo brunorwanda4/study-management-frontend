@@ -1,11 +1,11 @@
-import StaffPeople from "@/components/page/school-staff/dashboard/staff-people";
-import { Metadata } from "next";
-import type { Locale } from "@/i18n";
-import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";
-import { redirect } from "next/navigation";
 import NotFoundPage from "@/components/page/not-found";
-import { getAllTeacherBySchoolId } from "@/service/school/teacher-service";
+import StaffPeople from "@/components/page/school-staff/dashboard/staff-people";
 import SchoolTeacherTable from "@/components/page/school-staff/table/teacher-table/table-teacher";
+import type { Locale } from "@/i18n";
+import { getSchoolServer } from "@/lib/utils/auth";
+import { getAllTeacherBySchoolId } from "@/service/school/teacher-service";
+import { Metadata } from "next";
+import { redirect } from "next/navigation";
 
 interface props {
   params: Promise<{ lang: Locale }>;
@@ -27,7 +27,7 @@ const SchoolStaffTeacherPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
   const [currentUser, currentSchool] = await Promise.all([
-    getAuthUserServer(),
+    authUser(),
     getSchoolServer(),
   ]);
 

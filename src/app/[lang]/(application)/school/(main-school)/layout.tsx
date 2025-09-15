@@ -4,7 +4,7 @@ import SchoolHeader from "@/components/page/school/school-header";
 import SchoolHomeNav from "@/components/page/school/school-home-navbar";
 import { Separator } from "@/components/ui/separator";
 import { Locale } from "@/i18n";
-import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";
+import { getSchoolServer } from "@/lib/utils/auth";
 import { getSchoolByIdService } from "@/service/school/school.service";
 import { redirect } from "next/navigation";
 
@@ -18,7 +18,7 @@ const layout = async (props: props) => {
   const { lang } = params;
   const { children } = props;
   const [currentUser, currentSchool] = await Promise.all([
-    await getAuthUserServer(),
+    await authUser(),
     await getSchoolServer(),
   ]);
 

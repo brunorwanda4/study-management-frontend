@@ -1,7 +1,7 @@
 import DevelopingPage from "@/components/page/developing-page";
 import NotFoundPage from "@/components/page/not-found";
 import { Locale } from "@/i18n";
-import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";
+import { getSchoolServer } from "@/lib/utils/auth";
 import { getClassById } from "@/service/class/class.service";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
@@ -26,7 +26,7 @@ const ClassIdPage = async (props: Props) => {
   const { lang, classId } = params;
 
   const [currentUser, currentCls] = await Promise.all([
-    getAuthUserServer(),
+    authUser(),
     getClassById(classId),
     getSchoolServer(),
   ]);

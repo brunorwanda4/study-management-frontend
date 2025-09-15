@@ -1,8 +1,8 @@
 import MessagesAside from "@/components/page/messages/messages-aside";
 import { Locale } from "@/i18n";
-import { getAuthUserServer } from "@/lib/utils/auth";
+import { authUser } from "@/lib/utils/auth-user";;
 import { redirect } from "next/navigation";
- 
+
 interface props {
   children: React.ReactNode;
   params: Promise<{ lang: Locale }>;
@@ -12,7 +12,7 @@ const MessageLayout = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
   const { children } = props;
-  const user = await getAuthUserServer()
+  const user = await authUser()
   if (!user) {
     return redirect(`/${lang}/auth/login`);
   }

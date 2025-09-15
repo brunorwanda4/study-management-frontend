@@ -1,14 +1,13 @@
 import MyImage from "@/components/myComponents/myImage";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Separator } from "../ui/separator";
+import { Locale } from "@/i18n";
+import { ClassDto } from "@/lib/schema/class/class.schema";
+import { cn } from "@/lib/utils";
 import { Dot } from "lucide-react";
 import Link from "next/link";
-import { Locale } from "@/i18n";
-import { cn } from "@/lib/utils";
-import { Button } from "../ui/button";
 import { TextTooltip } from "../myComponents/text-tooltip";
-import { getAuthUserServer } from "@/lib/utils/auth";
-import { ClassDto } from "@/lib/schema/class/class.schema";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Button } from "../ui/button";
+import { Separator } from "../ui/separator";
 
 interface props {
   lang: Locale;
@@ -29,7 +28,7 @@ const ClassCard = async ({
   myClass,
   isNotes,
 }: props) => {
-  const getUser = await getAuthUserServer();
+  const getUser = await authUser();
   return (
     <div className=" basic-card p-0 relative h-auto">
       <div className=" relative">

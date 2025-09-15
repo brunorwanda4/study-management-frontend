@@ -1,7 +1,7 @@
 import SubjectCard from "@/components/cards/subject-card";
 import NotFoundPage from "@/components/page/not-found";
 import { Locale } from "@/i18n";
-import { getAuthUserServer } from "@/lib/utils/auth";
+import { authUser } from "@/lib/utils/auth-user";;
 import { getModuleByClassId } from "@/service/class/module-service";
 import { redirect } from "next/navigation";
 
@@ -11,7 +11,7 @@ interface Props {
 const ClassSubjectPage = async (props: Props) => {
   const params = await props.params;
   const { lang, classId } = params;
-  const [currentUser] = await Promise.all([getAuthUserServer()]);
+  const [currentUser] = await Promise.all([authUser()]);
 
   if (!currentUser) {
     return redirect(`/${lang}/auth/login`);

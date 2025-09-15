@@ -4,7 +4,7 @@ import SchoolContacts from "@/components/page/school/school-contacts";
 import SchoolHomeAbout from "@/components/page/school/school-home-about";
 import SchoolImages from "@/components/page/school/school-images";
 import { Locale } from "@/i18n";
-import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";
+import { getSchoolServer } from "@/lib/utils/auth";
 import { getSchoolByIdService } from "@/service/school/school.service";
 import { redirect } from "next/navigation";
  interface props {
@@ -15,14 +15,14 @@ const SchoolAboutPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
  const [currentUser, currentSchool] = await Promise.all([
-     getAuthUserServer(),
+     authUser(),
      getSchoolServer(),
    ]);
   if (!currentUser) {
     return redirect(`/${lang}/auth/login`);
   }
     if (!currentSchool) return <JoinSchoolPage />;
-  
+
     const school = await getSchoolByIdService(currentSchool.schoolId);
     if (!school.data) return <NotFoundPage />;
   return (

@@ -5,7 +5,7 @@ import ProfileStudentClassesCard from "@/components/profile/student/profile-stud
 import StudentPerformanceCard from "@/components/profile/student/student-perfomance-card";
 import UserFavoriteSubjects from "@/components/profile/user-favorite-subjects";
 import { Locale } from "@/i18n";
-import { getAuthUserServer } from "@/lib/utils/auth";
+import { authUser } from "@/lib/utils/auth-user";;
 import { getUserById } from "@/service/school/user-service";
 import { redirect } from "next/navigation";
 
@@ -15,7 +15,7 @@ interface Props {
 const ProfilePageById = async (props: Props) => {
   const params = await props.params;
   const { lang, userId } = params;
-  const [currentUser] = await Promise.all([getAuthUserServer()]);
+  const [currentUser] = await Promise.all([authUser()]);
 
   if (!currentUser) {
     return redirect(`/${lang}/auth/login`);

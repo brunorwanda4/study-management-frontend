@@ -1,18 +1,18 @@
-import SettingHeader from "@/components/page/settings/setting-header";
-import SettingLang from "@/components/page/settings/setting-lang";
-import SettingLinks from "@/components/page/settings/setting-links";
-import SettingTheme from "@/components/page/settings/setting-theme";
-import { Locale } from "@/i18n";
-import { getAuthUserServer } from "@/lib/utils/auth";
-import { redirect } from "next/navigation";
+import SettingHeader from '@/components/page/settings/setting-header';
+import SettingLang from '@/components/page/settings/setting-lang';
+import SettingLinks from '@/components/page/settings/setting-links';
+import SettingTheme from '@/components/page/settings/setting-theme';
+import { Locale } from '@/i18n';
+import { authUser } from '@/lib/utils/auth-user';
+import { redirect } from 'next/navigation';
 interface props {
   params: Promise<{ lang: Locale }>;
 }
 const SettingPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
-  const user = await getAuthUserServer();
-  if (!user) {
+  const auth = await authUser();
+  if (!auth) {
     return redirect(`/${lang}/auth/login`);
   }
   return (
@@ -20,10 +20,11 @@ const SettingPage = async (props: props) => {
       <SettingHeader
         lang={lang}
         user={{
-          ...user,
-          name: user.name ?? "",
-          email: user.email ?? undefined,
-          image: user.image ?? undefined,
+          ...auth.user,
+          name: auth.user.name ?? '',
+          email: auth.user.email ?? undefined,
+          image: auth.user.image ?? undefined,
+          username: auth.user.username ?? undefined,
         }}
       />
       <div className=" w-full px-4 flex space-x-4">

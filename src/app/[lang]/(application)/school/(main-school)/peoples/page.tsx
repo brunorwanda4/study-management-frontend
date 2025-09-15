@@ -4,7 +4,7 @@ import SchoolStaff from "@/components/page/school/school-staff";
 import SchoolStudents from "@/components/page/school/school-student";
 import SchoolTeachers from "@/components/page/school/school-teachers";
 import { Locale } from "@/i18n";
-import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";
+import { getSchoolServer } from "@/lib/utils/auth";
 import { getSchoolByIdService } from "@/service/school/school.service";
 import { redirect } from "next/navigation";
 interface props {
@@ -15,7 +15,7 @@ const SchoolPeoplePage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
   const [currentUser, currentSchool] = await Promise.all([
-    await getAuthUserServer(),
+    await authUser(),
     await getSchoolServer(),
   ]);
 

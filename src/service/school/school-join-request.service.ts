@@ -1,17 +1,16 @@
-import { SchoolJoinRequestAndOther, SchoolJoinRequestAndSchool, SchoolJoinRequestAndToken, SchoolJoinRequestDto, } from "@/lib/schema/school/school-join-school/school-join-request.schema"
-import apiRequest from "../api-client"
-import { getUserToken, setSchoolCookies } from "@/lib/utils/auth-cookies"
-import { getAuthUserServer } from "@/lib/utils/auth"
 import { JoinSchoolDto } from "@/lib/schema/school/join-school-schema"
-import { SendJoinSchoolRequestDto } from "@/lib/schema/school/school-join-school/send-join-school-request.schema"
 import { CreateJoinSchoolRequestDto } from "@/lib/schema/school/school-join-school/create-school-join-request"
+import { SchoolJoinRequestAndOther, SchoolJoinRequestAndSchool, SchoolJoinRequestAndToken, SchoolJoinRequestDto, } from "@/lib/schema/school/school-join-school/school-join-request.schema"
+import { SendJoinSchoolRequestDto } from "@/lib/schema/school/school-join-school/send-join-school-request.schema"
+import { getUserToken, setSchoolCookies } from "@/lib/utils/auth-cookies"
+import apiRequest from "../api-client"
 
 export const GetAllJoinSchoolRequestByCurrentUserEmail = async (email: string) => {
     return await apiRequest<void, SchoolJoinRequestAndSchool[]>("get", `/school-join-requests/by-email/${email}`)
 }
 
 export const approvedSchoolJoinRequestByCurrentUser = async (id: string) => {
-    const [token, currentUser] = await Promise.all([await getUserToken(), await getAuthUserServer()])
+    const [token, currentUser] = await Promise.all([await getUserToken(), await authUser()])
     if (!token) {
         return { error: "User token not found, it look like you not login 😔" }
     }
@@ -26,7 +25,7 @@ export const RejectSchoolJoinRequestByCurrentUser = async (id: string) => {
 }
 
 export const JoinSchoolByUsernameAndCode = async (joinSchoolDto: JoinSchoolDto) => {
-    const [token, currentUser] = await Promise.all([await getUserToken(), await getAuthUserServer()])
+    const [token, currentUser] = await Promise.all([await getUserToken(), await authUser()])
     if (!token) {
         return { error: "User token not found, it look like you not login 😔" }
     }

@@ -1,9 +1,7 @@
-"use client";
+'use client';
 
-import { LoginUserDto, LoginUserSchema } from "@/lib/schema/user/user.dto";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
+import { FormError, FormSuccess } from '@/components/myComponents/form-message';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -12,15 +10,17 @@ import {
   FormItem,
   // FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { useState, useTransition } from "react";
-import { EyeIcon, EyeOffIcon } from "lucide-react";
-import { loginService } from "@/service/auth/auth-service";
-import { redirectContents } from "@/lib/hooks/redirect";
-import { Locale } from "@/i18n";
-import { useRouter } from "next/navigation";
-import { FormError, FormSuccess } from "@/components/myComponents/form-message";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Locale } from '@/i18n';
+import { redirectContents } from '@/lib/hooks/redirect';
+import { LoginUserDto, LoginUserSchema } from '@/lib/schema/user/user.dto';
+import { loginService } from '@/service/auth/auth-service';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { EyeIcon, EyeOffIcon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState, useTransition } from 'react';
+import { useForm } from 'react-hook-form';
 
 interface props {
   lang: Locale;
@@ -29,14 +29,14 @@ interface props {
 const LoginForm = ({ lang }: props) => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState<undefined | null | string>("");
-  const [success, setSuccess] = useState<undefined | null | string>("");
+  const [error, setError] = useState<undefined | null | string>('');
+  const [success, setSuccess] = useState<undefined | null | string>('');
   const router = useRouter();
   const form = useForm<LoginUserDto>({
     resolver: zodResolver(LoginUserSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
   });
 
@@ -59,7 +59,7 @@ const LoginForm = ({ lang }: props) => {
   }
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 w-96">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-96">
         <FormField
           control={form.control}
           name="email"
@@ -68,12 +68,10 @@ const LoginForm = ({ lang }: props) => {
               <FormControl>
                 <div className="group relative">
                   <label
-                    htmlFor={"email"}
+                    htmlFor={'email'}
                     className="origin-start  group-focus-within:  has-[+input:not(:placeholder-shown)]:  absolute top-1/2 block -translate-y-1/2 cursor-text px-1 text-sm transition-all group-focus-within:pointer-events-none group-focus-within:top-0 group-focus-within:cursor-default group-focus-within:text-base group-focus-within:font-medium has-[+input:not(:placeholder-shown)]:pointer-events-none has-[+input:not(:placeholder-shown)]:top-0 has-[+input:not(:placeholder-shown)]:cursor-default has-[+input:not(:placeholder-shown)]:text-base has-[+input:not(:placeholder-shown)]:font-medium "
                   >
-                    <span className="bg-base-100 inline-flex px-2">
-                      Email Address*
-                    </span>
+                    <span className="bg-base-100 inline-flex px-2">Email Address*</span>
                   </label>
                   <Input
                     autoFocus
@@ -98,16 +96,14 @@ const LoginForm = ({ lang }: props) => {
               <FormControl>
                 <div className=" relative group">
                   <label
-                    htmlFor={"password"}
+                    htmlFor={'password'}
                     className="group-focus-within:  has-[+input:not(:placeholder-shown)]:  absolute top-1/2 block -translate-y-1/2 cursor-text px-1 text-sm transition-all group-focus-within:pointer-events-none group-focus-within:top-0  group-focus-within:cursor-default group-focus-within:text-base group-focus-within:font-medium has-[+input:not(:placeholder-shown)]:pointer-events-none has-[+input:not(:placeholder-shown)]:top-0 has-[+input:not(:placeholder-shown)]:cursor-default has-[+input:not(:placeholder-shown)]:text-base has-[+input:not(:placeholder-shown)]:font-medium "
                   >
-                    <span className="bg-base-100 inline-flex px-2">
-                      Password*
-                    </span>
+                    <span className="bg-base-100 inline-flex px-2">Password*</span>
                   </label>
                   <Input
                     className=" h-12 base   "
-                    type={isVisible ? "text" : "password"}
+                    type={isVisible ? 'text' : 'password'}
                     disabled={isPending}
                     placeholder=" "
                     {...field}
@@ -116,7 +112,7 @@ const LoginForm = ({ lang }: props) => {
                     className=" /80 hover:  focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
                     type="button"
                     onClick={toggleVisibility}
-                    aria-label={isVisible ? "Hide password" : "Show password"}
+                    aria-label={isVisible ? 'Hide password' : 'Show password'}
                     aria-pressed={isVisible}
                     aria-controls="password"
                   >
@@ -140,17 +136,14 @@ const LoginForm = ({ lang }: props) => {
         <Button
           type="submit"
           library="daisy"
-          variant={"info"}
+          variant={'info'}
           disabled={isPending}
-          size={"lg"}
+          size={'lg'}
           className=" w-full"
         >
-          Login  {isPending && (
-            <div
-              role="status"
-              aria-label="Loading"
-              className={"loading loading-spinner"}
-            />
+          Login{' '}
+          {isPending && (
+            <div role="status" aria-label="Loading" className={'loading loading-spinner'} />
           )}
         </Button>
       </form>

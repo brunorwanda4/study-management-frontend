@@ -1,7 +1,7 @@
 import JoinSchoolPage from "@/components/page/join-school-page";
 import SchoolJoinRequestsTable from "@/components/page/school-staff/table/school-join-request-table/SchoolJoinRequestsTable";
 import { Locale } from "@/i18n";
-import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";
+import { getSchoolServer } from "@/lib/utils/auth";
 import { GetAllSchoolJoinRequestBySchoolId } from "@/service/school/school-join-request.service";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
@@ -16,7 +16,7 @@ const JoinSchoolRequestPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
   const [currentUser, currentSchool] = await Promise.all([
-    getAuthUserServer(),
+    authUser(),
     getSchoolServer(),
   ]);
   if (!currentUser?.role) return redirect(`/${lang}/auth/login`);

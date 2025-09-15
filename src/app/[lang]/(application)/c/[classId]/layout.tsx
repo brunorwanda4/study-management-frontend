@@ -4,7 +4,7 @@ import ClassNavbar from "@/components/page/class/class-navbar";
 import NotFoundPage from "@/components/page/not-found";
 import { Separator } from "@/components/ui/separator";
 import { Locale } from "@/i18n";
-import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";
+import { getSchoolServer } from "@/lib/utils/auth";
 import { getClassById } from "@/service/class/class.service";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
@@ -31,7 +31,7 @@ const ClassIdLayout = async (props: Props) => {
   const params = await props.params;
   const { lang, classId } = params;
   const [currentUser, currentCls, currentSchool] = await Promise.all([
-    getAuthUserServer(),
+    authUser(),
     getClassById(classId),
     getSchoolServer(),
   ]);

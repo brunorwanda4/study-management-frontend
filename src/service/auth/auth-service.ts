@@ -5,11 +5,12 @@ import {
   onboardingDto,
   UserDto,
 } from '@/lib/schema/user/user.dto';
-import { getUserToken, setAuthCookie, setSchoolCookies } from '@/lib/utils/auth-cookies';
+import { setAuthCookie, setSchoolCookies } from '@/lib/utils/auth-cookies';
+import { authUser } from '@/lib/utils/auth-user';
 import apiRequest from '../api-client';
 
 export async function loginService(input: LoginUserDto) {
-  const res = await apiRequest<LoginUserDto, AuthUserDto>('post', '/auth/login', input);
+  const res = await apiRequest<LoginUserDto, AuthUserDto>('post', '/login', input);
   if (res.data) {
     if (res.data.accessToken) {
       await setAuthCookie(res.data.accessToken, res.data.id);
@@ -24,11 +25,7 @@ export async function loginService(input: LoginUserDto) {
 }
 
 export async function registerUserService(input: CreateUserDto) {
-  const res = await apiRequest<CreateUserDto, AuthUserDto>(
-    'post',
-    '/api/v0.0.1/adapter/user/auth/register',
-    input,
-  );
+  const res = await apiRequest<CreateUserDto, AuthUserDto>('post', '/register', input);
   if (res.data) {
     if (res.data.accessToken) {
       await setAuthCookie(res.data.accessToken, res.data.id);
@@ -40,17 +37,20 @@ export async function registerUserService(input: CreateUserDto) {
 }
 
 export async function onboardingService(input: onboardingDto) {
-  const token = await getUserToken();
-  if (!token) {
+  const auth = await authUser();
+  if (!auth?.token) {
     return { error: 'User token not found, it look like you not login 😔' };
   }
+
   const res = await apiRequest<onboardingDto, UserDto | AuthUserDto>(
     'patch',
-    `/user/${token.userId}`,
+    `/auth/onboarding`,
     input,
-    token.token,
-    'onboarding',
+    auth.token,
   );
+
+  console.log('Data 😣:', res);
+
   if (res.data) {
     if ('accessToken' in res.data && res.data.accessToken) {
       await setAuthCookie(res.data.accessToken, res.data.id);

@@ -2,7 +2,7 @@ import JoinSchoolPage from "@/components/page/join-school-page";
 import NotFoundPage from "@/components/page/not-found";
 import SchoolHomeBody from "@/components/page/school/school-home-body";
 import { Locale } from "@/i18n";
-import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";
+import { getSchoolServer } from "@/lib/utils/auth";
 import { getSchoolByIdService } from "@/service/school/school.service";
 import { redirect } from "next/navigation";
 
@@ -14,7 +14,7 @@ const SchoolPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
   const [currentUser, currentSchool] = await Promise.all([
-    await getAuthUserServer(),
+    await authUser(),
     await getSchoolServer(),
   ]);
 

@@ -1,7 +1,7 @@
 import CreateSchoolForm from "@/components/table/school/create-school-form";
 import PermissionPage from "@/components/page/permission-page";
 import { Locale } from "@/i18n";
-import { getAuthUserServer } from "@/lib/utils/auth";
+import { authUser } from "@/lib/utils/auth-user";;
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
@@ -15,7 +15,7 @@ interface props {
 const SchoolStaffRegisterSchool = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
-  const currentUser = await getAuthUserServer();
+  const currentUser = await authUser();
   if (!currentUser) return redirect(`/${lang}/auth/login`);
   if (currentUser.role !== "SCHOOLSTAFF")
     return <PermissionPage lang={lang} role={currentUser.role ?? "STUDENT"} />;

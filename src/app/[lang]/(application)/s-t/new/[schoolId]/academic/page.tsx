@@ -2,7 +2,7 @@ import { SchoolAcademicForm } from "@/components/table/school/school-academic-fo
 import NotFoundPage from "@/components/page/not-found";
 import PermissionPage from "@/components/page/permission-page";
 import { Locale } from "@/i18n";
-import { getAuthUserServer } from "@/lib/utils/auth";
+import { authUser } from "@/lib/utils/auth-user";;
 import { getSchoolByIdService } from "@/service/school/school.service";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
@@ -17,7 +17,7 @@ interface props {
 const SchoolAcademicOnboardingPage = async (props: props) => {
   const params = await props.params;
   const { lang, schoolId } = params;
-  const currentUser = await getAuthUserServer();
+  const currentUser = await authUser();
   if (!currentUser) return redirect(`/${lang}/auth/login`);
   if (currentUser.role !== "SCHOOLSTAFF")
     return <PermissionPage lang={lang} role={currentUser.role ?? "STUDENT"} />;

@@ -1,7 +1,6 @@
 
 import SchoolHomePosts from "@/components/page/school/school-home-posts";
 import { Locale } from "@/i18n";
-import { getAuthUserServer } from "@/lib/utils/auth";
 import { redirect } from "next/navigation";
 interface props {
   params: Promise<{ lang: Locale }>;
@@ -10,7 +9,7 @@ interface props {
 const SchoolPostsPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
-  const user = await getAuthUserServer()
+  const user = await authUser()
   if (!user) {
     return redirect(`/${lang}/auth/login`);
   }

@@ -1,25 +1,25 @@
 import SchoolEducationChart from "@/components/charts/school-education-chart";
 import SchoolStudentAndClassChart from "@/components/charts/school-student-and-classes-chart";
-import JoinSchoolDialog from "@/components/page/school-staff/dialog/join-school-dialog";
 import MyImage from "@/components/myComponents/myImage";
 import MyLink from "@/components/myComponents/myLink";
 import JoinSchoolRequestBody from "@/components/page/application/join-school-request/join-school-request-body";
 import NotFoundPage from "@/components/page/not-found";
 import StaffDashboardDetails from "@/components/page/school-staff/dashboard/staff-dashboard-details";
-import SchoolHeader from "@/components/page/school/school-header";
-import { Locale } from "@/i18n";
-import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";
-import { GetAllJoinSchoolRequestByCurrentUserEmail } from "@/service/school/school-join-request.service";
-import { getSchoolByIdService } from "@/service/school/school.service";
-import { Metadata } from "next";
-import { redirect } from "next/navigation";
 import ClassActivitiesTable from "@/components/page/school-staff/dashboard/table/classes-activities-table";
+import JoinSchoolTableWrapper from "@/components/page/school-staff/dashboard/table/join-school-table/join-school-table-wrapper";
 import StudentDashboardTable from "@/components/page/school-staff/dashboard/table/student-dashboard-table";
 import TeachersDashboardTable from "@/components/page/school-staff/dashboard/table/teacher-dashboard-table";
+import JoinSchoolDialog from "@/components/page/school-staff/dialog/join-school-dialog";
+import SchoolHeader from "@/components/page/school/school-header";
+import { Locale } from "@/i18n";
+import { getSchoolServer } from "@/lib/utils/auth";
 import { getClassesBySchoolIdViewData } from "@/service/class/class.service";
+import { GetAllJoinSchoolRequestByCurrentUserEmail } from "@/service/school/school-join-request.service";
+import { getSchoolByIdService } from "@/service/school/school.service";
 import { getAllStudentBySchoolId } from "@/service/school/student-service";
-import JoinSchoolTableWrapper from "@/components/page/school-staff/dashboard/table/join-school-table/join-school-table-wrapper";
 import { getAllTeacherBySchoolId } from "@/service/school/teacher-service";
+import { Metadata } from "next";
+import { redirect } from "next/navigation";
 
 interface props {
   params: Promise<{ lang: Locale }>;
@@ -37,7 +37,7 @@ const SchoolStaffPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
   const [currentUser, currentSchool] = await Promise.all([
-    getAuthUserServer(),
+    authUser(),
     getSchoolServer(),
   ]);
 
