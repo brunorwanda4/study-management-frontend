@@ -1,14 +1,12 @@
+import MyImage from "@/components/common/myImage";
+import MyLink from "@/components/comon/myLink";
 import AuthLang from "@/components/lang/auth-lang";
-import MyImage from "@/components/myComponents/myImage";
-import MyLink from "@/components/myComponents/myLink";
 import AuthButton from "@/components/page/welcome/auth-button";
 import WelcomeImage from "@/components/page/welcome/welcome-images";
 import AuthTheme from "@/components/theme/auth-theme";
 import { Locale } from "@/i18n";
 import { redirectContents } from "@/lib/hooks/redirect";
 import { authUser } from "@/lib/utils/auth-user";
-;
-
 interface props {
   params: Promise<{ lang: Locale }>;
 }
@@ -20,18 +18,18 @@ const WelcomePage = async (props: props) => {
   ]);
   const { lang } = params;
   return (
-    <section className=" flex justify-between w-full h-screen bg-base-100">
-      <div className=" w-1/2 p-8">
-        <div className=" flex justify-end">
+    <section className="bg-base-100 flex h-screen w-full justify-between">
+      <div className="w-1/2 p-8">
+        <div className="flex justify-end">
           <AuthTheme />
         </div>
-        <div className="  flex flex-col space-y-6 justify-center items-center">
-          <MyImage className=" size-16" src="/logo.png" />
+        <div className="flex flex-col items-center justify-center space-y-6">
+          <MyImage className="size-16" src="/logo.png" />
         </div>
-        <div className=" mt-10 flex flex-col justify-center items-center space-y-1">
-          <h1 className=" text-2xl">
+        <div className="mt-10 flex flex-col items-center justify-center space-y-1">
+          <h1 className="text-2xl">
             Welcome to{" "}
-            <span className=" font-medium font-mono leading-1">
+            <span className="font-mono leading-1 font-medium">
               space-together
             </span>
           </h1>
@@ -39,7 +37,7 @@ const WelcomePage = async (props: props) => {
             Study smarter, collaborate better, manage easier — start now!
           </p>
         </div>
-        <div className=" mt-8 justify-center items-center flex">
+        <div className="mt-8 flex items-center justify-center">
           {!currentUser ? (
             <AuthButton lang={lang} />
           ) : !currentUser.role ? (
@@ -62,19 +60,19 @@ const WelcomePage = async (props: props) => {
             </MyLink>
           )}
         </div>
-        <div className="mt-8  space-y-2">
-          <div className=" text-center">
+        <div className="mt-8 space-y-2">
+          <div className="text-center">
             <p>
               By continuing you agree to <span>space together</span>{" "}
               <MyLink href="/">Terms and Conditions</MyLink>
             </p>
           </div>
-          <div className=" text-center flex justify-center">
+          <div className="flex justify-center text-center">
             <AuthLang />
           </div>
         </div>
       </div>
-      <div className=" justify-start flex w-1/2 p-4 h-full">
+      <div className="flex h-full w-1/2 justify-start p-4">
         <WelcomeImage />
       </div>
     </section>

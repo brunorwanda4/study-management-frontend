@@ -1,17 +1,25 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import {
-  useForm,
-  useFieldArray,
-  ControllerRenderProps,
-  FieldPath,
-} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckIcon, ChevronDownIcon, MinusCircle } from "lucide-react";
+import { useState, useTransition } from "react";
+import {
+  ControllerRenderProps,
+  FieldPath,
+  useFieldArray,
+  useForm,
+} from "react-hook-form";
 
-import { cn } from "@/lib/utils";
+import { FormError, FormSuccess } from "@/components/common/form-message";
 import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import {
   Form,
   FormControl, // Keep FormControl import as it's used for standard inputs
@@ -23,28 +31,20 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandList,
-  CommandItem,
-} from "@/components/ui/command";
-import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { SchoolStaffRoles } from "@/lib/context/school.context";
-import { AuthUserDto } from "@/lib/utils/auth";
 import { Locale } from "@/i18n";
+import { SchoolStaffRoles } from "@/lib/context/school.context";
 import {
   SchoolAdministrationDto,
   SchoolAdministrationSchema,
 } from "@/lib/schema/school.dto";
+import { cn } from "@/lib/utils";
+import { AuthUserDto } from "@/lib/utils/auth";
 import { administrationSchoolRequestToJoinSchool } from "@/service/school/school.service";
 import { useRouter } from "next/navigation";
-import { FormError, FormSuccess } from "@/components/myComponents/form-message";
 
 const RoleSelectCombobox = ({
   field,
@@ -57,7 +57,7 @@ const RoleSelectCombobox = ({
   const [open, setOpen] = useState(false);
 
   const selectedRoleLabel = SchoolStaffRoles.find(
-    (role) => role.value === field.value
+    (role) => role.value === field.value,
   )?.value;
 
   return (
@@ -70,14 +70,12 @@ const RoleSelectCombobox = ({
           aria-expanded={open}
           className="w-full justify-between px-3 font-normal"
         >
-          <span
-            className={cn("truncate", !field.value && " ")}
-          >
+          <span className={cn("truncate", !field.value && " ")}>
             {selectedRoleLabel || "Select a role"}
           </span>
           <ChevronDownIcon
             size={16}
-            className=" /80 shrink-0 ml-2"
+            className="/80 ml-2 shrink-0"
             aria-hidden="true"
           />
         </Button>
@@ -95,7 +93,7 @@ const RoleSelectCombobox = ({
                   value={role.value}
                   onSelect={(currentValue) => {
                     field.onChange(
-                      currentValue === field.value ? "" : currentValue
+                      currentValue === field.value ? "" : currentValue,
                     );
                     setOpen(false);
                   }}
@@ -104,7 +102,7 @@ const RoleSelectCombobox = ({
                   <CheckIcon
                     className={cn(
                       "ml-auto h-4 w-4",
-                      field.value === role.value ? "opacity-100" : "opacity-0"
+                      field.value === role.value ? "opacity-100" : "opacity-0",
                     )}
                   />
                 </CommandItem>
@@ -166,7 +164,7 @@ const SchoolAdministrationForm = ({ currentUser, schoolId, lang }: props) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className=" basic-card  space-y-4" // Added back basic styling classes
+        className="basic-card space-y-4" // Added back basic styling classes
       >
         {/* Headmaster Details */}
         <div className="space-y-4">
@@ -174,7 +172,7 @@ const SchoolAdministrationForm = ({ currentUser, schoolId, lang }: props) => {
           <FormDescription>
             Enter the headmaster&apos;s information.
           </FormDescription>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <FormField
               control={form.control}
               name="headmasterName"
@@ -231,7 +229,7 @@ const SchoolAdministrationForm = ({ currentUser, schoolId, lang }: props) => {
           <FormDescription>
             Enter the director of Studies information.
           </FormDescription>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <FormField
               control={form.control}
               name="DirectorOfStudies"
@@ -303,7 +301,7 @@ const SchoolAdministrationForm = ({ currentUser, schoolId, lang }: props) => {
                       const value = e.target.value;
                       // Use parseInt and handle empty string, default to 0 if invalid parse
                       field.onChange(
-                        value === "" ? 0 : parseInt(value, 10) || 0
+                        value === "" ? 0 : parseInt(value, 10) || 0,
                       );
                     }}
                     // Ensure the input displays the number value correctly
@@ -338,7 +336,7 @@ const SchoolAdministrationForm = ({ currentUser, schoolId, lang }: props) => {
                 <MinusCircle className="h-4 w-4" />
                 <span className="sr-only">Remove Administrator</span>
               </Button>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+              <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
                 {/* ROLE SELECT FIELD - USING CUSTOM COMBOBOX */}
                 <FormField
                   control={form.control}
@@ -372,7 +370,7 @@ const SchoolAdministrationForm = ({ currentUser, schoolId, lang }: props) => {
                   )}
                 />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <FormField
                   control={form.control}
                   name={`additionalAdministration.${index}.email`}
@@ -428,12 +426,18 @@ const SchoolAdministrationForm = ({ currentUser, schoolId, lang }: props) => {
           <FormSuccess message={success} />
         </div>
         {/* Submit Button */}
-        <Button type="submit" library="daisy" variant={"info"} className="w-full mt-6" disabled={isPending}>
+        <Button
+          type="submit"
+          library="daisy"
+          variant={"info"}
+          className="mt-6 w-full"
+          disabled={isPending}
+        >
           {isPending && (
             <span
               role="status"
               aria-label="Saving..."
-              className="ml-2 h-4 w-4 animate-spin rounded-full border-2 border-foreground border-e-transparent"
+              className="border-foreground ml-2 h-4 w-4 animate-spin rounded-full border-2 border-e-transparent"
             ></span>
           )}
           Save Administration Details {isPending && "..."}

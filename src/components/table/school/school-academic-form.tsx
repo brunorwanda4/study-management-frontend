@@ -1,9 +1,11 @@
 "use client";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo, useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
 
+import { FormError, FormSuccess } from "@/components/common/form-message";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -14,7 +16,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
+import MultipleSelector from "@/components/ui/multiselect";
+import { Locale } from "@/i18n";
 import {
   AdvancedLevels,
   OLevelAssessment,
@@ -24,17 +27,14 @@ import {
   PrimarySubjects,
   TvetPrograms,
 } from "@/lib/context/school.context";
-import MultipleSelector from "@/components/ui/multiselect";
+import { useToast } from "@/lib/context/toast/ToastContext";
 import {
   schoolAcademicDto,
   SchoolAcademicSchema,
   SchoolDto,
 } from "@/lib/schema/school.dto";
 import { academicSchoolService } from "@/service/school/school.service";
-import { FormError, FormSuccess } from "@/components/myComponents/form-message";
 import { useRouter } from "next/navigation";
-import { Locale } from "@/i18n";
-import { useToast } from "@/lib/context/toast/ToastContext";
 interface props {
   school: SchoolDto;
   lang: Locale;
@@ -48,19 +48,19 @@ export function SchoolAcademicForm({ school, lang }: props) {
   const { showToast } = useToast();
   const hasPrimary = useMemo(
     () => school.educationLevel?.includes("Primary"),
-    [school.educationLevel]
+    [school.educationLevel],
   );
   const hasOLevel = useMemo(
     () => school.educationLevel?.includes("OLevel"),
-    [school.educationLevel]
+    [school.educationLevel],
   );
   const hasALevel = useMemo(
     () => school.educationLevel?.includes("ALevel"),
-    [school.educationLevel]
+    [school.educationLevel],
   );
   const hasTVET = useMemo(
     () => school.curriculum?.includes("TVET"),
-    [school.curriculum]
+    [school.curriculum],
   );
   const form = useForm<schoolAcademicDto>({
     resolver: zodResolver(SchoolAcademicSchema),
@@ -103,7 +103,7 @@ export function SchoolAcademicForm({ school, lang }: props) {
       const academic = await academicSchoolService(values);
       if (academic.data) {
         setSuccess(
-          `Successfully created ${academic.data?.totalClasses} classes and ${academic.data?.totalModule} module instances for school ${school.name}.`
+          `Successfully created ${academic.data?.totalClasses} classes and ${academic.data?.totalModule} module instances for school ${school.name}.`,
         );
         showToast({
           type: "success",
@@ -123,16 +123,16 @@ export function SchoolAcademicForm({ school, lang }: props) {
       }
     });
 
-    console.log(values)
+    console.log(values);
   }
 
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-6 basic-card shadow-sm"
+        className="basic-card space-y-6 shadow-sm"
       >
-        <div className=" grid md:grid-cols-2 gap-4 grid-cols-1">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {/* Ordinary Level Section - Conditionally Rendered */}
           {hasOLevel && (
             <div className="space-y-4">
@@ -152,12 +152,12 @@ export function SchoolAcademicForm({ school, lang }: props) {
                         name="primarySubjectsOffered"
                         render={({ field: innerField }) => {
                           return (
-                            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                            <FormItem className="flex flex-row items-start space-y-0 space-x-3">
                               <FormControl>
                                 <Checkbox
                                   disabled={isPending}
                                   checked={innerField.value?.includes(
-                                    subject.value
+                                    subject.value,
                                   )}
                                   onCheckedChange={(checked) => {
                                     return checked
@@ -167,13 +167,13 @@ export function SchoolAcademicForm({ school, lang }: props) {
                                         ])
                                       : innerField.onChange(
                                           innerField.value?.filter(
-                                            (value) => value !== subject.value
-                                          )
+                                            (value) => value !== subject.value,
+                                          ),
                                         );
                                   }}
                                 />
                               </FormControl>
-                              <FormLabel className="font-normal cursor-pointer">
+                              <FormLabel className="cursor-pointer font-normal">
                                 {subject.label}
                               </FormLabel>
                             </FormItem>
@@ -199,12 +199,12 @@ export function SchoolAcademicForm({ school, lang }: props) {
                         name="primarySubjectsOffered"
                         render={({ field: innerField }) => {
                           return (
-                            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                            <FormItem className="flex flex-row items-start space-y-0 space-x-3">
                               <FormControl>
                                 <Checkbox
                                   disabled={isPending}
                                   checked={innerField.value?.includes(
-                                    subject.value
+                                    subject.value,
                                   )}
                                   onCheckedChange={(checked) => {
                                     return checked
@@ -214,13 +214,13 @@ export function SchoolAcademicForm({ school, lang }: props) {
                                         ])
                                       : innerField.onChange(
                                           innerField.value?.filter(
-                                            (value) => value !== subject.value
-                                          )
+                                            (value) => value !== subject.value,
+                                          ),
                                         );
                                   }}
                                 />
                               </FormControl>
-                              <FormLabel className="font-normal cursor-pointer">
+                              <FormLabel className="cursor-pointer font-normal">
                                 {subject.label}
                               </FormLabel>
                             </FormItem>
@@ -246,12 +246,12 @@ export function SchoolAcademicForm({ school, lang }: props) {
                         name="primarySubjectsOffered"
                         render={({ field: innerField }) => {
                           return (
-                            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                            <FormItem className="flex flex-row items-start space-y-0 space-x-3">
                               <FormControl>
                                 <Checkbox
                                   disabled={isPending}
                                   checked={innerField.value?.includes(
-                                    subject.value
+                                    subject.value,
                                   )}
                                   onCheckedChange={(checked) => {
                                     return checked
@@ -261,13 +261,13 @@ export function SchoolAcademicForm({ school, lang }: props) {
                                         ])
                                       : innerField.onChange(
                                           innerField.value?.filter(
-                                            (value) => value !== subject.value
-                                          )
+                                            (value) => value !== subject.value,
+                                          ),
                                         );
                                   }}
                                 />
                               </FormControl>
-                              <FormLabel className="font-normal cursor-pointer">
+                              <FormLabel className="cursor-pointer font-normal">
                                 {subject.label}
                               </FormLabel>
                             </FormItem>
@@ -345,12 +345,12 @@ export function SchoolAcademicForm({ school, lang }: props) {
                         name="aLevelOptionSubjects"
                         render={({ field: innerField }) => {
                           return (
-                            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                            <FormItem className="flex flex-row items-start space-y-0 space-x-3">
                               <FormControl>
                                 <Checkbox
                                   disabled={isPending}
                                   checked={innerField.value?.includes(
-                                    subject.value
+                                    subject.value,
                                   )}
                                   onCheckedChange={(checked) => {
                                     return checked
@@ -360,13 +360,13 @@ export function SchoolAcademicForm({ school, lang }: props) {
                                         ])
                                       : innerField.onChange(
                                           innerField.value?.filter(
-                                            (value) => value !== subject.value
-                                          )
+                                            (value) => value !== subject.value,
+                                          ),
                                         );
                                   }}
                                 />
                               </FormControl>
-                              <FormLabel className="font-normal cursor-pointer">
+                              <FormLabel className="cursor-pointer font-normal">
                                 {subject.label}
                               </FormLabel>
                             </FormItem>
@@ -423,11 +423,11 @@ export function SchoolAcademicForm({ school, lang }: props) {
                         name="tvetOptionSubjects"
                         render={({ field: innerField }) => {
                           return (
-                            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                            <FormItem className="flex flex-row items-start space-y-0 space-x-3">
                               <FormControl>
                                 <Checkbox
                                   checked={innerField.value?.includes(
-                                    subject.value
+                                    subject.value,
                                   )}
                                   onCheckedChange={(checked) => {
                                     return checked
@@ -437,14 +437,14 @@ export function SchoolAcademicForm({ school, lang }: props) {
                                         ])
                                       : innerField.onChange(
                                           innerField.value?.filter(
-                                            (value) => value !== subject.value
-                                          )
+                                            (value) => value !== subject.value,
+                                          ),
                                         );
                                   }}
                                   disabled={isPending}
                                 />
                               </FormControl>
-                              <FormLabel className="font-normal cursor-pointer">
+                              <FormLabel className="cursor-pointer font-normal">
                                 {subject.label}
                               </FormLabel>
                             </FormItem>
@@ -476,11 +476,11 @@ export function SchoolAcademicForm({ school, lang }: props) {
                         name="primarySubjectsOffered"
                         render={({ field: innerField }) => {
                           return (
-                            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                            <FormItem className="flex flex-row items-start space-y-0 space-x-3">
                               <FormControl>
                                 <Checkbox
                                   checked={innerField.value?.includes(
-                                    subject.value
+                                    subject.value,
                                   )}
                                   onCheckedChange={(checked) => {
                                     return checked
@@ -490,14 +490,14 @@ export function SchoolAcademicForm({ school, lang }: props) {
                                         ])
                                       : innerField.onChange(
                                           innerField.value?.filter(
-                                            (value) => value !== subject.value
-                                          )
+                                            (value) => value !== subject.value,
+                                          ),
                                         );
                                   }}
                                   disabled={isPending}
                                 />
                               </FormControl>
-                              <FormLabel className="font-normal cursor-pointer">
+                              <FormLabel className="cursor-pointer font-normal">
                                 {subject.label}
                               </FormLabel>
                             </FormItem>

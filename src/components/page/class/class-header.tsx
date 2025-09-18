@@ -1,5 +1,5 @@
-import MyImage from "@/components/myComponents/myImage";
-import MyLink from "@/components/myComponents/myLink";
+import MyImage from "@/components/common/myImage";
+import MyLink from "@/components/comon/myLink";
 import { Locale } from "@/i18n";
 import {
   classImage,
@@ -23,21 +23,21 @@ const ClassHeader = ({
   lang,
 }: props) => {
   return (
-    <div className=" flex justify-between items-center">
-      <div className=" flex space-x-2 items-center">
+    <div className="flex items-center justify-between">
+      <div className="flex items-center space-x-2">
         <MyImage
           src={currentCls.image ? currentCls.image : classImage}
           classname="mask mask-squircle"
-          className=" size-20"
+          className="size-20"
         />
         <div className=" ">
-          <h4 className=" basic-title">{currentCls.name}</h4>
+          <h4 className="basic-title">{currentCls.name}</h4>
           <span>@ {currentCls.username}</span>
           {currentCls.teacher && (
             <MyLink
               loading
               href={`/${lang}/p/${currentCls.teacher.userId}?teacherId=${currentCls.classTeacherId}`}
-              className=" flex gap-2"
+              className="flex gap-2"
             >
               <MyImage
                 src={
@@ -46,7 +46,7 @@ const ClassHeader = ({
                     : teacherImage
                 }
                 classname="mask mask-squircle"
-                className=" size-6"
+                className="size-6"
               />
               {currentCls.teacher.name}
             </MyLink>
@@ -56,7 +56,7 @@ const ClassHeader = ({
       {/* school data */}
       {currentCls.school && (
         <div>
-          <div className=" flex items-center space-x-2">
+          <div className="flex items-center space-x-2">
             <MyLink
               href={
                 currentSchool?.schoolId === currentCls.school.id
@@ -74,7 +74,7 @@ const ClassHeader = ({
                 }
                 alt={currentCls.school.name}
                 classname=" object-contain"
-                className=" size-16"
+                className="size-16"
               />
             </MyLink>
             <div className="">
@@ -85,9 +85,9 @@ const ClassHeader = ({
                     : `/${lang}/school/${currentCls.school.id}`
                 }
                 type="link"
-                className=" underline-offset-0"
+                className="underline-offset-0"
               >
-                <h4 className=" basic-title">{currentCls.school.name}</h4>
+                <h4 className="basic-title">{currentCls.school.name}</h4>
               </MyLink>
             </div>
           </div>

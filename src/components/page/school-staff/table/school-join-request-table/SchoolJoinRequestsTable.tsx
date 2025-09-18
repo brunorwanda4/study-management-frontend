@@ -1,37 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useId, useMemo, useState } from "react";
-import {
-  Column,
-  ColumnDef,
-  ColumnFiltersState,
-  flexRender,
-  getCoreRowModel,
-  getFacetedMinMaxValues,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getSortedRowModel,
-  RowData,
-  SortingState,
-  useReactTable,
-} from "@tanstack/react-table";
-import {
-  ChevronDownIcon,
-  ChevronUpIcon,
-  MoreHorizontal,
-  SearchIcon,
-  UserCheck, // Example icon for Approved
-  UserX, // Example icon for Rejected
-  Clock, // Example icon for Pending
-  Users, // Icon for Role
-  LogIn, // Icon for Source (From User)
-  LogOut, // Icon for Source (Invite)
-  Library, // Icon for Class
-} from "lucide-react";
-import { cn } from "@/lib/utils";
+import MyImage from "@/components/common/myImage";
+import MyLink from "@/components/comon/myLink"; // If needed for links
+import { Badge } from "@/components/ui/badge"; // Using Badge for status
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -49,29 +32,46 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import MyLink from "@/components/myComponents/myLink"; // If needed for links
 import { Locale } from "@/i18n"; // Assuming you use this for i18n
-import { Badge } from "@/components/ui/badge"; // Using Badge for status
+import { studentImage, teacherImage } from "@/lib/context/images";
+import { formatTimeAgo } from "@/lib/functions/change-time";
 import {
   SchoolJoinRequestAndOther,
   SchoolJoinRequestDto,
   SchoolJoinRequestStatus,
 } from "@/lib/schema/school/school-join-school/school-join-request.schema";
-import { formatTimeAgo } from "@/lib/functions/change-time";
-import MyImage from "@/components/myComponents/myImage";
-import { studentImage, teacherImage } from "@/lib/context/images";
-import SendJoinSchoolRequest from "../../dialog/send-join-school-request-dialog";
+import { cn } from "@/lib/utils";
 import { UserSchool } from "@/lib/utils/auth";
+import {
+  Column,
+  ColumnDef,
+  ColumnFiltersState,
+  flexRender,
+  getCoreRowModel,
+  getFacetedMinMaxValues,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
+  getSortedRowModel,
+  RowData,
+  SortingState,
+  useReactTable,
+} from "@tanstack/react-table";
+import {
+  ChevronDownIcon,
+  ChevronUpIcon, // Example icon for Rejected
+  Clock, // Icon for Source (Invite)
+  Library, // Icon for Role
+  LogIn, // Icon for Source (From User)
+  LogOut,
+  MoreHorizontal,
+  SearchIcon,
+  UserCheck, // Example icon for Pending
+  Users, // Example icon for Approved
+  UserX, // Example icon for Rejected
+} from "lucide-react";
+import { useId, useMemo, useState } from "react";
+import SendJoinSchoolRequest from "../../dialog/send-join-school-request-dialog";
 
 // --- Prisma Schema related types ---
 declare module "@tanstack/react-table" {
@@ -84,7 +84,7 @@ declare module "@tanstack/react-table" {
 const columnsFunction = (
   lang: Locale,
   onApprove?: (id: string) => void,
-  onReject?: (id: string) => void
+  onReject?: (id: string) => void,
 ): ColumnDef<SchoolJoinRequestAndOther>[] => {
   const columns: ColumnDef<SchoolJoinRequestAndOther>[] = [
     {
@@ -121,7 +121,7 @@ const columnsFunction = (
             {item.user?.image && item.userId ? (
               <MyLink loading href={`/${lang}/p/${item.userId}`}>
                 <MyImage
-                  className="rounded-full size-12"
+                  className="size-12 rounded-full"
                   role="AVATAR"
                   src={
                     item.user.image ||
@@ -132,7 +132,7 @@ const columnsFunction = (
               </MyLink>
             ) : (
               <MyImage
-                className="rounded-full size-12"
+                className="size-12 rounded-full"
                 role="AVATAR"
                 src={
                   item.user?.image ||
@@ -167,7 +167,7 @@ const columnsFunction = (
       accessorKey: "role",
       cell: ({ row }) => (
         <div className="flex items-center gap-1 capitalize">
-          <Users className="h-4 w-4 text-muted-foreground" />
+          <Users className="text-muted-foreground h-4 w-4" />
           {row.getValue("role")}
         </div>
       ),
@@ -190,7 +190,7 @@ const columnsFunction = (
           : undefined;
         const content = (
           <div className="flex items-center gap-1">
-            <Library className="h-4 w-4 text-muted-foreground" />
+            <Library className="text-muted-foreground h-4 w-4" />
             {className || <span className="text-muted-foreground">-</span>}
           </div>
         );
@@ -219,7 +219,7 @@ const columnsFunction = (
         const Icon = fromUser ? LogIn : LogOut;
         return (
           <div className="flex items-center gap-1">
-            <Icon className="h-4 w-4 text-muted-foreground" />
+            <Icon className="text-muted-foreground h-4 w-4" />
             {fromUser ? "User Request" : "School Invite"}
           </div>
         );
@@ -252,7 +252,7 @@ const columnsFunction = (
         return (
           <Badge
             variant={variant}
-            className="capitalize flex items-center gap-1"
+            className="flex items-center gap-1 capitalize"
           >
             <Icon className="h-3.5 w-3.5" />
             {status}
@@ -307,7 +307,7 @@ const columnsFunction = (
               {/* Conditional Actions based on status */}
               {isPending && onApprove && (
                 <DropdownMenuItem
-                  className="text-green-600 focus:text-green-700 focus:bg-green-100"
+                  className="text-green-600 focus:bg-green-100 focus:text-green-700"
                   onClick={(e) => {
                     e.stopPropagation();
                     onApprove(request.id);
@@ -384,7 +384,7 @@ export default function SchoolJoinRequestsTable({
   // Memoize columns to prevent re-creation on every render unless handlers change
   const tableColumns = useMemo(
     () => columnsFunction(lang, onApproveRequest, onRejectRequest),
-    [lang, onApproveRequest, onRejectRequest]
+    [lang, onApproveRequest, onRejectRequest],
   );
 
   const table = useReactTable({
@@ -415,7 +415,7 @@ export default function SchoolJoinRequestsTable({
 
   return (
     <Card>
-      <CardHeader className=" flex justify-between  w-full">
+      <CardHeader className="flex w-full justify-between">
         <div>
           <CardTitle>School Join Requests</CardTitle>
           {/* Optional: Add description or global actions (e.g., bulk approve/reject) */}
@@ -444,7 +444,7 @@ export default function SchoolJoinRequestsTable({
       </CardHeader>
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-3 px-4 pb-4 border-b">
+      <div className="flex flex-wrap gap-3 border-b px-4 pb-4">
         {/* Applicant filter */}
         <div className="w-48">
           <Filter column={table.getColumn("name")!} />
@@ -480,17 +480,17 @@ export default function SchoolJoinRequestsTable({
                       <TableHead
                         key={header.id}
                         className={cn(
-                          "relative h-10 select-none whitespace-nowrap px-3", // Adjusted padding
+                          "relative h-10 px-3 whitespace-nowrap select-none", // Adjusted padding
                           header.column.getCanSort() ? "cursor-pointer" : "",
-                          headerProps?.className
+                          headerProps?.className,
                         )}
                         aria-sort={
                           header.column.getCanSort()
                             ? header.column.getIsSorted() === "asc"
                               ? "ascending"
                               : header.column.getIsSorted() === "desc"
-                              ? "descending"
-                              : "none"
+                                ? "descending"
+                                : "none"
                             : undefined
                         }
                         onClick={header.column.getToggleSortingHandler()} // Apply directly for simplicity
@@ -502,7 +502,7 @@ export default function SchoolJoinRequestsTable({
                             ? null
                             : flexRender(
                                 header.column.columnDef.header,
-                                header.getContext()
+                                header.getContext(),
                               )}
                           {
                             header.column.getCanSort() &&
@@ -554,12 +554,12 @@ export default function SchoolJoinRequestsTable({
                           key={cell.id}
                           className={cn(
                             "px-3 py-2 align-middle",
-                            cellProps?.className
+                            cellProps?.className,
                           )} // Adjusted padding
                         >
                           {flexRender(
                             cell.column.columnDef.cell,
-                            cell.getContext()
+                            cell.getContext(),
                           )}
                         </TableCell>
                       );
@@ -582,8 +582,8 @@ export default function SchoolJoinRequestsTable({
       </CardContent>
 
       {/* Pagination Controls */}
-      <div className="flex items-center justify-end space-x-2 py-4 px-4 border-t">
-        <div className="flex-1 text-sm text-muted-foreground">
+      <div className="flex items-center justify-end space-x-2 border-t px-4 py-4">
+        <div className="text-muted-foreground flex-1 text-sm">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
           {table.getFilteredRowModel().rows.length} row(s) selected.
           {/* TODO: Add total count from server if using server-side pagination */}
@@ -643,7 +643,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
         // Map boolean to strings for display in Select
         return values
           .map((val) =>
-            val === true ? "true" : val === false ? "false" : null
+            val === true ? "true" : val === false ? "false" : null,
           )
           .filter((val) => val !== null) // Filter out potential non-boolean values
           .sort();
@@ -676,13 +676,13 @@ function Filter({ column }: { column: Column<any, unknown> }) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const [min, max] = useMemo(
       () => column.getFacetedMinMaxValues() ?? [undefined, undefined],
-      [column] // Depend on column object
+      [column], // Depend on column object
     );
     return (
       <div>
         <Label htmlFor={`${id}-range-min`}>{columnHeader}</Label>
         {/* ... (keep the range input structure from your example) ... */}
-        <div className="flex gap-2 mt-1">
+        <div className="mt-1 flex gap-2">
           <Input
             id={`${id}-range-min`}
             // ... props ...

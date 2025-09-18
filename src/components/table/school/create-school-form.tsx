@@ -1,10 +1,11 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { ChangeEvent, useState, useTransition } from "react";
 import { useTheme } from "next-themes";
+import { ChangeEvent, useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
 
+import { Locale } from "@/i18n"; // Assuming you might need this
 import {
   AffiliationTypeEnum,
   AttendanceSystemEnum,
@@ -13,9 +14,9 @@ import {
   SchoolMembers,
   SchoolTypeEnum,
 } from "@/lib/schema/school.dto"; // Adjust import path
-import { Locale } from "@/i18n"; // Assuming you might need this
 
 // Import Shadcn UI Components
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -26,7 +27,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -34,23 +36,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 // Import Custom Components (Ensure these exist)
-import MyImage from "@/components/myComponents/myImage"; // Assuming this exists
-import { FormError, FormSuccess } from "@/components/myComponents/form-message"; // Assuming this exists
-import MultipleSelector from "../../ui/multiselect";
+import { FormError, FormSuccess } from "@/components/common/form-message"; // Assuming this exists
+import MyImage from "@/components/common/myImage"; // Assuming this exists
 import {
   SchoolCurriculum,
   schoolEducationLevel,
   schoolLabs,
   SchoolSportsExtracurricular,
 } from "@/lib/context/school.context";
-import { useRouter } from "next/navigation";
-import { createSchoolService } from "@/service/school/school.service";
 import { useToast } from "@/lib/context/toast/ToastContext";
+import { createSchoolService } from "@/service/school/school.service";
+import { useRouter } from "next/navigation";
+import MultipleSelector from "../../ui/multiselect";
 
 interface Props {
   lang: Locale;
@@ -107,7 +107,7 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
   // Image handler adapted for Logo
   const handleLogoChange = (
     e: ChangeEvent<HTMLInputElement>,
-    fieldChange: (value: string) => void
+    fieldChange: (value: string) => void,
   ) => {
     setError("");
     e.preventDefault();
@@ -140,17 +140,17 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
         showToast({
           type: "success",
           title: (
-            <div className=" flex space-x-2">
-              <MyImage src={"/logo.png"} className=" size-10" />
+            <div className="flex space-x-2">
+              <MyImage src={"/logo.png"} className="size-10" />
               <h3>space-together</h3>
             </div>
           ),
           description: (
-            <div className=" flex space-x-2">
+            <div className="flex space-x-2">
               {create.data.logo && (
                 <MyImage src={create.data.logo} role="ICON" />
               )}
-              <h3 className=" text-lg">{create.data.name}</h3>
+              <h3 className="text-lg">{create.data.name}</h3>
               Has been created successful 🌻
             </div>
           ),
@@ -173,12 +173,12 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-6 basic-card shadow-sm"
+        className="basic-card space-y-6 shadow-sm"
       >
         {/* Section: Basic Info */}
         <div className="">
-          <h3 className="text-lg font-medium mb-4">Basic Information</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <h3 className="mb-4 text-lg font-medium">Basic Information</h3>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {/* School Name */}
             <FormField
               control={form.control}
@@ -292,7 +292,7 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
                         field.value ||
                         "https://img.freepik.com/free-vector/illustration-gallery-icon_53876-27002.jpg"
                       } // Default placeholder
-                      className="size-24 border rounded" // Adjust styling as needed
+                      className="size-24 rounded border" // Adjust styling as needed
                       classname=" object-contain" // Adjust styling as needed
                       alt="School Logo"
                     />
@@ -338,7 +338,7 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
                 <FormControl>
                   <Textarea
                     placeholder="Tell us a little bit about the school"
-                    className="resize-y min-h-[100px]"
+                    className="min-h-[100px] resize-y"
                     {...field}
                   />
                 </FormControl>
@@ -350,8 +350,8 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
 
         {/* Section: Academic Details */}
         <div className="">
-          <h3 className="text-lg font-medium mb-4">Academic Details</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <h3 className="mb-4 text-lg font-medium">Academic Details</h3>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {/* Curriculum */}
             <FormField
               control={form.control}
@@ -451,9 +451,9 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
 
         {/* Section: Contact & Location */}
         <div className="">
-          <h3 className="text-lg font-medium mb-4">Contact & Location</h3>
+          <h3 className="mb-4 text-lg font-medium">Contact & Location</h3>
           {/* Address Fields */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-2">
             <FormField
               control={form.control}
               name="address.street"
@@ -537,7 +537,7 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
             />
           </div>
           {/* Contact Fields */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-2">
             <FormField
               control={form.control}
               name="contact.phone"
@@ -598,8 +598,8 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
           </FormDescription>
         </div>
         <div className="">
-          <h3 className="text-lg font-medium mb-4">Facilities & Operations</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <h3 className="mb-4 text-lg font-medium">Facilities & Operations</h3>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {/* Student Capacity */}
             <FormField
               control={form.control}
@@ -616,7 +616,7 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
                       // Ensure value is passed as number
                       onChange={(e) =>
                         field.onChange(
-                          parseInt(e.target.value, 10) || undefined
+                          parseInt(e.target.value, 10) || undefined,
                         )
                       }
                     />
@@ -641,7 +641,7 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
                       {...field}
                       onChange={(e) =>
                         field.onChange(
-                          parseInt(e.target.value, 10) || undefined
+                          parseInt(e.target.value, 10) || undefined,
                         )
                       }
                     />
@@ -699,13 +699,13 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
                       }
                       className="flex space-x-4"
                     >
-                      <FormItem className="flex items-center space-x-2 space-y-0">
+                      <FormItem className="flex items-center space-y-0 space-x-2">
                         <FormControl>
                           <RadioGroupItem value="true" />
                         </FormControl>
                         <FormLabel className="font-normal">Yes</FormLabel>
                       </FormItem>
-                      <FormItem className="flex items-center space-x-2 space-y-0">
+                      <FormItem className="flex items-center space-y-0 space-x-2">
                         <FormControl>
                           <RadioGroupItem value="false" />
                         </FormControl>
@@ -737,13 +737,13 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
                       }
                       className="flex space-x-4"
                     >
-                      <FormItem className="flex items-center space-x-2 space-y-0">
+                      <FormItem className="flex items-center space-y-0 space-x-2">
                         <FormControl>
                           <RadioGroupItem value="true" />
                         </FormControl>
                         <FormLabel className="font-normal">Yes</FormLabel>
                       </FormItem>
-                      <FormItem className="flex items-center space-x-2 space-y-0">
+                      <FormItem className="flex items-center space-y-0 space-x-2">
                         <FormControl>
                           <RadioGroupItem value="false" />
                         </FormControl>
@@ -775,13 +775,13 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
                       }
                       className="flex space-x-4"
                     >
-                      <FormItem className="flex items-center space-x-2 space-y-0">
+                      <FormItem className="flex items-center space-y-0 space-x-2">
                         <FormControl>
                           <RadioGroupItem value="true" />
                         </FormControl>
                         <FormLabel className="font-normal">Yes</FormLabel>
                       </FormItem>
-                      <FormItem className="flex items-center space-x-2 space-y-0">
+                      <FormItem className="flex items-center space-y-0 space-x-2">
                         <FormControl>
                           <RadioGroupItem value="false" />
                         </FormControl>
@@ -813,13 +813,13 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
                       }
                       className="flex space-x-4"
                     >
-                      <FormItem className="flex items-center space-x-2 space-y-0">
+                      <FormItem className="flex items-center space-y-0 space-x-2">
                         <FormControl>
                           <RadioGroupItem value="true" />
                         </FormControl>
                         <FormLabel className="font-normal">Yes</FormLabel>
                       </FormItem>
-                      <FormItem className="flex items-center space-x-2 space-y-0">
+                      <FormItem className="flex items-center space-y-0 space-x-2">
                         <FormControl>
                           <RadioGroupItem value="false" />
                         </FormControl>

@@ -1,49 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState, useEffect } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  MoreHorizontal,
-  Edit,
-  Trash2,
-  UserPlus,
-  ChevronLeft,
-  ChevronRight,
-  Search,
-} from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import MyImage from "@/components/common/myImage";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -54,14 +12,23 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
-  newTeacherFormSchema,
-  editTeacherFormSchema,
-  type NewTeacherForm,
-  type EditTeacherForm,
-} from "@/lib/schema/table-forms/teacher-forms";
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Form,
   FormControl,
@@ -70,8 +37,41 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Badge } from "@/components/ui/badge";
-import MyImage from "@/components/myComponents/myImage";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  editTeacherFormSchema,
+  newTeacherFormSchema,
+  type EditTeacherForm,
+  type NewTeacherForm,
+} from "@/lib/schema/table-forms/teacher-forms";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Edit,
+  MoreHorizontal,
+  Search,
+  Trash2,
+  UserPlus,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 
 // Available classes and subjects
 const availableClasses = ["L1", "L2", "L3"];
@@ -218,7 +218,7 @@ export default function TeacherList() {
     setSelectedTeachers((prev) =>
       prev.includes(id)
         ? prev.filter((teacherId) => teacherId !== id)
-        : [...prev, id]
+        : [...prev, id],
     );
   };
 
@@ -279,8 +279,8 @@ export default function TeacherList() {
               subjects: data.subjects,
               phone: data.phone,
             }
-          : teacher
-      )
+          : teacher,
+      ),
     );
 
     setIsEditDialogOpen(false);
@@ -290,7 +290,7 @@ export default function TeacherList() {
   const handleDeleteTeacher = (id: string) => {
     setTeachers(teachers.filter((teacher) => teacher.id !== id));
     setSelectedTeachers(
-      selectedTeachers.filter((teacherId) => teacherId !== id)
+      selectedTeachers.filter((teacherId) => teacherId !== id),
     );
     setTeacherToDelete(null);
   };
@@ -298,7 +298,7 @@ export default function TeacherList() {
   // Handle bulk delete
   const handleBulkDelete = () => {
     setTeachers(
-      teachers.filter((teacher) => !selectedTeachers.includes(teacher.id))
+      teachers.filter((teacher) => !selectedTeachers.includes(teacher.id)),
     );
     setSelectedTeachers([]);
     setIsBulkDeleteDialogOpen(false);
@@ -357,7 +357,7 @@ export default function TeacherList() {
   const indexOfFirstTeacher = indexOfLastTeacher - teachersPerPage;
   const currentTeachers = filteredTeachers.slice(
     indexOfFirstTeacher,
-    indexOfLastTeacher
+    indexOfLastTeacher,
   );
   const totalPages = Math.ceil(filteredTeachers.length / teachersPerPage);
 
@@ -400,8 +400,8 @@ export default function TeacherList() {
   ]);
 
   return (
-    <div className="w-full rounded-md basic-card-no-p border shadow-md">
-      <div className="text-white p-4 flex justify-between items-center">
+    <div className="basic-card-no-p w-full rounded-md border shadow-md">
+      <div className="flex items-center justify-between p-4 text-white">
         <h1 className="text-lg font-medium">All Teachers</h1>
 
         <div className="flex gap-2">
@@ -412,7 +412,7 @@ export default function TeacherList() {
               onClick={() => setIsBulkDeleteDialogOpen(true)}
               className="mr-2"
             >
-              <Trash2 className="h-4 w-4 mr-2" />
+              <Trash2 className="mr-2 h-4 w-4" />
               Delete Selected
             </Button>
           )}
@@ -428,7 +428,7 @@ export default function TeacherList() {
                 variant="outline"
                 className="basic-title-sm hover:bg-gray-100"
               >
-                <UserPlus className="h-4 w-4 mr-2" />
+                <UserPlus className="mr-2 h-4 w-4" />
                 Add new Teacher
               </Button>
             </DialogTrigger>
@@ -552,7 +552,7 @@ export default function TeacherList() {
                               const currentValues = field.value || [];
                               if (currentValues.includes(value)) {
                                 field.onChange(
-                                  currentValues.filter((v) => v !== value)
+                                  currentValues.filter((v) => v !== value),
                                 );
                               } else {
                                 field.onChange([...currentValues, value]);
@@ -583,7 +583,7 @@ export default function TeacherList() {
                               ))}
                             </SelectContent>
                           </Select>
-                          <div className="flex flex-wrap gap-1 mt-2">
+                          <div className="mt-2 flex flex-wrap gap-1">
                             {field.value?.map((cls) => (
                               <Badge
                                 key={cls}
@@ -593,12 +593,12 @@ export default function TeacherList() {
                                 {cls}
                                 <button
                                   type="button"
-                                  className="ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                                  className="ring-offset-background focus:ring-ring ml-1 rounded-full outline-none focus:ring-2 focus:ring-offset-2"
                                   onClick={() => {
                                     field.onChange(
                                       field.value.filter(
-                                        (value) => value !== cls
-                                      )
+                                        (value) => value !== cls,
+                                      ),
                                     );
                                   }}
                                 >
@@ -625,7 +625,7 @@ export default function TeacherList() {
                               const currentValues = field.value || [];
                               if (currentValues.includes(value)) {
                                 field.onChange(
-                                  currentValues.filter((v) => v !== value)
+                                  currentValues.filter((v) => v !== value),
                                 );
                               } else {
                                 field.onChange([...currentValues, value]);
@@ -656,7 +656,7 @@ export default function TeacherList() {
                               ))}
                             </SelectContent>
                           </Select>
-                          <div className="flex flex-wrap gap-1 mt-2">
+                          <div className="mt-2 flex flex-wrap gap-1">
                             {field.value?.map((subject) => (
                               <Badge
                                 key={subject}
@@ -666,12 +666,12 @@ export default function TeacherList() {
                                 {subject}
                                 <button
                                   type="button"
-                                  className="ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                                  className="ring-offset-background focus:ring-ring ml-1 rounded-full outline-none focus:ring-2 focus:ring-offset-2"
                                   onClick={() => {
                                     field.onChange(
                                       field.value.filter(
-                                        (value) => value !== subject
-                                      )
+                                        (value) => value !== subject,
+                                      ),
                                     );
                                   }}
                                 >
@@ -706,7 +706,7 @@ export default function TeacherList() {
       <Form {...filterForm}>
         <form
           onChange={filterForm.handleSubmit(applyFilters)}
-          className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
+          className="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-4"
         >
           <FormField
             control={filterForm.control}
@@ -715,7 +715,7 @@ export default function TeacherList() {
               <FormItem className="space-y-2">
                 <FormLabel className="text-white">Search</FormLabel>
                 <div className="relative">
-                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Search className="text-muted-foreground absolute top-2.5 left-2 h-4 w-4" />
                   <FormControl>
                     <Input
                       {...field}
@@ -752,7 +752,7 @@ export default function TeacherList() {
                       <SelectValue placeholder="Select gender" />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent className="bg-slate-800 text-white border-slate-700">
+                  <SelectContent className="border-slate-700 bg-slate-800 text-white">
                     <SelectItem value="All gender">All gender</SelectItem>
                     <SelectItem value="Male">Male</SelectItem>
                     <SelectItem value="Female">Female</SelectItem>
@@ -781,7 +781,7 @@ export default function TeacherList() {
                       <SelectValue placeholder="Select class" />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent className="bg-slate-800 text-white border-slate-700">
+                  <SelectContent className="border-slate-700 bg-slate-800 text-white">
                     <SelectItem value="All classes">All classes</SelectItem>
                     {availableClasses.map((cls) => (
                       <SelectItem key={cls} value={cls}>
@@ -813,7 +813,7 @@ export default function TeacherList() {
                       <SelectValue placeholder="Select subject" />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent className="bg-slate-800 text-white border-slate-700">
+                  <SelectContent className="border-slate-700 bg-slate-800 text-white">
                     <SelectItem value="All subjects">All subjects</SelectItem>
                     {availableSubjects.map((subject) => (
                       <SelectItem key={subject} value={subject}>
@@ -906,7 +906,7 @@ export default function TeacherList() {
             currentTeachers.map((teacher) => (
               <TableRow
                 key={teacher.id}
-                className="text-white border-t border-slate-400"
+                className="border-t border-slate-400 text-white"
               >
                 <TableCell className="p-2">
                   <Checkbox
@@ -917,7 +917,7 @@ export default function TeacherList() {
                 <TableCell>
                   <div className="flex items-center gap-3">
                     <MyImage
-                      className=" size-10"
+                      className="size-10"
                       src={teacher.image || "/placeholder.svg"}
                       role="AVATAR"
                       alt={teacher.name}
@@ -972,7 +972,7 @@ export default function TeacherList() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
                       align="end"
-                      className="bg-slate-800 text-white border-slate-700"
+                      className="border-slate-700 bg-slate-800 text-white"
                     >
                       <DropdownMenuItem
                         className="hover:bg-slate-700 focus:bg-slate-700"
@@ -981,7 +981,7 @@ export default function TeacherList() {
                           prepareTeacherForEdit(teacher);
                         }}
                       >
-                        <Edit className="h-4 w-4 mr-2" />
+                        <Edit className="mr-2 h-4 w-4" />
                         Edit
                       </DropdownMenuItem>
                       <DropdownMenuItem
@@ -992,7 +992,7 @@ export default function TeacherList() {
                           setIsDeleteDialogOpen(true);
                         }}
                       >
-                        <Trash2 className="h-4 w-4 mr-2" />
+                        <Trash2 className="mr-2 h-4 w-4" />
                         Delete
                       </DropdownMenuItem>
                     </DropdownMenuContent>
@@ -1002,7 +1002,7 @@ export default function TeacherList() {
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={8} className="text-center py-4 text-white">
+              <TableCell colSpan={8} className="py-4 text-center text-white">
                 No teachers found
               </TableCell>
             </TableRow>
@@ -1010,7 +1010,7 @@ export default function TeacherList() {
         </TableBody>
       </Table>
 
-      <div className="flex justify-between items-center p-4 text-white">
+      <div className="flex items-center justify-between p-4 text-white">
         <div>
           {filteredTeachers.length > 0 && (
             <p>
@@ -1023,21 +1023,21 @@ export default function TeacherList() {
         <div className="flex gap-2">
           <Button
             variant="outline"
-            className="bg-white basic-title-sm hover:bg-gray-100"
+            className="basic-title-sm bg-white hover:bg-gray-100"
             onClick={goToPreviousPage}
             disabled={currentPage === 1}
           >
-            <ChevronLeft className="h-4 w-4 mr-1" />
+            <ChevronLeft className="mr-1 h-4 w-4" />
             Previous
           </Button>
           <Button
             variant="outline"
-            className="bg-white basic-title-sm hover:bg-gray-100"
+            className="basic-title-sm bg-white hover:bg-gray-100"
             onClick={goToNextPage}
             disabled={currentPage === totalPages || totalPages === 0}
           >
             Next
-            <ChevronRight className="h-4 w-4 ml-1" />
+            <ChevronRight className="ml-1 h-4 w-4" />
           </Button>
         </div>
       </div>
@@ -1108,7 +1108,7 @@ export default function TeacherList() {
                             <SelectValue placeholder="Select gender" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent className="bg-slate-800 text-white border-slate-700">
+                        <SelectContent className="border-slate-700 bg-slate-800 text-white">
                           <SelectItem value="Male">Male</SelectItem>
                           <SelectItem value="Female">Female</SelectItem>
                         </SelectContent>
@@ -1164,7 +1164,7 @@ export default function TeacherList() {
                           const currentValues = field.value || [];
                           if (currentValues.includes(value)) {
                             field.onChange(
-                              currentValues.filter((v) => v !== value)
+                              currentValues.filter((v) => v !== value),
                             );
                           } else {
                             field.onChange([...currentValues, value]);
@@ -1182,7 +1182,7 @@ export default function TeacherList() {
                             </SelectValue>
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent className="bg-slate-800 text-white border-slate-700">
+                        <SelectContent className="border-slate-700 bg-slate-800 text-white">
                           {availableClasses.map((cls) => (
                             <SelectItem key={cls} value={cls}>
                               <div className="flex items-center gap-2">
@@ -1195,7 +1195,7 @@ export default function TeacherList() {
                           ))}
                         </SelectContent>
                       </Select>
-                      <div className="flex flex-wrap gap-1 mt-2">
+                      <div className="mt-2 flex flex-wrap gap-1">
                         {field.value?.map((cls) => (
                           <Badge
                             key={cls}
@@ -1205,10 +1205,10 @@ export default function TeacherList() {
                             {cls}
                             <button
                               type="button"
-                              className="ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                              className="ring-offset-background focus:ring-ring ml-1 rounded-full outline-none focus:ring-2 focus:ring-offset-2"
                               onClick={() => {
                                 field.onChange(
-                                  field.value.filter((value) => value !== cls)
+                                  field.value.filter((value) => value !== cls),
                                 );
                               }}
                             >
@@ -1235,7 +1235,7 @@ export default function TeacherList() {
                           const currentValues = field.value || [];
                           if (currentValues.includes(value)) {
                             field.onChange(
-                              currentValues.filter((v) => v !== value)
+                              currentValues.filter((v) => v !== value),
                             );
                           } else {
                             field.onChange([...currentValues, value]);
@@ -1253,7 +1253,7 @@ export default function TeacherList() {
                             </SelectValue>
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent className="bg-slate-800 text-white border-slate-700">
+                        <SelectContent className="border-slate-700 bg-slate-800 text-white">
                           {availableSubjects.map((subject) => (
                             <SelectItem key={subject} value={subject}>
                               <div className="flex items-center gap-2">
@@ -1266,7 +1266,7 @@ export default function TeacherList() {
                           ))}
                         </SelectContent>
                       </Select>
-                      <div className="flex flex-wrap gap-1 mt-2">
+                      <div className="mt-2 flex flex-wrap gap-1">
                         {field.value?.map((subject) => (
                           <Badge
                             key={subject}
@@ -1276,12 +1276,12 @@ export default function TeacherList() {
                             {subject}
                             <button
                               type="button"
-                              className="ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                              className="ring-offset-background focus:ring-ring ml-1 rounded-full outline-none focus:ring-2 focus:ring-offset-2"
                               onClick={() => {
                                 field.onChange(
                                   field.value.filter(
-                                    (value) => value !== subject
-                                  )
+                                    (value) => value !== subject,
+                                  ),
                                 );
                               }}
                             >
@@ -1316,7 +1316,7 @@ export default function TeacherList() {
         open={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
       >
-        <AlertDialogContent className="bg-slate-800 text-white border-slate-700">
+        <AlertDialogContent className="border-slate-700 bg-slate-800 text-white">
           <AlertDialogHeader>
             <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
             <AlertDialogDescription className="text-slate-300">
@@ -1348,7 +1348,7 @@ export default function TeacherList() {
         open={isBulkDeleteDialogOpen}
         onOpenChange={setIsBulkDeleteDialogOpen}
       >
-        <AlertDialogContent className="bg-slate-800 text-white border-slate-700">
+        <AlertDialogContent className="border-slate-700 bg-slate-800 text-white">
           <AlertDialogHeader>
             <AlertDialogTitle>Confirm Bulk Deletion</AlertDialogTitle>
             <AlertDialogDescription className="text-slate-300">

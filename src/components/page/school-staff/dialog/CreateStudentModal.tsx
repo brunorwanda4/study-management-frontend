@@ -1,21 +1,25 @@
 // src/components/page/school-staff/dialog/CreateStudentModal.tsx
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 
+import { FormError, FormSuccess } from "@/components/common/form-message";
+import {
+  ClassCombobox,
+  ComboboxItem,
+} from "@/components/table/school/class-combobox";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
   DialogTrigger,
-  DialogClose,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -24,18 +28,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { ViewDataClassDto } from "@/lib/schema/class/view-data-class.dto"; // Needed for class dropdown
 import {
   SendJoinSchoolRequestDto,
   sendJoinSchoolRequestSchema,
 } from "@/lib/schema/school/school-join-school/send-join-school-request.schema";
-import {
-  ClassCombobox,
-  ComboboxItem,
-} from "@/components/table/school/class-combobox";
 import { CreateSchoolJoinRequest } from "@/service/school/school-join-request.service";
 import { Plus, UsersIcon } from "lucide-react";
-import { FormError, FormSuccess } from "@/components/myComponents/form-message";
 
 interface CreateStudentModalProps {
   schoolId: string;
@@ -69,12 +69,12 @@ export function SendStudentRequestToJoinSchool({
         setSuccess(
           `Request sent successfully ${
             sendRequest.data.name ? `"for"${sendRequest.data.name}` : " "
-          }! ☺️`
+          }! ☺️`,
         );
         form.reset(); // Reset the entire form on success
       } else {
         setError(
-          sendRequest.message || "An error occurred while sending the request."
+          sendRequest.message || "An error occurred while sending the request.",
         );
       }
     });

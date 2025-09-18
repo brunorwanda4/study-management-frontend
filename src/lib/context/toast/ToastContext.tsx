@@ -1,20 +1,20 @@
 "use client";
 
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useCallback,
-  ReactNode,
-  useRef,
-  useEffect,
-} from "react";
+import { CustomToast } from "@/components/comon/custom-toast";
 import {
   ToastProvider as ShadcnToastProvider,
   ToastViewport,
 } from "@/components/ui/toast";
 import { useProgressTimer } from "@/hooks/useProgressTimer";
-import { CustomToast } from "@/components/myComponents/custom-toast";
+import React, {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { v4 as uuidv4 } from "uuid"; // npm i uuid
 
 export type ToastType = "success" | "error" | "warning" | "info" | "default";
@@ -86,7 +86,7 @@ export const ToastManager: React.FC<{ children: ReactNode }> = ({
         handleDismiss();
       }
     },
-    [handleDismiss]
+    [handleDismiss],
   );
 
   return (
@@ -107,7 +107,7 @@ export const ToastManager: React.FC<{ children: ReactNode }> = ({
             action={toastProps.action}
           />
         )}
-        <ToastViewport className=" sm:top-11 sm:right-0" />
+        <ToastViewport className="sm:top-11 sm:right-0" />
         {children}
       </ShadcnToastProvider>
     </ToastContext.Provider>

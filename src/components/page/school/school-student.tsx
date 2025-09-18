@@ -1,5 +1,5 @@
 import UserCardSmall from "@/components/cards/user-card-small";
-import MyLink from "@/components/myComponents/myLink";
+import MyLink from "@/components/comon/myLink";
 import { Button } from "@/components/ui/button";
 import { Locale } from "@/i18n";
 import { StudentDto } from "@/lib/schema/school/student.dto";
@@ -17,8 +17,8 @@ interface props {
 const SchoolStudents = ({ lang, currentUser, students, onThePage }: props) => {
   if (students.length === 0) {
     return (
-      <div className=" basic-card space-y-2">
-        <h3 className=" text-center basic-title text-gray-500">
+      <div className="basic-card space-y-2">
+        <h3 className="basic-title text-center text-gray-500">
           This school have no students! 😔
         </h3>
         {currentUser.role === "SCHOOLSTAFF" && (
@@ -27,7 +27,7 @@ const SchoolStudents = ({ lang, currentUser, students, onThePage }: props) => {
               button={{ variant: "primary", library: "daisy" }}
               type="button"
               href="s-t/students"
-              className=" w-full"
+              className="w-full"
               classname=" w-full"
             >
               <BsPlusCircle />
@@ -40,11 +40,11 @@ const SchoolStudents = ({ lang, currentUser, students, onThePage }: props) => {
   }
 
   return (
-    <div className=" basic-card space-y-2">
+    <div className="basic-card space-y-2">
       <div className="">
-        <h3 className=" font-semibold capitalize">school Student </h3>
+        <h3 className="font-semibold capitalize">school Student </h3>
       </div>
-      <div className=" space-y-2 ml-2">
+      <div className="ml-2 space-y-2">
         {students.map((item) => {
           return (
             <UserCardSmall
@@ -61,7 +61,7 @@ const SchoolStudents = ({ lang, currentUser, students, onThePage }: props) => {
       {!onThePage && (
         <Link
           href={`/${lang}/school/peoples`}
-          className=" w-full  items-center flex justify-center"
+          className="flex w-full items-center justify-center"
         >
           <Button variant="ghost" size="sm" className="w-full">
             See More

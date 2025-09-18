@@ -1,18 +1,18 @@
 "use client";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Separator } from "../ui/separator";
-import { Button } from "../ui/button";
 import { Locale } from "@/i18n";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
+import { formatTimeAgo } from "@/lib/functions/change-time";
 import { SchoolJoinRequestAndSchool } from "@/lib/schema/school/school-join-school/school-join-request.schema";
+import { cn } from "@/lib/utils";
 import {
   approvedSchoolJoinRequestByCurrentUser,
   RejectSchoolJoinRequestByCurrentUser,
 } from "@/service/school/school-join-request.service";
-import { FormError, FormSuccess } from "../myComponents/form-message";
+import Link from "next/link";
 import { useState, useTransition } from "react";
-import { formatTimeAgo } from "@/lib/functions/change-time";
+import { FormError, FormSuccess } from "../comon/form-message";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Button } from "../ui/button";
+import { Separator } from "../ui/separator";
 
 interface props {
   lang: Locale;
@@ -63,7 +63,7 @@ const SchoolJoinRequestCard = ({
   };
 
   return (
-    <div className={cn("basic-card p-4 w-72", className)}>
+    <div className={cn("basic-card w-72 p-4", className)}>
       <div className="flex items-start gap-3">
         <Avatar className="size-12">
           <AvatarImage
@@ -76,8 +76,8 @@ const SchoolJoinRequestCard = ({
           <AvatarFallback>{displayName.charAt(0).toUpperCase()}</AvatarFallback>
         </Avatar>
         <div className="flex-1 overflow-hidden">
-          <h3 className="font-medium text-base truncate">{displayName}</h3>
-          {email && <p className="text-sm text-gray-500 truncate">{email}</p>}
+          <h3 className="truncate text-base font-medium">{displayName}</h3>
+          {email && <p className="truncate text-sm text-gray-500">{email}</p>}
         </div>
       </div>
       <div className="mt-4 text-sm">
@@ -85,7 +85,7 @@ const SchoolJoinRequestCard = ({
         <span className="font-semibold capitalize">{displayRole}</span> at:
       </div>
       <div>
-        <div className="flex items-center gap-2 mt-2">
+        <div className="mt-2 flex items-center gap-2">
           <Avatar className="size-8">
             <AvatarImage
               src={schoolLogo || "/images/default-school-logo.jpg"}
@@ -95,18 +95,18 @@ const SchoolJoinRequestCard = ({
           </Avatar>
           <Link
             href={`/${lang}/school/${schoolId}`}
-            className="font-medium text-sm hover:underline truncate"
+            className="truncate text-sm font-medium hover:underline"
           >
             {schoolName}
           </Link>
         </div>
-        <div className=" flex justify-end">
-          <span className=" text-sm text-gray-500">
+        <div className="flex justify-end">
+          <span className="text-sm text-gray-500">
             {formatTimeAgo(request.updateAt)}
           </span>
         </div>
       </div>
-      <div className=" mt-2">
+      <div className="mt-2">
         <FormError message={error} />
         <FormSuccess message={success} />
       </div>

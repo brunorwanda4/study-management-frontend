@@ -1,7 +1,7 @@
 import SchoolEducationChart from "@/components/charts/school-education-chart";
 import SchoolStudentAndClassChart from "@/components/charts/school-student-and-classes-chart";
-import MyImage from "@/components/myComponents/myImage";
-import MyLink from "@/components/myComponents/myLink";
+import MyImage from "@/components/common/myImage";
+import MyLink from "@/components/comon/myLink";
 import JoinSchoolRequestBody from "@/components/page/application/join-school-request/join-school-request-body";
 import NotFoundPage from "@/components/page/not-found";
 import StaffDashboardDetails from "@/components/page/school-staff/dashboard/staff-dashboard-details";
@@ -13,6 +13,7 @@ import JoinSchoolDialog from "@/components/page/school-staff/dialog/join-school-
 import SchoolHeader from "@/components/page/school/school-header";
 import { Locale } from "@/i18n";
 import { getSchoolServer } from "@/lib/utils/auth";
+import { authUser } from "@/lib/utils/auth-user";
 import { getClassesBySchoolIdViewData } from "@/service/class/class.service";
 import { GetAllJoinSchoolRequestByCurrentUserEmail } from "@/service/school/school-join-request.service";
 import { getSchoolByIdService } from "@/service/school/school.service";
@@ -51,11 +52,11 @@ const SchoolStaffPage = async (props: props) => {
       getSchoolByIdService(currentSchool.schoolId),
       getClassesBySchoolIdViewData(currentSchool.schoolId),
       getAllStudentBySchoolId(currentSchool.schoolId),
-      getAllTeacherBySchoolId(currentSchool.schoolId)
+      getAllTeacherBySchoolId(currentSchool.schoolId),
     ]);
     if (!school.data) return <NotFoundPage />;
     return (
-      <div className=" p-4 space-y-4 w-full">
+      <div className="w-full space-y-4 p-4">
         <SchoolHeader
           currentUser={currentUser}
           currentSchool={currentSchool}
@@ -70,15 +71,15 @@ const SchoolStaffPage = async (props: props) => {
           lang={lang}
         />
         {/* school basic info */}
-        <div className=" flex space-x-4 w-full">
+        <div className="flex w-full space-x-4">
           <SchoolEducationChart />
           <SchoolStudentAndClassChart classes={classes.data || []} />
         </div>
-        <div className=" flex space-x-4 w-full">
+        <div className="flex w-full space-x-4">
           <JoinSchoolTableWrapper currentSchool={currentSchool} lang={lang} />
           <ClassActivitiesTable lang={lang} />
         </div>
-        <div className=" flex space-x-4 w-full">
+        <div className="flex w-full space-x-4">
           <StudentDashboardTable students={students.data || []} lang={lang} />
           <TeachersDashboardTable teachers={teachers.data || []} lang={lang} />
         </div>
@@ -87,12 +88,12 @@ const SchoolStaffPage = async (props: props) => {
   }
 
   const getSchoolJoinRequest = await GetAllJoinSchoolRequestByCurrentUserEmail(
-    currentUser.email
+    currentUser.user.email,
   );
   return (
-    <div className=" w-full px-4 py-2 space-y-4 grid place-content-center h-full">
-      <div className=" flex flex-col justify-center items-center space-y-2">
-        <div className=" flex justify-center items-center w-full h-full gap-2 flex-row-reverse">
+    <div className="grid h-full w-full place-content-center space-y-4 px-4 py-2">
+      <div className="flex flex-col items-center justify-center space-y-2">
+        <div className="flex h-full w-full flex-row-reverse items-center justify-center gap-2">
           <MyLink
             loading
             href={`/${lang}/s-t/new`}
@@ -108,7 +109,7 @@ const SchoolStaffPage = async (props: props) => {
       {getSchoolJoinRequest.data && (
         <JoinSchoolRequestBody
           lang={lang}
-          currentUser={currentUser}
+          currentUser={currentUser.user}
           requests={getSchoolJoinRequest.data}
         />
       )}

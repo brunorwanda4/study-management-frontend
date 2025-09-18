@@ -1,26 +1,18 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useState, useTransition } from "react";
+import { useToast } from "@/lib/context/toast/ToastContext";
 import { ClassDto } from "@/lib/schema/class/class.schema";
 import { ClassType } from "@/lib/schema/class/create-class.dto";
 import { updateClassPublicInfo } from "@/service/class/class.service";
-import { useToast } from "@/lib/context/toast/ToastContext";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
 
 // Components
+import { FormError, FormSuccess } from "@/components/common/form-message";
+import { ImageUpload } from "@/components/comon/image-upload";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { ImageUpload } from "@/components/myComponents/image-upload";
-import { FormError, FormSuccess } from "@/components/myComponents/form-message";
 import {
   Form,
   FormControl,
@@ -29,7 +21,18 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { ClassUpdateDto, ClassUpdateSchema } from "@/lib/schema/class/update-class-schema";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  ClassUpdateDto,
+  ClassUpdateSchema,
+} from "@/lib/schema/class/update-class-schema";
 
 interface UpdateClassPublicInfoFormProps {
   classData: ClassDto;
@@ -88,7 +91,7 @@ export default function UpdateClassPublicInfoForm({
           });
         } else {
           throw new Error(
-            result.message || "Failed to update class information"
+            result.message || "Failed to update class information",
           );
         }
       } catch (error) {
@@ -111,7 +114,7 @@ export default function UpdateClassPublicInfoForm({
     placeholder: string,
     isRequired = false,
     isSelect = false,
-    selectItems?: { value: string; label: string }[]
+    selectItems?: { value: string; label: string }[],
   ) => (
     <FormField
       control={form.control}
@@ -121,7 +124,7 @@ export default function UpdateClassPublicInfoForm({
         const stringValue = field.value?.toString() ?? "";
 
         return (
-          <FormItem className="space-y-2 flex flex-col">
+          <FormItem className="flex flex-col space-y-2">
             <FormLabel>
               {label} {isRequired && "*"}
             </FormLabel>
@@ -174,16 +177,16 @@ export default function UpdateClassPublicInfoForm({
           className="w-full space-y-4"
           onSubmit={form.handleSubmit(handleSubmit)}
         >
-          <div className="space-y-4 md:flex md:space-x-4 md:space-y-0">
+          <div className="space-y-4 md:flex md:space-y-0 md:space-x-4">
             {/* Left Column */}
-            <div className="md:w-1/2 space-y-4">
+            <div className="space-y-4 md:w-1/2">
               {renderFormField("name", "Class Name", "Enter class name", true)}
               {renderFormField("code", "Class Code", "Enter class code", true)}
               {renderFormField(
                 "username",
                 "Class Username",
                 "Enter class username",
-                true
+                true,
               )}
 
               {renderFormField(
@@ -195,17 +198,17 @@ export default function UpdateClassPublicInfoForm({
                 Object.values(ClassType).map((type) => ({
                   value: type,
                   label: type,
-                }))
+                })),
               )}
             </div>
 
             {/* Right Column */}
-            <div className="md:w-1/2 space-y-4">
+            <div className="space-y-4 md:w-1/2">
               <FormField
                 control={form.control}
                 name="image"
                 render={({ field }) => (
-                  <FormItem className="space-y-2 flex flex-col">
+                  <FormItem className="flex flex-col space-y-2">
                     <FormLabel>Class Image</FormLabel>
                     <FormControl>
                       <ImageUpload
@@ -225,7 +228,7 @@ export default function UpdateClassPublicInfoForm({
               {renderFormField(
                 "educationLever",
                 "Education Level",
-                "Enter education level"
+                "Enter education level",
               )}
               {renderFormField("curriculum", "Curriculum", "Enter curriculum")}
             </div>

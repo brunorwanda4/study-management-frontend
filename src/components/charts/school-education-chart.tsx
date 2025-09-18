@@ -16,9 +16,9 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { useMemo } from "react";
-import { Button } from "../ui/button";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
-import MyImage from "../myComponents/myImage";
+import MyImage from "../comon/myImage";
+import { Button } from "../ui/button";
 const chartData = [
   { browser: "REB", visitors: 200, fill: "var(--color-safari)" },
   { browser: "TVET", visitors: 287, fill: "var(--color-firefox)" },
@@ -55,11 +55,11 @@ export default function SchoolEducationChart() {
   }, []);
 
   return (
-    <Card className="flex flex-col w-1/3">
-      <CardHeader className=" flex justify-between items-center pb-0 border-b border-base-300">
+    <Card className="flex w-1/3 flex-col">
+      <CardHeader className="border-base-300 flex items-center justify-between border-b pb-0">
         <CardTitle>School Education</CardTitle>
         <Button variant={"ghost"} shape={"circle"} library="daisy">
-          <HiOutlineDotsHorizontal size={24}/>
+          <HiOutlineDotsHorizontal size={24} />
         </Button>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
@@ -92,7 +92,7 @@ export default function SchoolEducationChart() {
                         <tspan
                           x={viewBox.cx}
                           y={viewBox.cy}
-                          className="text-3xl font-bold text-primary-content"
+                          className="text-primary-content text-3xl font-bold"
                         >
                           {totalVisitors.toLocaleString()}
                         </tspan>
@@ -112,33 +112,33 @@ export default function SchoolEducationChart() {
           </PieChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className=" grid grid-cols-3 space-x-4 text-sm ">
-        <div className=" flex flex-col space-y-1 items-center">
-          <MyImage className=" size-6" src="/icons/rwanda.png" />
-          <div className=" flex space-x-1">
-            <div className=" size-2 rounded-full bg-[#1100ff]" />
-            <span className=" text-sm">Primary</span>
+      <CardFooter className="grid grid-cols-3 space-x-4 text-sm">
+        <div className="flex flex-col items-center space-y-1">
+          <MyImage className="size-6" src="/icons/rwanda.png" />
+          <div className="flex space-x-1">
+            <div className="size-2 rounded-full bg-[#1100ff]" />
+            <span className="text-sm">Primary</span>
           </div>
         </div>
-        <div className=" flex flex-col space-y-1 items-center">
-          <MyImage className=" size-6" src="/icons/english.png" />
-          <div className=" flex space-x-1">
-            <div className=" size-2 rounded-full bg-[#0088ff]" />
-            <span className=" text-sm">Ordinary Level</span>
+        <div className="flex flex-col items-center space-y-1">
+          <MyImage className="size-6" src="/icons/english.png" />
+          <div className="flex space-x-1">
+            <div className="size-2 rounded-full bg-[#0088ff]" />
+            <span className="text-sm">Ordinary Level</span>
           </div>
         </div>
-        <div className=" flex flex-col space-y-1 items-center">
-          <MyImage className=" size-6" src="/icons/classroom.png" />
-          <div className=" flex space-x-1">
-            <div className=" size-2 rounded-full bg-[#a9d7ff]" />
-            <span className=" text-sm">Primary</span>
+        <div className="flex flex-col items-center space-y-1">
+          <MyImage className="size-6" src="/icons/classroom.png" />
+          <div className="flex space-x-1">
+            <div className="size-2 rounded-full bg-[#a9d7ff]" />
+            <span className="text-sm">Primary</span>
           </div>
         </div>
-        <div className=" flex flex-col space-y-1 items-center">
-          <MyImage className=" size-6" src="/icons/education.png" />
-          <div className=" flex space-x-1">
-            <div className=" size-2 rounded-full bg-[#1100ff]" />
-            <span className=" text-sm">Primary</span>
+        <div className="flex flex-col items-center space-y-1">
+          <MyImage className="size-6" src="/icons/education.png" />
+          <div className="flex space-x-1">
+            <div className="size-2 rounded-full bg-[#1100ff]" />
+            <span className="text-sm">Primary</span>
           </div>
         </div>
       </CardFooter>

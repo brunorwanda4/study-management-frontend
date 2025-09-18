@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
+import { FormError, FormSuccess } from "@/components/common/form-message";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -18,11 +19,10 @@ import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-} from "@/components/ui/input-otp"; 
+} from "@/components/ui/input-otp";
 import { JoinSchoolDto } from "@/lib/schema/school/join-school-schema";
-import { useState, useTransition } from "react";
-import { FormError, FormSuccess } from "@/components/myComponents/form-message";
 import { JoinSchoolByUsernameAndCode } from "@/service/school/school-join-request.service";
+import { useState, useTransition } from "react";
 import { JoinClassDto, JoinClassSchema } from "./schema/join-class-schema";
 
 export default function JoinClassCodeForm() {
@@ -70,13 +70,13 @@ export default function JoinClassCodeForm() {
 
   return (
     <Form {...form}>
-      <form className=" space-y-2" onSubmit={form.handleSubmit(onSubmit)}>
+      <form className="space-y-2" onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
           name="username"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className=" bg-base-200">Username</FormLabel>
+              <FormLabel className="bg-base-200">Username</FormLabel>
               <FormControl>
                 <Input
                   disabled={isPending}
@@ -117,13 +117,13 @@ export default function JoinClassCodeForm() {
             </FormItem>
           )}
         />
-        <div className=" mt-2">
+        <div className="mt-2">
           <FormError message={error} />
           <FormSuccess message={success} />
         </div>
         <Button
           disabled={isPending}
-          className=" w-full"
+          className="w-full"
           variant={"info"}
           library="daisy"
           type="submit"

@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 4789 --turbopack",
+    "dev": "next dev -p 4747 --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -15,6 +15,7 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@formatjs/intl-localematcher": "^0.6.1",
     "@hookform/resolvers": "^5.0.1",
+    "@internationalized/date": "^3.9.0",
     "@radix-ui/react-accordion": "^1.2.4",
     "@radix-ui/react-alert-dialog": "^1.1.11",
     "@radix-ui/react-avatar": "^1.1.4",

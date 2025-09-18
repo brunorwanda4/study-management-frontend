@@ -1,13 +1,16 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form"; // Import useFieldArray if handling socialMedia dynamically
-import { ChangeEvent, useState, useTransition } from "react";
 import { useTheme } from "next-themes";
+import { ChangeEvent, useState, useTransition } from "react";
+import { useForm } from "react-hook-form"; // Import useFieldArray if handling socialMedia dynamically
 
 import { Locale } from "@/i18n"; // Assuming you might need this
 
 // Import Shadcn UI Components
+import { FormError, FormSuccess } from "@/components/common/form-message"; // Assuming this exists
+import MyImage from "@/components/common/myImage"; // Assuming this exists
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -18,7 +21,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import MultipleSelector, { Option } from "@/components/ui/multiselect";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -26,12 +31,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator"; // For visual separation
-import MyImage from "@/components/myComponents/myImage"; // Assuming this exists
-import { FormError, FormSuccess } from "@/components/myComponents/form-message"; // Assuming this exists
+import { Textarea } from "@/components/ui/textarea";
+import { schoolLogoImage } from "@/lib/context/images";
 import {
   schoolEducationLevel,
   schoolLabs,
@@ -44,13 +46,11 @@ import {
   SchoolMembers,
   SchoolTypeEnum,
 } from "@/lib/schema/school.dto";
-import MultipleSelector, { Option } from "@/components/ui/multiselect";
+import { updateSchoolSchoolService } from "@/service/school/school.service";
 import {
   PublicSchoolUpdateDto,
   PublicSchoolUpdateSchema,
 } from "./schema/update-school-public-info";
-import { updateSchoolSchoolService } from "@/service/school/school.service";
-import { schoolLogoImage } from "@/lib/context/images";
 
 interface Props {
   lang: Locale;
@@ -114,7 +114,7 @@ const UpdateSchoolPublicInfoForm = ({ initialData }: Props) => {
   });
   const handleLogoChange = (
     e: ChangeEvent<HTMLInputElement>,
-    fieldChange: (value: string) => void
+    fieldChange: (value: string) => void,
   ) => {
     setError("");
     e.preventDefault();
@@ -154,7 +154,7 @@ const UpdateSchoolPublicInfoForm = ({ initialData }: Props) => {
     startTransition(async () => {
       const update = await updateSchoolSchoolService(
         initialData?.id,
-        dataToSubmit
+        dataToSubmit,
       ); // Use the update service
       if (update?.data) {
         // Adjust based on your service response structure
@@ -174,14 +174,14 @@ const UpdateSchoolPublicInfoForm = ({ initialData }: Props) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 basic-card shadow-sm p-6 md:p-8" // Added padding
+        className="basic-card space-y-8 p-6 shadow-sm md:p-8" // Added padding
       >
         {/* --- Section: Basic Information --- */}
         <div className="space-y-6">
-          <h3 className="text-xl font-semibold mb-4 border-b pb-2">
+          <h3 className="mb-4 border-b pb-2 text-xl font-semibold">
             Basic Information
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {/* School Name */}
             <FormField
               control={form.control}
@@ -298,7 +298,7 @@ const UpdateSchoolPublicInfoForm = ({ initialData }: Props) => {
                   >
                     <MyImage
                       src={field.value || schoolLogoImage} // Placeholder
-                      className="size-24 border rounded"
+                      className="size-24 rounded border"
                       classname="object-contain"
                       alt="School Logo Preview"
                     />
@@ -357,7 +357,7 @@ const UpdateSchoolPublicInfoForm = ({ initialData }: Props) => {
                 <FormControl>
                   <Textarea
                     placeholder="Tell us a little bit about the school"
-                    className="resize-y min-h-[100px]"
+                    className="min-h-[100px] resize-y"
                     {...field}
                     value={field.value ?? ""}
                   />
@@ -372,10 +372,10 @@ const UpdateSchoolPublicInfoForm = ({ initialData }: Props) => {
 
         {/* --- Section: Academic Details --- */}
         <div className="space-y-6">
-          <h3 className="text-xl font-semibold mb-4 border-b pb-2">
+          <h3 className="mb-4 border-b pb-2 text-xl font-semibold">
             Academic Details
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {/* Curriculum */}
 
             {/* Education Level */}
@@ -462,11 +462,11 @@ const UpdateSchoolPublicInfoForm = ({ initialData }: Props) => {
 
         {/* --- Section: Contact & Location --- */}
         <div className="space-y-6">
-          <h3 className="text-xl font-semibold mb-4 border-b pb-2">
+          <h3 className="mb-4 border-b pb-2 text-xl font-semibold">
             Contact & Location
           </h3>
           {/* Address Fields */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+          <div className="mb-4 grid grid-cols-1 gap-6 md:grid-cols-2">
             <FormField
               control={form.control}
               name="address.street"
@@ -572,7 +572,7 @@ const UpdateSchoolPublicInfoForm = ({ initialData }: Props) => {
             />
           </div>
           {/* Contact Fields */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+          <div className="mb-4 grid grid-cols-1 gap-6 md:grid-cols-2">
             <FormField
               control={form.control}
               name="contact.phone"
@@ -640,7 +640,7 @@ const UpdateSchoolPublicInfoForm = ({ initialData }: Props) => {
             {/* Example static (less ideal):
                          <FormField control={form.control} name="socialMedia[0].url" render={...} /> // Not recommended for arrays
                          */}
-            <p className="text-sm text-muted-foreground p-4 border rounded">
+            <p className="text-muted-foreground rounded border p-4 text-sm">
               [Social Media Links section requires implementation using
               useFieldArray]
             </p>
@@ -651,10 +651,10 @@ const UpdateSchoolPublicInfoForm = ({ initialData }: Props) => {
 
         {/* --- Section: Facilities & Operations --- */}
         <div className="space-y-6">
-          <h3 className="text-xl font-semibold mb-4 border-b pb-2">
+          <h3 className="mb-4 border-b pb-2 text-xl font-semibold">
             Facilities & Operations
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {/* Student Capacity */}
             <FormField
               control={form.control}
@@ -675,7 +675,7 @@ const UpdateSchoolPublicInfoForm = ({ initialData }: Props) => {
                         field.onChange(
                           e.target.value === ""
                             ? undefined
-                            : parseInt(e.target.value, 10)
+                            : parseInt(e.target.value, 10),
                         )
                       }
                     />
@@ -704,7 +704,7 @@ const UpdateSchoolPublicInfoForm = ({ initialData }: Props) => {
                         field.onChange(
                           e.target.value === ""
                             ? undefined
-                            : parseInt(e.target.value, 10)
+                            : parseInt(e.target.value, 10),
                         )
                       }
                     />
@@ -764,7 +764,7 @@ const UpdateSchoolPublicInfoForm = ({ initialData }: Props) => {
                       } // Controlled component needs string value
                       className="flex space-x-4"
                     >
-                      <FormItem className="flex items-center space-x-2 space-y-0">
+                      <FormItem className="flex items-center space-y-0 space-x-2">
                         <FormControl>
                           <RadioGroupItem value="true" id="uniform-yes" />
                         </FormControl>
@@ -772,7 +772,7 @@ const UpdateSchoolPublicInfoForm = ({ initialData }: Props) => {
                           Yes
                         </Label>
                       </FormItem>
-                      <FormItem className="flex items-center space-x-2 space-y-0">
+                      <FormItem className="flex items-center space-y-0 space-x-2">
                         <FormControl>
                           <RadioGroupItem value="false" id="uniform-no" />
                         </FormControl>
@@ -806,7 +806,7 @@ const UpdateSchoolPublicInfoForm = ({ initialData }: Props) => {
                       }
                       className="flex space-x-4"
                     >
-                      <FormItem className="flex items-center space-x-2 space-y-0">
+                      <FormItem className="flex items-center space-y-0 space-x-2">
                         <FormControl>
                           <RadioGroupItem value="true" id="scholarship-yes" />
                         </FormControl>
@@ -817,7 +817,7 @@ const UpdateSchoolPublicInfoForm = ({ initialData }: Props) => {
                           Yes
                         </Label>
                       </FormItem>
-                      <FormItem className="flex items-center space-x-2 space-y-0">
+                      <FormItem className="flex items-center space-y-0 space-x-2">
                         <FormControl>
                           <RadioGroupItem value="false" id="scholarship-no" />
                         </FormControl>
@@ -851,7 +851,7 @@ const UpdateSchoolPublicInfoForm = ({ initialData }: Props) => {
                       }
                       className="flex space-x-4"
                     >
-                      <FormItem className="flex items-center space-x-2 space-y-0">
+                      <FormItem className="flex items-center space-y-0 space-x-2">
                         <FormControl>
                           <RadioGroupItem value="true" id="library-yes" />
                         </FormControl>
@@ -859,7 +859,7 @@ const UpdateSchoolPublicInfoForm = ({ initialData }: Props) => {
                           Yes
                         </Label>
                       </FormItem>
-                      <FormItem className="flex items-center space-x-2 space-y-0">
+                      <FormItem className="flex items-center space-y-0 space-x-2">
                         <FormControl>
                           <RadioGroupItem value="false" id="library-no" />
                         </FormControl>
@@ -893,7 +893,7 @@ const UpdateSchoolPublicInfoForm = ({ initialData }: Props) => {
                       }
                       className="flex space-x-4"
                     >
-                      <FormItem className="flex items-center space-x-2 space-y-0">
+                      <FormItem className="flex items-center space-y-0 space-x-2">
                         <FormControl>
                           <RadioGroupItem value="true" id="online-yes" />
                         </FormControl>
@@ -901,7 +901,7 @@ const UpdateSchoolPublicInfoForm = ({ initialData }: Props) => {
                           Yes
                         </Label>
                       </FormItem>
-                      <FormItem className="flex items-center space-x-2 space-y-0">
+                      <FormItem className="flex items-center space-y-0 space-x-2">
                         <FormControl>
                           <RadioGroupItem value="false" id="online-no" />
                         </FormControl>

@@ -1,8 +1,19 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @plugin "daisyui" {
-  themes: light --default, dark --prefersdark, cupcake, cmyk, acid, winter,
-    valentine, synthwave, business, night, forest, black;
+  themes:
+    light --default,
+    dark --prefersdark,
+    cupcake,
+    cmyk,
+    acid,
+    winter,
+    valentine,
+    synthwave,
+    business,
+    night,
+    forest,
+    black;
 }
 
 @custom-variant dark (&:is(.dark *));
@@ -134,21 +145,40 @@
 }
 
 .title-page {
-  @apply font-bold text-2xl;
+  @apply text-2xl font-bold;
 }
 .basic-title {
-  @apply font-medium text-lg;
+  @apply text-lg font-medium;
 }
 
-.small-title{
-  @apply font-medium text-base
+.small-title {
+  @apply text-base font-medium;
 }
 
 .basic-card {
-  @apply bg-base-100 p-4 card border border-base-300 shadow-sm shadow-base-300;
+  @apply bg-base-100 card border-base-300 shadow-base-300 border p-4 shadow-sm;
 }
 
 .basic-card-no-p {
-  @apply bg-base-100 card border border-base-300;
+  @apply bg-base-100 card border-base-300 border;
 }
 
+.happy-card {
+  @apply bg-base-300 card border-base-200 border-2 p-4;
+}
+
+.happy-line {
+  @apply flex flex-col gap-4;
+}
+
+.happy-title-base {
+  @apply text-lg font-semibold;
+}
+
+.happy-title-head {
+  @apply text-2xl font-bold;
+}
+
+happy-page {
+  @apply flex min-h-screen flex-col space-y-2 p-2;
+}

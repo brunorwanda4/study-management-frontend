@@ -1,14 +1,14 @@
-import { format } from "date-fns"; // Make sure date-fns is installed
-import { ColumnDef, RowData } from "@tanstack/react-table";
+import MyImage from "@/components/common/myImage";
+import MyLink from "@/components/comon/myLink";
 import { Checkbox } from "@/components/ui/checkbox";
-import MyLink from "@/components/myComponents/myLink";
-import MyImage from "@/components/myComponents/myImage";
+import { Locale } from "@/i18n";
 import { studentImage } from "@/lib/context/images";
 import { studentsAndOther } from "@/lib/schema/school/student.dto";
-import { Locale } from "@/i18n";
+import { ColumnDef, RowData } from "@tanstack/react-table";
+import { format } from "date-fns"; // Make sure date-fns is installed
 
 const calculateAge = (
-  dob: { year: number; month: number; day: number } | undefined
+  dob: { year: number; month: number; day: number } | undefined,
 ): number | null => {
   if (
     !dob ||
@@ -35,7 +35,7 @@ const calculateAge = (
     const today = new Date();
     // Use UTC dates for comparison to avoid timezone shifts affecting age calculation
     const todayUTC = new Date(
-      Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate())
+      Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()),
     );
 
     let age = todayUTC.getUTCFullYear() - birthDate.getUTCFullYear();
@@ -66,7 +66,7 @@ declare module "@tanstack/react-table" {
 // The complete columns() function
 // ========================================================================
 export const StudentTableColumns = (
-  lang: Locale
+  lang: Locale,
 ): ColumnDef<studentsAndOther>[] => {
   return [
     // --- 1. Selection Column ---
@@ -101,7 +101,7 @@ export const StudentTableColumns = (
       header: "Student",
       accessorKey: "name", // Used for sorting/filtering by name
       cell: ({ row }) => (
-        <div className="flex space-x-3 items-center">
+        <div className="flex items-center space-x-3">
           {" "}
           {/* Increased space */}
           <MyLink
@@ -121,7 +121,7 @@ export const StudentTableColumns = (
             {/* Prevent text overflow issues */}
             <MyLink
               loading
-              className="font-medium truncate hover:underline" // Truncate long names
+              className="truncate font-medium hover:underline" // Truncate long names
               href={`/${lang}/p/${row.original.userId}?studentId=${row.original.id}`}
               //   title={row.original.name || 'View Profile'} // Add title attribute
             >
@@ -130,7 +130,7 @@ export const StudentTableColumns = (
             {/* Conditionally render email if present */}
             {row.original.email && (
               <span
-                className="text-sm text-muted-foreground truncate"
+                className="text-muted-foreground truncate text-sm"
                 title={row.original.email} // Add title attribute
               >
                 {row.original.email}
@@ -171,7 +171,7 @@ export const StudentTableColumns = (
         const gender = row.original.gender;
         if (gender === "MALE") return <div className="text-sm">Male</div>;
         if (gender === "FEMALE") return <div className="text-sm">Female</div>;
-        return <div className="text-sm text-muted-foreground">N/A</div>; // Fallback
+        return <div className="text-muted-foreground text-sm">N/A</div>; // Fallback
       },
       enableSorting: false, // Sorting by gender might not be common
       meta: {
@@ -217,7 +217,7 @@ export const StudentTableColumns = (
 
         const [min, max] = filterValue as [
           number | undefined,
-          number | undefined
+          number | undefined,
         ];
 
         // Check against min and max boundaries
@@ -242,7 +242,11 @@ export const StudentTableColumns = (
       accessorKey: "class.name", // Keep this for data access
       cell: ({ row }) => {
         return (
-          <MyLink href={`/${lang}/c/${row.original.classId}`} loading className="text-sm">
+          <MyLink
+            href={`/${lang}/c/${row.original.classId}`}
+            loading
+            className="text-sm"
+          >
             {row.original.class?.name || (
               <span className="text-muted-foreground">Unassigned</span>
             )}

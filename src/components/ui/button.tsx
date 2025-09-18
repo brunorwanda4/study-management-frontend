@@ -1,9 +1,9 @@
 "use client";
-import * as React from "react";
+import { cn } from "@/lib/utils";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
+import * as React from "react";
 
 // ShadCN-style variants
 export const shadcnVariants = cva(
@@ -35,7 +35,7 @@ export const shadcnVariants = cva(
       variant: "default",
       size: "default",
     },
-  }
+  },
 );
 
 // DaisyUI-style variants
@@ -73,10 +73,11 @@ const daisyVariants = cva("btn", {
 });
 
 // Props for ShadCN version
-export type ShadcnButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  asChild?: boolean;
-  library?: "shadcn";
-} & VariantProps<typeof shadcnVariants>;
+export type ShadcnButtonProps =
+  React.ButtonHTMLAttributes<HTMLButtonElement> & {
+    asChild?: boolean;
+    library?: "shadcn";
+  } & VariantProps<typeof shadcnVariants>;
 
 // Props for DaisyUI version
 export type DaisyButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -90,7 +91,7 @@ type UniversalButtonProps = ShadcnButtonProps | DaisyButtonProps;
 const Button = React.forwardRef<HTMLButtonElement, UniversalButtonProps>(
   ({ className, asChild = false, library = "shadcn", ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
-    const {theme} = useTheme()
+    const { theme } = useTheme();
     const styles =
       library === "daisy"
         ? daisyVariants({
@@ -102,8 +103,15 @@ const Button = React.forwardRef<HTMLButtonElement, UniversalButtonProps>(
             className,
           });
 
-    return <Comp data-them={theme} ref={ref} className={cn("cursor-pointer",styles)} {...props} />;
-  }
+    return (
+      <Comp
+        data-them={theme}
+        ref={ref}
+        className={cn("cursor-pointer", styles)}
+        {...props}
+      />
+    );
+  },
 );
 
 Button.displayName = "Button";

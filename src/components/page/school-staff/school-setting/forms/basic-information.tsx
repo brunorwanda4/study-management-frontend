@@ -1,10 +1,14 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { ChangeEvent, useState, useTransition } from "react";
 import { useTheme } from "next-themes";
+import { ChangeEvent, useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
 
+import { FormError } from "@/components/common/form-message";
+import MyImage from "@/components/common/myImage";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -15,7 +19,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -23,19 +27,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import MyImage from "@/components/myComponents/myImage";
+import { Textarea } from "@/components/ui/textarea";
 import { schoolLogoImage } from "@/lib/context/images";
+import { useToast } from "@/lib/context/toast/ToastContext";
 import { SchoolMembers, SchoolTypeEnum } from "@/lib/schema/school.dto";
+import { updateSchoolSchoolService } from "@/service/school/school.service";
 import {
   BasicInformationDto,
   BasicInformationSchema,
 } from "./schema/basic-information";
-import { Card } from "@/components/ui/card";
-import { updateSchoolSchoolService } from "@/service/school/school.service";
-import { useToast } from "@/lib/context/toast/ToastContext";
-import { FormError } from "@/components/myComponents/form-message";
 
 interface BasicInformationFormProps {
   initialData: BasicInformationDto;
@@ -65,7 +65,7 @@ export const BasicInformationForm = ({
 
   const handleLogoChange = (
     e: ChangeEvent<HTMLInputElement>,
-    fieldChange: (value: string) => void
+    fieldChange: (value: string) => void,
   ) => {
     setError("");
     e.preventDefault();
@@ -111,11 +111,11 @@ export const BasicInformationForm = ({
   };
 
   return (
-    <Card className=" p-6">
+    <Card className="p-6">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className=" space-y-4">
-          <h3 className="text-xl font-semibold mb-4 pb-2">Basic Information</h3>
-          <div className="space-x-6 flex w-full">
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <h3 className="mb-4 pb-2 text-xl font-semibold">Basic Information</h3>
+          <div className="flex w-full space-x-6">
             <div className="flex flex-col space-y-4">
               <FormField
                 control={form.control}
@@ -125,7 +125,7 @@ export const BasicInformationForm = ({
                     <FormLabel>School Name</FormLabel>
                     <FormControl>
                       <Input
-                        className=" w-[30rem]"
+                        className="w-[30rem]"
                         placeholder="e.g., Green Hills Academy"
                         {...field}
                       />
@@ -145,7 +145,7 @@ export const BasicInformationForm = ({
                     <FormLabel>School Username</FormLabel>
                     <FormControl>
                       <Input
-                        className=" w-[30rem]"
+                        className="w-[30rem]"
                         placeholder="e.g., greenhills"
                         {...field}
                       />
@@ -170,7 +170,7 @@ export const BasicInformationForm = ({
                       value={field.value ?? ""}
                     >
                       <FormControl>
-                        <SelectTrigger className=" w-40">
+                        <SelectTrigger className="w-40">
                           <SelectValue placeholder="Select school type" />
                         </SelectTrigger>
                       </FormControl>
@@ -202,7 +202,7 @@ export const BasicInformationForm = ({
                       value={field.value ?? ""}
                     >
                       <FormControl>
-                        <SelectTrigger className=" w-40">
+                        <SelectTrigger className="w-40">
                           <SelectValue placeholder="Select student body type" />
                         </SelectTrigger>
                       </FormControl>
@@ -231,7 +231,7 @@ export const BasicInformationForm = ({
                     <FormControl>
                       <Textarea
                         placeholder="Tell us a little bit about the school"
-                        className="resize-y min-h-[100px] w-[30rem]"
+                        className="min-h-[100px] w-[30rem] resize-y"
                         {...field}
                       />
                     </FormControl>
@@ -248,13 +248,13 @@ export const BasicInformationForm = ({
               control={form.control}
               name="logo"
               render={({ field }) => (
-                <FormItem className="mt-4 flex flex-col gap-2 items-center">
+                <FormItem className="mt-4 flex flex-col items-center gap-2">
                   <FormLabel>School Logo</FormLabel>
-                  <div className="flex items-center gap-4 flex-col">
+                  <div className="flex flex-col items-center gap-4">
                     <Label htmlFor="logo-upload" className="cursor-pointer">
                       <MyImage
                         src={field.value || schoolLogoImage}
-                        className="size-48 border border-base-300 shadow-sm"
+                        className="border-base-300 size-48 border shadow-sm"
                         classname="object-contain"
                         alt="School Logo Preview"
                       />

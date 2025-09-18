@@ -1,13 +1,11 @@
-import { format } from "date-fns"; // Make sure date-fns is installed
-import { ColumnDef, RowData } from "@tanstack/react-table";
+import MyImage from "@/components/common/myImage";
+import MyLink from "@/components/comon/myLink";
 import { Checkbox } from "@/components/ui/checkbox";
-import MyLink from "@/components/myComponents/myLink";
-import MyImage from "@/components/myComponents/myImage";
+import { Locale } from "@/i18n";
 import { studentImage } from "@/lib/context/images";
 import { TeacherDto } from "@/lib/schema/school/teacher.dto";
-import { Locale } from "@/i18n";
-
-
+import { ColumnDef, RowData } from "@tanstack/react-table";
+import { format } from "date-fns"; // Make sure date-fns is installed
 
 // Extend ColumnMeta - This should be done outside the function, typically in a declaration file (.d.ts)
 // or at the top level of your module if not using a separate declaration file.
@@ -23,9 +21,7 @@ declare module "@tanstack/react-table" {
 // ========================================================================
 // The complete columns() function
 // ========================================================================
-export const TeacherTableColumns = (
-  lang: Locale
-): ColumnDef<TeacherDto>[] => {
+export const TeacherTableColumns = (lang: Locale): ColumnDef<TeacherDto>[] => {
   return [
     // --- 1. Selection Column ---
     {
@@ -59,7 +55,7 @@ export const TeacherTableColumns = (
       header: "Teacher",
       accessorKey: "name", // Used for sorting/filtering by name
       cell: ({ row }) => (
-        <div className="flex space-x-3 items-center">
+        <div className="flex items-center space-x-3">
           <MyLink
             loading
             href={`/${lang}/p/${row.original.userId}teacherId=${row.original.id}`}
@@ -77,7 +73,7 @@ export const TeacherTableColumns = (
             {/* Prevent text overflow issues */}
             <MyLink
               loading
-              className="font-medium truncate hover:underline" // Truncate long names
+              className="truncate font-medium hover:underline" // Truncate long names
               href={`/${lang}/p/${row.original.userId}teacherId=${row.original.id}`}
               //   title={row.original.name || 'View Profile'} // Add title attribute
             >
@@ -86,7 +82,7 @@ export const TeacherTableColumns = (
             {/* Conditionally render email if present */}
             {row.original.email && (
               <span
-                className="text-sm text-muted-foreground truncate"
+                className="text-muted-foreground truncate text-sm"
                 title={row.original.email} // Add title attribute
               >
                 {row.original.email}
@@ -127,7 +123,7 @@ export const TeacherTableColumns = (
         const gender = row.original.gender;
         if (gender === "MALE") return <div className="text-sm">Male</div>;
         if (gender === "FEMALE") return <div className="text-sm">Female</div>;
-        return <div className="text-sm text-muted-foreground">N/A</div>; // Fallback
+        return <div className="text-muted-foreground text-sm">N/A</div>; // Fallback
       },
       enableSorting: false, // Sorting by gender might not be common
       meta: {
@@ -144,9 +140,6 @@ export const TeacherTableColumns = (
     },
 
     // --- 5. Age Column ---
-   
-
-    
 
     // --- 7. Phone Column ---
     {

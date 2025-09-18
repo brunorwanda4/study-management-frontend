@@ -1,5 +1,5 @@
-import MyImage from "@/components/myComponents/myImage";
-import MyLink from "@/components/myComponents/myLink";
+import MyImage from "@/components/common/myImage";
+import MyLink from "@/components/comon/myLink";
 import {
   Card,
   CardContent,
@@ -28,9 +28,9 @@ interface props {
 export default function TeachersDashboardTable({ lang, teachers }: props) {
   return (
     <Card className="w-1/2 pb-2">
-      <CardHeader className=" flex justify-between">
+      <CardHeader className="flex justify-between">
         <CardTitle className="text-lg font-semibold">Teachers</CardTitle>
-        <div className=" space-x-4">
+        <div className="space-x-4">
           <MyLink
             href={`/${lang}/s-t/teachers`}
             type="button"
@@ -40,7 +40,7 @@ export default function TeachersDashboardTable({ lang, teachers }: props) {
           </MyLink>
         </div>
       </CardHeader>
-      <CardContent className=" p-0">
+      <CardContent className="p-0">
         <Table className="">
           <TableHeader>
             <TableRow className="hover:bg-transparent">
@@ -54,18 +54,25 @@ export default function TeachersDashboardTable({ lang, teachers }: props) {
               <TableRow key={item.id}>
                 <TableCell>
                   <div className="flex items-center gap-3">
-                    <MyLink loading
+                    <MyLink
+                      loading
                       href={`/${lang}/p/${item.userId}?teacherId=${item.id}`}
                     >
                       <MyImage
-                        className="rounded-full size-12"
+                        className="size-12 rounded-full"
                         classname="mask mask-squircle"
                         src={item.image || teacherImage}
                         alt={item.name}
                       />
                     </MyLink>
                     <div>
-                      <MyLink loading href={`/${lang}/p/${item.userId}?teacherId=${item.id}`}  className="font-medium">{item.name}</MyLink>
+                      <MyLink
+                        loading
+                        href={`/${lang}/p/${item.userId}?teacherId=${item.id}`}
+                        className="font-medium"
+                      >
+                        {item.name}
+                      </MyLink>
                       <span className="text-muted-foreground mt-0.5 text-xs">
                         {item.email}
                       </span>
@@ -88,7 +95,7 @@ export default function TeachersDashboardTable({ lang, teachers }: props) {
           type="button"
           button={{ library: "daisy", variant: "ghost" }}
           href={`/${lang}/s-t/classes`}
-          className=" w-full"
+          className="w-full"
           classname=" w-full"
         >
           See others {teachers.length}

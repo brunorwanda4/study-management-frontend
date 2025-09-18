@@ -1,22 +1,9 @@
 // Ensure this is at the top of your .tsx file for Next.js App Router client components
 "use client";
 
-import React, {
-  useState,
-  useMemo,
-  useCallback,
-  useId,
-  useTransition,
-} from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  useForm,
-  useFieldArray,
-  Control,
-  UseFormSetValue,
-  UseFormGetValues,
-  UseFormWatch,
-} from "react-hook-form";
+import MyImage from "@/components/common/myImage";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -27,9 +14,6 @@ import {
   FormMessage,
 } from "@/components/ui/form"; // Assume these are shadcn/ui components
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { PlusCircle, Trash2 } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -37,13 +21,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useToast } from "@/lib/context/toast/ToastContext";
+import { updateSchoolSchoolService } from "@/service/school/school.service";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { PlusCircle, Trash2 } from "lucide-react";
+import React, {
+  useCallback,
+  useId,
+  useMemo,
+  useState,
+  useTransition,
+} from "react";
+import {
+  Control,
+  useFieldArray,
+  useForm,
+  UseFormGetValues,
+  UseFormSetValue,
+  UseFormWatch,
+} from "react-hook-form";
 import {
   ContactLocationDto,
   ContactLocationSchema,
 } from "./schema/contact-location"; // Make sure SocialMediaLink type is available
-import { useToast } from "@/lib/context/toast/ToastContext";
-import { updateSchoolSchoolService } from "@/service/school/school.service";
-import MyImage from "@/components/myComponents/myImage";
 
 // Define a type for social media platform configuration
 interface SocialMediaPlatform {
@@ -118,7 +118,7 @@ const detectSocialMediaPlatform = (url: string): string => {
 const getSocialMediaIconComponent = (platformName?: string): string => {
   if (!platformName) return OTHER_PLATFORM_ICON;
   const platform = SOCIAL_MEDIA_PLATFORMS_LIST.find(
-    (p) => p.name.toLowerCase() === platformName.toLowerCase()
+    (p) => p.name.toLowerCase() === platformName.toLowerCase(),
   );
   return platform ? platform.icon : OTHER_PLATFORM_ICON;
 };
@@ -146,7 +146,7 @@ const SocialMediaItem: React.FC<SocialMediaItemProps> = ({
 
   const currentIcon = useMemo(
     () => getSocialMediaIconComponent(platformValue),
-    [platformValue]
+    [platformValue],
   );
 
   const [inputMode, setInputMode] = useState<"url" | "username">("url");
@@ -155,7 +155,7 @@ const SocialMediaItem: React.FC<SocialMediaItemProps> = ({
     () =>
       SOCIAL_MEDIA_PLATFORMS_LIST.find((p) => p.name === platformValue) ||
       SOCIAL_MEDIA_PLATFORMS_LIST.find((p) => p.name === DEFAULT_PLATFORM)!,
-    [platformValue]
+    [platformValue],
   );
   const urlTemplate = currentPlatformConfig.urlTemplate;
 
@@ -178,7 +178,7 @@ const SocialMediaItem: React.FC<SocialMediaItemProps> = ({
         });
       }
     },
-    [setValue, index, urlTemplate]
+    [setValue, index, urlTemplate],
   );
 
   const extractUsername = useCallback(
@@ -191,7 +191,7 @@ const SocialMediaItem: React.FC<SocialMediaItemProps> = ({
         return "";
 
       const platform = SOCIAL_MEDIA_PLATFORMS_LIST.find(
-        (p) => p.name === platformValue
+        (p) => p.name === platformValue,
       );
       if (!platform) return "";
 
@@ -199,10 +199,10 @@ const SocialMediaItem: React.FC<SocialMediaItemProps> = ({
       // This is a simplified extraction; more robust parsing might be needed for complex templates
       const prefix = platform.urlTemplate.substring(
         0,
-        platform.urlTemplate.indexOf("{username}")
+        platform.urlTemplate.indexOf("{username}"),
       );
       const suffix = platform.urlTemplate.substring(
-        platform.urlTemplate.indexOf("{username}") + "{username}".length
+        platform.urlTemplate.indexOf("{username}") + "{username}".length,
       );
 
       if (url.startsWith(prefix) && url.endsWith(suffix)) {
@@ -226,7 +226,7 @@ const SocialMediaItem: React.FC<SocialMediaItemProps> = ({
         return ""; // Invalid URL
       }
     },
-    [platformValue, urlTemplate]
+    [platformValue, urlTemplate],
   );
 
   const handleUrlInputChange = useCallback(
@@ -237,7 +237,7 @@ const SocialMediaItem: React.FC<SocialMediaItemProps> = ({
       });
       const detectedPlatform = detectSocialMediaPlatform(newUrl);
       const currentPlatform = getValues(
-        `socialMedia.${index}.platform` as const
+        `socialMedia.${index}.platform` as const,
       );
       if (currentPlatform !== detectedPlatform) {
         setValue(`socialMedia.${index}.platform`, detectedPlatform, {
@@ -246,13 +246,13 @@ const SocialMediaItem: React.FC<SocialMediaItemProps> = ({
         });
       }
     },
-    [setValue, getValues, index]
+    [setValue, getValues, index],
   );
 
   return (
-    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 p-3    ">
+    <div className="flex flex-col items-start gap-3 p-3 sm:flex-row sm:items-center">
       <div className="flex-none">
-        <MyImage src={currentIcon} className=" size-10" role="ICON" />
+        <MyImage src={currentIcon} className="size-10" role="ICON" />
       </div>
 
       <div className="flex-grow space-y-3">
@@ -307,13 +307,13 @@ const SocialMediaItem: React.FC<SocialMediaItemProps> = ({
             // Still bind to link, but display/interact with username
             name={`socialMedia.${index}.link` as const}
             render={(
-              { field } // field.value here is the full link
+              { field }, // field.value here is the full link
             ) => (
               <FormItem>
                 <FormLabel className="sr-only">Username</FormLabel>
                 <FormControl>
                   <div className="flex items-center">
-                    <span className="mr-1 text-sm   text-nowrap">
+                    <span className="mr-1 text-sm text-nowrap">
                       {urlTemplate.split("{username}")[0]}
                     </span>
                     <Input
@@ -324,7 +324,7 @@ const SocialMediaItem: React.FC<SocialMediaItemProps> = ({
                       className="flex-1"
                     />
                     {urlTemplate.split("{username}")[1] && (
-                      <span className="ml-1 text-sm   text-nowrap">
+                      <span className="ml-1 text-sm text-nowrap">
                         {urlTemplate.split("{username}")[1]}
                       </span>
                     )}
@@ -342,7 +342,7 @@ const SocialMediaItem: React.FC<SocialMediaItemProps> = ({
         control={control}
         name={`socialMedia.${index}.platform` as const}
         render={({ field: platformField }) => (
-          <FormItem className="w-full sm:w-48 mt-2 sm:mt-0">
+          <FormItem className="mt-2 w-full sm:mt-0 sm:w-48">
             <FormLabel className="sr-only">Platform</FormLabel>
             <Select
               onValueChange={(value) => {
@@ -350,17 +350,17 @@ const SocialMediaItem: React.FC<SocialMediaItemProps> = ({
                 // If in username mode and we have a username, reconstruct URL
                 if (inputMode === "username" && value !== DEFAULT_PLATFORM) {
                   const currentLink = getValues(
-                    `socialMedia.${index}.link` as const
+                    `socialMedia.${index}.link` as const,
                   );
                   const username = extractUsername(currentLink);
                   if (username) {
                     const newPlatformConfig = SOCIAL_MEDIA_PLATFORMS_LIST.find(
-                      (p) => p.name === value
+                      (p) => p.name === value,
                     );
                     if (newPlatformConfig?.urlTemplate.includes("{username}")) {
                       const newUrl = newPlatformConfig.urlTemplate.replace(
                         "{username}",
-                        username
+                        username,
                       );
                       setValue(`socialMedia.${index}.link`, newUrl, {
                         shouldValidate: true,
@@ -385,7 +385,7 @@ const SocialMediaItem: React.FC<SocialMediaItemProps> = ({
               value={platformField.value || DEFAULT_PLATFORM}
             >
               <FormControl>
-                <SelectTrigger className="   ">
+                <SelectTrigger className=" ">
                   <SelectValue placeholder="Select Platform" />
                 </SelectTrigger>
               </FormControl>
@@ -407,7 +407,7 @@ const SocialMediaItem: React.FC<SocialMediaItemProps> = ({
         variant="ghost"
         size="icon"
         onClick={() => remove(index)}
-        className=" mt-2 sm:mt-0 self-center sm:self-start"
+        className="mt-2 self-center sm:mt-0 sm:self-start"
         aria-label="Remove social media link"
       >
         <Trash2 className="h-5 w-5" />
@@ -493,22 +493,22 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
   };
 
   return (
-    <Card className=" p-6">
+    <Card className="p-6">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleFormSubmit)}
           className="space-y-8"
         >
-          <h3 className="text-2xl font-semibold mb-6 pb-3  ">
+          <h3 className="mb-6 pb-3 text-2xl font-semibold">
             Update School Contact & Location
           </h3>
 
           {/* Address Fields */}
-          <fieldset className="space-y-4 p-4  rounded-lg ">
-            <legend className="text-lg font-medium   px-1">
+          <fieldset className="space-y-4 rounded-lg p-4">
+            <legend className="px-1 text-lg font-medium">
               Address Details
             </legend>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+            <div className="grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-2">
               <FormField
                 control={form.control}
                 name="address.street"
@@ -555,8 +555,7 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Postal Code{" "}
-                      <span className="text-xs ">(Optional)</span>
+                      Postal Code <span className="text-xs">(Optional)</span>
                     </FormLabel>
                     <FormControl>
                       <Input placeholder="e.g., 5000" {...field} />
@@ -589,7 +588,7 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
                   <FormItem>
                     <FormLabel>
                       Google Maps URL{" "}
-                      <span className="text-xs ">(Optional)</span>
+                      <span className="text-xs">(Optional)</span>
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -606,11 +605,11 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
           </fieldset>
 
           {/* Contact Fields */}
-          <fieldset className="space-y-4 p-4 rounded-lg ">
-            <legend className="text-lg font-medium   px-1">
+          <fieldset className="space-y-4 rounded-lg p-4">
+            <legend className="px-1 text-lg font-medium">
               Contact Information
             </legend>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+            <div className="grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-2">
               <FormField
                 control={form.control}
                 name="contact.phone"
@@ -650,7 +649,7 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
                 name="contact.whatsappNumber"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className=" flex space-x-2">
+                    <FormLabel className="flex space-x-2">
                       <MyImage src="/icons/whatsapp.png" role="ICON" />
                       <span> Whatsapp number</span>
                     </FormLabel>
@@ -669,8 +668,8 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
           </fieldset>
 
           {/* Website Field */}
-          <fieldset className="space-y-4 p-4 rounded-lg ">
-            <legend className="text-lg font-medium   px-1">
+          <fieldset className="space-y-4 rounded-lg p-4">
+            <legend className="px-1 text-lg font-medium">
               Online Presence
             </legend>
             <FormField
@@ -679,8 +678,7 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Website{" "}
-                    <span className="text-xs ">(Optional)</span>
+                    Website <span className="text-xs">(Optional)</span>
                   </FormLabel>
                   <FormControl>
                     <Input
@@ -696,16 +694,15 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
           </fieldset>
 
           {/* Social Media Section */}
-          <fieldset className="space-y-4 p-4  rounded-lg ">
-            <legend className="text-lg font-medium   px-1 mb-1">
-              Social Media{" "}
-              <span className="text-xs ">(Optional)</span>
+          <fieldset className="space-y-4 rounded-lg p-4">
+            <legend className="mb-1 px-1 text-lg font-medium">
+              Social Media <span className="text-xs">(Optional)</span>
             </legend>
-            <FormDescription className="text-sm  ">
+            <FormDescription className="text-sm">
               Add social media links. The platform will be auto-detected, or you
               can select it manually.
             </FormDescription>
-            <div className="space-y-4 mt-3">
+            <div className="mt-3 space-y-4">
               {fields.map((item, index) => (
                 <SocialMediaItem
                   key={item.id} // item.id is provided by useFieldArray
@@ -737,12 +734,12 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
 
           {/* Success and Error Message Display */}
           {successMessage && (
-            <p className="text-sm font-medium text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30 p-3 ">
+            <p className="bg-green-100 p-3 text-sm font-medium text-green-600 dark:bg-green-900/30 dark:text-green-400">
               {successMessage}
             </p>
           )}
           {errorMessage && (
-            <p className="text-sm font-medium text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 p-3 ">
+            <p className="bg-red-100 p-3 text-sm font-medium text-red-600 dark:bg-red-900/30 dark:text-red-400">
               {errorMessage}
             </p>
           )}
@@ -761,7 +758,7 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
             {isPending ? (
               <div className="flex items-center justify-center">
                 <svg
-                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-current" // Use text-current for spinner color
+                  className="mr-3 -ml-1 h-5 w-5 animate-spin text-current" // Use text-current for spinner color
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"

@@ -1,12 +1,8 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from "react";
-import MyImage from "@/components/myComponents/myImage";
-import MyLink from "@/components/myComponents/myLink";
-import {
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
+import MyImage from "@/components/common/myImage";
+import MyLink from "@/components/comon/myLink";
+import { CardContent, CardFooter } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -16,12 +12,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Locale } from "@/i18n";
+import { studentImage, teacherImage } from "@/lib/context/images";
+import { formatTimeAgo } from "@/lib/functions/change-time";
+import { SchoolJoinRequestAndOther } from "@/lib/schema/school/school-join-school/school-join-request.schema";
 import { UserSchool } from "@/lib/utils/auth";
 import { GetAllSchoolJoinRequestBySchoolId } from "@/service/school/school-join-request.service";
-import { formatTimeAgo } from "@/lib/functions/change-time";
-import { studentImage, teacherImage } from "@/lib/context/images";
+import { useEffect, useState } from "react";
 import JoinSchoolTableDropdown from "./join-school-table-dropdown";
-import { SchoolJoinRequestAndOther } from "@/lib/schema/school/school-join-school/school-join-request.schema";
 
 interface Props {
   lang: Locale;
@@ -35,7 +32,9 @@ export default function JoinSchoolTable({ lang, currentSchool }: Props) {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const res = await GetAllSchoolJoinRequestBySchoolId(currentSchool.schoolId);
+        const res = await GetAllSchoolJoinRequestBySchoolId(
+          currentSchool.schoolId,
+        );
         setRequests(res.data || []);
       } catch (err) {
         console.error("Failed to fetch join requests:", err);
@@ -49,7 +48,7 @@ export default function JoinSchoolTable({ lang, currentSchool }: Props) {
 
   return (
     <>
-      <CardContent className="p-0 justify-between flex flex-col">
+      <CardContent className="flex flex-col justify-between p-0">
         {loading ? (
           <div>Loading...</div>
         ) : requests.length === 0 ? (
@@ -73,20 +72,26 @@ export default function JoinSchoolTable({ lang, currentSchool }: Props) {
                         {item.user?.image && item.userId ? (
                           <MyLink loading href={`/${lang}/p/${item.userId}`}>
                             <MyImage
-                              className="rounded-full size-12"
+                              className="size-12 rounded-full"
                               role="AVATAR"
                               src={
-                                item.user.image || (item.role === "STUDENT" ? studentImage : teacherImage)
+                                item.user.image ||
+                                (item.role === "STUDENT"
+                                  ? studentImage
+                                  : teacherImage)
                               }
                               alt={item.name ?? undefined}
                             />
                           </MyLink>
                         ) : (
                           <MyImage
-                            className="rounded-full size-12"
+                            className="size-12 rounded-full"
                             role="AVATAR"
                             src={
-                              item.user?.image || (item.role === "STUDENT" ? studentImage : teacherImage)
+                              item.user?.image ||
+                              (item.role === "STUDENT"
+                                ? studentImage
+                                : teacherImage)
                             }
                             alt={item.name ?? undefined}
                           />

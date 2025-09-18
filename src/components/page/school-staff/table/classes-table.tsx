@@ -1,33 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useId, useMemo, useState } from "react";
-import {
-  Column,
-  ColumnDef,
-  ColumnFiltersState,
-  flexRender,
-  getCoreRowModel,
-  getFacetedMinMaxValues,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getSortedRowModel,
-  RowData,
-  SortingState,
-  useReactTable,
-  // Import FilterFn if needed for custom filtering, though not used in this specific refactor
-  // FilterFn,
-} from "@tanstack/react-table";
-import {
-  ChevronDownIcon,
-  ChevronUpIcon,
-  MoreHorizontal, // Using MoreHorizontal for an actions dropdown
-  SearchIcon,
-  ShieldCheckIcon, // Example icon for Class Type
-} from "lucide-react";
-import { cn } from "@/lib/utils"; // Assuming you have this utility
+import MyImage from "@/components/common/myImage";
+import MyLink from "@/components/comon/myLink";
+import { Button } from "@/components/ui/button"; // For Actions
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox"; // Assuming shadcn/ui
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"; // For Actions
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -45,19 +30,32 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button"; // For Actions
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"; // For Actions
-import { ClassDto, ClassEnum } from "@/lib/schema/class/class.schema";
-import MyImage from "@/components/myComponents/myImage";
-import MyLink from "@/components/myComponents/myLink";
 import { Locale } from "@/i18n";
+import { ClassDto, ClassEnum } from "@/lib/schema/class/class.schema";
+import { cn } from "@/lib/utils"; // Assuming you have this utility
+import {
+  Column,
+  ColumnDef,
+  ColumnFiltersState,
+  flexRender,
+  getCoreRowModel,
+  getFacetedMinMaxValues,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
+  getSortedRowModel,
+  RowData,
+  SortingState,
+  useReactTable,
+} from "@tanstack/react-table";
+import {
+  ChevronDownIcon,
+  ChevronUpIcon,
+  MoreHorizontal, // Using MoreHorizontal for an actions dropdown
+  SearchIcon,
+  ShieldCheckIcon, // Example icon for Class Type
+} from "lucide-react";
+import { useId, useMemo, useState } from "react";
 // --- Prisma Schema related types ---
 
 declare module "@tanstack/react-table" {
@@ -99,7 +97,7 @@ const columsFunction = (lang: Locale) => {
         <MyLink
           loading
           href={`/${lang}/c/${row.original.id}`}
-          className="font-medium flex items-center gap-2"
+          className="flex items-center gap-2 font-medium"
         >
           {row.original.image && (
             <MyImage
@@ -132,15 +130,15 @@ const columsFunction = (lang: Locale) => {
         const type = row.getValue("classType") as ClassEnum | null;
         return type ? (
           <div className="flex items-center gap-1">
-            <ShieldCheckIcon className="h-4 w-4 text-muted-foreground" />
+            <ShieldCheckIcon className="text-muted-foreground h-4 w-4" />
             <span
               className={cn(
-                "px-2 py-0.5 rounded text-xs font-medium",
+                "rounded px-2 py-0.5 text-xs font-medium",
                 type === "Private"
                   ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
                   : type === "Public"
-                  ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                  : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200" // Default/fallback
+                    ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                    : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200", // Default/fallback
               )}
             >
               {type}
@@ -317,7 +315,7 @@ export default function ClassesTable({ classes, lang }: ClassTableProps) {
       </CardHeader>
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-3 px-4 pb-4 border-b">
+      <div className="flex flex-wrap gap-3 border-b px-4 pb-4">
         {/* Name filter */}
         <div className="w-48">
           <Filter column={table.getColumn("name")!} />
@@ -360,23 +358,23 @@ export default function ClassesTable({ classes, lang }: ClassTableProps) {
                         key={header.id}
                         className={cn(
                           "relative h-10 select-none",
-                          headerProps?.className
+                          headerProps?.className,
                         )} // Apply custom class
                         aria-sort={
                           header.column.getCanSort()
                             ? header.column.getIsSorted() === "asc"
                               ? "ascending"
                               : header.column.getIsSorted() === "desc"
-                              ? "descending"
-                              : "none"
+                                ? "descending"
+                                : "none"
                             : undefined // Only add aria-sort if sortable
                         }
                       >
                         {header.isPlaceholder ? null : header.column.getCanSort() ? (
                           <div
                             className={cn(
-                              "flex items-center gap-2 cursor-pointer",
-                              headerProps?.className ? "" : "justify-between" // Avoid double justify-end on right aligned headers
+                              "flex cursor-pointer items-center gap-2",
+                              headerProps?.className ? "" : "justify-between", // Avoid double justify-end on right aligned headers
                             )}
                             onClick={header.column.getToggleSortingHandler()}
                             onKeyDown={(e) => {
@@ -400,7 +398,7 @@ export default function ClassesTable({ classes, lang }: ClassTableProps) {
                           >
                             {flexRender(
                               header.column.columnDef.header,
-                              header.getContext()
+                              header.getContext(),
                             )}
                             {{
                               asc: (
@@ -425,7 +423,7 @@ export default function ClassesTable({ classes, lang }: ClassTableProps) {
                         ) : (
                           flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )
                         )}
                       </TableHead>
@@ -453,7 +451,7 @@ export default function ClassesTable({ classes, lang }: ClassTableProps) {
                           {/* Apply custom class */}
                           {flexRender(
                             cell.column.columnDef.cell,
-                            cell.getContext()
+                            cell.getContext(),
                           )}
                         </TableCell>
                       );
@@ -475,8 +473,8 @@ export default function ClassesTable({ classes, lang }: ClassTableProps) {
         </div>
       </CardContent>
       {/* Optional: Add Pagination Controls here */}
-      <div className="flex items-center justify-end space-x-2 py-4 px-4 border-t">
-        <div className="flex-1 text-sm text-muted-foreground">
+      <div className="flex items-center justify-end space-x-2 border-t px-4 py-4">
+        <div className="text-muted-foreground flex-1 text-sm">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
           {table.getFilteredRowModel().rows.length} row(s) selected.
         </div>
@@ -523,7 +521,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
       // Filter out potential undefined/null keys if they shouldn't be selectable options
       // Keep null/undefined if you explicitly want to filter by them
       const values = Array.from(uniqueMap.keys()).filter(
-        (val) => val !== null && val !== undefined
+        (val) => val !== null && val !== undefined,
       ); // Adjust filter as needed
 
       // No need to flatten like before, as 'intents' was the special array case.
@@ -533,7 +531,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
       console.error(
         "Error getting faceted unique values for column:",
         column.id,
-        e
+        e,
       );
       return [];
     }
@@ -550,17 +548,17 @@ function Filter({ column }: { column: Column<any, unknown> }) {
           console.error(
             "Error getting min/max values for column:",
             column.id,
-            e
+            e,
           );
           return [undefined, undefined];
         }
       },
-      [column] // Depend only on the column object itself
+      [column], // Depend only on the column object itself
     );
     return (
       <div>
         <Label htmlFor={`${id}-range-min`}>{columnHeader}</Label>
-        <div className="flex gap-2 mt-1">
+        <div className="mt-1 flex gap-2">
           <Input
             id={`${id}-range-min`}
             className="flex-1 [-moz-appearance:_textfield] [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"

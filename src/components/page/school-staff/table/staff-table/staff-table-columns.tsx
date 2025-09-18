@@ -1,13 +1,11 @@
-import { format } from "date-fns"; // Make sure date-fns is installed
-import { ColumnDef, RowData } from "@tanstack/react-table";
+import MyImage from "@/components/common/myImage";
+import MyLink from "@/components/comon/myLink";
 import { Checkbox } from "@/components/ui/checkbox";
-import MyLink from "@/components/myComponents/myLink";
-import MyImage from "@/components/myComponents/myImage";
-import { studentImage } from "@/lib/context/images";
 import { Locale } from "@/i18n";
+import { studentImage } from "@/lib/context/images";
 import { SchoolStaffDto } from "@/lib/schema/school/school-staff.schema";
-
-
+import { ColumnDef, RowData } from "@tanstack/react-table";
+import { format } from "date-fns"; // Make sure date-fns is installed
 
 declare module "@tanstack/react-table" {
   //allows us to define custom properties for our columns
@@ -21,7 +19,7 @@ declare module "@tanstack/react-table" {
 // The complete columns() function
 // ========================================================================
 export const StaffTableColumns = (
-  lang: Locale
+  lang: Locale,
 ): ColumnDef<SchoolStaffDto>[] => {
   return [
     // --- 1. Selection Column ---
@@ -56,7 +54,7 @@ export const StaffTableColumns = (
       header: "Staff",
       accessorKey: "name", // Used for sorting/filtering by name
       cell: ({ row }) => (
-        <div className="flex space-x-3 items-center">
+        <div className="flex items-center space-x-3">
           {" "}
           {/* Increased space */}
           <MyLink
@@ -76,7 +74,7 @@ export const StaffTableColumns = (
             {/* Prevent text overflow issues */}
             <MyLink
               loading
-              className="font-medium truncate hover:underline" // Truncate long names
+              className="truncate font-medium hover:underline" // Truncate long names
               href={`/${lang}/p/${row.original.userId}?studentId=${row.original.id}`}
               //   title={row.original.name || 'View Profile'} // Add title attribute
             >
@@ -85,7 +83,7 @@ export const StaffTableColumns = (
             {/* Conditionally render email if present */}
             {row.original.email && (
               <span
-                className="text-sm text-muted-foreground truncate"
+                className="text-muted-foreground truncate text-sm"
                 title={row.original.email} // Add title attribute
               >
                 {row.original.email}
@@ -126,7 +124,7 @@ export const StaffTableColumns = (
         const gender = row.original.gender;
         if (gender === "MALE") return <div className="text-sm">Male</div>;
         if (gender === "FEMALE") return <div className="text-sm">Female</div>;
-        return <div className="text-sm text-muted-foreground">N/A</div>; // Fallback
+        return <div className="text-muted-foreground text-sm">N/A</div>; // Fallback
       },
       enableSorting: false, // Sorting by gender might not be common
       meta: {
@@ -141,10 +139,6 @@ export const StaffTableColumns = (
       },
       size: 100, // Suggest a size
     },
-
-    
-
-    
 
     // --- 7. Phone Column ---
     {

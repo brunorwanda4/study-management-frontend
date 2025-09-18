@@ -1,10 +1,10 @@
 "use client";
-import MyImage from "@/components/myComponents/myImage";
+import MyImage from "@/components/common/myImage";
 import { Button } from "@/components/ui/button";
 import { Locale } from "@/i18n";
 import { LoaderCircle } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useTransition } from "react";
+import { useTransition } from "react";
 import { BsCheck2Circle } from "react-icons/bs";
 
 interface props {
@@ -47,26 +47,26 @@ const SettingLang = ({ lang }: props) => {
   ];
 
   return (
-    <div className=" basic-card">
+    <div className="basic-card">
       <div>
-        <h2 className=" basic-title">Language settings</h2>
+        <h2 className="basic-title">Language settings</h2>
         <p>
           Application language we support, change system language by click them,
           it can take few second to change{" "}
         </p>
       </div>
-      <div className=" space-y-2 mt-4">
+      <div className="mt-4 space-y-2">
         {languages.map((item, index) => (
           <Button
             key={index}
-            className=" w-full justify-between"
+            className="w-full justify-between"
             onClick={() => handleLang(item.username)}
             variant="ghost"
             size="sm"
           >
-            <div className=" flex space-x-2 items-center">
+            <div className="flex items-center space-x-2">
               <MyImage role="ICON" src={item.image} />
-              <span className=" capitalize">{item.name}</span>
+              <span className="capitalize">{item.name}</span>
             </div>
             {isPending ? (
               <LoaderCircle
@@ -77,7 +77,7 @@ const SettingLang = ({ lang }: props) => {
               />
             ) : (
               lang === item.username && (
-                <BsCheck2Circle size={20} className=" text-info" />
+                <BsCheck2Circle size={20} className="text-info" />
               )
             )}
           </Button>

@@ -1,5 +1,5 @@
+import MyLink from "@/components/comon/myLink";
 import SendJoinSchoolRequest from "@/components/page/school-staff/dialog/send-join-school-request-dialog";
-import MyLink from "@/components/myComponents/myLink";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Locale } from "@/i18n";
 import { UserSchool } from "@/lib/utils/auth";

@@ -1,5 +1,5 @@
 import UserCardSmall from "@/components/cards/user-card-small";
-import MyLink from "@/components/myComponents/myLink";
+import MyLink from "@/components/comon/myLink";
 import { Button } from "@/components/ui/button";
 import { Locale } from "@/i18n";
 import { TeacherDto } from "@/lib/schema/school/teacher.dto";
@@ -17,8 +17,8 @@ interface props {
 const SchoolTeachers = ({ lang, onThePage, currentUser, teachers }: props) => {
   if (teachers.length === 0) {
     return (
-      <div className=" basic-card space-y-2">
-        <h3 className=" text-center basic-title text-gray-500">
+      <div className="basic-card space-y-2">
+        <h3 className="basic-title text-center text-gray-500">
           This school have not have teaches! 😔
         </h3>
         {currentUser.role === "SCHOOLSTAFF" && (
@@ -27,7 +27,7 @@ const SchoolTeachers = ({ lang, onThePage, currentUser, teachers }: props) => {
               button={{ variant: "primary", library: "daisy" }}
               type="button"
               href="s-t/teachers"
-              className=" w-full"
+              className="w-full"
               classname=" w-full"
             >
               <BsPlusCircle />
@@ -39,9 +39,9 @@ const SchoolTeachers = ({ lang, onThePage, currentUser, teachers }: props) => {
     );
   }
   return (
-    <div className=" basic-card space-y-2">
+    <div className="basic-card space-y-2">
       <div className="">
-        <h3 className=" font-semibold capitalize">Teachers </h3>
+        <h3 className="font-semibold capitalize">Teachers </h3>
       </div>
       {teachers.map((item) => {
         return (
@@ -53,16 +53,16 @@ const SchoolTeachers = ({ lang, onThePage, currentUser, teachers }: props) => {
             userRole="TEACHER"
             name={item.name}
             image={item.image}
-            userId = {item.userId}
+            userId={item.userId}
           />
         );
       })}
       {!onThePage && (
         <Link
           href={`/${lang}/school/peoples`}
-          className=" w-full items-center flex justify-center"
+          className="flex w-full items-center justify-center"
         >
-          <Button variant="ghost" size="sm" className=" w-full">
+          <Button variant="ghost" size="sm" className="w-full">
             See More
           </Button>
         </Link>

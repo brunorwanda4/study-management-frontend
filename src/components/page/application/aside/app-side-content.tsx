@@ -26,15 +26,15 @@ export const adminSidebarGroups: sidebarGroupsProps[] = [
     items: [
       {
         title: "Dashboard",
-        url: "/admin/",
+        url: "/a/",
       },
       {
         title: "Database",
-        url: "/admin/database",
+        url: "/a/database",
       },
       {
         title: "Collections",
-        url: "/admin/collections",
+        url: "/a/collections",
       },
     ],
   },
@@ -45,17 +45,17 @@ export const adminSidebarGroups: sidebarGroupsProps[] = [
         title: "Users",
         url: "/collection/users",
         children: [
-          { title: "Students", url: "/admin/users/students" },
-          { title: "Teachers", url: "/admin/users/teachers" },
-          { title: "Manage Users", url: "/admin/users/crud" },
+          { title: "Students", url: "/a/users/students" },
+          { title: "Teachers", url: "/a/users/teachers" },
+          { title: "Manage Users", url: "/a/users/crud" },
         ],
       },
       {
         title: "Classes",
         children: [
-          { title: "All Classes", url: "/admin/classes/all" },
-          { title: "Create Class", url: "/admin/classes/create" },
-          { title: "Manage Classes", url: "/admin/classes/manage" },
+          { title: "All Classes", url: "/a/classes/all" },
+          { title: "Create Class", url: "/a/classes/create" },
+          { title: "Manage Classes", url: "/a/classes/manage" },
         ],
       },
     ],
@@ -145,7 +145,7 @@ export const teacherSidebarGroups: sidebarGroupsProps[] = [
 
 export const schoolStaffSidebarGroups: sidebarGroupsProps[] = [
   {
-      label: "Dashboard",
+    label: "Dashboard",
     items: [
       {
         title: "Dashboard",
@@ -170,8 +170,8 @@ export const schoolStaffSidebarGroups: sidebarGroupsProps[] = [
     ],
   },
   {
-    label : "Your school",
-    items : [
+    label: "Your school",
+    items: [
       {
         title: "Students",
         icon: "/icons/students.png",
@@ -227,10 +227,10 @@ export const schoolStaffSidebarGroups: sidebarGroupsProps[] = [
       //   icon: "/icons/shield.png",
       //   url: "/s-t/Securities",
       // },
-    ]
+    ],
   },
   {
-      label: "For you",
+    label: "For you",
     items: [
       {
         title: "Messages",

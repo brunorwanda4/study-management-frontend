@@ -1,5 +1,14 @@
 "use client";
 
+import MyImage from "@/components/common/myImage";
+import { LoadingIndicator } from "@/components/comon/myLink";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Separator } from "@/components/ui/separator";
 import {
   Sidebar,
   SidebarContent,
@@ -12,57 +21,51 @@ import {
   SidebarMenuSub,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { Locale } from "@/i18n";
+import { cn } from "@/lib/utils";
+import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
-import { Separator } from "@/components/ui/separator";
-import { Locale } from "@/i18n";
 import { ReactNode } from "react";
 import { sidebarGroupsProps } from "./app-side-content";
-import { useTheme } from "next-themes";
-import MyImage from "@/components/myComponents/myImage";
-import { LoadingIndicator } from "@/components/myComponents/myLink";
 
 // Helper function to check if path starts with URL
 const isActivePath = (
   currentPath: string,
   targetUrl: string | undefined,
-  lang?: Locale
+  lang?: Locale,
 ) => {
   if (!targetUrl) return false;
-  
+
   const normalizedTarget = lang ? `/${lang}${targetUrl}` : targetUrl;
-  
+
   // Special cases that require exact match
   const exactMatchRoutes = [
-    '/admin/',
-    '/admin', // in case there's no trailing slash
-    '/s-t',
-    '/s-t/', // school staff dashboard
+    "/admin/",
+    "/admin", // in case there's no trailing slash
+    "/s-t",
+    "/s-t/", // school staff dashboard
     // Add any other routes that should only match exactly
   ];
 
   // Check if this is an exact match route
-  const requiresExactMatch = exactMatchRoutes.some(route => 
-    route === targetUrl || `/${lang}${route}` === normalizedTarget
+  const requiresExactMatch = exactMatchRoutes.some(
+    (route) => route === targetUrl || `/${lang}${route}` === normalizedTarget,
   );
 
   if (requiresExactMatch) {
-    return currentPath === normalizedTarget || 
-           currentPath === `${normalizedTarget}/`;
+    return (
+      currentPath === normalizedTarget || currentPath === `${normalizedTarget}/`
+    );
   }
 
   // For all other routes, use startsWith
-  return currentPath.startsWith(normalizedTarget) &&
-         // Ensure we don't match partial segments
-         (currentPath === normalizedTarget ||
-          currentPath.startsWith(`${normalizedTarget}/`));
+  return (
+    currentPath.startsWith(normalizedTarget) &&
+    // Ensure we don't match partial segments
+    (currentPath === normalizedTarget ||
+      currentPath.startsWith(`${normalizedTarget}/`))
+  );
 };
 // Reusable component for rendering sidebar groups
 const SidebarGroupComponent = ({
@@ -75,16 +78,16 @@ const SidebarGroupComponent = ({
   const path = usePathname();
   const { theme } = useTheme();
   return (
-    <SidebarGroup className=" p-0">
+    <SidebarGroup className="p-0">
       <div>
         {label ? (
-          <span className=" font-medium text-sm text-gray-500 ml-2">
+          <span className="ml-2 text-sm font-medium text-gray-500">
             {label}
           </span>
         ) : (
           <div>
             {index == 0 ? (
-              <div className=" mt-2"></div>
+              <div className="mt-2"></div>
             ) : (
               <Separator className="mb-2" />
             )}
@@ -92,7 +95,7 @@ const SidebarGroupComponent = ({
         )}
       </div>
       <SidebarGroupContent>
-        <SidebarMenu className=" pr-2">
+        <SidebarMenu className="pr-2">
           {items.map((item, index) => {
             if (item.otherData1)
               return (
@@ -106,23 +109,23 @@ const SidebarGroupComponent = ({
                     <SidebarMenuItem>
                       <AccordionTrigger
                         className={cn(
-                          "hover:no-underline btn btn-sm btn-ghost py-0 rounded-l-none",
+                          "btn btn-sm btn-ghost rounded-l-none py-0 hover:no-underline",
                           item.url &&
                             isActivePath(path, item.url, lang) &&
-                            `bg-base-300 ${theme === "dark" && "bg-white/10"}`
+                            `bg-base-300 ${theme === "dark" && "bg-white/10"}`,
                         )}
                       >
                         {item.url ? (
                           <Link
                             href={cn(lang ? `/${lang}${item.url}` : item.url)}
                             className={cn(
-                              "flex items-center gap-2 font-normal justify-between rounded-l-none "
+                              "flex items-center justify-between gap-2 rounded-l-none font-normal",
                             )}
                           >
                             {item.icon && (
-                              <MyImage  className=" size-6" src={item.icon} />
+                              <MyImage className="size-6" src={item.icon} />
                             )}
-                            <div className=" flex justify-between">
+                            <div className="flex justify-between">
                               <span>{item.title}</span>
                               <LoadingIndicator />
                             </div>
@@ -130,7 +133,7 @@ const SidebarGroupComponent = ({
                         ) : (
                           <div className="flex items-center gap-2 font-normal">
                             {item.icon && (
-                              <MyImage className=" size-6" src={item.icon} />
+                              <MyImage className="size-6" src={item.icon} />
                             )}
                             {item.title}
                           </div>
@@ -152,7 +155,7 @@ const SidebarGroupComponent = ({
               >
                 <AccordionItem value={item.title}>
                   <SidebarMenuItem>
-                    <AccordionTrigger className="hover:no-underline btn btn-sm btn-ghost py-0">
+                    <AccordionTrigger className="btn btn-sm btn-ghost py-0 hover:no-underline">
                       <span className="flex items-center gap-2">
                         {item.title}
                       </span>
@@ -169,18 +172,18 @@ const SidebarGroupComponent = ({
                                     : `${subItem.url}`
                                 }
                                 className={cn(
-                                  "ml-8 flex items-center gap-2  rounded-md",
+                                  "ml-8 flex items-center gap-2 rounded-md",
                                   isActivePath(path, subItem.url, lang) &&
-                                    "btn-info"
+                                    "btn-info",
                                 )}
                               >
-                                <div className=" flex justify-between">
+                                <div className="flex justify-between">
                                   <span className=" "> {subItem.title}</span>
                                   <LoadingIndicator />
                                 </div>
                               </Link>
                             ) : (
-                              <button className="ml-8 flex items-center gap-2 btn-xs btn-ghost  rounded-md">
+                              <button className="btn-xs btn-ghost ml-8 flex items-center gap-2 rounded-md">
                                 {subItem.title}
                               </button>
                             )}
@@ -198,15 +201,15 @@ const SidebarGroupComponent = ({
                     <Link
                       href={cn(lang ? `/${lang}${item.url}` : item.url)}
                       className={cn(
-                        "flex items-center gap-2  font-normal rounded-l-none",
+                        "flex items-center gap-2 rounded-l-none font-normal",
                         isActivePath(path, item.url, lang) &&
-                          `bg-base-300 ${theme === "dark" && "bg-white/10"}`
+                          `bg-base-300 ${theme === "dark" && "bg-white/10"}`,
                       )}
                     >
                       {item.icon && (
-                        <MyImage className=" size-6" src={item.icon} />
+                        <MyImage className="size-6" src={item.icon} />
                       )}
-                      <div className=" justify-between flex ">
+                      <div className="flex justify-between">
                         {item.title}
                         <LoadingIndicator />
                       </div>
@@ -214,7 +217,7 @@ const SidebarGroupComponent = ({
                   ) : (
                     <div className="flex items-center gap-2 font-normal">
                       {item.icon && (
-                        <MyImage className=" size-6" src={item.icon} />
+                        <MyImage className="size-6" src={item.icon} />
                       )}
                       {item.title}
                     </div>
@@ -237,9 +240,9 @@ interface props {
 
 export function AppSidebar({ items, lang, otherData1 }: props) {
   return (
-    <Sidebar className=" pt-14" collapsible="offcanvas">
-      <SidebarContent className=" border-r border-base-300">
-        <div className=" overflow-y-auto max-h-[calc(100vh-5.5rem) space-y-1">
+    <Sidebar className="pt-14" collapsible="offcanvas">
+      <SidebarContent className="border-base-300 border-r">
+        <div className="max-h-[calc(100vh-5.5rem) space-y-1 overflow-y-auto">
           {items.map((group, index) => (
             <SidebarGroupComponent
               key={index}

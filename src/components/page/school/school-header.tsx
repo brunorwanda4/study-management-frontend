@@ -1,16 +1,16 @@
+import MyImage from "@/components/common/myImage";
+import MyLink from "@/components/comon/myLink";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { TfiWorld } from "react-icons/tfi";
-import Link from "next/link";
 import { Locale } from "@/i18n";
-import MyImage from "@/components/myComponents/myImage";
-import { SchoolAndOthers } from "@/lib/schema/school.dto";
-import { AuthUserDto, UserSchool } from "@/lib/utils/auth";
 import {
   schoolBackground,
   schoolImage,
   schoolLogoImage,
 } from "@/lib/context/images";
-import MyLink from "@/components/myComponents/myLink";
+import { SchoolAndOthers } from "@/lib/schema/school.dto";
+import { AuthUserDto, UserSchool } from "@/lib/utils/auth";
+import Link from "next/link";
+import { TfiWorld } from "react-icons/tfi";
 
 interface props {
   lang: Locale;
@@ -28,37 +28,37 @@ const SchoolHeader = ({
   onThePage,
 }: props) => {
   return (
-    <div className=" space-y-2">
+    <div className="space-y-2">
       {!onThePage && (
         <MyImage
           src={schoolBackground}
-          className=" w-full h-80"
+          className="h-80 w-full"
           classname=" card rounded-t-none"
         />
       )}
-      <div className=" flex justify-between items-center">
-        <div className=" flex space-x-2 items-center">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-2">
           <MyLink loading href={`/${lang}/school`}>
-            <Avatar className=" size-32">
+            <Avatar className="size-32">
               <AvatarImage src={school?.logo ? school.logo : schoolLogoImage} />
               <AvatarFallback>LOGO</AvatarFallback>
             </Avatar>
           </MyLink>
-          <div className=" space-y-1">
+          <div className="space-y-1">
             <MyLink
-              className=" underline-offset-0"
+              className="underline-offset-0"
               loading
               href={`/${lang}/school`}
             >
-              <h1 className=" basic-title">
+              <h1 className="basic-title">
                 {school?.name ? school.name : "School name"}
               </h1>
             </MyLink>
-            <Link href={`/${lang}/school`} className=" link-hover">
+            <Link href={`/${lang}/school`} className="link-hover">
               @ {school?.username ? school.username : "school_username"}
             </Link>
             <div>
-              <div className=" text-sm text-myGray flex space-x-2 font-semibold items-center">
+              <div className="text-myGray flex items-center space-x-2 text-sm font-semibold">
                 <TfiWorld />
                 <span>
                   {school?.schoolType ? school.schoolType : "Public school"}
@@ -80,14 +80,14 @@ const SchoolHeader = ({
           </div>
         </div>
         {school?.id === currentSchool?.schoolId && (
-          <div className=" flex space-x-2 items-center">
+          <div className="flex items-center space-x-2">
             <MyImage
-              className=" size-20"
+              className="size-20"
               classname="mask mask-squircle"
               src={currentUser?.image ? currentUser.image : schoolImage}
             />
             <div>
-              <h4 className=" basic-title">{currentUser.name}</h4>
+              <h4 className="basic-title">{currentUser.name}</h4>
               <span>{currentSchool?.role}</span>
             </div>
           </div>

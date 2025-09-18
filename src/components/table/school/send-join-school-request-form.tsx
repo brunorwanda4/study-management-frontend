@@ -1,10 +1,11 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form"; // useWatch is implicitly used via form.watch
-import { useState, useTransition, useEffect } from "react";
 import { UsersIcon } from "lucide-react"; // Import the icon for classes
+import { useEffect, useState, useTransition } from "react";
+import { useForm } from "react-hook-form"; // useWatch is implicitly used via form.watch
 
+import { FormError, FormSuccess } from "@/components/common/form-message";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,12 +16,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { FormError, FormSuccess } from "@/components/myComponents/form-message";
-import {
-  SendJoinSchoolRequestDto,
-  sendJoinSchoolRequestSchema,
-} from "@/lib/schema/school/school-join-school/send-join-school-request.schema";
-import { UserSchool } from "@/lib/utils/auth";
 import {
   Select,
   SelectContent,
@@ -30,6 +25,11 @@ import {
 } from "@/components/ui/select";
 import { SchoolStaffRoles } from "@/lib/context/school.context";
 import { ViewDataClassDto } from "@/lib/schema/class/view-data-class.dto";
+import {
+  SendJoinSchoolRequestDto,
+  sendJoinSchoolRequestSchema,
+} from "@/lib/schema/school/school-join-school/send-join-school-request.schema";
+import { UserSchool } from "@/lib/utils/auth";
 import { CreateSchoolJoinRequest } from "@/service/school/school-join-request.service";
 import { ClassCombobox, ComboboxItem } from "./class-combobox";
 
@@ -83,12 +83,12 @@ export default function SendJoinSchoolRequestForm({
       const sendRequest = await CreateSchoolJoinRequest(data);
       if (sendRequest.data) {
         setSuccess(
-          `Request sent successfully for ${sendRequest.data.name}! ☺️`
+          `Request sent successfully for ${sendRequest.data.name}! ☺️`,
         );
-        form.reset(); 
+        form.reset();
       } else {
         setError(
-          sendRequest.message || "An error occurred while sending the request."
+          sendRequest.message || "An error occurred while sending the request.",
         );
       }
     });
@@ -102,11 +102,10 @@ export default function SendJoinSchoolRequestForm({
     number: classItem._count.students, // Display student count
   }));
 
-
   return (
     <Form {...form}>
       <form
-        className=" w-full space-y-4 flex flex-col"
+        className="flex w-full flex-col space-y-4"
         onSubmit={form.handleSubmit(onSubmit)}
       >
         {/* Email Field (no changes) */}
@@ -114,7 +113,7 @@ export default function SendJoinSchoolRequestForm({
           control={form.control}
           name="email"
           render={({ field }) => (
-            <FormItem className=" space-y-2 flex flex-col">
+            <FormItem className="flex flex-col space-y-2">
               <FormLabel className=" ">Email Address *</FormLabel>
               <FormControl>
                 <Input
@@ -134,7 +133,7 @@ export default function SendJoinSchoolRequestForm({
           control={form.control}
           name="role"
           render={({ field }) => (
-            <FormItem className=" space-y-2 flex flex-col">
+            <FormItem className="flex flex-col space-y-2">
               <FormLabel className=" ">Select Role *</FormLabel>
               <Select
                 // Use field.onChange directly for simpler state update
@@ -164,7 +163,7 @@ export default function SendJoinSchoolRequestForm({
             control={form.control}
             name="staffRole"
             render={({ field }) => (
-              <FormItem className=" space-y-2 flex flex-col">
+              <FormItem className="flex flex-col space-y-2">
                 <FormLabel className=" ">Specific Staff Role *</FormLabel>
                 <Select
                   onValueChange={field.onChange}
@@ -196,7 +195,7 @@ export default function SendJoinSchoolRequestForm({
             control={form.control}
             name="classId" // Correct field name
             render={({ field }) => (
-              <FormItem className=" space-y-2 flex flex-col">
+              <FormItem className="flex flex-col space-y-2">
                 <FormLabel className=" ">Select Class *</FormLabel>
                 {/* Use FormControl to wrap the custom component for label association etc. */}
                 <FormControl>
@@ -230,7 +229,7 @@ export default function SendJoinSchoolRequestForm({
         <Button
           library="daisy" // Removed if not standard Shadcn/Radix prop
           disabled={isPending}
-          className=" w-full"
+          className="w-full"
           variant={"info"} // Use standard Shadcn variants or configure custom ones
           type="submit"
         >

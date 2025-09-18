@@ -5,8 +5,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import MyImage from "../myComponents/myImage"
+} from "@/components/ui/table";
+import MyImage from "../comon/myImage";
 
 const items = [
   {
@@ -53,7 +53,7 @@ const items = [
     status: "Active",
     balance: "-$1,000.00",
   },
-]
+];
 
 export default function SimpleTable() {
   return (
@@ -74,7 +74,7 @@ export default function SimpleTable() {
               <TableCell>
                 <div className="flex items-center gap-3">
                   <MyImage
-                    className="rounded-full size-10"
+                    className="size-10 rounded-full"
                     src={item.image}
                     alt={item.name}
                   />
@@ -98,5 +98,5 @@ export default function SimpleTable() {
         Table with images
       </p>
     </div>
-  )
+  );
 }

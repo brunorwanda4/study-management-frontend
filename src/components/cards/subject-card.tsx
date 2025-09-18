@@ -1,10 +1,10 @@
 import { Locale } from "@/i18n";
-import MyImage from "../myComponents/myImage";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { classImage } from "@/lib/context/images";
-import MyLink from "../myComponents/myLink";
 import { moduleANdOthers } from "@/lib/schema/class/module.dto";
 import { BsGear } from "react-icons/bs";
+import MyImage from "../comon/myImage";
+import MyLink from "../comon/myLink";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
 interface props {
   lang: Locale;
@@ -13,21 +13,21 @@ interface props {
 const SubjectCard = ({ lang, module }: props) => {
   return (
     <Card>
-      <CardHeader className=" flex justify-between items-center">
-        <CardTitle className=" flex flex-col space-y-2">
+      <CardHeader className="flex items-center justify-between">
+        <CardTitle className="flex flex-col space-y-2">
           <MyLink
             loading
-            className=" underline-offset-0 capitalize"
+            className="capitalize underline-offset-0"
             href={`/${lang}/c/${module.classId}/subjects/${module.id}`}
           >
             {module.name}
           </MyLink>
           <MyLink
             loading
-            className=" underline-offset-0"
+            className="underline-offset-0"
             href={`/${lang}/c/${module.classId}/subjects/${module.id}`}
           >
-            <span className=" text-sm ">{module.code}</span>
+            <span className="text-sm">{module.code}</span>
           </MyLink>
         </CardTitle>
         <MyLink
@@ -42,7 +42,7 @@ const SubjectCard = ({ lang, module }: props) => {
 
       {/* Module Details */}
       <CardContent>
-        <div className=" text-base mb-4">
+        <div className="mb-4 text-base">
           <p>Subject Type: {module.subjectType}</p>
           <p>Curriculum: {module.curriculum}</p>
           <p>Topics: 12</p>
@@ -54,10 +54,10 @@ const SubjectCard = ({ lang, module }: props) => {
           <MyLink
             loading
             href={`/${lang}/p/${module.teacher.userId}?teacherID=${module.teacher.id}`}
-            className="flex items-center mb-4 border-t pt-4 border-t-base-300"
+            className="border-t-base-300 mb-4 flex items-center border-t pt-4"
           >
             <MyImage
-              className="w-10 h-10 rounded-full mr-4 object-cover"
+              className="mr-4 h-10 w-10 rounded-full object-cover"
               src={module.teacher?.image || "/images/p.jpg"}
               alt={`Teacher`}
             />
@@ -72,10 +72,10 @@ const SubjectCard = ({ lang, module }: props) => {
           <MyLink
             loading
             href={`/${lang}/c/${module.classId}`}
-            className="flex items-center mb-4 border-t pt-4 border-t-base-content/20"
+            className="border-t-base-content/20 mb-4 flex items-center border-t pt-4"
           >
             <MyImage
-              className="w-10 h-10 rounded-full mr-4 object-cover"
+              className="mr-4 h-10 w-10 rounded-full object-cover"
               src={module.class.image || classImage}
               alt={module.class.name}
             />

@@ -1,11 +1,10 @@
-import MyImage from "@/components/myComponents/myImage";
-import MyLink from "@/components/myComponents/myLink";
+import MyImage from "@/components/common/myImage";
+import MyLink from "@/components/comon/myLink";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Locale } from "@/i18n";
 import { studentImage } from "@/lib/context/images";
 import { studentsAndOther } from "@/lib/schema/school/student.dto";
-import React from "react";
 import { BsGear, BsPlusCircle } from "react-icons/bs";
 
 interface props {
@@ -16,20 +15,20 @@ interface props {
 const ClassStudentCard = ({ lang, student }: props) => {
   return (
     <Card>
-      <CardHeader className=" flex justify-between">
+      <CardHeader className="flex justify-between">
         <CardTitle>Students</CardTitle>
         <Button variant={"primary"} library="daisy" size={"sm"}>
           <BsPlusCircle /> Add Student
         </Button>
       </CardHeader>
-      <CardContent className=" px-2">
+      <CardContent className="px-2">
         {student.map((item) => {
           return (
             <div
               key={item.id}
-              className=" flex w-full justify-between hover:bg-base-300 card flex-row duration-200 p-2"
+              className="hover:bg-base-300 card flex w-full flex-row justify-between p-2 duration-200"
             >
-              <div className=" flex space-x-2">
+              <div className="flex space-x-2">
                 <MyLink
                   loading
                   href={`/${lang}/p/${item.userId}?studentId=${item.id}`}
@@ -37,7 +36,7 @@ const ClassStudentCard = ({ lang, student }: props) => {
                   <MyImage
                     role="AVATAR"
                     src={item.image || studentImage}
-                    className=" size-12"
+                    className="size-12"
                     classname=" mask mask-squircle"
                   />
                 </MyLink>
@@ -45,7 +44,7 @@ const ClassStudentCard = ({ lang, student }: props) => {
                   <MyLink
                     loading
                     href={`/${lang}/p/${item.userId}?studentId=${item.id}`}
-                    className=" small-title underline-offset-0"
+                    className="small-title underline-offset-0"
                   >
                     {item.name}
                   </MyLink>
