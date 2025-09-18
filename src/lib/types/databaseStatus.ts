@@ -1,5 +1,3 @@
-import { FetchError } from "./fetchErr";
-
 export interface CollectionStats {
   name: string;
   document_count: number;
@@ -13,17 +11,12 @@ export interface DatabaseStats {
   collections: CollectionStats[];
 }
 
-export interface DbProps {
-  data: DatabaseStats | null;
-  error: FetchError | null;
-}
-
 export interface EndpointModeler {
-    method: string;
-    path: string;
+  method: string;
+  path: string;
 }
 
 export interface EndpointCategoryModel {
-    name: string;
-    endpoints: EndpointModeler[];
+  name: string;
+  endpoints: EndpointModeler[];
 }

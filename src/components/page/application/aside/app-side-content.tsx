@@ -26,15 +26,18 @@ export const adminSidebarGroups: sidebarGroupsProps[] = [
     items: [
       {
         title: "Dashboard",
+        icon: "/icons/dashboard.png",
         url: "/a/",
       },
       {
         title: "Database",
         url: "/a/database",
+        icon: "/icons/database.png",
       },
       {
         title: "Collections",
         url: "/a/collections",
+        icon: "/icons/data-collection.png",
       },
     ],
   },
@@ -44,14 +47,20 @@ export const adminSidebarGroups: sidebarGroupsProps[] = [
       {
         title: "Users",
         url: "/collection/users",
+        icon: "/icons/family.png",
         children: [
-          { title: "Students", url: "/a/users/students" },
+          {
+            icon: "/icons/classroom.png",
+            title: "Students",
+            url: "/a/users/students",
+          },
           { title: "Teachers", url: "/a/users/teachers" },
           { title: "Manage Users", url: "/a/users/crud" },
         ],
       },
       {
         title: "Classes",
+        icon: "/icons/classroom.png",
         children: [
           { title: "All Classes", url: "/a/classes/all" },
           { title: "Create Class", url: "/a/classes/create" },
@@ -65,6 +74,7 @@ export const adminSidebarGroups: sidebarGroupsProps[] = [
     items: [
       {
         title: "Settings",
+        icon: "/icons/cogwheel.png",
         url: "/setting",
       },
     ],

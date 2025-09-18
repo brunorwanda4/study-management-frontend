@@ -5,6 +5,7 @@ import SchoolHomeNav from "@/components/page/school/school-home-navbar";
 import { Separator } from "@/components/ui/separator";
 import { Locale } from "@/i18n";
 import { getSchoolServer } from "@/lib/utils/auth";
+import { authUser } from "@/lib/utils/auth-user";
 import { getSchoolByIdService } from "@/service/school/school.service";
 import { redirect } from "next/navigation";
 
@@ -18,7 +19,7 @@ const layout = async (props: props) => {
   const { lang } = params;
   const { children } = props;
   const [currentUser, currentSchool] = await Promise.all([
-    await authUser(),
+    (await authUser())?.user,
     await getSchoolServer(),
   ]);
 
@@ -31,7 +32,7 @@ const layout = async (props: props) => {
 
   return (
     <section>
-      <div className=" px-4 space-y-4 pb-4">
+      <div className="space-y-4 px-4 pb-4">
         <SchoolHeader
           school={school.data}
           currentSchool={currentSchool}

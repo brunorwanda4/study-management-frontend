@@ -1,20 +1,19 @@
 "use client";
 
-import MyImage from "@/components/common/myImage";
-import { LoadingIndicator } from "@/components/common/myLink";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Separator } from "@/components/ui/separator";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -24,12 +23,16 @@ import {
 import { Locale } from "@/i18n";
 import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ReactNode } from "react";
 import { sidebarGroupsProps } from "./app-side-content";
 
-// Helper function to check if path starts with URL
+interface AppSidebarProps {
+  items: sidebarGroupsProps[];
+  lang: Locale;
+}
+
 const isActivePath = (
   currentPath: string,
   targetUrl: string | undefined,
@@ -39,16 +42,8 @@ const isActivePath = (
 
   const normalizedTarget = lang ? `/${lang}${targetUrl}` : targetUrl;
 
-  // Special cases that require exact match
-  const exactMatchRoutes = [
-    "/admin/",
-    "/admin", // in case there's no trailing slash
-    "/s-t",
-    "/s-t/", // school staff dashboard
-    // Add any other routes that should only match exactly
-  ];
+  const exactMatchRoutes = ["/a/", "/a", "/s-t", "/s-t/"];
 
-  // Check if this is an exact match route
   const requiresExactMatch = exactMatchRoutes.some(
     (route) => route === targetUrl || `/${lang}${route}` === normalizedTarget,
   );
@@ -59,206 +54,117 @@ const isActivePath = (
     );
   }
 
-  // For all other routes, use startsWith
   return (
     currentPath.startsWith(normalizedTarget) &&
-    // Ensure we don't match partial segments
     (currentPath === normalizedTarget ||
       currentPath.startsWith(`${normalizedTarget}/`))
   );
 };
-// Reusable component for rendering sidebar groups
-const SidebarGroupComponent = ({
-  label,
-  items,
-  index,
-  lang,
-  otherData1,
-}: sidebarGroupsProps) => {
+
+export function AppSidebar({ items, lang }: AppSidebarProps) {
   const path = usePathname();
   const { theme } = useTheme();
   return (
-    <SidebarGroup className="p-0">
-      <div>
-        {label ? (
-          <span className="ml-2 text-sm font-medium text-gray-500">
-            {label}
-          </span>
-        ) : (
-          <div>
-            {index == 0 ? (
-              <div className="mt-2"></div>
-            ) : (
-              <Separator className="mb-2" />
+    <Sidebar className="bg-base-100 pt-16" collapsible="icon">
+      <SidebarContent className="bg-base-100 text-on-primary dark:bg-surface-container dark:text-on-surface">
+        {items.map((group, groupIndex) => (
+          <SidebarGroup key={groupIndex} className="pl-0">
+            {group.label && (
+              <SidebarGroupLabel className="ml-2 text-sm font-medium text-gray-500">
+                {group.label}
+              </SidebarGroupLabel>
             )}
-          </div>
-        )}
-      </div>
-      <SidebarGroupContent>
-        <SidebarMenu className="pr-2">
-          {items.map((item, index) => {
-            if (item.otherData1)
-              return (
-                <Accordion
-                  type="single"
-                  collapsible
-                  key={index}
-                  className="group/accordion"
-                >
-                  <AccordionItem value={item.title}>
-                    <SidebarMenuItem>
-                      <AccordionTrigger
-                        className={cn(
-                          "btn btn-sm btn-ghost rounded-l-none py-0 hover:no-underline",
-                          item.url &&
-                            isActivePath(path, item.url, lang) &&
-                            `bg-base-300 ${theme === "dark" && "bg-white/10"}`,
-                        )}
-                      >
-                        {item.url ? (
-                          <Link
-                            href={cn(lang ? `/${lang}${item.url}` : item.url)}
+
+            <SidebarGroupContent className=" ">
+              <SidebarMenu className=" ">
+                {group.items.map((item, itemIndex) => (
+                  <SidebarMenuItem key={itemIndex}>
+                    {item.children ? (
+                      <Accordion type="single" collapsible className="w-full">
+                        <AccordionItem value={`item-${itemIndex}`}>
+                          <AccordionTrigger
                             className={cn(
-                              "flex items-center justify-between gap-2 rounded-l-none font-normal",
+                              buttonVariants({ variant: "ghost" }),
+                              isActivePath(path, item.url, lang) &&
+                                `bg-base-300 ${theme === "dark" && "bg-white/10"}`,
+                              "w-full justify-start rounded-l-none",
                             )}
                           >
                             {item.icon && (
-                              <MyImage className="size-6" src={item.icon} />
+                              <Image
+                                src={item.icon}
+                                alt={item.title}
+                                width={20}
+                                height={20}
+                                className="h-5 min-h-[20px] w-5 min-w-[20px]"
+                              />
                             )}
-                            <div className="flex justify-between">
-                              <span>{item.title}</span>
-                              <LoadingIndicator />
-                            </div>
-                          </Link>
-                        ) : (
-                          <div className="flex items-center gap-2 font-normal">
-                            {item.icon && (
-                              <MyImage className="size-6" src={item.icon} />
-                            )}
+                            <span className="text-base-content">
+                              {item.title}
+                            </span>
+                          </AccordionTrigger>
+
+                          <AccordionContent>
+                            <SidebarMenuSub>
+                              {item.children.map((subItem, subIndex) => (
+                                <SidebarMenuSubItem key={subIndex}>
+                                  <Link
+                                    href={subItem.url || "/"}
+                                    className={cn(
+                                      buttonVariants({ variant: "ghost" }),
+                                      isActivePath(path, subItem.url, lang) &&
+                                        "btn-info",
+                                      "ml-6 justify-start rounded-l-none",
+                                    )}
+                                  >
+                                    <span className="text-base-content">
+                                      {subItem.title}
+                                    </span>
+                                  </Link>
+                                </SidebarMenuSubItem>
+                              ))}
+                            </SidebarMenuSub>
+                          </AccordionContent>
+                        </AccordionItem>
+                      </Accordion>
+                    ) : (
+                      <SidebarMenuButton asChild className=" ">
+                        <Link
+                          className={cn(
+                            buttonVariants({ variant: "ghost" }),
+                            isActivePath(path, item.url, lang) &&
+                              `bg-base-300 ${theme === "dark" && "bg-white/10"}`,
+                            "justify-start rounded-l-none",
+                            "",
+                          )}
+                          href={item.url || "/"}
+                        >
+                          {item.icon && (
+                            <Image
+                              src={item.icon}
+                              alt={item.title}
+                              width={20}
+                              height={20}
+                              className="h-5 min-h-[20px] w-5 min-w-[20px]"
+                            />
+                          )}
+                          <span className="text-base-content">
                             {item.title}
-                          </div>
-                        )}
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        <SidebarMenuSub>{otherData1}</SidebarMenuSub>
-                      </AccordionContent>
-                    </SidebarMenuItem>
-                  </AccordionItem>
-                </Accordion>
-              );
-            return item.children ? (
-              <Accordion
-                type="single"
-                collapsible
-                key={index}
-                className="group/accordion"
-              >
-                <AccordionItem value={item.title}>
-                  <SidebarMenuItem>
-                    <AccordionTrigger className="btn btn-sm btn-ghost py-0 hover:no-underline">
-                      <span className="flex items-center gap-2">
-                        {item.title}
-                      </span>
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      <SidebarMenuSub>
-                        {item.children.map((subItem, subIndex) => (
-                          <SidebarMenuSubItem key={subIndex}>
-                            {subItem.url ? (
-                              <Link
-                                href={
-                                  lang
-                                    ? `/${lang}${subItem.url}`
-                                    : `${subItem.url}`
-                                }
-                                className={cn(
-                                  "ml-8 flex items-center gap-2 rounded-md",
-                                  isActivePath(path, subItem.url, lang) &&
-                                    "btn-info",
-                                )}
-                              >
-                                <div className="flex justify-between">
-                                  <span className=" "> {subItem.title}</span>
-                                  <LoadingIndicator />
-                                </div>
-                              </Link>
-                            ) : (
-                              <button className="btn-xs btn-ghost ml-8 flex items-center gap-2 rounded-md">
-                                {subItem.title}
-                              </button>
-                            )}
-                          </SidebarMenuSubItem>
-                        ))}
-                      </SidebarMenuSub>
-                    </AccordionContent>
+                          </span>
+                        </Link>
+                      </SidebarMenuButton>
+                    )}
                   </SidebarMenuItem>
-                </AccordionItem>
-              </Accordion>
-            ) : (
-              <SidebarMenuItem key={index}>
-                <SidebarMenuButton asChild>
-                  {item.url ? (
-                    <Link
-                      href={cn(lang ? `/${lang}${item.url}` : item.url)}
-                      className={cn(
-                        "flex items-center gap-2 rounded-l-none font-normal",
-                        isActivePath(path, item.url, lang) &&
-                          `bg-base-300 ${theme === "dark" && "bg-white/10"}`,
-                      )}
-                    >
-                      {item.icon && (
-                        <MyImage className="size-6" src={item.icon} />
-                      )}
-                      <div className="flex justify-between">
-                        {item.title}
-                        <LoadingIndicator />
-                      </div>
-                    </Link>
-                  ) : (
-                    <div className="flex items-center gap-2 font-normal">
-                      {item.icon && (
-                        <MyImage className="size-6" src={item.icon} />
-                      )}
-                      {item.title}
-                    </div>
-                  )}
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            );
-          })}
-        </SidebarMenu>
-      </SidebarGroupContent>
-    </SidebarGroup>
-  );
-};
-
-interface props {
-  items: sidebarGroupsProps[];
-  lang?: Locale;
-  otherData1?: ReactNode[];
-}
-
-export function AppSidebar({ items, lang, otherData1 }: props) {
-  return (
-    <Sidebar className="pt-14" collapsible="offcanvas">
-      <SidebarContent className="border-base-300 border-r">
-        <div className="max-h-[calc(100vh-5.5rem) space-y-1 overflow-y-auto">
-          {items.map((group, index) => (
-            <SidebarGroupComponent
-              key={index}
-              label={group.label}
-              items={group.items}
-              index={index}
-              lang={lang}
-              otherData1={otherData1}
-            />
-          ))}
-          <div className="h-[1.5rem]]" />
-        </div>
-        <SidebarFooter className=" ">
-          {/* TODO: add aside footer */}
-        </SidebarFooter>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
       </SidebarContent>
+
+      <SidebarFooter className="bg-base-100 text-on-primary dark:bg-surface-container dark:text-on-surface">
+        {/* add theme */}
+      </SidebarFooter>
     </Sidebar>
   );
 }

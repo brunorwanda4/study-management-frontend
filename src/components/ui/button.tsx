@@ -116,4 +116,19 @@ const Button = React.forwardRef<HTMLButtonElement, UniversalButtonProps>(
 
 Button.displayName = "Button";
 
-export { Button };
+const buttonVariants = (
+  options: (VariantProps<typeof shadcnVariants> &
+    VariantProps<typeof daisyVariants> & { library?: "shadcn" | "daisy" }) & {
+    className?: string;
+  } = {},
+) => {
+  const { library = "shadcn", ...rest } = options;
+
+  if (library === "daisy") {
+    return daisyVariants(rest as VariantProps<typeof daisyVariants>);
+  }
+
+  return shadcnVariants(rest as VariantProps<typeof shadcnVariants>);
+};
+
+export { Button, buttonVariants };

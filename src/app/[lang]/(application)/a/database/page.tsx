@@ -1,41 +1,28 @@
-import PageTitle from "@/components/common/page-title";
 import CollectionsCharts from "@/components/page/admin/database/collections_cards";
 import DatabaseHeader from "@/components/page/admin/database/databaseHeader";
+import ErrorPage from "@/components/page/error-page";
 import { DatabaseStats } from "@/lib/types/databaseStatus";
-import { FetchError } from "@/lib/types/fetchErr";
-import { fetchDatabaseStatus } from "@/service/admin/databaseStatusService";
+import apiRequest from "@/service/api-client";
 
-const Home = async () => {
-  let data: DatabaseStats | null = null;
-  let error: FetchError | null = null;
+const DatabasePage = async () => {
+  const request = await apiRequest<void, DatabaseStats>(
+    "get",
+    "/database/status",
+  );
 
-  try {
-    const result = await fetchDatabaseStatus();
-
-    if (result && "message" in result) {
-      error = result;
-    } else if (result) {
-      data = result;
-    }
-  } catch (err) {
-    error = {
-      message: "An unexpected error occurred",
-      details: (err as Error).message,
-    };
+  if (!request.data) {
+    return <ErrorPage message={request.message} />;
   }
 
   return (
-    <div className="happy-page">
+    <div className="happy-page space-y-4">
+      <DatabaseHeader data={request.data} />
       <div>
-        <PageTitle title="Database" />
-      </div>
-      <DatabaseHeader data={data} error={error} />
-      <div>
-        <CollectionsCharts data={data} error={error} />
+        <CollectionsCharts data={request.data} />
       </div>
       <div className="h-screen" />
     </div>
   );
 };
 
-export default Home;
+export default DatabasePage;

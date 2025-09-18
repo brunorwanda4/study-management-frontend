@@ -10,26 +10,18 @@ import {
   formatCollectionName,
   formatCollectionNameLink,
 } from "@/lib/functions/names_fn";
-import { DbProps } from "@/lib/types/databaseStatus";
+import { DatabaseStats } from "@/lib/types/databaseStatus";
 
 import Link from "next/link";
 import { useState } from "react";
 import { BsCollection, BsThreeDots } from "react-icons/bs";
 
-const CollectionsCharts = ({ data, error }: DbProps) => {
-  const [selectedType, setSelectedType] = useState("All Collection");
+interface props {
+  data?: DatabaseStats;
+}
 
-  if (error) {
-    return (
-      <div className="relative rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
-        <strong className="font-bold">Error: </strong>
-        <span className="block sm:inline">{error.message}</span>
-        {error.details && (
-          <span className="mt-1 block text-sm">{error.details}</span>
-        )}
-      </div>
-    );
-  }
+const CollectionsCharts = ({ data }: props) => {
+  const [selectedType, setSelectedType] = useState("All Collection");
 
   if (!data) {
     return (
