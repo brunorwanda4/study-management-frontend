@@ -4,8 +4,8 @@ import { redirectContents } from "@/lib/hooks/redirect";
 import { UserRoleDto } from "@/lib/schema/user/user.dto";
 import { useRouter } from "next/navigation";
 import { BsArrowLeft } from "react-icons/bs";
-import MyImage from "../comon/myImage";
-import MyLink from "../comon/myLink";
+import MyImage from "../common/myImage";
+import MyLink from "../common/myLink";
 import { Button } from "../ui/button";
 
 interface props {

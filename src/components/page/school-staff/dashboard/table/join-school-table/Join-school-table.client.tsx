@@ -1,7 +1,7 @@
 "use client";
 
 import MyImage from "@/components/common/myImage";
-import MyLink from "@/components/comon/myLink";
+import MyLink from "@/components/common/myLink";
 import { CardContent, CardFooter } from "@/components/ui/card";
 import {
   Table,

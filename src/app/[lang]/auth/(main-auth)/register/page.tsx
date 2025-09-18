@@ -1,4 +1,4 @@
-import MyLink from "@/components/comon/myLink";
+import MyLink from "@/components/common/myLink";
 import RegisterForm from "@/components/page/auth/forms/register-form";
 import { Locale } from "@/i18n";
 import { Metadata } from "next";

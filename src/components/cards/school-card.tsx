@@ -4,7 +4,7 @@ import { Locale } from "@/i18n";
 import { cn } from "@/lib/utils";
 import { Dot } from "lucide-react";
 import Link from "next/link";
-import { TextTooltip } from "../comon/text-tooltip";
+import { TextTooltip } from "../common/text-tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";

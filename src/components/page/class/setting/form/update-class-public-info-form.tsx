@@ -10,7 +10,7 @@ import { useForm } from "react-hook-form";
 
 // Components
 import { FormError, FormSuccess } from "@/components/common/form-message";
-import { ImageUpload } from "@/components/comon/image-upload";
+import { ImageUpload } from "@/components/common/image-upload";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import {

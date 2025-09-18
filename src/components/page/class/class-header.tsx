@@ -1,5 +1,5 @@
 import MyImage from "@/components/common/myImage";
-import MyLink from "@/components/comon/myLink";
+import MyLink from "@/components/common/myLink";
 import { Locale } from "@/i18n";
 import {
   classImage,
@@ -7,7 +7,8 @@ import {
   teacherImage,
 } from "@/lib/context/images";
 import { ClassAndOthers } from "@/lib/schema/class/class.schema";
-import { AuthUserDto, UserSchool } from "@/lib/utils/auth";
+import { AuthUserDto } from "@/lib/schema/user/user.dto";
+import { UserSchool } from "@/lib/utils/auth";
 
 interface props {
   currentCls: ClassAndOthers;

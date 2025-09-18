@@ -2,8 +2,8 @@ import { Locale } from "@/i18n";
 import { classImage } from "@/lib/context/images";
 import { moduleANdOthers } from "@/lib/schema/class/module.dto";
 import { BsGear } from "react-icons/bs";
-import MyImage from "../comon/myImage";
-import MyLink from "../comon/myLink";
+import MyImage from "../common/myImage";
+import MyLink from "../common/myLink";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
 interface props {

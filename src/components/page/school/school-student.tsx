@@ -1,5 +1,5 @@
 import UserCardSmall from "@/components/cards/user-card-small";
-import MyLink from "@/components/comon/myLink";
+import MyLink from "@/components/common/myLink";
 import { Button } from "@/components/ui/button";
 import { Locale } from "@/i18n";
 import { StudentDto } from "@/lib/schema/school/student.dto";

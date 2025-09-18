@@ -2,7 +2,7 @@
 "use client";
 
 import MyImage from "@/components/common/myImage";
-import MyLink from "@/components/comon/myLink";
+import MyLink from "@/components/common/myLink";
 import { Button } from "@/components/ui/button"; // For Actions
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox"; // Assuming shadcn/ui

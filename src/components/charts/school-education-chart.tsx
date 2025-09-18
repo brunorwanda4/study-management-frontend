@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/chart";
 import { useMemo } from "react";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
-import MyImage from "../comon/myImage";
+import MyImage from "../common/myImage";
 import { Button } from "../ui/button";
 const chartData = [
   { browser: "REB", visitors: 200, fill: "var(--color-safari)" },

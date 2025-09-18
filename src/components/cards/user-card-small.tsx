@@ -4,8 +4,8 @@ import { toLowerCase } from "@/lib/functions/characters";
 import { cn } from "@/lib/utils";
 import { Dot } from "lucide-react";
 import { LuMessageCircle } from "react-icons/lu";
-import MyLink from "../comon/myLink";
-import { TextTooltip } from "../comon/text-tooltip";
+import MyLink from "../common/myLink";
+import { TextTooltip } from "../common/text-tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 interface props {

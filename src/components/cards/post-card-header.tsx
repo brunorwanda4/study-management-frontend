@@ -1,4 +1,4 @@
-import UserTooltip from "@/components/comon/user-tooltip";
+import UserTooltip from "@/components/common/user-tooltip";
 import { Locale } from "@/i18n";
 import { userImage } from "@/lib/context/images";
 import Link from "next/link";

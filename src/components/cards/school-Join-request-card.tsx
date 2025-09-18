@@ -9,7 +9,7 @@ import {
 } from "@/service/school/school-join-request.service";
 import Link from "next/link";
 import { useState, useTransition } from "react";
-import { FormError, FormSuccess } from "../comon/form-message";
+import { FormError, FormSuccess } from "../common/form-message";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";

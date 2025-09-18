@@ -1,8 +1,8 @@
 "use client";
+import MyImage from "@/components/common/myImage";
 import { Locale } from "@/i18n";
 import { usePathname, useRouter } from "next/navigation";
 import { IoLanguageOutline } from "react-icons/io5";
-import MyImage from "../comon/myImage";
 import { Button } from "../ui/button";
 
 const AuthLang = () => {

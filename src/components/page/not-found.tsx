@@ -3,7 +3,7 @@ import { RefreshCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { BsArrowLeft } from "react-icons/bs";
-import MyImage from "../comon/myImage";
+import MyImage from "../common/myImage";
 import { Button } from "../ui/button";
 
 interface props {

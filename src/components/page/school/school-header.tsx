@@ -1,5 +1,5 @@
 import MyImage from "@/components/common/myImage";
-import MyLink from "@/components/comon/myLink";
+import MyLink from "@/components/common/myLink";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Locale } from "@/i18n";
 import {

@@ -1,4 +1,4 @@
-import MyImage from "../comon/myImage";
+import MyImage from "../common/myImage";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
 const UserFavoriteSubjects = () => {

@@ -6,7 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import MyImage from "../comon/myImage";
+import MyImage from "../common/myImage";
 
 const items = [
   {

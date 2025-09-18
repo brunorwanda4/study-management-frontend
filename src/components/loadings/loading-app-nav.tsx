@@ -1,4 +1,4 @@
-import MyImage from "../comon/myImage";
+import MyImage from "../common/myImage";
 import AppLogo from "../page/application/navbard/app-logo";
 import { Button } from "../ui/button";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import MyImage from "@/components/common/myImage";
-import { LoadingIndicator } from "@/components/comon/myLink";
+import { LoadingIndicator } from "@/components/common/myLink";
 import {
   Accordion,
   AccordionContent,

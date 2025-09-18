@@ -1,4 +1,4 @@
-import MyLink from "@/components/comon/myLink";
+import MyLink from "@/components/common/myLink";
 import { Locale } from "@/i18n";
 import { User } from "lucide-react";
 import { BsArrowRight } from "react-icons/bs";

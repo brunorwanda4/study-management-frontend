@@ -1,5 +1,5 @@
 import MyImage from "@/components/common/myImage";
-import MyLink from "@/components/comon/myLink";
+import MyLink from "@/components/common/myLink";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Locale } from "@/i18n";
 import { studentImage } from "@/lib/context/images";

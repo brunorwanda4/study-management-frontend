@@ -4,8 +4,8 @@ import { userAndOther } from "@/lib/schema/user/user.dto";
 import { Phone, User } from "lucide-react";
 import { FaSchool } from "react-icons/fa6";
 import { MdClass, MdEmail } from "react-icons/md";
-import MyImage from "../comon/myImage";
-import MyLink from "../comon/myLink";
+import MyImage from "../common/myImage";
+import MyLink from "../common/myLink";
 import { Separator } from "../ui/separator";
 
 interface props {

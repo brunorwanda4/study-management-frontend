@@ -1,5 +1,5 @@
 "use client";
-import MyLink from "@/components/comon/myLink";
+import MyLink from "@/components/common/myLink";
 import { Locale } from "@/i18n";
 import { usePathname } from "next/navigation";
 import { FaPeopleGroup, FaSchool, FaSignsPost } from "react-icons/fa6";

@@ -1,6 +1,6 @@
 "use client";
 
-import { CustomToast } from "@/components/comon/custom-toast";
+import { CustomToast } from "@/components/common/custom-toast";
 import {
   ToastProvider as ShadcnToastProvider,
   ToastViewport,

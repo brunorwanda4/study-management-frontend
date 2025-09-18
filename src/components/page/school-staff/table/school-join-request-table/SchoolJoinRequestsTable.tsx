@@ -2,7 +2,7 @@
 "use client";
 
 import MyImage from "@/components/common/myImage";
-import MyLink from "@/components/comon/myLink"; // If needed for links
+import MyLink from "@/components/common/myLink"; // If needed for links
 import { Badge } from "@/components/ui/badge"; // Using Badge for status
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

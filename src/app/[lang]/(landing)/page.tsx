@@ -1,5 +1,5 @@
 import MyImage from "@/components/common/myImage";
-import MyLink from "@/components/comon/myLink";
+import MyLink from "@/components/common/myLink";
 import AuthLang from "@/components/lang/auth-lang";
 import AuthButton from "@/components/page/welcome/auth-button";
 import WelcomeImage from "@/components/page/welcome/welcome-images";

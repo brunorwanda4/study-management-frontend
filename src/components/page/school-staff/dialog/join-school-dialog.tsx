@@ -1,4 +1,4 @@
-import MyImage from "../../../comon/myImage";
+import MyImage from "../../../common/myImage";
 import InputJoinSchoolFormForm from "../../../table/school/join-school-form";
 import { Button } from "../../../ui/button";
 import {

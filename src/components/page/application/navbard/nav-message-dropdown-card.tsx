@@ -1,4 +1,4 @@
-import { TextTooltip } from "@/components/comon/text-tooltip";
+import { TextTooltip } from "@/components/common/text-tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Locale } from "@/i18n";
