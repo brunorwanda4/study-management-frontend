@@ -1,15 +1,11 @@
 "use client";
 import { CommonDataTable } from "@/components/common/table/common-data-table";
 import TableFilter from "@/components/common/table/table-filter";
+import CreateNewUserDialog from "@/components/page/admin/users/createNewUserDialog";
 import { getUsersTableCollectionColumns } from "@/components/page/admin/users/users_table_collection_columns";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserModel } from "@/lib/types/userModel";
+import { AuthUserResult } from "@/lib/utils/auth-user";
 import apiRequest from "@/service/api-client";
 import {
   ColumnDef,
@@ -26,21 +22,22 @@ import { useEffect, useState } from "react";
 
 interface Props {
   users: UserModel[];
-  token: string;
+  auth: AuthUserResult;
   serverMode?: boolean; // flag: true = server fetching, false = SSR
 }
 
 const UsersTableCollection = ({
   users: initialUsers,
-  token,
+  auth,
   serverMode = true,
 }: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-
+  const token = auth.token;
   // ✅ restore page index from URL
   const initialPage = parseInt(searchParams.get("page") ?? "1", 10) - 1;
   const [data, setData] = useState<UserModel[]>(initialUsers);
+
   const [pageIndex, setPageIndex] = useState(initialPage);
   const [pageSize] = useState(10);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -101,10 +98,8 @@ const UsersTableCollection = ({
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <div>
-            <CardTitle>Users</CardTitle>
-            <CardDescription>All users in the system</CardDescription>
-          </div>
+          <CardTitle>Users</CardTitle>
+          <CreateNewUserDialog auth={auth} />
         </div>
       </CardHeader>
       <CardContent className="space-y-4">

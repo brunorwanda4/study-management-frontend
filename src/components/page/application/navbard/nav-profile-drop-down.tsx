@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,13 +9,14 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Locale } from '@/i18n';
-import { AuthUserDto } from '@/lib/schema/user/user.dto';
-import { logout } from '@/lib/utils/auth';
-import { LogOut, User } from 'lucide-react';
-import { useTheme } from 'next-themes';
-import Link from 'next/link';
+} from "@/components/ui/dropdown-menu";
+import { Locale } from "@/i18n";
+import { AuthUserDto } from "@/lib/schema/user/user.dto";
+import { logout } from "@/lib/utils/auth";
+import { generateImageProfile } from "@/lib/utils/generate-profile-image";
+import { LogOut, User } from "lucide-react";
+import { useTheme } from "next-themes";
+import Link from "next/link";
 
 interface props {
   lang: Locale;
@@ -24,37 +25,32 @@ interface props {
 
 const NavProfileDropDown = ({ lang, user }: props) => {
   const { theme } = useTheme();
+  const image = generateImageProfile(user.gender);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button library="daisy" variant="ghost" shape="circle">
-          <Avatar className=" size-10  ">
-            <AvatarImage src={user?.image ? user.image : '/images/2.jpg'} />
+          <Avatar className="size-10">
+            <AvatarImage src={user?.image ? user.image : image} />
             <AvatarFallback>{user.role}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className=" w-72" data-theme={theme}>
-        <DropdownMenuLabel className=" flex gap-2 items-center">
-          <Avatar className=" size-10">
-            <AvatarImage
-              src={
-                user?.image
-                  ? user.image
-                  : 'https://res.cloudinary.com/dg9f2wy0t/image/upload/v1744817900/avatars/aef1b831f2dcdf4df0197c07e21f6cda.jpg'
-              }
-            />
+      <DropdownMenuContent className="w-72" data-theme={theme}>
+        <DropdownMenuLabel className="flex items-center gap-2">
+          <Avatar className="size-10">
+            <AvatarImage src={user?.image ? user.image : image} />
             <AvatarFallback>{user.role}</AvatarFallback>
           </Avatar>
-          <div className=" flex flex-col">
-            <span className=" font-medium">{user.name}</span>
+          <div className="flex flex-col">
+            <span className="font-medium">{user.name}</span>
             <span> {user.email}</span>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           <Link href={`/${lang}/profile`}>
-            <Button variant="ghost" size="sm" className=" w-full justify-start">
+            <Button variant="ghost" size="sm" className="w-full justify-start">
               <User />
               <span>Your Profile</span>
             </Button>
@@ -67,7 +63,7 @@ const NavProfileDropDown = ({ lang, user }: props) => {
             type="button"
             variant="ghost"
             size="sm"
-            className=" text-error w-full justify-start cursor-pointer"
+            className="text-error w-full cursor-pointer justify-start"
           >
             <LogOut />
             <span>Logout</span>

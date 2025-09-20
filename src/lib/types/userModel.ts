@@ -8,7 +8,7 @@ export const UserModelNewSchema = z.object({
   name: z.string(),
   email: z.string().email(),
   username: z.string().optional(),
-  password: z.string(),
+  password_hash: z.string(),
   role: userRoleSchema.optional(),
   image_id: z.string().optional(),
   image: z.string().optional(),
@@ -37,6 +37,7 @@ export const UserModelSchema = z.object({
   address: AddressSchema.optional(),
   current_school_id: z.string().optional(),
   bio: z.string().optional(),
+  disable: z.boolean().optional(),
   created_at: z.string().optional(),
   updated_at: z.string().optional(),
 });

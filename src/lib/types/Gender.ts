@@ -8,3 +8,9 @@ export const gender = {
   FEMALE: "FEMALE" as Gender,
   OTHER: "OTHER" as Gender,
 };
+
+export const genders: { id: Gender; role: string }[] = [
+  { id: "MALE", role: "Male" },
+  { id: "FEMALE", role: "Female" },
+  { id: "OTHER", role: "Other" },
+];

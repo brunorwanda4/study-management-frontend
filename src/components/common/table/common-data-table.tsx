@@ -105,40 +105,45 @@ export function CommonDataTable<TData, TValue>({
         </TableComponent>
       </div>
 
-      {/* ✅ Pagination Controls */}
       <div className="flex items-center justify-start gap-2">
         <Button
           variant="outline"
           size="sm"
-          onClick={() => {
-            if (serverMode && setPageIndex) {
-              setPageIndex(Math.max((pageIndex ?? 0) - 1, 0));
-            } else {
-              table.previousPage();
-            }
-          }}
+          onClick={() => table.previousPage()}
+          // onClick={() => {
+          //   if (serverMode && setPageIndex) {
+          //     setPageIndex(Math.max((pageIndex ?? 0) - 1, 0));
+          //   } else {
+          //     table.previousPage();
+          //   }
+          // }}
           disabled={
             serverMode ? (pageIndex ?? 0) === 0 : !table.getCanPreviousPage()
           }
         >
           Previous
         </Button>
+
         <span className="text-sm">
+          {/* Page {table.getState().pagination.pageIndex + 1} */}
           Page{" "}
           {serverMode
             ? (pageIndex ?? 0) + 1
             : table.getState().pagination.pageIndex + 1}{" "}
         </span>
+
         <Button
           variant="outline"
           size="sm"
-          onClick={() => {
-            if (serverMode && setPageIndex) {
-              setPageIndex((pageIndex ?? 0) + 1);
-            } else {
-              table.nextPage();
-            }
-          }}
+          onClick={() => table.nextPage()}
+          // disabled={!table.getCanNextPage()}
+          // onClick={() => {
+          //   if (serverMode && setPageIndex) {
+          //     setPageIndex((pageIndex ?? 0) + 1);
+          //   } else {
+          //     table.nextPage();
+          //   }
+          // }}
           disabled={
             serverMode ? data.length < pageSize : !table.getCanNextPage()
           }

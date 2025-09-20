@@ -1,23 +1,28 @@
-import z, { string } from 'zod';
-import { ClassDto } from '../class/class.schema';
-import { SchoolDto } from '../school.dto';
+import { GenderSchema } from "@/lib/types/Gender";
+import z, { string } from "zod";
+import { ClassDto } from "../class/class.schema";
+import { SchoolDto } from "../school.dto";
 
-export const UserRoleEnum = z.enum(['STUDENT', 'TEACHER', 'ADMIN', 'SCHOOLSTAFF'], {
-  required_error: 'User role is required',
-  invalid_type_error: 'Invalid user role',
-});
+export const UserRoleEnum = z.enum(
+  ["STUDENT", "TEACHER", "ADMIN", "SCHOOLSTAFF"],
+  {
+    required_error: "User role is required",
+    invalid_type_error: "Invalid user role",
+  },
+);
 export type UserRoleDto = z.infer<typeof UserRoleEnum>;
 
-export const GenderEnum = z.enum(['FEMALE', 'MALE'], {
+export const GenderEnum = z.enum(["FEMALE", "MALE"], {
   message: "Gender must be one of 'MALE' or 'FEMALE',",
-  required_error: 'Gender is required',
-  invalid_type_error: 'Invalid gender',
+  required_error: "Gender is required",
+  invalid_type_error: "Invalid gender",
 });
 
-const googleMapsUrlRegex = /^https?:\/\/(www\.)?google\.[a-z]{2,}(\.[a-z]{2,})?\/maps([\/@?].*)?$/i;
+const googleMapsUrlRegex =
+  /^https?:\/\/(www\.)?google\.[a-z]{2,}(\.[a-z]{2,})?\/maps([\/@?].*)?$/i;
 
 export const AddressSchema = z.object({
-  country: z.string().min(1, { message: 'Country is required' }),
+  country: z.string().min(1, { message: "Country is required" }),
   province: z.string().optional(),
   district: z.string().optional(),
   sector: z.string().optional(),
@@ -27,23 +32,25 @@ export const AddressSchema = z.object({
   postalCode: z.string().optional(),
   googleMapUrl: z
     .string()
-    .url({ message: 'Invalid URL' })
-    .regex(googleMapsUrlRegex, { message: 'URL must be a valid Google Maps link' })
+    .url({ message: "Invalid URL" })
+    .regex(googleMapsUrlRegex, {
+      message: "URL must be a valid Google Maps link",
+    })
     .optional(),
 });
 
 export const AgeSchema = z.object({
   year: z.number({
-    required_error: 'Year is required',
-    invalid_type_error: 'Year must be a number',
+    required_error: "Year is required",
+    invalid_type_error: "Year must be a number",
   }),
   month: z.number({
-    required_error: 'Month is required',
-    invalid_type_error: 'Month must be a number',
+    required_error: "Month is required",
+    invalid_type_error: "Month must be a number",
   }),
   day: z.number({
-    required_error: 'Day is required',
-    invalid_type_error: 'Day must be a number',
+    required_error: "Day is required",
+    invalid_type_error: "Day must be a number",
   }),
 });
 
@@ -51,10 +58,10 @@ export const CreateUserSchema = z.object({
   name: z
     .string()
     .min(1, {
-      message: 'Name is required',
+      message: "Name is required",
     })
     .max(50, {
-      message: 'Maximum characters are 50',
+      message: "Maximum characters are 50",
     }),
   email: z.string().email(),
   password: z.string().optional(),
@@ -66,10 +73,10 @@ export const UpdateUserSchema = z.object({
   name: z
     .string()
     .min(1, {
-      message: 'Name is required',
+      message: "Name is required",
     })
     .max(50, {
-      message: 'Maximum characters are 50',
+      message: "Maximum characters are 50",
     })
     .optional(),
   email: z.string().email().optional(),
@@ -80,13 +87,13 @@ export const UpdateUserSchema = z.object({
   password: z.string().optional().optional(),
   username: string()
     .min(1, {
-      message: 'Username is required',
+      message: "Username is required",
     })
     .max(50, {
-      message: 'Maximum characters are 50',
+      message: "Maximum characters are 50",
     })
     .optional(),
-  role: z.enum(['STUDENT', 'TEACHER', 'ADMIN', 'SCHOOLSTAFF']).optional(),
+  role: z.enum(["STUDENT", "TEACHER", "ADMIN", "SCHOOLSTAFF"]).optional(),
 });
 
 export type UpdateUserDto = z.infer<typeof UpdateUserSchema>;
@@ -95,7 +102,7 @@ export type UpdateUserDto = z.infer<typeof UpdateUserSchema>;
 export const LoginUserSchema = z.object({
   email: z.string().email(),
   password: z.string().min(1, {
-    message: 'Password is required',
+    message: "Password is required",
   }),
 });
 
@@ -105,7 +112,7 @@ export const RegisterUserSchema = z.object({
   name: z.string(),
   email: z.string().email(),
   password: z.string().min(1, {
-    message: 'Password is required',
+    message: "Password is required",
   }),
 });
 
@@ -115,21 +122,19 @@ export const AuthUserSchema = z.object({
   id: z.string(),
   email: z.string().email(),
   username: z.string(),
-  name: z.string().min(1, {
-    message: ' Minimum 1 character',
-  }),
-  image: z.string().nullable().optional(), // 👈 now accepts null OR string
+  name: z.string().min(1, { message: "Minimum 1 character" }),
+  image: z.string().nullable().optional(),
   role: UserRoleEnum.optional(),
   currentSchoolId: z.string().optional(),
+  gender: GenderSchema.optional(),
   bio: z
     .string()
-    .max(500, {
-      message: 'Bio cannot exceed 500 characters',
-    })
+    .max(500, { message: "Bio cannot exceed 500 characters" })
     .nullable()
-    .optional(), // 👈 same idea for bio
+    .optional(),
   accessToken: z.string().optional(),
   schoolAccessToken: z.string().optional(),
+  disable: z.boolean().optional(),
   exp: z.number(),
   iat: z.number(),
 });
@@ -141,20 +146,24 @@ export const OnboardingSchema = z.object({
   image: z
     .string()
     .optional()
-    .refine((val) => !val || (val.startsWith('data:image/') && val.length < 2 * 1024 * 1024), {
-      message: 'Invalid image format or image too large (max 2MB)',
-    }),
+    .refine(
+      (val) =>
+        !val || (val.startsWith("data:image/") && val.length < 2 * 1024 * 1024),
+      {
+        message: "Invalid image format or image too large (max 2MB)",
+      },
+    ),
   age: z
     .object({
       year: z
         .number()
-        .min(1900, 'Year must be valid')
-        .max(new Date().getFullYear(), 'Year cannot be in the future'),
+        .min(1900, "Year must be valid")
+        .max(new Date().getFullYear(), "Year cannot be in the future"),
       month: z
         .number()
-        .min(1, 'Month must be between 1 and 12')
-        .max(12, 'Month must be between 1 and 12'),
-      day: z.number().min(1, 'Day must be valid').max(31, 'Day must be valid'),
+        .min(1, "Month must be between 1 and 12")
+        .max(12, "Month must be between 1 and 12"),
+      day: z.number().min(1, "Day must be valid").max(31, "Day must be valid"),
     })
     .refine(
       (data) => {
@@ -172,17 +181,17 @@ export const OnboardingSchema = z.object({
         return age >= 2 && age <= 100;
       },
       {
-        message: 'Age must be between 3 and 95 years old.',
+        message: "Age must be between 3 and 95 years old.",
       },
     ),
   phone: z
     .string()
     .min(10, {
-      message: 'Minium character are 10',
+      message: "Minium character are 10",
     })
-    .regex(/^\d+$/, 'Phone number must contain only numbers')
+    .regex(/^\d+$/, "Phone number must contain only numbers")
     .optional(),
-  role: z.enum(['STUDENT', 'TEACHER', 'ADMIN', 'SCHOOLSTAFF'], {
+  role: z.enum(["STUDENT", "TEACHER", "ADMIN", "SCHOOLSTAFF"], {
     message: "Role must be one of 'STUDENT', 'TEACHER', or 'SCHOOL STAFF'",
   }),
   gender: GenderEnum,
@@ -194,21 +203,21 @@ export type onboardingDto = z.infer<typeof OnboardingSchema>;
 
 export const UserSchema = z.object({
   Id: z.string(),
-  name: z.string().min(1, { message: 'Name is required' }).max(50, {
-    message: 'Maximum characters allowed for name is 50',
+  name: z.string().min(1, { message: "Name is required" }).max(50, {
+    message: "Maximum characters allowed for name is 50",
   }),
-  email: z.string().email({ message: 'Invalid email address' }),
+  email: z.string().email({ message: "Invalid email address" }),
   username: z.string().min(3, {
-    message: 'Username must be at least 3 characters',
+    message: "Username must be at least 3 characters",
   }),
   password: z
     .string()
     .min(6, {
-      message: 'Password must be at least 6 characters',
+      message: "Password must be at least 6 characters",
     })
     .optional(),
   role: UserRoleEnum.optional(),
-  image: z.string().url({ message: 'Image must be a valid URL' }).optional(),
+  image: z.string().url({ message: "Image must be a valid URL" }).optional(),
   phone: z.string().optional(),
   gender: GenderEnum.optional(),
   age: AgeSchema.optional(),
@@ -217,7 +226,7 @@ export const UserSchema = z.object({
   bio: z
     .string()
     .max(500, {
-      message: 'Bio cannot exceed 500 characters',
+      message: "Bio cannot exceed 500 characters",
     })
     .optional(),
   createAt: z.string(),

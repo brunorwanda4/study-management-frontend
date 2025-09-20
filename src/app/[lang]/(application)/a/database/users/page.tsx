@@ -34,7 +34,7 @@ const UserPageCollection = async () => {
   return (
     <div className="happy-page space-y-4">
       <UserCollectionDetails stats={statsRequest.data} />
-      <UsersTableCollection users={usersRequest.data} token={auth.token} />
+      <UsersTableCollection auth={auth} users={usersRequest.data} />
     </div>
   );
 };

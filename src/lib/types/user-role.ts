@@ -14,3 +14,10 @@ export const userRole = {
   TEACHER: "TEACHER" as userRole,
   SCHOOLSTAFF: "SCHOOLSTAFF",
 };
+
+export const userRoles: { id: userRole; role: string }[] = [
+  // { id: "ADMIN", role: "ADMIN" },
+  { id: "SCHOOLSTAFF", role: "SCHOOLSTAFF" },
+  { id: "TEACHER", role: "TEACHER" },
+  { id: "STUDENT", role: "STUDENT" },
+];

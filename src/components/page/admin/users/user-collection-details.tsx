@@ -38,6 +38,7 @@ const UserCollectionDetails = ({ stats }: Props) => {
         { key: "Assigned to School", value: stats.assigned_school },
         { key: "No School", value: stats.no_school },
       ],
+      ClassNameItems: "flex flex-col",
     },
     {
       title: "Recently Added Users",

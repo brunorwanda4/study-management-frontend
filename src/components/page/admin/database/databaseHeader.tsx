@@ -26,7 +26,12 @@ const DatabaseHeader = ({ data }: props) => {
   return (
     <main className="grid grid-cols-4 gap-4">
       {components.map((item, i) => (
-        <DataDetailsCard title={item.title} icon={item.icon} size={item.size} />
+        <DataDetailsCard
+          key={i}
+          title={item.title}
+          icon={item.icon}
+          size={item.size}
+        />
       ))}
     </main>
   );
