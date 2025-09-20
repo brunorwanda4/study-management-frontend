@@ -50,7 +50,7 @@ async function authMiddleware(req: NextRequest) {
   const isLoggedIn = !!auth;
 
   if (auth) {
-    if (willExpireSoon(auth.user.exp)) {
+    if (await willExpireSoon(auth.user.exp)) {
       const newToken = await refreshAuthToken(auth.token);
       if (newToken) {
         await setAuthCookie(newToken, auth.user.id);

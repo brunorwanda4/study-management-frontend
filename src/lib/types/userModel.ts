@@ -1,69 +1,80 @@
-import { ProfileImageModelGet } from "./imageModel";
+import { AddressSchema } from "@/lib/types/address";
+import { AgeSchema } from "@/lib/types/age";
+import { GenderSchema } from "@/lib/types/Gender";
+import { userRoleSchema } from "@/lib/types/user-role";
+import z from "zod";
 
-export interface Gender {
-  Male: "Male"; // Male gender representation
-  Female: "Female"; // Female gender representation
-  Other: "Other"; // Other gender representation
-}
+export const UserModelNewSchema = z.object({
+  name: z.string(),
+  email: z.string().email(),
+  username: z.string().optional(),
+  password: z.string(),
+  role: userRoleSchema.optional(),
+  image_id: z.string().optional(),
+  image: z.string().optional(),
+  phone: z.string().optional(),
+  gender: GenderSchema.optional(),
+  age: AgeSchema.optional(),
+  address: AddressSchema.optional(),
+  current_school_id: z.string().optional(),
+  bio: z.string().optional(),
+});
+export type UserModelNew = z.infer<typeof UserModelNewSchema>;
 
-export interface UserModelNew {
-  name: string; // Full name of the user
-  username?: string; // Username (optional)
-  role: string; // Role ID associated with the user
-  email: string; // Email address of the user
-  phone?: string; // Phone number (optional)
-  image?: string; // Image
-  password: string; // Password for the user
-  gender: keyof Gender; // Gender of the user, refers to the Gender interface
-}
+// User schema (fetched from DB)
+export const UserModelSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  email: z.string().email(),
+  username: z.string().optional(),
+  password_hash: z.string().optional(),
+  role: userRoleSchema.optional(),
+  image_id: z.string().optional(),
+  image: z.string().optional(),
+  phone: z.string().optional(),
+  gender: GenderSchema.optional(),
+  age: AgeSchema.optional(),
+  address: AddressSchema.optional(),
+  current_school_id: z.string().optional(),
+  bio: z.string().optional(),
+  created_at: z.string().optional(),
+  updated_at: z.string().optional(),
+});
+export type UserModel = z.infer<typeof UserModelSchema>;
 
-export interface UserModel {
-  id: string; // id
-  role?: string; // role id
-  name: string; // name
-  username?: string; // username
-  email: string; // email
-  phone?: string; // phone number
-  password?: string; // password
-  disable?: boolean; // disabled status
-  gender?: keyof Gender; // gender
-  create_on: string; // create date
-  update_on?: string; // update date
-  image?: ProfileImageModelGet[]; // Images
-}
+// Update User schema
+export const UserModelPutSchema = z.object({
+  name: z.string().optional(),
+  email: z.string().email().optional(),
+  username: z.string().optional(),
+  password: z.string().optional(),
+  role: userRoleSchema.optional(),
+  image: z.string().optional(),
+  phone: z.string().optional(),
+  gender: GenderSchema.optional(),
+  age: AgeSchema.optional(),
+  address: AddressSchema.optional(),
+  current_school_id: z.string().optional(),
+  bio: z.string().optional(),
+  updated_at: z.string().optional(),
+});
+export type UserModelPut = z.infer<typeof UserModelPutSchema>;
 
-export interface UserModelPut {
-  role?: string; // Role
-  username?: string; // Username
-  name?: string; // Name
-  email?: string; // Email
-  phone?: string; // Phone
-  password?: string; // Password
-  gender?: Gender; // Gender
-  disable?: boolean; // Disabled status
-  image?: string; // Image
-}
+// Bulk delete schema
+export const UserModelDeleteManySchema = z.object({
+  users: z.array(z.string()),
+});
+export type UserModelDeleteMany = z.infer<typeof UserModelDeleteManySchema>;
 
-export interface UserModelDeleteMany {
-  users: string[]; // Array of user idisable
-}
+// Single update schema
+export const UserModelUpdateSchema = z.object({
+  id: z.string(),
+  user: UserModelPutSchema,
+});
+export type UserModelUpdate = z.infer<typeof UserModelUpdateSchema>;
 
-export interface UserModelUpdate {
-  id: string; // id
-  user: UserModelPut; // user object
-}
-export interface UserModelUpdateMany {
-  users: UserModelUpdate[]; // Array of user idisable
-}
-
-// user role model
-export type UserRoleModel = {
-  id: string; // id
-  role: string; // role
-  create_on: string; // create date
-  update_on?: string; // update date
-};
-
-export type UserRoleModelNew = {
-  role: string; // role
-};
+// Bulk update schema
+export const UserModelUpdateManySchema = z.object({
+  users: z.array(UserModelUpdateSchema),
+});
+export type UserModelUpdateMany = z.infer<typeof UserModelUpdateManySchema>;

@@ -1,210 +1,146 @@
 "use client";
-
-import { DataTable } from "@/components/common/data-table";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { CommonDataTable } from "@/components/common/table/common-data-table";
+import TableFilter from "@/components/common/table/table-filter";
+import { getUsersTableCollectionColumns } from "@/components/page/admin/users/users_table_collection_columns";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Separator } from "@/components/ui/separator";
-import { toast } from "@/lib/hooks/use-toast";
-import { FetchError } from "@/lib/types/fetchErr";
-import { UserModel, UserModelPut, UserRoleModel } from "@/lib/types/userModel";
-import { cn } from "@/lib/utils";
-import { updateUserAPI } from "@/service/admin/fetchDataFn";
-import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
-import Link from "next/link";
-import { useState, useTransition } from "react";
-import { FaCloudArrowDown } from "react-icons/fa6";
-import CreateNewUserDialog from "./createNewUserDialog";
-import UserActionDialog from "./userActionDialog";
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { UserModel } from "@/lib/types/userModel";
+import apiRequest from "@/service/api-client";
+import {
+  ColumnDef,
+  ColumnFiltersState,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  SortingState,
+  useReactTable,
+} from "@tanstack/react-table";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
-interface props {
+interface Props {
   users: UserModel[];
-  usersRole: UserRoleModel[] | FetchError;
-  collectionName: string;
+  token: string;
+  serverMode?: boolean; // flag: true = server fetching, false = SSR
 }
 
-const UsersTableCollection = ({ users, usersRole, collectionName }: props) => {
-  const [isPending, startTransition] = useTransition();
-  const [SelectedUsers, setSelectedUsers] = useState<UserModel[]>([]);
+const UsersTableCollection = ({
+  users: initialUsers,
+  token,
+  serverMode = true,
+}: Props) => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const columns: ColumnDef<UserModel>[] = [
-    {
-      id: "select",
-      header: ({ table }) => {
-        return (
-          <Checkbox
-            checked={
-              table.getIsAllPageRowsSelected() ||
-              (table.getIsSomePageRowsSelected() && "indeterminate")
-            }
-            onCheckedChange={(value) => {
-              table.toggleAllPageRowsSelected(!!value);
-              setSelectedUsers(
-                value
-                  ? table.getFilteredRowModel().rows.map((row) => row.original)
-                  : [],
-              );
-            }}
-            aria-label="Select all"
-          />
-        );
-      },
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => {
-            row.toggleSelected(!!value);
-            setSelectedUsers((prev) =>
-              value
-                ? [...prev, row.original]
-                : prev.filter((user) => user.id !== row.original.id),
-            );
-          }}
-          aria-label="Select row"
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false,
-    },
-    {
-      accessorKey: "name",
-      header: "Name",
-      cell: ({ row }) => {
-        const user = row.original;
-        return (
-          <Link
-            href={`/collection/${collectionName}/${user.id}`}
-            className={cn("link-hover", user.disable && "text-warning")}
-          >
-            {row.getValue("name")}
-          </Link>
-        );
-      },
-    },
-    {
-      accessorKey: "email",
-      header: "Email",
-      cell: ({ row }) => (
-        <span className="text-lowercase">{row.getValue("email")}</span>
-      ),
-    },
-    {
-      accessorKey: "role",
-      header: "Role",
-      cell: ({ row }) => <span>{row.getValue("role")}</span>,
-    },
-    {
-      accessorKey: "username",
-      header: "Username",
-      cell: ({ row }) => <span>{row.getValue("username") || "N/A"}</span>,
-    },
-    {
-      accessorKey: "create_on",
-      header: "Created On",
-      cell: ({ row }) => (
-        <span>{new Date(row.getValue("create_on")).toLocaleDateString()}</span>
-      ),
-    },
-    {
-      id: "actions",
-      enableHiding: false,
-      cell: ({ row }) => {
-        const payment = row.original;
-        const disableUser: UserModelPut = { disable: true };
-        const Enable: UserModelPut = { disable: false };
-        return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-base-200">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(payment.id)}
-              >
-                Copy ID
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <Link href={`/collection/${collectionName}/${payment.id}`}>
-                  View account
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                disabled={isPending}
-                onClick={() =>
-                  handleSubmit(
-                    payment.disable ? Enable : disableUser,
-                    payment.id,
-                  )
-                }
-                className="text-warning"
-              >
-                {payment.disable ? "Enable" : "Disable"} account
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        );
-      },
-    },
-  ];
+  // ✅ restore page index from URL
+  const initialPage = parseInt(searchParams.get("page") ?? "1", 10) - 1;
+  const [data, setData] = useState<UserModel[]>(initialUsers);
+  const [pageIndex, setPageIndex] = useState(initialPage);
+  const [pageSize] = useState(10);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: "name", desc: false },
+  ]);
 
-  const handleSubmit = (values: UserModelPut, id: string) => {
-    startTransition(async () => {
-      const result = await updateUserAPI(values, id);
+  const columns = getUsersTableCollectionColumns();
 
-      if ("message" in result) {
-        toast({
-          title: "Uh oh! Something went wrong.",
-          description: result.message,
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: `User ${result.name} updated successfully`,
-          description: <div>user: {result.name}</div>,
-        });
+  const table = useReactTable<UserModel>({
+    data,
+    columns: columns as ColumnDef<UserModel, unknown>[],
+    state: { sorting, columnFilters, pagination: { pageIndex, pageSize } },
+    onColumnFiltersChange: setColumnFilters,
+    onSortingChange: setSorting,
+    onPaginationChange: (updater) => {
+      const nextIndex =
+        typeof updater === "function"
+          ? updater({ pageIndex, pageSize }).pageIndex
+          : updater.pageIndex;
+      setPageIndex(nextIndex);
+
+      // ✅ update URL param
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("page", (nextIndex + 1).toString());
+      router.replace(`?${params.toString()}`, { scroll: false });
+    },
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    manualPagination: true, // ✅ controlled
+    pageCount: -1, // unknown total, infinite scroll style
+  });
+
+  // ✅ Fetch users on page change
+  useEffect(() => {
+    if (!serverMode) return;
+
+    const fetchUsers = async () => {
+      const query = `?limit=${pageSize}&skip=${pageIndex * pageSize}`;
+      const request = await apiRequest<void, UserModel[]>(
+        "get",
+        `/users${query}`,
+        undefined,
+        token,
+      );
+
+      if (request.statusCode === 200 && request.data) {
+        setData(request.data);
       }
-    });
-  };
+    };
+
+    fetchUsers();
+  }, [pageIndex, pageSize, token]);
 
   return (
-    <div className="happy-card container overflow-x-auto p-0">
-      <div className="flex justify-between p-4">
-        <h1 className="happy-title-base">Users Table ({users.length})</h1>
-        <div className="space-x-2">
-          {SelectedUsers.length > 0 && (
-            <UserActionDialog
-              setUsers={setSelectedUsers}
-              users={SelectedUsers}
-            />
-          )}
-          <CreateNewUserDialog usersRole={usersRole} />
-          <Button variant="success" size="sm">
-            <FaCloudArrowDown /> Export
-          </Button>
+    <Card>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle>Users</CardTitle>
+            <CardDescription>All users in the system</CardDescription>
+          </div>
         </div>
-      </div>
-      <Separator />
-      <div className="p-4 pt-0">
-        <DataTable
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="flex flex-wrap gap-3">
+          <div className="w-44">
+            <TableFilter column={table.getColumn("name")!} />
+          </div>
+          <div className="w-36">
+            <TableFilter column={table.getColumn("username")!} />
+          </div>
+          <div className="w-36">
+            <TableFilter column={table.getColumn("email")!} />
+          </div>
+          <div className="w-36">
+            <TableFilter column={table.getColumn("role")!} />
+          </div>
+          <div className="w-36">
+            <TableFilter column={table.getColumn("phone")!} />
+          </div>
+          <div className="">
+            <TableFilter column={table.getColumn("created_at")!} />
+          </div>
+        </div>
+
+        {/* ✅ pass table + data */}
+        <CommonDataTable
+          table={table}
           columns={columns}
-          data={users}
-          searchKeys={["email", "name", "role"]}
+          data={serverMode ? data : initialUsers}
+          serverMode={serverMode}
+          pageIndex={pageIndex}
+          setPageIndex={setPageIndex}
+          pageSize={pageSize}
         />
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 

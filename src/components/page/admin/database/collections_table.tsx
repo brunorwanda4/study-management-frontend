@@ -1,6 +1,6 @@
 "use client";
 
-import { CommonDataTable } from "@/components/common/table/data-table";
+import { CommonDataTable } from "@/components/common/table/common-data-table";
 import TableFilter from "@/components/common/table/table-filter";
 import { getCollectionsTableColumns } from "@/components/page/admin/database/collections_table_column";
 import {

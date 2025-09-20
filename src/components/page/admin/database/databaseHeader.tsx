@@ -1,4 +1,4 @@
-import DataDetailsCard from "@/components/common/cards/data-details.-card";
+import DataDetailsCard from "@/components/common/cards/data-details-card";
 import { DatabaseStats } from "@/lib/types/databaseStatus";
 
 interface props {

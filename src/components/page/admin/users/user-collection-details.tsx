@@ -1,22 +1,64 @@
-import DataDetailsCard from "@/components/common/cards/data-details.-card";
-import { UserModel } from "@/lib/types/userModel";
+import DataDetailsCard, {
+  dataDetailsCardProps,
+} from "@/components/common/cards/data-details-card";
+import { UserStats } from "@/lib/types/User-stats";
 
-interface props {
-  users: UserModel;
+interface Props {
+  stats: UserStats;
 }
 
-const UserCollectionDetails = ({ users }: props) => {
-  const components = [
+const UserCollectionDetails = ({ stats }: Props) => {
+  const allUsersComponents: dataDetailsCardProps[] = [
     {
-      title: "Total users",
-      size: 432,
+      title: "Total Users",
+      size: stats.total,
       icon: "/icons/family.png",
+      items: [
+        { key: "Male", value: stats.male },
+        { key: "Female", value: stats.female },
+        { key: "Other", value: stats.other },
+      ],
+    },
+    {
+      title: "All User Roles",
+      size: "4",
+      icon: "/icons/staff.png",
+      items: [
+        { key: "Admins", value: stats.admins },
+        { key: "School Staffs", value: stats.staff },
+        { key: "Students", value: stats.students },
+        { key: "Teachers", value: stats.teachers },
+      ],
+    },
+    {
+      title: "School Assignment",
+      size: "2",
+      icon: "/icons/school.png",
+      items: [
+        { key: "Assigned to School", value: stats.assigned_school },
+        { key: "No School", value: stats.no_school },
+      ],
+    },
+    {
+      title: "Recently Added Users",
+      size: stats.recent_30_days,
+      icon: "/icons/add-user.png",
+      items: [{ key: "Added in Last 30 Days", value: stats.recent_30_days }],
+      ClassNameItems: " flex",
     },
   ];
+
   return (
-    <main className="grid grid-cols-4 gap-4">
-      {components.map((item, i) => (
-        <DataDetailsCard title={item.title} icon={item.icon} size={item.size} />
+    <main className="grid w-full grid-cols-4 gap-4">
+      {allUsersComponents.map((item, i) => (
+        <DataDetailsCard
+          key={i}
+          title={item.title}
+          icon={item.icon}
+          size={item.size}
+          items={item.items}
+          ClassNameItems={item.ClassNameItems}
+        />
       ))}
     </main>
   );

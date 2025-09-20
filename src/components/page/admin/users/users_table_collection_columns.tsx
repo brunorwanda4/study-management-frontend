@@ -1,0 +1,86 @@
+"use client";
+
+import MyImage from "@/components/common/myImage";
+import { UserModel } from "@/lib/types/userModel";
+import { generateImageProfile } from "@/lib/utils/generate-profile-image";
+import { ColumnDef } from "@tanstack/react-table";
+
+export const getUsersTableCollectionColumns = (): ColumnDef<UserModel>[] => [
+  {
+    header: "Name",
+    accessorKey: "name",
+    meta: { filterVariant: "text" },
+    cell: ({ row }) => {
+      return (
+        <div className="flex items-center gap-2">
+          <MyImage
+            role="AVATAR"
+            className="size-12"
+            src={
+              row.original.image || generateImageProfile(row.original.gender)
+            }
+          />
+          <div className="flex flex-col gap-1">
+            <span className="font-medium">{row.original.name}</span>
+            <span className="text-sm">{row.original.gender}</span>
+          </div>
+        </div>
+      );
+    },
+  },
+  {
+    header: "Username",
+    accessorKey: "username",
+    meta: { filterVariant: "text" },
+  },
+  {
+    header: "Email",
+    accessorKey: "email",
+    meta: { filterVariant: "text" },
+  },
+  {
+    header: "Role",
+    accessorFn: (user) => user.role ?? "N/A",
+    id: "role",
+    meta: { filterVariant: "select" },
+  },
+  {
+    header: "Phone",
+    accessorKey: "phone",
+    meta: { filterVariant: "text" },
+  },
+  {
+    header: "School",
+    accessorFn: (user) =>
+      user.current_school_id ? "Assigned" : "Not Assigned",
+    id: "school",
+    meta: { filterVariant: "select" },
+  },
+  {
+    header: "Created At",
+    accessorKey: "created_at",
+    meta: { filterVariant: "dateRange" },
+    cell: ({ row }) => {
+      return (
+        <div className="space-y-2">
+          <div className="flex flex-row gap-1">
+            <span>Created on:</span>
+            <span>
+              {row.original.created_at
+                ? new Date(row.original.created_at).toLocaleDateString()
+                : "-"}
+            </span>
+          </div>
+          <div className="flex flex-row gap-1">
+            <span>update on:</span>
+            <span>
+              {row.original.updated_at
+                ? new Date(row.original.updated_at).toLocaleDateString()
+                : "-"}
+            </span>
+          </div>
+        </div>
+      );
+    },
+  },
+];
