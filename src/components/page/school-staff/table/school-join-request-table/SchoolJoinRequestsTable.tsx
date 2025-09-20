@@ -53,7 +53,6 @@ import {
   getFacetedUniqueValues,
   getFilteredRowModel,
   getSortedRowModel,
-  RowData,
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
@@ -74,12 +73,6 @@ import { useId, useMemo, useState } from "react";
 import SendJoinSchoolRequest from "../../dialog/send-join-school-request-dialog";
 
 // --- Prisma Schema related types ---
-declare module "@tanstack/react-table" {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface ColumnMeta<TData extends RowData, TValue> {
-    filterVariant?: "text" | "range" | "select";
-  }
-}
 
 const columnsFunction = (
   lang: Locale,

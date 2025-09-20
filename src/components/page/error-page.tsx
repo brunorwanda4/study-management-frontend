@@ -9,9 +9,10 @@ import { Button } from "../ui/button";
 
 interface props {
   message?: string;
+  details?: string;
 }
 
-const ErrorPage = ({ message }: props) => {
+const ErrorPage = ({ message, details }: props) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false); // Add loading state
 
@@ -25,8 +26,8 @@ const ErrorPage = ({ message }: props) => {
   };
 
   return (
-    <div className="flex w-full justify-center">
-      <div className="flex flex-col">
+    <div className="flex w-full items-center justify-center">
+      <div className="flex flex-col items-center">
         <MyImage
           className="h-54 w-96"
           src="/png/error-page.png"

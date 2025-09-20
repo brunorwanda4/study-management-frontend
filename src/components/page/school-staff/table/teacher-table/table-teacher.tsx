@@ -1,27 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useId, useMemo, useState } from "react";
-import {
-  Column,
-  ColumnFiltersState,
-  flexRender,
-  getCoreRowModel,
-  getFacetedMinMaxValues,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getSortedRowModel,
-  RowData,
-  SortingState,
-  useReactTable,
-} from "@tanstack/react-table";
-import {
-  ChevronDownIcon,
-  ChevronUpIcon,
-  SearchIcon,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -39,19 +18,26 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { TeacherDto } from "@/lib/schema/school/teacher.dto";
 import { Locale } from "@/i18n";
-import { TeacherTableColumns } from "./teacher-table-columns";
+import { TeacherDto } from "@/lib/schema/school/teacher.dto";
+import { cn } from "@/lib/utils";
+import {
+  Column,
+  ColumnFiltersState,
+  flexRender,
+  getCoreRowModel,
+  getFacetedMinMaxValues,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
+  getSortedRowModel,
+  SortingState,
+  useReactTable,
+} from "@tanstack/react-table";
+import { ChevronDownIcon, ChevronUpIcon, SearchIcon } from "lucide-react";
+import { useId, useMemo, useState } from "react";
 import { SendTeacherRequestToJoinSchool } from "../../dialog/createTeacherModal";
-
-declare module "@tanstack/react-table" {
-  //allows us to define custom properties for our columns
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface ColumnMeta<TData extends RowData, TValue> {
-    filterVariant?: "text" | "range" | "select";
-  }
-}
-
+import { TeacherTableColumns } from "./teacher-table-columns";
 
 interface props {
   teachers: TeacherDto[];
@@ -101,14 +87,16 @@ export default function SchoolTeacherTable({
   const numberOfColumns = table.getAllColumns().length;
 
   return (
-    <div className="space-y-6 basic-card-no-p">
-      <div className=" pt-4 px-4 pb-0 flex justify-between items-center">
-        <h3 className=" title-page">Teachers</h3>
+    <div className="basic-card-no-p space-y-6">
+      <div className="flex items-center justify-between px-4 pt-4 pb-0">
+        <h3 className="title-page">Teachers</h3>
         {/* Pass Classes data if the modal needs it */}
-        <SendTeacherRequestToJoinSchool schoolId={schoolId}  />
+        <SendTeacherRequestToJoinSchool schoolId={schoolId} />
       </div>
       {/* Filters */}
-      <div className="flex flex-wrap gap-3 px-4 py-2 border-b"> {/* Add border */}
+      <div className="flex flex-wrap gap-3 border-b px-4 py-2">
+        {" "}
+        {/* Add border */}
         {/* Search input for Student Name */}
         <div className="w-44">
           {/* Make sure the accessorKey "name" matches the column */}
@@ -116,28 +104,34 @@ export default function SchoolTeacherTable({
         </div>
         {/* Filter for Student ID */}
         <div className="w-36">
-           <Filter column={table.getColumn("id")!} />
+          <Filter column={table.getColumn("id")!} />
         </div>
         {/* Gender select */}
-        <div className="w-32"> {/* Adjusted width */}
+        <div className="w-32">
+          {" "}
+          {/* Adjusted width */}
           <Filter column={table.getColumn("gender")!} />
         </div>
         {/* Class select */}
-         <div className="w-40"> {/* Adjusted width */}
+        <div className="w-40">
+          {" "}
+          {/* Adjusted width */}
           {/* Use the correct accessor key 'class.name' */}
           <Filter column={table.getColumn("class.name")!} />
         </div>
         {/* Age range inputs */}
         <div className="w-36">
-           <Filter column={table.getColumn("age")!} />
+          <Filter column={table.getColumn("age")!} />
         </div>
         {/* Phone search */}
-         <div className="w-40"> {/* Adjusted width */}
-           <Filter column={table.getColumn("phone")!} />
+        <div className="w-40">
+          {" "}
+          {/* Adjusted width */}
+          <Filter column={table.getColumn("phone")!} />
         </div>
-         {/* Enrolled On search (basic text) */}
-         <div className="w-36">
-           <Filter column={table.getColumn("createAt")!} />
+        {/* Enrolled On search (basic text) */}
+        <div className="w-36">
+          <Filter column={table.getColumn("createAt")!} />
         </div>
         {/* Remove filters for traffic and link */}
       </div>
@@ -150,22 +144,23 @@ export default function SchoolTeacherTable({
                 return (
                   <TableHead
                     key={header.id}
-                    className="relative h-10 border-t select-none whitespace-nowrap px-3" // Added padding/whitespace
+                    className="relative h-10 border-t px-3 whitespace-nowrap select-none" // Added padding/whitespace
                     // Calculate width based on column definition if needed
                     // style={{ width: header.getSize() }}
                     aria-sort={
                       header.column.getIsSorted() === "asc"
                         ? "ascending"
                         : header.column.getIsSorted() === "desc"
-                        ? "descending"
-                        : "none"
+                          ? "descending"
+                          : "none"
                     }
                   >
                     {header.isPlaceholder ? null : header.column.getCanSort() ? (
                       <div
                         className={cn(
                           "flex h-full items-center justify-between gap-2",
-                           header.column.getCanSort() && "cursor-pointer select-none" // Use cn for conditional class
+                          header.column.getCanSort() &&
+                            "cursor-pointer select-none", // Use cn for conditional class
                         )}
                         onClick={header.column.getToggleSortingHandler()}
                         onKeyDown={(e) => {
@@ -178,11 +173,15 @@ export default function SchoolTeacherTable({
                           }
                         }}
                         tabIndex={header.column.getCanSort() ? 0 : undefined}
-                        title={header.column.getCanSort() ? `Sort by ${typeof header.column.columnDef.header === 'string' ? header.column.columnDef.header : ''}` : undefined} // Add title for sortable headers
+                        title={
+                          header.column.getCanSort()
+                            ? `Sort by ${typeof header.column.columnDef.header === "string" ? header.column.columnDef.header : ""}`
+                            : undefined
+                        } // Add title for sortable headers
                       >
                         {flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                         {/* Sorting Indicator */}
                         {{
@@ -200,14 +199,21 @@ export default function SchoolTeacherTable({
                               aria-hidden="true"
                             />
                           ),
-                        }[header.column.getIsSorted() as string] ?? (
-                           header.column.getCanSort() ? <span className="size-4 opacity-30" aria-hidden="true">↕</span> : null // Placeholder sort icon
-                        )}
+                        }[header.column.getIsSorted() as string] ??
+                          (header.column.getCanSort() ? (
+                            <span
+                              className="size-4 opacity-30"
+                              aria-hidden="true"
+                            >
+                              ↕
+                            </span>
+                          ) : null) // Placeholder sort icon
+                        }
                       </div>
                     ) : (
                       flexRender(
                         header.column.columnDef.header,
-                        header.getContext()
+                        header.getContext(),
                       )
                     )}
                   </TableHead>
@@ -224,7 +230,9 @@ export default function SchoolTeacherTable({
                 data-state={row.getIsSelected() && "selected"}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="px-3 py-2"> {/* Added padding */}
+                  <TableCell key={cell.id} className="px-3 py-2">
+                    {" "}
+                    {/* Added padding */}
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -244,7 +252,6 @@ export default function SchoolTeacherTable({
   );
 }
 
-
 interface FilterProps {
   column: Column<any, unknown>;
 }
@@ -253,18 +260,25 @@ export function Filter({ column }: FilterProps) {
   const id = useId();
 
   const filterVariant = column?.columnDef?.meta?.filterVariant;
-  const columnHeader = typeof column?.columnDef?.header === "string" ? column.columnDef.header : "";
+  const columnHeader =
+    typeof column?.columnDef?.header === "string"
+      ? column.columnDef.header
+      : "";
 
   const sortedUniqueValues = useMemo(() => {
     if (!column || filterVariant === "range") return [];
 
     const values = Array.from(column.getFacetedUniqueValues().keys());
-    const flattened = values.flatMap((val) => (Array.isArray(val) ? val : [val]));
+    const flattened = values.flatMap((val) =>
+      Array.isArray(val) ? val : [val],
+    );
     return Array.from(new Set(flattened)).sort();
   }, [column, filterVariant]);
 
   if (!column) {
-    console.warn("Filter component received an undefined column. Check if the column ID used in getColumn() is correct.");
+    console.warn(
+      "Filter component received an undefined column. Check if the column ID used in getColumn() is correct.",
+    );
     return null;
   }
 
@@ -311,7 +325,9 @@ export function Filter({ column }: FilterProps) {
       <Label htmlFor={`${id}-select`}>{columnHeader}</Label>
       <Select
         value={columnFilterValue?.toString() ?? "all"}
-        onValueChange={(value) => column.setFilterValue(value === "all" ? undefined : value)}
+        onValueChange={(value) =>
+          column.setFilterValue(value === "all" ? undefined : value)
+        }
       >
         <SelectTrigger id={`${id}-select`}>
           <SelectValue />

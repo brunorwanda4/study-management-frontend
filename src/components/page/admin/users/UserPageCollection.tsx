@@ -6,7 +6,7 @@ import { UserModel, UserRoleModel } from "@/lib/types/userModel";
 import { fetchUserRole } from "@/service/admin/fetchDataFn";
 import { ApiClient } from "@/service/admin/fetchingAPIClient";
 import CollectionUserRole from "./collectionUserRole";
-import UserCollectionDetails from "./userCollectionDetials";
+import UserCollectionDetails from "./user-collection-details";
 import UsersTableCollection from "./usersTableCollection";
 
 const apiClient = new ApiClient();

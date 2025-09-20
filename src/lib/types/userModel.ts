@@ -1,9 +1,9 @@
 import { ProfileImageModelGet } from "./imageModel";
 
 export interface Gender {
-  Male: "M"; // Male gender representation
-  Female: "F"; // Female gender representation
-  Other: "O"; // Other gender representation
+  Male: "Male"; // Male gender representation
+  Female: "Female"; // Female gender representation
+  Other: "Other"; // Other gender representation
 }
 
 export interface UserModelNew {

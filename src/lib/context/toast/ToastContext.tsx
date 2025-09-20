@@ -6,6 +6,7 @@ import {
   ToastViewport,
 } from "@/components/ui/toast";
 import { useProgressTimer } from "@/hooks/useProgressTimer";
+import { Next13ProgressBar } from "next13-progressbar";
 import React, {
   createContext,
   ReactNode,
@@ -108,6 +109,11 @@ export const ToastManager: React.FC<{ children: ReactNode }> = ({
           />
         )}
         <ToastViewport className="sm:top-11 sm:right-0" />
+        <Next13ProgressBar
+          height={"2px"}
+          color="#29D"
+          options={{ showSpinner: false }}
+        />
         {children}
       </ShadcnToastProvider>
     </ToastContext.Provider>

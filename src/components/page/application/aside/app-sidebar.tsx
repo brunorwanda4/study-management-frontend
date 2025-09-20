@@ -1,5 +1,6 @@
 "use client";
 
+import { LoadingIndicator } from "@/components/common/myLink";
 import {
   Accordion,
   AccordionContent,
@@ -65,10 +66,10 @@ export function AppSidebar({ items, lang }: AppSidebarProps) {
   const path = usePathname();
   const { theme } = useTheme();
   return (
-    <Sidebar className="bg-base-100 pt-16" collapsible="icon">
-      <SidebarContent className="bg-base-100 text-on-primary dark:bg-surface-container dark:text-on-surface">
+    <Sidebar className="bg-base-100 gap-0 space-y-0 pt-14" collapsible="icon">
+      <SidebarContent className="bg-base-100 text-on-primary dark:bg-surface-container dark:text-on-surface gap-0">
         {items.map((group, groupIndex) => (
-          <SidebarGroup key={groupIndex} className="pl-0">
+          <SidebarGroup key={groupIndex} className="py-0 pl-0">
             {group.label && (
               <SidebarGroupLabel className="ml-2 text-sm font-medium text-gray-500">
                 {group.label}
@@ -87,21 +88,24 @@ export function AppSidebar({ items, lang }: AppSidebarProps) {
                               buttonVariants({ variant: "ghost" }),
                               isActivePath(path, item.url, lang) &&
                                 `bg-base-300 ${theme === "dark" && "bg-white/10"}`,
-                              "hover:bg-base-200 w-full justify-start rounded-l-none",
+                              "hover:bg-base-200 w-full justify-between rounded-l-none",
                             )}
                           >
-                            {item.icon && (
-                              <Image
-                                src={item.icon}
-                                alt={item.title}
-                                width={20}
-                                height={20}
-                                className="h-5 min-h-[20px] w-5 min-w-[20px]"
-                              />
-                            )}
-                            <span className="text-base-content">
-                              {item.title}
-                            </span>
+                            <div className="flex items-center gap-2">
+                              {item.icon && (
+                                <Image
+                                  src={item.icon}
+                                  alt={item.title}
+                                  width={20}
+                                  height={20}
+                                  className="h-5 min-h-[20px] w-5 min-w-[20px]"
+                                />
+                              )}
+                              <span className="text-base-content">
+                                {item.title}
+                              </span>
+                            </div>
+                            <LoadingIndicator />
                           </AccordionTrigger>
 
                           <AccordionContent>
@@ -134,23 +138,26 @@ export function AppSidebar({ items, lang }: AppSidebarProps) {
                             buttonVariants({ variant: "ghost" }),
                             isActivePath(path, item.url, lang) &&
                               `bg-base-300 ${theme === "dark" && "bg-white/10"}`,
-                            "hover:bg-base-200 justify-start rounded-l-none",
-                            "",
+                            "hover:bg-base-200 justify-between rounded-l-none",
+                            " ",
                           )}
                           href={item.url || "/"}
                         >
-                          {item.icon && (
-                            <Image
-                              src={item.icon}
-                              alt={item.title}
-                              width={20}
-                              height={20}
-                              className="h-5 min-h-[20px] w-5 min-w-[20px]"
-                            />
-                          )}
-                          <span className="text-base-content">
-                            {item.title}
-                          </span>
+                          <div className="flex items-center gap-2">
+                            {item.icon && (
+                              <Image
+                                src={item.icon}
+                                alt={item.title}
+                                width={20}
+                                height={20}
+                                className="h-5 min-h-[20px] w-5 min-w-[20px]"
+                              />
+                            )}
+                            <span className="text-base-content">
+                              {item.title}
+                            </span>
+                          </div>
+                          <LoadingIndicator />
                         </Link>
                       </SidebarMenuButton>
                     )}

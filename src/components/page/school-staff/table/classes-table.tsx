@@ -44,7 +44,6 @@ import {
   getFacetedUniqueValues,
   getFilteredRowModel,
   getSortedRowModel,
-  RowData,
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
@@ -57,13 +56,6 @@ import {
 } from "lucide-react";
 import { useId, useMemo, useState } from "react";
 // --- Prisma Schema related types ---
-
-declare module "@tanstack/react-table" {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface ColumnMeta<TData extends RowData, TValue> {
-    filterVariant?: "text" | "range" | "select";
-  }
-}
 
 // --- Column Definitions for Classes ---
 const columsFunction = (lang: Locale) => {

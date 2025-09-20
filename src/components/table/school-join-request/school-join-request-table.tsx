@@ -2,11 +2,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useCallback, useMemo, useState } from "react";
 import {
   Column,
-  ColumnDef,
   ColumnFiltersState,
+  FilterFn,
   flexRender,
   getCoreRowModel,
   getFacetedMinMaxValues,
@@ -17,20 +16,15 @@ import {
   RowData,
   SortingState,
   useReactTable,
-  FilterFn, // Import FilterFn
-  // REMOVE THIS LINE: getGlobalFilteredRowModel,
 } from "@tanstack/react-table";
 import {
   ChevronDownIcon,
   ChevronUpIcon,
   SearchIcon,
   SortAscIcon,
-  UserIcon,
 } from "lucide-react"; // Added UserIcon
-import Link from "next/link"; // Assuming you use Next.js for links
+import React, { useCallback, useMemo, useState } from "react";
 
-import { cn } from "@/lib/utils";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -48,11 +42,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button"; // Import Button
-import {
-  SchoolJoinRequestDto,
-  SchoolJoinRequestSchema, // Assuming your DTO matches the Zod schema structure
-} from "@/lib/schema/school/school-join-school/school-join-request.schema"; // Adjust path as needed
+import { SchoolJoinRequestDto } from "@/lib/schema/school/school-join-school/school-join-request.schema"; // Adjust path as needed
+import { cn } from "@/lib/utils";
 import SchoolJoinRequestTableColumns from "./school-join-request-table-columns";
 
 // Define SchoolStaffRoles and valid roles (as provided)
@@ -82,18 +73,10 @@ const getRoleLabel = (value: string | undefined | null): string => {
 };
 
 declare module "@tanstack/react-table" {
-  //allows us to define custom properties for our columns
-  interface ColumnMeta<TData extends RowData, TValue> {
-    filterVariant?: "text" | "range" | "select";
-    // Add custom options for select filter (e.g., for roles)
-    filterOptions?: { label: string; value: string }[];
-  }
-  // Add interface for global filtering function if needed
   interface TableMeta<TData extends RowData> {
     globalFilterFn?: FilterFn<TData>;
   }
 }
-
 
 // --- Component Props ---
 interface Props {
@@ -120,25 +103,31 @@ export default function SchoolJoinTable({
 
   // --- Action Handlers ---
   // Use passed callbacks or default loggers
-  const handleAccept = useCallback((request: SchoolJoinRequestDto) => {
-    console.log("Accepting:", request);
-    if (onAcceptRequest) {
-      onAcceptRequest(request);
-    }
-    // Add logic here to update status via API call etc.
-  }, [onAcceptRequest]);
+  const handleAccept = useCallback(
+    (request: SchoolJoinRequestDto) => {
+      console.log("Accepting:", request);
+      if (onAcceptRequest) {
+        onAcceptRequest(request);
+      }
+      // Add logic here to update status via API call etc.
+    },
+    [onAcceptRequest],
+  );
 
-  const handleReject = useCallback((request: SchoolJoinRequestDto) => {
-    console.log("Rejecting:", request);
-    if (onRejectRequest) {
-      onRejectRequest(request);
-    }
-  }, [onRejectRequest]);
+  const handleReject = useCallback(
+    (request: SchoolJoinRequestDto) => {
+      console.log("Rejecting:", request);
+      if (onRejectRequest) {
+        onRejectRequest(request);
+      }
+    },
+    [onRejectRequest],
+  );
 
   // Memoize columns to include action handlers
   const tableColumns = useMemo(
     () => SchoolJoinRequestTableColumns(handleAccept, handleReject),
-    [handleAccept, handleReject]
+    [handleAccept, handleReject],
   );
 
   const table = useReactTable({
@@ -194,7 +183,7 @@ export default function SchoolJoinTable({
               placeholder="Search requests..."
               type="text"
             />
-            <div className=" /80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
+            <div className="/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
               <SearchIcon size={16} />
             </div>
           </div>
@@ -218,7 +207,7 @@ export default function SchoolJoinTable({
         {/* Add Date Filter components here if needed */}
       </div>
       {/* Selected Row Count (Optional) */}
-      <div className="text-sm  ">
+      <div className="text-sm">
         {table.getFilteredSelectedRowModel().rows.length} of{" "}
         {table.getFilteredRowModel().rows.length} row(s) selected.
       </div>
@@ -232,14 +221,14 @@ export default function SchoolJoinTable({
                   <TableHead
                     key={header.id}
                     colSpan={header.colSpan} // Add colSpan
-                    className="h-10 px-2 md:px-4 text-xs md:text-sm" // Adjust padding and text size
+                    className="h-10 px-2 text-xs md:px-4 md:text-sm" // Adjust padding and text size
                     aria-sort={
                       header.column.getCanSort()
                         ? header.column.getIsSorted() === "asc"
                           ? "ascending"
                           : header.column.getIsSorted() === "desc"
-                          ? "descending"
-                          : "none"
+                            ? "descending"
+                            : "none"
                         : undefined
                     }
                     style={{
@@ -253,7 +242,7 @@ export default function SchoolJoinTable({
                           "flex items-center gap-1", // Reduced gap
                           header.column.getCanSort()
                             ? "cursor-pointer select-none"
-                            : ""
+                            : "",
                         )}
                         onClick={header.column.getToggleSortingHandler()}
                         onKeyDown={(e) => {
@@ -269,7 +258,7 @@ export default function SchoolJoinTable({
                       >
                         {flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                         {header.column.getCanSort() && // Only show sort icon if sortable
                           ({
@@ -313,13 +302,13 @@ export default function SchoolJoinTable({
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
                       key={cell.id}
-                      className="px-2 md:px-4 py-2 text-xs md:text-sm"
+                      className="px-2 py-2 text-xs md:px-4 md:text-sm"
                     >
                       {" "}
                       {/* Adjust padding/text */}
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}
@@ -371,7 +360,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
         // Type is { label: string; value: string }[]
         // Create a mutable copy before sorting if filterOptions comes from props/external source
         return [...filterOptions].sort((a, b) =>
-          a.label.localeCompare(b.label)
+          a.label.localeCompare(b.label),
         );
       } else {
         // Type is string[]
@@ -488,7 +477,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
           placeholder={`Filter ${columnHeader.toLowerCase()}...`}
           type="text"
         />
-        <div className=" /80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
+        <div className="/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
           <SearchIcon size={16} />
         </div>
       </div>

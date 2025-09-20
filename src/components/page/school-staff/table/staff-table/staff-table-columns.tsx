@@ -4,16 +4,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Locale } from "@/i18n";
 import { studentImage } from "@/lib/context/images";
 import { SchoolStaffDto } from "@/lib/schema/school/school-staff.schema";
-import { ColumnDef, RowData } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns"; // Make sure date-fns is installed
-
-declare module "@tanstack/react-table" {
-  //allows us to define custom properties for our columns
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface ColumnMeta<TData extends RowData, TValue> {
-    filterVariant?: "text" | "range" | "select";
-  }
-}
 
 // ========================================================================
 // The complete columns() function
