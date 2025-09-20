@@ -4,7 +4,7 @@ import CollectionPageStatic, {
 import { FetchError } from "@/lib/types/fetchErr";
 import { UserModel, UserRoleModel } from "@/lib/types/userModel";
 import { fetchUserRole } from "@/service/admin/fetchDataFn";
-import { ApiClient } from "@/services/class/fetchingAPIClient";
+import { ApiClient } from "@/service/admin/fetchingAPIClient";
 import CollectionUserRole from "./collectionUserRole";
 import UserCollectionDetails from "./userCollectionDetials";
 import UsersTableCollection from "./usersTableCollection";

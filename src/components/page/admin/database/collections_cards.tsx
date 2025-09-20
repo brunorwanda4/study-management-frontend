@@ -99,7 +99,7 @@ const CollectionsCharts = ({ data }: props) => {
         <div className="grid grid-cols-2 gap-4">
           {displayedCollections.map((collection, index) => (
             <Link
-              href={`/collection/${formatCollectionNameLink(collection.name)}`}
+              href={`/a/collection/${formatCollectionNameLink(collection.name)}`}
               key={index}
               className="bg-base-100/50 btn btn-ghost flex h-28 items-center justify-between rounded-lg p-0 shadow-sm"
             >

@@ -23,9 +23,12 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { toast } from "@/lib/hooks/use-toast";
+import {
+  userRoleSchema,
+  userRoleSchemeType,
+} from "@/lib/schema/admin/user-schema";
 import { UserRoleModel } from "@/lib/types/userModel";
 import { updateUserRole } from "@/service/admin/fetchDataFn";
-import { userRoleSchema, userRoleSchemeType } from "@/utils/schema/user-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircle } from "lucide-react";
 import { useState, useTransition } from "react";
@@ -78,7 +81,12 @@ const UpdateUserRoleDialog = ({ userRole }: props) => {
     <Dialog>
       {/* Trigger Button */}
       <DialogTrigger asChild>
-        <Button disabled={isPending} variant="warning" size="xs">
+        <Button
+          disabled={isPending}
+          variant="warning"
+          size="xs"
+          library="daisy"
+        >
           update
           {isPending && (
             <LoaderCircle
@@ -135,6 +143,7 @@ const UpdateUserRoleDialog = ({ userRole }: props) => {
                 variant="info"
                 size="sm"
                 type="submit"
+                library="daisy"
               >
                 Confirm
               </Button>

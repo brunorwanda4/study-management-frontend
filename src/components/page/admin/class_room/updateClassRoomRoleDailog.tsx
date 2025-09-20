@@ -1,5 +1,6 @@
 "use client";
 
+import { FormError, FormSuccess } from "@/components/common/form-message";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -20,15 +21,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/lib/hooks/use-toast";
-import { updateClassRoomTypeAPI } from "@/service/admin/fetchDataFn";
-import {
-  ClassRoomTypeModelGet,
-  ClassRoomTypeModelPut,
-} from "@/types/classRoomTypeModel";
 import {
   classRoomTypeSchema,
   classRoomTypeSchemaType,
-} from "@/utils/schema/classRoomTypeSchema";
+} from "@/lib/schema/admin/classRoomTypeSchema";
+import {
+  ClassRoomTypeModelGet,
+  ClassRoomTypeModelPut,
+} from "@/lib/types/classRoomTypeModel";
+import { updateClassRoomTypeAPI } from "@/service/admin/fetchDataFn";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircle } from "lucide-react";
 import { useState, useTransition } from "react";
@@ -101,7 +103,7 @@ const UpdateClassRoomTypeDialog = ({ classRoleType }: props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="warning" size="xs">
+        <Button variant="warning" size="xs" library="daisy">
           update
         </Button>
       </DialogTrigger>

@@ -22,11 +22,11 @@ import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/lib/hooks/use-toast";
+import { tradeSchema, tradeSchemaType } from "@/lib/schema/admin/tradeSchema";
+import { SectorModelGet } from "@/lib/types/sectorModel";
 // import { cn } from "@/lib/utils";
 import { TradeModelGet, TradeModelPut } from "@/lib/types/tradeModel";
 import { updateTradeAPI } from "@/service/admin/fetchDataFn";
-import { SectorModelGet } from "@/types/sectorModel";
-import { tradeSchema, tradeSchemaType } from "@/utils/schema/tradeSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircle } from "lucide-react";
 import { ChangeEvent, useState, useTransition } from "react";
@@ -135,7 +135,7 @@ const UpdateTradeDialog = ({ sectors, trade }: props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="warning" size="xs">
+        <Button variant="warning" size="xs" library="daisy">
           update
           {isPending && (
             <LoaderCircle

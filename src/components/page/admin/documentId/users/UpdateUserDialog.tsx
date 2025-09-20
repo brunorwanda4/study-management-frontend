@@ -26,8 +26,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "@/lib/hooks/use-toast";
+import { userSchema, userSchemeType } from "@/lib/schema/admin/user-schema";
 import { updateUserAPI } from "@/service/admin/fetchDataFn";
-import { userSchema, userSchemeType } from "@/utils/schema/user-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -237,8 +237,8 @@ const UpdateUserDialog = ({ usersRole, user }: props) => {
               />
 
               <div className="mt-2">
-                <FormMessageError message={error} />
-                <FormMessageSuccess message={success} />
+                <FormError message={error} />
+                <FormSuccess message={success} />
               </div>
               <DialogFooter className="mt-4">
                 <DialogClose asChild>
@@ -251,6 +251,7 @@ const UpdateUserDialog = ({ usersRole, user }: props) => {
                   variant="info"
                   disabled={isPending}
                   type="submit"
+                  library="daisy"
                 >
                   Update account
                 </Button>

@@ -1,5 +1,6 @@
 "use client";
 
+import { FormError, FormSuccess } from "@/components/common/form-message";
 import MyImage from "@/components/common/myImage";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,11 +24,14 @@ import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/lib/hooks/use-toast";
+import {
+  sectorSchema,
+  sectorSchemaType,
+} from "@/lib/schema/admin/sectorSchema";
 // import { cn } from "@/lib/utils";
 import { EducationModelGet } from "@/lib/types/educationModel";
+import { SectorModelNew } from "@/lib/types/sectorModel";
 import { createSectorAPI } from "@/service/admin/fetchDataFn";
-import { SectorModelNew } from "@/types/sectorModel";
-import { sectorSchema, sectorSchemaType } from "@/utils/schema/sectorSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircle } from "lucide-react";
 import { ChangeEvent, useState, useTransition } from "react";
@@ -131,7 +135,7 @@ const CreateSectorDialog = ({ education }: props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="info" size="sm">
+        <Button library="daisy" variant="info" size="sm">
           <BsPlus /> Add new sector
           {isPending && (
             <LoaderCircle
@@ -289,6 +293,7 @@ const CreateSectorDialog = ({ education }: props) => {
               </DialogClose>
               <DialogClose asChild>
                 <Button
+                  library="daisy"
                   type="submit"
                   variant="info"
                   size="md"

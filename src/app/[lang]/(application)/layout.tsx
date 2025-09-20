@@ -34,17 +34,15 @@ const ApplicationLayout = async (props: props) => {
           role === "STUDENT"
             ? studentSidebarGroups
             : role === "SCHOOLSTAFF"
-            ? schoolStaffSidebarGroups
-            : role === "ADMIN"
-            ? adminSidebarGroups
-            : teacherSidebarGroups
+              ? schoolStaffSidebarGroups
+              : role === "ADMIN"
+                ? adminSidebarGroups
+                : teacherSidebarGroups
         }
         lang={lang}
       />
-      <div className=" flex flex-col w-full space-y-4 bg-base-200">
-        <main className="pt-14 w-full min-h-screen">
-          {children}
-        </main>
+      <div className="bg-base-200 flex w-full flex-col space-y-4">
+        <main className="min-h-screen w-full pt-14">{children}</main>
         <AppFooter lang={lang} />
       </div>
     </SidebarProvider>

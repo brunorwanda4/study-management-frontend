@@ -24,19 +24,19 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/lib/hooks/use-toast";
 import { updateClassRoomAPI } from "@/service/admin/fetchDataFn";
 
+import { FormError, FormSuccess } from "@/components/common/form-message";
+import MyImage from "@/components/common/myImage";
 import {
   classRoomSchema,
   classRoomSchemaType,
-} from "@/utils/schema/classRoomSchema";
-
-import MyImage from "@/components/common/myImage";
+} from "@/lib/schema/admin/classRoomSchema";
 import {
   ClassRoomModelGet,
   ClassRoomModelPut,
 } from "@/lib/types/classRoomModel";
+import { ClassRoomTypeModelGet } from "@/lib/types/classRoomTypeModel";
+import { SectorModelGet } from "@/lib/types/sectorModel";
 import { TradeModelGet } from "@/lib/types/tradeModel";
-import { ClassRoomTypeModelGet } from "@/types/classRoomTypeModel";
-import { SectorModelGet } from "@/types/sectorModel";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircle } from "lucide-react";
 import { ChangeEvent, useState, useTransition } from "react";
@@ -163,7 +163,7 @@ const UpdateClassRoomDialog = ({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="warning" size="xs">
+        <Button variant="warning" size="xs" library="daisy">
           update
           {isPending && (
             <LoaderCircle
@@ -382,6 +382,7 @@ const UpdateClassRoomDialog = ({
               </DialogClose>
               <DialogClose asChild>
                 <Button
+                  library="daisy"
                   type="submit"
                   variant="info"
                   size="md"

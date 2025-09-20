@@ -88,7 +88,7 @@ const CreateClassRoomTypeDialog = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="info" size="sm">
+        <Button variant="info" size="sm" library="daisy">
           <BsPlus /> Add class room type
           {isPending && (
             <LoaderCircle

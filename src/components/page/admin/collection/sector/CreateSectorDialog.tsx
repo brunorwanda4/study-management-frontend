@@ -131,7 +131,7 @@ const CreateSectorDialog = ({ education }: props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="info" size="sm">
+        <Button variant="info" size="sm" library="daisy">
           <BsPlus /> Add new sector
           {isPending && (
             <LoaderCircle

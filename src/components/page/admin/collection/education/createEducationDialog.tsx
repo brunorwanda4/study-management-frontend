@@ -132,7 +132,7 @@ const CreateEducationDialog = () => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="info" size="sm">
+        <Button variant="info" size="sm" library="daisy">
           <BsPlus /> Add new education
           {isPending && (
             <LoaderCircle

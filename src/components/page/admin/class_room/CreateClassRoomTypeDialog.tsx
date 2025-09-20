@@ -1,5 +1,6 @@
 "use client";
 
+import { FormError, FormSuccess } from "@/components/common/form-message";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -21,11 +22,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/lib/hooks/use-toast";
-import { createClassRoomTypeAPI } from "@/service/admin/fetchDataFn";
 import {
   classRoomTypeSchema,
   classRoomTypeSchemaType,
-} from "@/utils/schema/classRoomTypeSchema";
+} from "@/lib/schema/admin/classRoomTypeSchema";
+import { createClassRoomTypeAPI } from "@/service/admin/fetchDataFn";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircle } from "lucide-react";
 import { useState, useTransition } from "react";
@@ -88,7 +89,7 @@ const CreateClassRoomTypeDialog = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="info" size="sm">
+        <Button variant="info" size="sm" library="daisy">
           <BsPlus /> Add class room type
           {isPending && (
             <LoaderCircle
@@ -175,6 +176,7 @@ const CreateClassRoomTypeDialog = () => {
               </DialogClose>
               <DialogClose asChild>
                 <Button
+                  library="daisy"
                   type="submit"
                   variant="info"
                   size="md"

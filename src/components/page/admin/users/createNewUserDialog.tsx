@@ -20,14 +20,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "@/lib/hooks/use-toast";
 import { createUserAPI } from "@/service/admin/fetchDataFn";
-import { userSchema, userSchemeType } from "@/utils/schema/user-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { BsPlus } from "react-icons/bs";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 
+import { FormError, FormSuccess } from "@/components/common/form-message";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { userSchema, userSchemeType } from "@/lib/schema/admin/user-schema";
 import { FetchError } from "@/lib/types/fetchErr";
 import { UserRoleModel } from "@/lib/types/userModel";
 
@@ -95,7 +96,7 @@ const CreateNewUserDialog = ({ usersRole }: props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="info" size="sm">
+        <Button variant="info" size="sm" library="daisy">
           <BsPlus /> Create new user
         </Button>
       </DialogTrigger>
@@ -253,8 +254,8 @@ const CreateNewUserDialog = ({ usersRole }: props) => {
               />
 
               <div className="mt-2">
-                <FormMessageError message={error} />
-                <FormMessageSuccess message={success} />
+                <FormError message={error} />
+                <FormSuccess message={success} />
               </div>
               <DialogFooter className="mt-4">
                 <DialogClose asChild>
@@ -267,6 +268,7 @@ const CreateNewUserDialog = ({ usersRole }: props) => {
                   variant="info"
                   disabled={isPending}
                   type="submit"
+                  library="daisy"
                 >
                   Create user
                 </Button>

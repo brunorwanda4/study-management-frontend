@@ -87,7 +87,7 @@ export function AppSidebar({ items, lang }: AppSidebarProps) {
                               buttonVariants({ variant: "ghost" }),
                               isActivePath(path, item.url, lang) &&
                                 `bg-base-300 ${theme === "dark" && "bg-white/10"}`,
-                              "w-full justify-start rounded-l-none",
+                              "hover:bg-base-200 w-full justify-start rounded-l-none",
                             )}
                           >
                             {item.icon && (
@@ -114,7 +114,7 @@ export function AppSidebar({ items, lang }: AppSidebarProps) {
                                       buttonVariants({ variant: "ghost" }),
                                       isActivePath(path, subItem.url, lang) &&
                                         "btn-info",
-                                      "ml-6 justify-start rounded-l-none",
+                                      "hover:bg-base-200 ml-6 justify-start rounded-l-none",
                                     )}
                                   >
                                     <span className="text-base-content">
@@ -134,7 +134,7 @@ export function AppSidebar({ items, lang }: AppSidebarProps) {
                             buttonVariants({ variant: "ghost" }),
                             isActivePath(path, item.url, lang) &&
                               `bg-base-300 ${theme === "dark" && "bg-white/10"}`,
-                            "justify-start rounded-l-none",
+                            "hover:bg-base-200 justify-start rounded-l-none",
                             "",
                           )}
                           href={item.url || "/"}

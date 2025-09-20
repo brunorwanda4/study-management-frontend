@@ -3,15 +3,13 @@
 import MyImage from "@/components/common/myImage";
 import {
   AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dailog";
-import {
-  AlertDialogAction,
-  AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,14 +24,14 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/lib/hooks/use-toast";
 import {
+  educationSchema,
+  educationSchemaType,
+} from "@/lib/schema/admin/educationSchema";
+import {
   EducationModelGet,
   EducationModelPut,
 } from "@/lib/types/educationModel";
 import { updateEducationAPI } from "@/service/admin/fetchDataFn";
-import {
-  educationSchema,
-  educationSchemaType,
-} from "@/utils/schema/educationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircle } from "lucide-react";
 import { ChangeEvent, useState, useTransition } from "react";

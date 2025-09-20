@@ -145,7 +145,7 @@ const CreateTradeDialog = ({ sectors }: props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="info" size="sm">
+        <Button variant="info" size="sm" library="daisy">
           <BsPlus /> Add new trade
           {isPending && (
             <LoaderCircle

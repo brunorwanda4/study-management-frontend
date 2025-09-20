@@ -1,5 +1,6 @@
 "use client";
 
+import { FormError, FormSuccess } from "@/components/common/form-message";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -23,8 +24,11 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { toast } from "@/lib/hooks/use-toast";
+import {
+  userRoleSchema,
+  userRoleSchemeType,
+} from "@/lib/schema/admin/user-schema";
 import { createUserRole } from "@/service/admin/fetchDataFn";
-import { userRoleSchema, userRoleSchemeType } from "@/utils/schema/user-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircle } from "lucide-react";
 import { useState, useTransition } from "react";
@@ -74,7 +78,7 @@ const CollectionUserRoleNew = () => {
     <Dialog>
       {/* Trigger Button */}
       <DialogTrigger asChild>
-        <Button disabled={isPending} variant="info" size="sm">
+        <Button disabled={isPending} variant="info" size="sm" library="daisy">
           <BsPlus /> Add User Role{" "}
           {isPending && (
             <LoaderCircle
@@ -127,6 +131,7 @@ const CollectionUserRoleNew = () => {
                 Cancel
               </DialogClose>
               <Button
+                library="daisy"
                 disabled={isPending}
                 variant="info"
                 size="sm"

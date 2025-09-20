@@ -23,8 +23,11 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { toast } from "@/lib/hooks/use-toast";
+import {
+  userRoleSchema,
+  userRoleSchemeType,
+} from "@/lib/schema/admin/user-schema";
 import { createUserRole } from "@/service/admin/fetchDataFn";
-import { userRoleSchema, userRoleSchemeType } from "@/utils/schema/user-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircle } from "lucide-react";
 import { useState, useTransition } from "react";
@@ -131,6 +134,7 @@ const CollectionUserRoleNew = () => {
                 variant="info"
                 size="sm"
                 type="submit"
+                library="daisy"
               >
                 Confirm
               </Button>

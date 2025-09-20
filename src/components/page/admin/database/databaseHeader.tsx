@@ -1,74 +1,49 @@
-import { Separator } from "@/components/ui/separator";
+import MyImage from "@/components/common/myImage";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { DatabaseStats } from "@/lib/types/databaseStatus";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
-import { FcFilingCabinet, FcPackage, FcRules } from "react-icons/fc";
 
 interface props {
   data?: DatabaseStats;
 }
 
 const DatabaseHeader = ({ data }: props) => {
-  const className = {
-    parentDiv: "h-32 happy-card p-0 w-full flex flex-row",
-    childDiv: "p-6 w-1/4 h-full",
-  };
-
+  const components = [
+    {
+      title: "Total size",
+      size: data?.total_size_bytes,
+      icon: "/icons/database.png",
+    },
+    {
+      title: "Total collations",
+      size: data?.total_collection,
+      icon: "/icons/data-collection.png",
+    },
+    {
+      title: "Total documents",
+      size: `${data?.total_documents} docs`,
+      icon: "/icons/memo.png",
+    },
+  ];
   return (
-    <div className={cn(className.parentDiv)}>
-      <div className={cn(className.childDiv)}>
-        <div>
-          <div className="flex justify-between">
-            <h3 className="font-medium">Total Size</h3>
-            <div className="">
-              <FcFilingCabinet size={32} />
+    <main className="grid grid-cols-4 gap-4">
+      {components.map((item, i) => (
+        <Card className="pb-0" key={i}>
+          <CardHeader className="border-b-0">
+            <div className="flex items-center justify-between">
+              <div className="space-y-2">
+                <CardTitle>{item.title}</CardTitle>
+                <span className="text-2xl font-semibold">{item.size}</span>
+              </div>
+              <MyImage
+                src={item.icon}
+                className="size-12"
+                alt={`icon: ${item.icon}`}
+              />
             </div>
-          </div>
-          <div className="mt-3">
-            <span className="text-3xl font-bold">{data?.total_size_bytes}</span>
-          </div>
-        </div>
-      </div>
-      <Separator orientation="vertical" />
-      <div className={cn(className.childDiv)}>
-        <div>
-          <div className="flex justify-between">
-            <h3 className="font-medium">Total Collections</h3>
-            <Link href={`/collections`}>
-              <FcPackage size={32} />
-            </Link>
-          </div>
-          <div className="mt-3 flex items-center justify-center">
-            <Link href={`/collections`} className="text-3xl font-bold">
-              {data?.total_collection}
-            </Link>
-          </div>
-        </div>
-      </div>
-      <Separator orientation="vertical" />
-      <div className={cn(className.childDiv)}>
-        <div>
-          <div className="flex justify-between">
-            <h3 className="font-medium">Total Documents</h3>
-            <div>
-              <FcRules size={32} />
-            </div>
-          </div>
-          <div className="mt-3">
-            <span className="text-3xl font-bold">{data?.total_documents}</span>
-          </div>
-        </div>
-      </div>
-      <Separator orientation="vertical" />
-      <div className={cn(className.childDiv)}>
-        <div>
-          <h3 className="font-medium">Date </h3>
-          <div className="mt-3">
-            <span className="text-3xl font-bold">{data?.total_size_bytes}</span>
-          </div>
-        </div>
-      </div>
-    </div>
+          </CardHeader>
+        </Card>
+      ))}
+    </main>
   );
 };
 
