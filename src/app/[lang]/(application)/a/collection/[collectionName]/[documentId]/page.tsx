@@ -1,5 +1,4 @@
 import ClassPageDocument from "@/components/page/admin/classes/classPageDucoment";
-import UserPageDocument from "@/components/page/admin/documentId/users/UserPageDocument";
 import { DocumentPageStaticError } from "@/components/page/admin/static/documentPageStatic";
 
 const DocumentPage = async (props: {
@@ -9,13 +8,6 @@ const DocumentPage = async (props: {
   const { collectionName, documentId } = params;
 
   switch (collectionName) {
-    case "users":
-      return (
-        <UserPageDocument
-          collectionName={collectionName}
-          documentId={documentId}
-        />
-      );
     case "classes":
       return (
         <ClassPageDocument

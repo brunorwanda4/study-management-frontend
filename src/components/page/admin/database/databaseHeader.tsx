@@ -1,4 +1,6 @@
-import DataDetailsCard from "@/components/common/cards/data-details-card";
+import DataDetailsCard, {
+  dataDetailsCardProps,
+} from "@/components/common/cards/data-details-card";
 import { DatabaseStats } from "@/lib/types/databaseStatus";
 
 interface props {
@@ -6,7 +8,7 @@ interface props {
 }
 
 const DatabaseHeader = ({ data }: props) => {
-  const components = [
+  const components: dataDetailsCardProps[] = [
     {
       title: "Total size",
       size: data?.total_size_bytes,

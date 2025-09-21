@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { fileToBase64 } from "@/lib/helpers/file-to-base-64";
 import { useFileUpload } from "@/lib/hooks/use-file-upload";
 import { cn } from "@/lib/utils";
 import {
@@ -22,16 +23,6 @@ interface Props {
   onChange: (value: string | null) => void;
   classname?: string;
   Classname?: string;
-}
-
-// 🔑 helper: convert File -> base64
-async function fileToBase64(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result as string);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
 }
 
 export default function UploadImage({
@@ -178,7 +169,7 @@ export default function UploadImage({
                     or{" "}
                     <span
                       className={cn(
-                        "text-primary font-medium",
+                        "text-base-content font-medium",
                         disabled ? "text-neutral" : "",
                       )}
                     >

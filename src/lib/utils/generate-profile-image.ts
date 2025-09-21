@@ -41,3 +41,9 @@ function getRandomGender(): Gender {
   const index = Math.floor(Math.random() * genders.length);
   return genders[index];
 }
+
+export const generateEducationIcon = () => {
+  const images = ["education", "graduation-hat"];
+  const index = Math.floor(Math.random() * images.length);
+  return `/icons/${index}.png`;
+};

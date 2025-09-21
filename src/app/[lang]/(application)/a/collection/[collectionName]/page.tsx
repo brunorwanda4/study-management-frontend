@@ -4,7 +4,6 @@ import EducationPageDocument from "@/components/page/admin/education/educationPa
 import SectorPageDocument from "@/components/page/admin/sector/sectorPageComponet";
 import { CollectionPageErrorStatic } from "@/components/page/admin/static/collectionPageStatic";
 import TradePageDocument from "@/components/page/admin/trades/TradePageDocument";
-import UserPageCollection from "@/components/page/admin/users/UserPageCollection";
 
 export default async function CollectionPage(props: {
   params: Promise<{ collectionName: string }>;
@@ -13,8 +12,6 @@ export default async function CollectionPage(props: {
   const { collectionName } = params;
 
   switch (collectionName) {
-    case "users":
-      return <UserPageCollection collectionName={collectionName} />;
     case "educations":
       return <EducationPageDocument collection={collectionName} />;
     case "sector":
