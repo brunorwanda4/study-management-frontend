@@ -1,11 +1,12 @@
-import * as React from "react"
-import { ChevronRightIcon, MoreHorizontal } from "lucide-react"
-import { Slot } from "radix-ui"
+import { ChevronRightIcon, MoreHorizontal } from "lucide-react";
+import { Slot } from "radix-ui";
+import * as React from "react";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 function Breadcrumb({ ...props }: React.ComponentProps<"nav">) {
-  return <nav aria-label="breadcrumb" data-slot="breadcrumb" {...props} />
+  return <nav aria-label="breadcrumb" data-slot="breadcrumb" {...props} />;
 }
 
 function BreadcrumbList({ className, ...props }: React.ComponentProps<"ol">) {
@@ -14,11 +15,11 @@ function BreadcrumbList({ className, ...props }: React.ComponentProps<"ol">) {
       data-slot="breadcrumb-list"
       className={cn(
         "text-muted-foreground flex flex-wrap items-center gap-1.5 text-sm break-words sm:gap-2.5",
-        className
+        className,
       )}
       {...props}
     />
-  )
+  );
 }
 
 function BreadcrumbItem({ className, ...props }: React.ComponentProps<"li">) {
@@ -28,25 +29,27 @@ function BreadcrumbItem({ className, ...props }: React.ComponentProps<"li">) {
       className={cn("inline-flex items-center gap-1.5", className)}
       {...props}
     />
-  )
+  );
 }
 
 function BreadcrumbLink({
   asChild,
   className,
+  href,
   ...props
-}: React.ComponentProps<"a"> & {
-  asChild?: boolean
+}: React.ComponentProps<typeof Link> & {
+  asChild?: boolean;
 }) {
-  const Comp = asChild ? Slot.Root : "a"
+  const Comp = asChild ? Slot.Root : Link;
 
   return (
     <Comp
+      href={href ?? "#"}
       data-slot="breadcrumb-link"
       className={cn("hover:text-foreground transition-colors", className)}
       {...props}
     />
-  )
+  );
 }
 
 function BreadcrumbPage({ className, ...props }: React.ComponentProps<"span">) {
@@ -56,10 +59,10 @@ function BreadcrumbPage({ className, ...props }: React.ComponentProps<"span">) {
       role="link"
       aria-disabled="true"
       aria-current="page"
-      className={cn("text-foreground font-normal", className)}
+      className={cn("text-base-content font-normal", className)}
       {...props}
     />
-  )
+  );
 }
 
 function BreadcrumbSeparator({
@@ -77,7 +80,7 @@ function BreadcrumbSeparator({
     >
       {children ?? <ChevronRightIcon size={16} />}
     </li>
-  )
+  );
 }
 
 function BreadcrumbEllipsis({
@@ -95,7 +98,7 @@ function BreadcrumbEllipsis({
       <MoreHorizontal size={16} />
       <span className="sr-only">More</span>
     </span>
-  )
+  );
 }
 
 export {
@@ -106,4 +109,4 @@ export {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-}
+};

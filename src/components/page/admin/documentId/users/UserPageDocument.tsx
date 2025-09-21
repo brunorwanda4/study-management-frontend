@@ -13,7 +13,7 @@ import {
 } from "@/service/admin/fetchDataFn";
 import DeleteUserDialog from "../../collection/users/deleteUserDialog";
 import UpdateUserDialog from "./UpdateUserDialog";
-import UserDisableButton from "./userDisableButton";
+import UserDisableButton from "./user-disable-dialog";
 
 interface props {
   collectionName: string;

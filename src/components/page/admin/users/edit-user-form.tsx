@@ -30,15 +30,21 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/lib/context/toast/ToastContext";
 import { genders } from "@/lib/types/Gender";
 import { userRoles } from "@/lib/types/user-role";
-import { UserModelNew, UserModelNewSchema } from "@/lib/types/userModel";
+import {
+  UserModel,
+  UserModelPut,
+  UserModelPutSchema,
+} from "@/lib/types/userModel";
 import { AuthUserResult } from "@/lib/utils/auth-user";
 import apiRequest from "@/service/api-client";
 
 interface props {
   auth: AuthUserResult;
+  user: UserModel;
+  isDialog?: boolean;
 }
 
-const CreateUserForm = ({ auth }: props) => {
+const EditUserForm = ({ auth, user, isDialog = false }: props) => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [password, setPassword] = useState("");
@@ -83,29 +89,35 @@ const CreateUserForm = ({ auth }: props) => {
     return "Strong password";
   };
 
-  const form = useForm<UserModelNew>({
-    resolver: zodResolver(UserModelNewSchema),
+  const form = useForm<UserModelPut>({
+    resolver: zodResolver(UserModelPutSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      username: "",
+      name: user.name ? user.name : "",
+      email: user.email ? user.email : "",
+      username: user.username ? user.username : "",
       password_hash: "",
-      phone: "",
-      bio: "",
-      role: undefined,
-      gender: undefined,
-      address: {
-        country: "",
-        province: "",
-        district: "",
-        sector: "",
-        cell: "",
-        village: "",
-        state: "",
-        postal_code: "",
-        google_map_url: "",
-      },
-      age: { year: undefined, month: undefined, day: undefined },
+      phone: user.phone ? user.phone : "",
+      bio: user.bio ? user.bio : "",
+      role: user.role ? user.role : "STUDENT",
+      gender: user.gender ? user.gender : "MALE",
+      image: user.image ? user.image : "",
+      address: user.address
+        ? user.address
+        : {
+            country: "",
+            province: "",
+            district: "",
+            sector: "",
+            cell: "",
+            village: "",
+            state: "",
+            postal_code: "",
+            google_map_url: "",
+          },
+      age: user.age
+        ? user.age
+        : { year: undefined, month: undefined, day: undefined },
+      disable: user.disable ? user.disable : false,
     },
   });
 
@@ -118,14 +130,19 @@ const CreateUserForm = ({ auth }: props) => {
     fieldChange(newPassword);
   };
 
-  const handleSubmit = (values: UserModelNew) => {
+  const handleSubmit = (values: UserModelPut) => {
     setError(null);
     setSuccess(null);
 
+    // Don't send empty password if unchanged
+    if (!values.password_hash) {
+      delete values.password_hash;
+    }
+
     startTransition(async () => {
-      const result = await apiRequest<UserModelNew, any>(
-        "post",
-        "/users",
+      const result = await apiRequest<UserModelPut, any>(
+        "put", // Changed from POST to PUT for update
+        `/users/${user.id || user._id}`, // Updated endpoint to include user ID
         values,
         auth.token,
       );
@@ -136,24 +153,17 @@ const CreateUserForm = ({ auth }: props) => {
           description: result.message,
           type: "error",
         });
-        setError(result.message || "Failed to create user");
+        setError(result.message || "Failed to update user");
       } else {
-        setSuccess("User created successfully!");
+        setSuccess("User updated successfully!");
         showToast({
-          title: "User created successfully 😁",
+          title: "User updated successfully 😁",
           description: <div>user: {result.data.name}</div>,
           type: "success",
         });
-        form.reset();
       }
     });
   };
-
-  // Generate years, months, and days for age selection
-  const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 100 }, (_, i) => currentYear - i);
-  const months = Array.from({ length: 12 }, (_, i) => i + 1);
-  const days = Array.from({ length: 31 }, (_, i) => i + 1);
 
   return (
     <Form {...form}>
@@ -242,19 +252,19 @@ const CreateUserForm = ({ auth }: props) => {
               )}
             />
 
-            {/* Password */}
+            {/* Password - Optional for editing */}
             <FormField
               name="password_hash"
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-base">Password*</FormLabel>
+                  <FormLabel className="text-base">Change Password</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
                         className="h-12 pr-10 text-base"
                         type={seePassword ? "text" : "password"}
-                        placeholder="Enter password"
+                        placeholder="Leave blank to keep current password"
                         disabled={isPending}
                         {...field}
                         onChange={(e) =>
@@ -279,47 +289,57 @@ const CreateUserForm = ({ auth }: props) => {
                   </FormControl>
                   <FormMessage />
 
-                  {/* Password strength indicator */}
-                  <div
-                    className="bg-border mt-3 mb-2 h-1 w-full overflow-hidden rounded-full"
-                    role="progressbar"
-                    aria-valuenow={strengthScore}
-                    aria-valuemin={0}
-                    aria-valuemax={4}
-                    aria-label="Password strength"
-                  >
-                    <div
-                      className={`h-full ${getStrengthColor(strengthScore)} transition-all duration-500 ease-out`}
-                      style={{ width: `${(strengthScore / 4) * 100}%` }}
-                    ></div>
-                  </div>
+                  {/* Password strength indicator (only show if password is entered) */}
+                  {password && (
+                    <>
+                      <div
+                        className="bg-border mt-3 mb-2 h-1 w-full overflow-hidden rounded-full"
+                        role="progressbar"
+                        aria-valuenow={strengthScore}
+                        aria-valuemin={0}
+                        aria-valuemax={4}
+                        aria-label="Password strength"
+                      >
+                        <div
+                          className={`h-full ${getStrengthColor(strengthScore)} transition-all duration-500 ease-out`}
+                          style={{ width: `${(strengthScore / 4) * 100}%` }}
+                        ></div>
+                      </div>
 
-                  {/* Password strength description */}
-                  <p className="mb-2 text-sm font-medium">
-                    {getStrengthText(strengthScore)}. Must contain:
-                  </p>
+                      {/* Password strength description */}
+                      <p className="mb-2 text-sm font-medium">
+                        {getStrengthText(strengthScore)}. Must contain:
+                      </p>
 
-                  {/* Password requirements list */}
-                  <ul className="grid grid-cols-2 gap-1 text-sm">
-                    {strength.map((req, index) => (
-                      <li key={index} className="flex items-center gap-2">
-                        {req.met ? (
-                          <CheckIcon size={16} className="text-emerald-500" />
-                        ) : (
-                          <XIcon size={16} className="text-muted-foreground" />
-                        )}
-                        <span
-                          className={
-                            req.met
-                              ? "text-emerald-600"
-                              : "text-muted-foreground"
-                          }
-                        >
-                          {req.text}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
+                      {/* Password requirements list */}
+                      <ul className="grid grid-cols-2 gap-1 text-sm">
+                        {strength.map((req, index) => (
+                          <li key={index} className="flex items-center gap-2">
+                            {req.met ? (
+                              <CheckIcon
+                                size={16}
+                                className="text-emerald-500"
+                              />
+                            ) : (
+                              <XIcon
+                                size={16}
+                                className="text-muted-foreground"
+                              />
+                            )}
+                            <span
+                              className={
+                                req.met
+                                  ? "text-emerald-600"
+                                  : "text-muted-foreground"
+                              }
+                            >
+                              {req.text}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
                 </FormItem>
               )}
             />
@@ -428,6 +448,7 @@ const CreateUserForm = ({ auth }: props) => {
                       <div className="flex w-full flex-col space-y-1">
                         <Label>years</Label>
                         <Select
+                          value={field.value?.year?.toString() || ""}
                           onValueChange={(value) =>
                             field.onChange({
                               ...(field.value || {}),
@@ -455,6 +476,7 @@ const CreateUserForm = ({ auth }: props) => {
                       <div className="flex w-full flex-col space-y-1">
                         <Label>Month</Label>
                         <Select
+                          value={field.value?.month?.toString() || ""}
                           onValueChange={(value) =>
                             field.onChange({
                               ...(field.value || {}),
@@ -481,6 +503,7 @@ const CreateUserForm = ({ auth }: props) => {
                       <div className="flex w-full flex-col space-y-1">
                         <Label>Day</Label>
                         <Select
+                          value={field.value?.day?.toString() || ""}
                           onValueChange={(value) =>
                             field.onChange({
                               ...(field.value || {}),
@@ -592,11 +615,13 @@ const CreateUserForm = ({ auth }: props) => {
         </div>
 
         <DialogFooter className="mt-4">
-          <DialogClose asChild>
-            <Button size="sm" type="button" library="daisy">
-              Cancel
-            </Button>
-          </DialogClose>
+          {isDialog && (
+            <DialogClose asChild>
+              <Button size="sm" type="button" library="daisy">
+                Cancel
+              </Button>
+            </DialogClose>
+          )}
           <Button
             size="sm"
             variant="info"
@@ -604,7 +629,7 @@ const CreateUserForm = ({ auth }: props) => {
             type="submit"
             library="daisy"
           >
-            Create user{" "}
+            Update user{" "}
             {isPending && <span className="loading loading-spinner" />}
           </Button>
         </DialogFooter>
@@ -613,4 +638,4 @@ const CreateUserForm = ({ auth }: props) => {
   );
 };
 
-export default CreateUserForm;
+export default EditUserForm;

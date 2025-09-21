@@ -4,6 +4,7 @@ import MyImage from "@/components/common/myImage";
 import { UserModel } from "@/lib/types/userModel";
 import { generateImageProfile } from "@/lib/utils/generate-profile-image";
 import { ColumnDef } from "@tanstack/react-table";
+import Link from "next/link";
 
 export const getUsersTableCollectionColumns = (): ColumnDef<UserModel>[] => [
   {
@@ -12,7 +13,10 @@ export const getUsersTableCollectionColumns = (): ColumnDef<UserModel>[] => [
     meta: { filterVariant: "text" },
     cell: ({ row }) => {
       return (
-        <div className="flex items-center gap-2">
+        <Link
+          href={`/a/database/users/${row.original.username}`}
+          className="flex items-center gap-2"
+        >
           <MyImage
             role="AVATAR"
             className="size-12"
@@ -24,7 +28,7 @@ export const getUsersTableCollectionColumns = (): ColumnDef<UserModel>[] => [
             <span className="font-medium">{row.original.name}</span>
             <span className="text-sm">{row.original.gender}</span>
           </div>
-        </div>
+        </Link>
       );
     },
   },
@@ -32,11 +36,25 @@ export const getUsersTableCollectionColumns = (): ColumnDef<UserModel>[] => [
     header: "Username",
     accessorKey: "username",
     meta: { filterVariant: "text" },
+    cell: ({ row }) => {
+      return (
+        <Link href={`/a/database/users/${row.original.username}`}>
+          {row.original.username}
+        </Link>
+      );
+    },
   },
   {
     header: "Email",
     accessorKey: "email",
     meta: { filterVariant: "text" },
+    cell: ({ row }) => {
+      return (
+        <Link href={`/a/database/users/${row.original.username}`}>
+          {row.original.email}
+        </Link>
+      );
+    },
   },
   {
     header: "Role",

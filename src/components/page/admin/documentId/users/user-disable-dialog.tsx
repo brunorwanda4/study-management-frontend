@@ -20,7 +20,6 @@ import { cn } from "@/lib/utils";
 import { AuthUserResult } from "@/lib/utils/auth-user";
 import apiRequest from "@/service/api-client";
 import { LoaderCircle } from "lucide-react";
-import { redirect } from "next/navigation";
 import { useState, useTransition } from "react";
 
 interface Props {
@@ -28,46 +27,48 @@ interface Props {
   auth: AuthUserResult;
 }
 
-const DeleteUserDialog = ({ user, auth }: Props) => {
+const UserDisableDialog = ({ auth, user }: Props) => {
   const [error, setError] = useState<undefined | string>("");
   const [success, setSuccess] = useState<undefined | string>("");
   const [isPending, startTransition] = useTransition();
   const { showToast } = useToast();
 
-  const handleDelete = () => {
+  const handleToggle = () => {
     setError("");
     setSuccess("");
     startTransition(async () => {
-      const deleteUser = await apiRequest<void, UserModel>(
-        "delete",
+      const request = await apiRequest<{ disable: boolean }, UserModel>(
+        "put",
         `/users/${user.id || user._id}`,
-        undefined,
-        auth.token,
+        {
+          disable: user.disable ? false : true,
+        },
+        auth?.token,
       );
 
-      if (deleteUser.statusCode !== 200) {
-        setError(deleteUser.message);
+      if (!request.data) {
+        setError(request.message);
         showToast({
           title: "Uh oh! Something went wrong.",
-          description: deleteUser.message,
+          description: request.message,
           type: "error",
         });
       } else {
-        setSuccess("User role deleted successfully!");
+        const action = user.disable ? "disabled" : "enabled";
+        setSuccess(`User ${request.data.name} ${action} successfully!`);
         showToast({
-          title: "User role created successfully",
-          type: "warning",
+          title: `User ${request.data.name} ${action} successfully`,
+          type: "success",
           description: (
             <p>
-              You delete <strong>{deleteUser.data?.name}</strong> account which
-              created on {deleteUser.data?.created_at} 😔
+              You {action} <strong>{request.data.name}</strong> account.
             </p>
           ),
         });
-        redirect("/a/database/users");
       }
     });
   };
+
   return (
     <AlertDialog>
       <AlertDialogTrigger
@@ -81,8 +82,11 @@ const DeleteUserDialog = ({ user, auth }: Props) => {
           "cursor-pointer",
         )}
       >
-        <MyImage role="ICON" src="/icons/delete.png" />{" "}
-        <span className="">Delete</span>
+        <MyImage
+          role="ICON"
+          src={user.disable ? "/icons/checked.png" : "/icons/disabled.png"}
+        />
+        <span className="">{user.disable ? "Enable" : "Disable"}</span>
         {isPending && (
           <LoaderCircle
             className="-ms-1 me-2 animate-spin"
@@ -92,16 +96,20 @@ const DeleteUserDialog = ({ user, auth }: Props) => {
           />
         )}
       </AlertDialogTrigger>
-      <AlertDialogContent className="">
+      <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            Are you sure you want to delete{" "}
-            <span className="font-medium capitalize">{user.name}</span> account?
+            Are you sure you want to{" "}
+            <span className="font-medium capitalize">
+              {user.disable ? "enable" : "disable"}
+            </span>{" "}
+            <span className="font-medium capitalize">{user.name}</span>'s
+            account?
           </AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. It will permanently delete the user
-            account and the user will no longer be able to access the system
-            again. 😔 Please proceed with caution.
+            {user.disable
+              ? "This will re-enable the account and allow the user to access the system again."
+              : "This action will disable the account. The user will not be able to access the system until it is enabled again."}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <div className="mt-2">
@@ -113,13 +121,16 @@ const DeleteUserDialog = ({ user, auth }: Props) => {
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction
-            onClick={handleDelete}
+            onClick={() => handleToggle()}
             className={cn(
-              buttonVariants({ variant: "destructive", library: "shadcn" }),
+              buttonVariants({
+                variant: user.disable ? "success" : "warning",
+                library: "daisy",
+              }),
               "cursor-pointer",
             )}
           >
-            Delete
+            {user.disable ? "Enable" : "Disable"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -127,4 +138,4 @@ const DeleteUserDialog = ({ user, auth }: Props) => {
   );
 };
 
-export default DeleteUserDialog;
+export default UserDisableDialog;

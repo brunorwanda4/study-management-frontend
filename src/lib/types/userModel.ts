@@ -24,6 +24,7 @@ export type UserModelNew = z.infer<typeof UserModelNewSchema>;
 // User schema (fetched from DB)
 export const UserModelSchema = z.object({
   id: z.string(),
+  _id: z.string().optional(),
   name: z.string(),
   email: z.string().email(),
   username: z.string().optional(),
@@ -48,7 +49,7 @@ export const UserModelPutSchema = z.object({
   name: z.string().optional(),
   email: z.string().email().optional(),
   username: z.string().optional(),
-  password: z.string().optional(),
+  password_hash: z.string().optional(),
   role: userRoleSchema.optional(),
   image: z.string().optional(),
   phone: z.string().optional(),
@@ -56,6 +57,7 @@ export const UserModelPutSchema = z.object({
   age: AgeSchema.optional(),
   address: AddressSchema.optional(),
   current_school_id: z.string().optional(),
+  disable: z.boolean().optional(),
   bio: z.string().optional(),
   updated_at: z.string().optional(),
 });
