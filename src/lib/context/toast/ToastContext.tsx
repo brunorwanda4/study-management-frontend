@@ -5,7 +5,7 @@ import {
   ToastProvider as ShadcnToastProvider,
   ToastViewport,
 } from "@/components/ui/toast";
-import { useProgressTimer } from "@/hooks/useProgressTimer";
+import { useProgressTimer } from "@/lib/hooks/useProgressTimer";
 import { Next13ProgressBar } from "next13-progressbar";
 import React, {
   createContext,

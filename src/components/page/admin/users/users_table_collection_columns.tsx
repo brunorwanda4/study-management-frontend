@@ -2,6 +2,7 @@
 
 import MyImage from "@/components/common/myImage";
 import { UserModel } from "@/lib/types/userModel";
+import { cn } from "@/lib/utils";
 import { generateImageProfile } from "@/lib/utils/generate-profile-image";
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
@@ -15,7 +16,11 @@ export const getUsersTableCollectionColumns = (): ColumnDef<UserModel>[] => [
       return (
         <Link
           href={`/a/database/users/${row.original.username}`}
-          className="flex items-center gap-2"
+          className={cn(
+            "flex flex-row items-center gap-2",
+            row.original.disable && "text-warning tooltip tooltip-warning",
+          )}
+          data-tip={cn(row.original.disable && "Disabled user")}
         >
           <MyImage
             role="AVATAR"
@@ -38,7 +43,14 @@ export const getUsersTableCollectionColumns = (): ColumnDef<UserModel>[] => [
     meta: { filterVariant: "text" },
     cell: ({ row }) => {
       return (
-        <Link href={`/a/database/users/${row.original.username}`}>
+        <Link
+          href={`/a/database/users/${row.original.username}`}
+          className={cn(
+            "flex items-center gap-2",
+            row.original.disable ? "text-warning tooltip tooltip-warning" : "",
+          )}
+          data-tip={cn(row.original.disable ? "Disabled user" : "")}
+        >
           {row.original.username}
         </Link>
       );

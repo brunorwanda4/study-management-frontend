@@ -1,5 +1,7 @@
 "use client";
 
+import { FormError, FormSuccess } from "@/components/common/form-message";
+import MyImage from "@/components/common/myImage";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,93 +13,96 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { toast } from "@/lib/hooks/use-toast";
-import { TradeModelGet } from "@/lib/types/tradeModel";
-import { deleteTradeAPI } from "@/service/admin/fetchDataFn";
+import { buttonVariants } from "@/components/ui/button";
+import { useToast } from "@/lib/context/toast/ToastContext";
+import { TradeModule } from "@/lib/schema/admin/tradeSchema";
+import { cn } from "@/lib/utils";
+import { AuthUserResult } from "@/lib/utils/auth-user";
+import apiRequest from "@/service/api-client";
 import { LoaderCircle } from "lucide-react";
+import { redirect } from "next/navigation";
 import { useState, useTransition } from "react";
 
 interface Props {
-  trade: TradeModelGet;
+  trade: TradeModule;
+  auth: AuthUserResult;
 }
 
-const DeleteTradeDialog = ({ trade }: Props) => {
+const DeleteTradeDialog = ({ trade, auth }: Props) => {
   const [error, setError] = useState<undefined | string>("");
   const [success, setSuccess] = useState<undefined | string>("");
   const [isPending, startTransition] = useTransition();
-  const handleDelete = (id: string) => {
+  const { showToast } = useToast();
+
+  const handleDelete = () => {
     setError("");
     setSuccess("");
     startTransition(async () => {
-      const deleteEducation = await deleteTradeAPI(id);
-
-      if ("message" in deleteEducation) {
-        setError(deleteEducation.message);
-        toast({
+      const request = await apiRequest(
+        "delete",
+        `/trades/${trade.id || trade._id}`,
+        undefined,
+        auth.token,
+      );
+      if (request.error || !request.data || request.statusCode !== 200) {
+        setError(request.message);
+        showToast({
           title: "Uh oh! Something went wrong.",
-          description: deleteEducation.message,
-          variant: "destructive",
+          description: request.message,
+          type: "error",
         });
       } else {
-        setSuccess("User role deleted successfully!");
-        toast({
-          title: "User role created successfully",
-          description: (
-            <p>
-              You delete <strong>{deleteEducation.name}</strong> account which
-              created on {deleteEducation.create_on} 😔
-            </p>
-          ),
+        setSuccess("Trade deleted successfully!");
+        showToast({
+          title: "Trade deleted successfully",
+          description: <p>{request.message}</p>,
+          type: "success",
         });
+        redirect("/a/database/trades");
       }
     });
   };
+
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button size="xs" library="daisy">
-          Delete
-          {isPending && (
-            <LoaderCircle
-              className="-ms-1 me-2 animate-spin"
-              size={12}
-              strokeWidth={2}
-              aria-hidden="true"
-            />
-          )}
-        </Button>
+      <AlertDialogTrigger
+        className={cn(
+          buttonVariants({ size: "sm", variant: "ghost", library: "shadcn" }),
+          "cursor-pointer",
+        )}
+      >
+        <MyImage role="ICON" src="/icons/delete.png" />
+        <span>Delete</span>
+        {isPending && <LoaderCircle className="ms-2 animate-spin" size={12} />}
       </AlertDialogTrigger>
-      <AlertDialogContent className="happy-card">
+
+      <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            Are you sure you want to delete trade
-            <strong className="capitalize">{trade.name}</strong> account?
+            Are you sure you want to delete trade <strong>{trade.name}</strong>?
           </AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. It will permanently delete the trade
-            account and the trade will no longer be able to access the system
-            again. 😔 Please proceed with caution.
+            This action cannot be undone. The trade will be permanently removed.
           </AlertDialogDescription>
         </AlertDialogHeader>
+
         <div className="mt-2">
           <FormError message={error} />
           <FormSuccess message={success} />
         </div>
+
         <AlertDialogFooter>
-          <AlertDialogCancel type="button">Cancel</AlertDialogCancel>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
-            onClick={() => handleDelete(trade.id)}
-            className="btn-error"
+            onClick={handleDelete}
+            className={cn(
+              buttonVariants({ variant: "destructive", library: "shadcn" }),
+              "cursor-pointer",
+            )}
           >
-            Delete{" "}
+            Delete
             {isPending && (
-              <LoaderCircle
-                className="-ms-1 me-2 animate-spin"
-                size={12}
-                strokeWidth={2}
-                aria-hidden="true"
-              />
+              <LoaderCircle className="ms-2 animate-spin" size={12} />
             )}
           </AlertDialogAction>
         </AlertDialogFooter>

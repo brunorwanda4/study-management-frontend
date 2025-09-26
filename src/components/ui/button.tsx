@@ -117,12 +117,19 @@ const Button = React.forwardRef<HTMLButtonElement, UniversalButtonProps>(
 Button.displayName = "Button";
 
 const buttonVariants = (
-  options: (VariantProps<typeof shadcnVariants> &
-    VariantProps<typeof daisyVariants> & { library?: "shadcn" | "daisy" }) & {
-    className?: string;
-  } = {},
+  options:
+    | (VariantProps<typeof shadcnVariants> & {
+        library?: "shadcn";
+        className?: string;
+      })
+    | (VariantProps<typeof daisyVariants> & {
+        library: "daisy";
+        className?: string;
+      }) = {
+    library: "shadcn",
+  },
 ) => {
-  const { library = "shadcn", ...rest } = options;
+  const { library = "shadcn", ...rest } = options as any;
 
   if (library === "daisy") {
     return daisyVariants(rest as VariantProps<typeof daisyVariants>);

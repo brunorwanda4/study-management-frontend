@@ -1,6 +1,6 @@
 "use client";
 
-import CreateTradeForm from "@/components/page/admin/trades/create-trade-form";
+import CreateMainClassForm from "@/components/page/admin/main-class/create-main-class-form";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -16,22 +16,22 @@ interface props {
   auth: AuthUserResult;
 }
 
-const CreateTradeDialog = ({ auth }: props) => {
+const CreateMainClassDialog = ({ auth }: props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button library="daisy" variant="info" size="sm">
-          <BsPlus /> Add new trade
+          <BsPlus /> Add main class
         </Button>
       </DialogTrigger>
       <DialogContent className="max- max-h-[95vh] overflow-y-auto sm:max-w-4xl">
         <DialogHeader>
-          <DialogTitle>Add New trade</DialogTitle>
+          <DialogTitle>Add New Main class</DialogTitle>
         </DialogHeader>
-        <CreateTradeForm auth={auth} />
+        <CreateMainClassForm auth={auth} />
       </DialogContent>
     </Dialog>
   );
 };
 
-export default CreateTradeDialog;
+export default CreateMainClassDialog;

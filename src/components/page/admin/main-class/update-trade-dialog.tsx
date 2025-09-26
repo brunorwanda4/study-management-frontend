@@ -1,5 +1,5 @@
 import MyImage from "@/components/common/myImage";
-import UpdateSectorForm from "@/components/page/admin/sector/update-sector-form";
+import UpdateMainClassForm from "@/components/page/admin/main-class/update-main-class-form";
 import { buttonVariants } from "@/components/ui/button";
 import {
   Dialog,
@@ -8,16 +8,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { SectorModel } from "@/lib/schema/admin/sectorSchema";
+import { MainClassModel } from "@/lib/schema/admin/main-classes-schema";
 import { cn } from "@/lib/utils";
 import { AuthUserResult } from "@/lib/utils/auth-user";
 
 interface Props {
-  sector: SectorModel;
+  mainClass: MainClassModel;
   auth: AuthUserResult;
 }
 
-const UpdateSectorDialog = ({ sector, auth }: Props) => {
+const UpdateMainClassDialog = ({ mainClass, auth }: Props) => {
   return (
     <Dialog>
       <DialogTrigger
@@ -26,18 +26,18 @@ const UpdateSectorDialog = ({ sector, auth }: Props) => {
           "w-full cursor-pointer",
         )}
       >
-        <MyImage role="ICON" src="/icons/edit.png" /> Update sector
+        <MyImage role="ICON" src="/icons/edit.png" /> Update main class{" "}
       </DialogTrigger>
       <DialogContent className="max- max-h-[95vh] overflow-y-auto sm:max-w-4xl">
         <DialogHeader>
           <DialogTitle>
-            Update sector <strong>{sector.name}</strong>
+            Update trade <strong>{mainClass.name}</strong>
           </DialogTitle>
         </DialogHeader>
-        <UpdateSectorForm auth={auth} sector={sector} />
+        <UpdateMainClassForm auth={auth} mainClass={mainClass} />
       </DialogContent>
     </Dialog>
   );
 };
 
-export default UpdateSectorDialog;
+export default UpdateMainClassDialog;

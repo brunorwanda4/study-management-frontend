@@ -1,21 +1,21 @@
-import SectorInformationCard from "@/components/page/admin/sector/sector-information-card";
+import MainClassInformationCard from "@/components/page/admin/main-class/main-class-information-card";
 import ErrorPage from "@/components/page/error-page";
 import NotFoundPage from "@/components/page/not-found";
-import { SectorModel } from "@/lib/schema/admin/sectorSchema";
+import { MainClassModelWithOthers } from "@/lib/schema/admin/main-classes-schema";
 import { authUser } from "@/lib/utils/auth-user";
 import apiRequest from "@/service/api-client";
 import { redirect } from "next/navigation";
 
-const SectorUsernamePage = async (props: {
-  params: Promise<{ sectorUsername: string }>;
+const MainClassUsernamePage = async (props: {
+  params: Promise<{ mainClassUsername: string }>;
 }) => {
   const params = await props.params;
-  const { sectorUsername } = params;
+  const { mainClassUsername } = params;
   const auth = await authUser();
   if (!auth) redirect("/auth/login");
-  const request = await apiRequest<void, SectorModel>(
+  const request = await apiRequest<void, MainClassModelWithOthers>(
     "get",
-    `/sectors/username/${sectorUsername}`,
+    `/main-classes/username/others/${mainClassUsername}`,
     undefined,
     auth.token,
   );
@@ -26,9 +26,9 @@ const SectorUsernamePage = async (props: {
 
   return (
     <div>
-      <SectorInformationCard auth={auth} sector={request.data} />
+      <MainClassInformationCard auth={auth} mainClass={request.data} />
     </div>
   );
 };
 
-export default SectorUsernamePage;
+export default MainClassUsernamePage;

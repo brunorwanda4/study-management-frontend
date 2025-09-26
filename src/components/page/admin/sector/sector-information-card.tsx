@@ -1,25 +1,27 @@
 "use client";
 
-import MyImage from "@/components/common/myImage";
+import DeleteSectorDialog from "@/components/page/admin/sector/deleteSectorDialog";
+import SectorDisableDialog from "@/components/page/admin/sector/sector-disable-dialog";
+import UpdateSectorDialog from "@/components/page/admin/sector/updateSectorDialog";
 import OpenImages from "@/components/page/admin/users/open-images";
-import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SectorModel } from "@/lib/schema/admin/sectorSchema";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
+import { AuthUserResult } from "@/lib/utils/auth-user";
 
 interface PropsSector {
   sector: SectorModel;
+  auth: AuthUserResult;
 }
 
-const SectorInformationCard = ({ sector }: PropsSector) => {
+const SectorInformationCard = ({ sector, auth }: PropsSector) => {
   return (
     <Card className="max-w-fit">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Sector</CardTitle>
           <div className="flex items-center gap-4">
-            {/* Add Sector Actions here if needed (disable/delete) */}
+            <SectorDisableDialog sector={sector} auth={auth} />
+            <DeleteSectorDialog sector={sector} auth={auth} />
           </div>
         </div>
       </CardHeader>
@@ -49,12 +51,7 @@ const SectorInformationCard = ({ sector }: PropsSector) => {
 
             {/* Edit Button */}
             <div className="mt-4">
-              <Link
-                className={cn(buttonVariants({ library: "shadcn" }), "w-full")}
-                href={`/a/database/sectors/${sector.username}/edit`}
-              >
-                <MyImage role="ICON" src="/icons/edit.png" /> Edit Sector
-              </Link>
+              <UpdateSectorDialog sector={sector} auth={auth} />
             </div>
 
             {/* Description */}

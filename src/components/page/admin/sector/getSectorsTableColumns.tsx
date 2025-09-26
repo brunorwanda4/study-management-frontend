@@ -2,6 +2,7 @@
 
 import MyImage from "@/components/common/myImage";
 import { SectorModel } from "@/lib/schema/admin/sectorSchema";
+import { cn } from "@/lib/utils";
 import { generateEducationIcon } from "@/lib/utils/generate-profile-image";
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
@@ -15,7 +16,11 @@ export const getSectorsTableColumns = (): ColumnDef<SectorModel>[] => {
       cell: ({ row }) => (
         <Link
           href={`/a/database/sectors/${row.original.username}`}
-          className="flex flex-row items-center gap-2"
+          className={cn(
+            "flex flex-row items-center gap-2",
+            row.original.disable ? "text-warning tooltip tooltip-warning" : "",
+          )}
+          data-tip={cn(row.original.disable ? "Disabled Sector" : "")}
         >
           <MyImage
             src={row.original.logo || generateEducationIcon()}
@@ -31,7 +36,14 @@ export const getSectorsTableColumns = (): ColumnDef<SectorModel>[] => {
       accessorKey: "username",
       meta: { filterVariant: "text" },
       cell: ({ row }) => (
-        <Link href={`/a/database/sectors/${row.original.username}`}>
+        <Link
+          href={`/a/database/sectors/${row.original.username}`}
+          className={cn(
+            "flex items-center gap-2",
+            row.original.disable ? "text-warning tooltip tooltip-warning" : "",
+          )}
+          data-tip={cn(row.original.disable ? "Disabled Sector" : "")}
+        >
           {row.original.username}
         </Link>
       ),

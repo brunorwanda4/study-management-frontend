@@ -20,7 +20,6 @@ import { cn } from "@/lib/utils";
 import { AuthUserResult } from "@/lib/utils/auth-user";
 import apiRequest from "@/service/api-client";
 import { LoaderCircle } from "lucide-react";
-import { redirect } from "next/navigation";
 import { useState, useTransition } from "react";
 
 interface Props {
@@ -28,23 +27,26 @@ interface Props {
   auth: AuthUserResult;
 }
 
-const DeleteSectorDialog = ({ sector, auth }: Props) => {
+const SectorDisableDialog = ({ auth, sector }: Props) => {
   const [error, setError] = useState<undefined | string>("");
   const [success, setSuccess] = useState<undefined | string>("");
   const [isPending, startTransition] = useTransition();
   const { showToast } = useToast();
 
-  const handleDelete = () => {
+  const handleToggle = () => {
     setError("");
     setSuccess("");
     startTransition(async () => {
-      const request = await apiRequest(
-        "delete",
+      const request = await apiRequest<{ disable: boolean }, SectorModel>(
+        "put",
         `/sectors/${sector.id || sector._id}`,
-        undefined,
-        auth.token,
+        {
+          disable: sector.disable ? false : true,
+        },
+        auth?.token,
       );
-      if (request.error || !request.data || request.statusCode !== 200) {
+
+      if (!request.data) {
         setError(request.message);
         showToast({
           title: "Uh oh! Something went wrong.",
@@ -52,16 +54,21 @@ const DeleteSectorDialog = ({ sector, auth }: Props) => {
           type: "error",
         });
       } else {
-        setSuccess("Sector deleted successfully!");
+        const action = sector.disable ? "disabled" : "enabled";
+        setSuccess(`Sector ${request.data.name} ${action} successfully!`);
         showToast({
-          title: "Sector deleted successfully",
-          description: <p>{request.message}</p>,
+          title: `Sector ${request.data.name} ${action} successfully`,
           type: "success",
+          description: (
+            <p>
+              You {action} <strong>{request.data.name}</strong> account.
+            </p>
+          ),
         });
-        redirect("/a/database/sectors");
       }
     });
   };
+
   return (
     <AlertDialog>
       <AlertDialogTrigger
@@ -74,8 +81,11 @@ const DeleteSectorDialog = ({ sector, auth }: Props) => {
           "cursor-pointer",
         )}
       >
-        <MyImage role="ICON" src="/icons/delete.png" />
-        <span className="">Delete</span>
+        <MyImage
+          role="ICON"
+          src={sector.disable ? "/icons/checked.png" : "/icons/disabled.png"}
+        />
+        <span className="">{sector.disable ? "Enable" : "Disable"}</span>
         {isPending && (
           <LoaderCircle
             className="-ms-1 me-2 animate-spin"
@@ -85,16 +95,19 @@ const DeleteSectorDialog = ({ sector, auth }: Props) => {
           />
         )}
       </AlertDialogTrigger>
-      <AlertDialogContent className="">
+      <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            Are you sure you want to delete sector{" "}
-            <strong className="">{sector.name}</strong>?
+            Are you sure you want to{" "}
+            <span className="font-medium capitalize">
+              {sector.disable ? "enable" : "disable"}
+            </span>{" "}
+            <span className="font-medium">{sector.name}</span>?
           </AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. It will permanently delete the sector
-            account and the sector will no longer be able to access the system
-            again. 😔 Please proceed with caution.
+            {sector.disable
+              ? "This will re-enable the account and allow the sector to access the system again."
+              : "This action will disable the account. The sector will not be able to access the system until it is enabled again."}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <div className="mt-2">
@@ -102,23 +115,20 @@ const DeleteSectorDialog = ({ sector, auth }: Props) => {
           <FormSuccess message={success} />
         </div>
         <AlertDialogFooter>
-          <AlertDialogCancel type="button">Cancel</AlertDialogCancel>
+          <AlertDialogCancel type="button" className="cursor-pointer">
+            Cancel
+          </AlertDialogCancel>
           <AlertDialogAction
-            onClick={handleDelete}
+            onClick={() => handleToggle()}
             className={cn(
-              buttonVariants({ variant: "destructive", library: "shadcn" }),
+              buttonVariants({
+                variant: sector.disable ? "success" : "warning",
+                library: "daisy",
+              }),
               "cursor-pointer",
             )}
           >
-            Delete{" "}
-            {isPending && (
-              <LoaderCircle
-                className="-ms-1 me-2 animate-spin"
-                size={12}
-                strokeWidth={2}
-                aria-hidden="true"
-              />
-            )}
+            {sector.disable ? "Enable" : "Disable"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -126,4 +136,4 @@ const DeleteSectorDialog = ({ sector, auth }: Props) => {
   );
 };
 
-export default DeleteSectorDialog;
+export default SectorDisableDialog;

@@ -15,36 +15,36 @@ import {
 } from "@/components/ui/alert-dialog";
 import { buttonVariants } from "@/components/ui/button";
 import { useToast } from "@/lib/context/toast/ToastContext";
-import { SectorModel } from "@/lib/schema/admin/sectorSchema";
+import { TradeModule } from "@/lib/schema/admin/tradeSchema";
 import { cn } from "@/lib/utils";
 import { AuthUserResult } from "@/lib/utils/auth-user";
 import apiRequest from "@/service/api-client";
 import { LoaderCircle } from "lucide-react";
-import { redirect } from "next/navigation";
 import { useState, useTransition } from "react";
 
 interface Props {
-  sector: SectorModel;
+  trade: TradeModule;
   auth: AuthUserResult;
 }
 
-const DeleteSectorDialog = ({ sector, auth }: Props) => {
+const TradeDisableDialog = ({ trade, auth }: Props) => {
   const [error, setError] = useState<undefined | string>("");
   const [success, setSuccess] = useState<undefined | string>("");
   const [isPending, startTransition] = useTransition();
   const { showToast } = useToast();
 
-  const handleDelete = () => {
+  const handleToggle = () => {
     setError("");
     setSuccess("");
     startTransition(async () => {
-      const request = await apiRequest(
-        "delete",
-        `/sectors/${sector.id || sector._id}`,
-        undefined,
+      const request = await apiRequest<{ disable: boolean }, TradeModule>(
+        "put",
+        `/trades/${trade.id || trade._id}`,
+        { disable: trade.disable ? false : true },
         auth.token,
       );
-      if (request.error || !request.data || request.statusCode !== 200) {
+
+      if (!request.data) {
         setError(request.message);
         showToast({
           title: "Uh oh! Something went wrong.",
@@ -52,73 +52,71 @@ const DeleteSectorDialog = ({ sector, auth }: Props) => {
           type: "error",
         });
       } else {
-        setSuccess("Sector deleted successfully!");
+        const action = trade.disable ? "enabled" : "disabled";
+        setSuccess(`Trade ${request.data.name} ${action} successfully!`);
         showToast({
-          title: "Sector deleted successfully",
-          description: <p>{request.message}</p>,
+          title: `Trade ${request.data.name} ${action}`,
+          description: (
+            <p>
+              You {action} <strong>{request.data.name}</strong>.
+            </p>
+          ),
           type: "success",
         });
-        redirect("/a/database/sectors");
       }
     });
   };
+
   return (
     <AlertDialog>
       <AlertDialogTrigger
         className={cn(
-          buttonVariants({
-            size: "sm",
-            variant: "ghost",
-            library: "shadcn",
-          }),
+          buttonVariants({ size: "sm", variant: "ghost", library: "shadcn" }),
           "cursor-pointer",
         )}
       >
-        <MyImage role="ICON" src="/icons/delete.png" />
-        <span className="">Delete</span>
-        {isPending && (
-          <LoaderCircle
-            className="-ms-1 me-2 animate-spin"
-            size={12}
-            strokeWidth={2}
-            aria-hidden="true"
-          />
-        )}
+        <MyImage
+          role="ICON"
+          src={trade.disable ? "/icons/checked.png" : "/icons/disabled.png"}
+        />
+        <span>{trade.disable ? "Enable" : "Disable"}</span>
+        {isPending && <LoaderCircle className="ms-2 animate-spin" size={12} />}
       </AlertDialogTrigger>
-      <AlertDialogContent className="">
+
+      <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            Are you sure you want to delete sector{" "}
-            <strong className="">{sector.name}</strong>?
+            Are you sure you want to{" "}
+            <span className="capitalize">
+              {trade.disable ? "enable" : "disable"}
+            </span>{" "}
+            <strong>{trade.name}</strong>?
           </AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. It will permanently delete the sector
-            account and the sector will no longer be able to access the system
-            again. 😔 Please proceed with caution.
+            {trade.disable
+              ? "This will re-enable the trade."
+              : "This action will disable the trade until re-enabled."}
           </AlertDialogDescription>
         </AlertDialogHeader>
+
         <div className="mt-2">
           <FormError message={error} />
           <FormSuccess message={success} />
         </div>
+
         <AlertDialogFooter>
-          <AlertDialogCancel type="button">Cancel</AlertDialogCancel>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
-            onClick={handleDelete}
+            onClick={handleToggle}
             className={cn(
-              buttonVariants({ variant: "destructive", library: "shadcn" }),
+              buttonVariants({
+                variant: trade.disable ? "success" : "warning",
+                library: "daisy",
+              }),
               "cursor-pointer",
             )}
           >
-            Delete{" "}
-            {isPending && (
-              <LoaderCircle
-                className="-ms-1 me-2 animate-spin"
-                size={12}
-                strokeWidth={2}
-                aria-hidden="true"
-              />
-            )}
+            {trade.disable ? "Enable" : "Disable"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -126,4 +124,4 @@ const DeleteSectorDialog = ({ sector, auth }: Props) => {
   );
 };
 
-export default DeleteSectorDialog;
+export default TradeDisableDialog;

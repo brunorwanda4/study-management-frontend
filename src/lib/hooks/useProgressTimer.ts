@@ -1,4 +1,3 @@
-// hooks/useProgressTimer.ts
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -67,7 +66,10 @@ export function useProgressTimer({
     const state = timerState.current;
     if (!state.isPaused && state.startTime !== 0 && state.remaining > 0) {
       cleanup();
-      state.remaining = Math.max(0, state.remaining - (Date.now() - state.startTime));
+      state.remaining = Math.max(
+        0,
+        state.remaining - (Date.now() - state.startTime),
+      );
       state.isPaused = true;
     }
   }, [cleanup]);

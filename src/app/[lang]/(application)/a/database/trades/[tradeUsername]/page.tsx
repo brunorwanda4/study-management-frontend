@@ -1,21 +1,21 @@
-import SectorInformationCard from "@/components/page/admin/sector/sector-information-card";
+import TradeInformationCard from "@/components/page/admin/trades/trade-information-card";
 import ErrorPage from "@/components/page/error-page";
 import NotFoundPage from "@/components/page/not-found";
-import { SectorModel } from "@/lib/schema/admin/sectorSchema";
+import { TradeModelWithOthers } from "@/lib/schema/admin/tradeSchema";
 import { authUser } from "@/lib/utils/auth-user";
 import apiRequest from "@/service/api-client";
 import { redirect } from "next/navigation";
 
-const SectorUsernamePage = async (props: {
-  params: Promise<{ sectorUsername: string }>;
+const TradeUsernamePage = async (props: {
+  params: Promise<{ tradeUsername: string }>;
 }) => {
   const params = await props.params;
-  const { sectorUsername } = params;
+  const { tradeUsername } = params;
   const auth = await authUser();
   if (!auth) redirect("/auth/login");
-  const request = await apiRequest<void, SectorModel>(
+  const request = await apiRequest<void, TradeModelWithOthers>(
     "get",
-    `/sectors/username/${sectorUsername}`,
+    `/trades/username/others/${tradeUsername}`,
     undefined,
     auth.token,
   );
@@ -26,9 +26,9 @@ const SectorUsernamePage = async (props: {
 
   return (
     <div>
-      <SectorInformationCard auth={auth} sector={request.data} />
+      <TradeInformationCard trade={request.data} auth={auth} />
     </div>
   );
 };
 
-export default SectorUsernamePage;
+export default TradeUsernamePage;

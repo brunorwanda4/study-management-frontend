@@ -1,13 +1,13 @@
-import CreateTradeDialog from "./createTradeDialog";
-import AllTradeTable from "./AllTradeTable";
+import CollectionPageStatic, {
+  CollectionPageErrorStatic,
+} from "@/components/page/admin/static/collectionPageStatic";
 import {
   fetchAllEducation,
   fetchAllSector,
   fetchAllTrade,
 } from "@/service/admin/fetchDataFn";
-import CollectionPageStatic, {
-  CollectionPageErrorStatic,
-} from "@/components/page/admin/static/collectionPageStatic";
+import CreateTradeDialog from "./createTradeDialog";
+import AllTradeTable from "./trade-trable-collection";
 // import AllEducationComponent from "./allEducationComponent"
 
 interface props {

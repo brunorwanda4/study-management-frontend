@@ -34,7 +34,7 @@ const DataDetailsCard = ({
           {!!items &&
             items.map((item, i) => (
               <div key={`data-details-items-${i}`} className={cn("flex gap-1")}>
-                <span className="text-sm">{item.key}:</span>
+                <span className="line-clamp-1 text-sm">{item.key}:</span>
                 <span className="text-sm font-medium">{item.value}</span>
               </div>
             ))}

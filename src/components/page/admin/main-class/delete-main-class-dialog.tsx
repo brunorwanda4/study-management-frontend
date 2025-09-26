@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { buttonVariants } from "@/components/ui/button";
 import { useToast } from "@/lib/context/toast/ToastContext";
-import { SectorModel } from "@/lib/schema/admin/sectorSchema";
+import { MainClassModel } from "@/lib/schema/admin/main-classes-schema";
 import { cn } from "@/lib/utils";
 import { AuthUserResult } from "@/lib/utils/auth-user";
 import apiRequest from "@/service/api-client";
@@ -24,13 +24,13 @@ import { redirect } from "next/navigation";
 import { useState, useTransition } from "react";
 
 interface Props {
-  sector: SectorModel;
+  mainClass: MainClassModel;
   auth: AuthUserResult;
 }
 
-const DeleteSectorDialog = ({ sector, auth }: Props) => {
-  const [error, setError] = useState<undefined | string>("");
-  const [success, setSuccess] = useState<undefined | string>("");
+const DeleteMainClassDialog = ({ mainClass, auth }: Props) => {
+  const [error, setError] = useState<string | undefined>("");
+  const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
   const { showToast } = useToast();
 
@@ -40,7 +40,7 @@ const DeleteSectorDialog = ({ sector, auth }: Props) => {
     startTransition(async () => {
       const request = await apiRequest(
         "delete",
-        `/sectors/${sector.id || sector._id}`,
+        `/main-classes/${mainClass.id || mainClass._id}`,
         undefined,
         auth.token,
       );
@@ -52,57 +52,49 @@ const DeleteSectorDialog = ({ sector, auth }: Props) => {
           type: "error",
         });
       } else {
-        setSuccess("Sector deleted successfully!");
+        setSuccess("Main class deleted successfully!");
         showToast({
-          title: "Sector deleted successfully",
+          title: "Main class deleted successfully",
           description: <p>{request.message}</p>,
           type: "success",
         });
-        redirect("/a/database/sectors");
+        redirect("/a/database/main-classes");
       }
     });
   };
+
   return (
     <AlertDialog>
       <AlertDialogTrigger
         className={cn(
-          buttonVariants({
-            size: "sm",
-            variant: "ghost",
-            library: "shadcn",
-          }),
+          buttonVariants({ size: "sm", variant: "ghost", library: "shadcn" }),
           "cursor-pointer",
         )}
       >
         <MyImage role="ICON" src="/icons/delete.png" />
-        <span className="">Delete</span>
-        {isPending && (
-          <LoaderCircle
-            className="-ms-1 me-2 animate-spin"
-            size={12}
-            strokeWidth={2}
-            aria-hidden="true"
-          />
-        )}
+        <span>Delete</span>
+        {isPending && <LoaderCircle className="ms-2 animate-spin" size={12} />}
       </AlertDialogTrigger>
-      <AlertDialogContent className="">
+
+      <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            Are you sure you want to delete sector{" "}
-            <strong className="">{sector.name}</strong>?
+            Are you sure you want to delete main class{" "}
+            <strong>{mainClass.name}</strong>?
           </AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. It will permanently delete the sector
-            account and the sector will no longer be able to access the system
-            again. 😔 Please proceed with caution.
+            This action cannot be undone. The main class will be permanently
+            removed.
           </AlertDialogDescription>
         </AlertDialogHeader>
+
         <div className="mt-2">
           <FormError message={error} />
           <FormSuccess message={success} />
         </div>
+
         <AlertDialogFooter>
-          <AlertDialogCancel type="button">Cancel</AlertDialogCancel>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
             className={cn(
@@ -110,14 +102,9 @@ const DeleteSectorDialog = ({ sector, auth }: Props) => {
               "cursor-pointer",
             )}
           >
-            Delete{" "}
+            Delete
             {isPending && (
-              <LoaderCircle
-                className="-ms-1 me-2 animate-spin"
-                size={12}
-                strokeWidth={2}
-                aria-hidden="true"
-              />
+              <LoaderCircle className="ms-2 animate-spin" size={12} />
             )}
           </AlertDialogAction>
         </AlertDialogFooter>
@@ -126,4 +113,4 @@ const DeleteSectorDialog = ({ sector, auth }: Props) => {
   );
 };
 
-export default DeleteSectorDialog;
+export default DeleteMainClassDialog;

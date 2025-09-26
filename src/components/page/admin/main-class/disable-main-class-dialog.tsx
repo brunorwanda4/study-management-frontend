@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { buttonVariants } from "@/components/ui/button";
 import { useToast } from "@/lib/context/toast/ToastContext";
-import { UserModel } from "@/lib/types/userModel";
+import { MainClassModel } from "@/lib/schema/admin/main-classes-schema";
 import { cn } from "@/lib/utils";
 import { AuthUserResult } from "@/lib/utils/auth-user";
 import apiRequest from "@/service/api-client";
@@ -23,13 +23,13 @@ import { LoaderCircle } from "lucide-react";
 import { useState, useTransition } from "react";
 
 interface Props {
-  user: UserModel;
+  mainClass: MainClassModel;
   auth: AuthUserResult;
 }
 
-const UserDisableDialog = ({ auth, user }: Props) => {
-  const [error, setError] = useState<undefined | string>("");
-  const [success, setSuccess] = useState<undefined | string>("");
+const MainClassDisableDialog = ({ mainClass, auth }: Props) => {
+  const [error, setError] = useState<string | undefined>("");
+  const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
   const { showToast } = useToast();
 
@@ -37,13 +37,11 @@ const UserDisableDialog = ({ auth, user }: Props) => {
     setError("");
     setSuccess("");
     startTransition(async () => {
-      const request = await apiRequest<{ disable: boolean }, UserModel>(
+      const request = await apiRequest<{ disable: boolean }, MainClassModel>(
         "put",
-        `/users/${user.id || user._id}`,
-        {
-          disable: user.disable ? false : true,
-        },
-        auth?.token,
+        `/main-classes/${mainClass.id || mainClass._id}`,
+        { disable: mainClass.disable ? false : true },
+        auth.token,
       );
 
       if (!request.data) {
@@ -54,16 +52,16 @@ const UserDisableDialog = ({ auth, user }: Props) => {
           type: "error",
         });
       } else {
-        const action = user.disable ? "disabled" : "enabled";
-        setSuccess(`User ${request.data.name} ${action} successfully!`);
+        const action = mainClass.disable ? "enabled" : "disabled";
+        setSuccess(`Main class ${request.data.name} ${action} successfully!`);
         showToast({
-          title: `User ${request.data.name} ${action} successfully`,
-          type: "success",
+          title: `Main class ${request.data.name} ${action}`,
           description: (
             <p>
-              You {action} <strong>{request.data.name}</strong> account.
+              You {action} <strong>{request.data.name}</strong>.
             </p>
           ),
+          type: "success",
         });
       }
     });
@@ -73,63 +71,52 @@ const UserDisableDialog = ({ auth, user }: Props) => {
     <AlertDialog>
       <AlertDialogTrigger
         className={cn(
-          buttonVariants({
-            size: "sm",
-            variant: "ghost",
-            library: "shadcn",
-          }),
+          buttonVariants({ size: "sm", variant: "ghost", library: "shadcn" }),
           "cursor-pointer",
         )}
       >
         <MyImage
           role="ICON"
-          src={user.disable ? "/icons/checked.png" : "/icons/disabled.png"}
+          src={mainClass.disable ? "/icons/checked.png" : "/icons/disabled.png"}
         />
-        <span className="">{user.disable ? "Enable" : "Disable"}</span>
-        {isPending && (
-          <LoaderCircle
-            className="-ms-1 me-2 animate-spin"
-            size={12}
-            strokeWidth={2}
-            aria-hidden="true"
-          />
-        )}
+        <span>{mainClass.disable ? "Enable" : "Disable"}</span>
+        {isPending && <LoaderCircle className="ms-2 animate-spin" size={12} />}
       </AlertDialogTrigger>
+
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
             Are you sure you want to{" "}
-            <span className="font-medium capitalize">
-              {user.disable ? "enable" : "disable"}
+            <span className="capitalize">
+              {mainClass.disable ? "enable" : "disable"}
             </span>{" "}
-            <span className="font-medium capitalize">{user.name}</span>'s
-            account?
+            <strong>{mainClass.name}</strong>?
           </AlertDialogTitle>
           <AlertDialogDescription>
-            {user.disable
-              ? "This will re-enable the account and allow the user to access the system again."
-              : "This action will disable the account. The user will not be able to access the system until it is enabled again."}
+            {mainClass.disable
+              ? "This will re-enable the main class."
+              : "This action will disable the main class until re-enabled."}
           </AlertDialogDescription>
         </AlertDialogHeader>
+
         <div className="mt-2">
           <FormError message={error} />
           <FormSuccess message={success} />
         </div>
+
         <AlertDialogFooter>
-          <AlertDialogCancel type="button" className="cursor-pointer">
-            Cancel
-          </AlertDialogCancel>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
-            onClick={() => handleToggle()}
+            onClick={handleToggle}
             className={cn(
               buttonVariants({
-                variant: user.disable ? "success" : "warning",
+                variant: mainClass.disable ? "success" : "warning",
                 library: "daisy",
               }),
               "cursor-pointer",
             )}
           >
-            {user.disable ? "Enable" : "Disable"}
+            {mainClass.disable ? "Enable" : "Disable"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -137,4 +124,4 @@ const UserDisableDialog = ({ auth, user }: Props) => {
   );
 };
 
-export default UserDisableDialog;
+export default MainClassDisableDialog;
