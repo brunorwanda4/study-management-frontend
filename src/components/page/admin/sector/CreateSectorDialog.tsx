@@ -9,14 +9,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { SectorModel } from "@/lib/schema/admin/sectorSchema";
 import { AuthUserResult } from "@/lib/utils/auth-user";
 import { BsPlus } from "react-icons/bs";
 
 interface props {
   auth: AuthUserResult;
+  onSectorCreated?: (sector: SectorModel) => void;
 }
 
-const CreateSectorDialog = ({ auth }: props) => {
+const CreateSectorDialog = ({ auth, onSectorCreated }: props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -28,7 +30,7 @@ const CreateSectorDialog = ({ auth }: props) => {
         <DialogHeader>
           <DialogTitle>Add New Sector</DialogTitle>
         </DialogHeader>
-        <CreateSectorForm auth={auth} />
+        <CreateSectorForm auth={auth} onSectorCreated={onSectorCreated} />
       </DialogContent>
     </Dialog>
   );

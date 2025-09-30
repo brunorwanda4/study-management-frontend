@@ -54,7 +54,7 @@ export async function onboardingService(input: onboardingDto) {
     "patch",
     `/auth/onboarding`,
     input,
-    auth.token,
+    { token: auth.token },
   );
 
   console.log("Data 😣:", res);

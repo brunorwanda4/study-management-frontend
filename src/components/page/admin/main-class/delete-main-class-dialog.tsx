@@ -42,7 +42,7 @@ const DeleteMainClassDialog = ({ mainClass, auth }: Props) => {
         "delete",
         `/main-classes/${mainClass.id || mainClass._id}`,
         undefined,
-        auth.token,
+        { token: auth.token },
       );
       if (request.error || !request.data || request.statusCode !== 200) {
         setError(request.message);

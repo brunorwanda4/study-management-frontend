@@ -57,18 +57,12 @@ const UpdateTradeForm = ({ auth, trade }: Props) => {
     const fetchOptions = async () => {
       try {
         const [sectorsRes, tradesRes] = await Promise.all([
-          apiRequest<any, SectorModel[]>(
-            "get",
-            "/sectors",
-            undefined,
-            auth.token,
-          ),
-          apiRequest<any, TradeModule[]>(
-            "get",
-            "/trades",
-            undefined,
-            auth.token,
-          ),
+          apiRequest<any, SectorModel[]>("get", "/sectors", undefined, {
+            token: auth.token,
+          }),
+          apiRequest<any, TradeModule[]>("get", "/trades", undefined, {
+            token: auth.token,
+          }),
         ]);
 
         if (sectorsRes.data) {
@@ -113,7 +107,7 @@ const UpdateTradeForm = ({ auth, trade }: Props) => {
         "put",
         `/trades/${trade.id || trade._id}`,
         values,
-        auth.token,
+        { token: auth.token },
       );
 
       if (!request.data) {

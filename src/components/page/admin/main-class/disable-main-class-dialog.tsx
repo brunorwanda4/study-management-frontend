@@ -41,7 +41,7 @@ const MainClassDisableDialog = ({ mainClass, auth }: Props) => {
         "put",
         `/main-classes/${mainClass.id || mainClass._id}`,
         { disable: mainClass.disable ? false : true },
-        auth.token,
+        { token: auth.token },
       );
 
       if (!request.data) {

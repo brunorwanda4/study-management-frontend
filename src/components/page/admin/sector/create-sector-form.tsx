@@ -38,9 +38,10 @@ import { useForm } from "react-hook-form";
 
 interface props {
   auth: AuthUserResult;
+  onSectorCreated?: (sector: SectorModel) => void;
 }
 
-const CreateSectorForm = ({ auth }: props) => {
+const CreateSectorForm = ({ auth, onSectorCreated }: props) => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
@@ -74,7 +75,19 @@ const CreateSectorForm = ({ auth }: props) => {
           "post",
           "/sectors",
           values,
-          auth.token,
+          {
+            token: auth.token,
+            // Enable real-time and provide callback
+            realtime: "sector",
+            onRealtimeEvent: (event) => {
+              if (
+                event.event_type === "created" &&
+                event.entity_type === "sector"
+              ) {
+                onSectorCreated?.(event.data);
+              }
+            },
+          },
         );
 
         if (!request.data) {
@@ -92,6 +105,9 @@ const CreateSectorForm = ({ auth }: props) => {
             type: "success",
           });
           form.reset();
+
+          // Call the callback with the created sector
+          onSectorCreated?.(request.data);
         }
       } catch (err) {
         setError(`Unexpected error occurred [${err}]. Please try again.`);

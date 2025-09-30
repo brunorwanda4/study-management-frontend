@@ -144,7 +144,7 @@ const EditUserForm = ({ auth, user, isDialog = false }: props) => {
         "put", // Changed from POST to PUT for update
         `/users/${user.id || user._id}`, // Updated endpoint to include user ID
         values,
-        auth.token,
+        { token: auth.token },
       );
 
       if (!result.data) {

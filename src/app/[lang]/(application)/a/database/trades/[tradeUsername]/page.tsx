@@ -17,7 +17,7 @@ const TradeUsernamePage = async (props: {
     "get",
     `/trades/username/others/${tradeUsername}`,
     undefined,
-    auth.token,
+    { token: auth.token },
   );
   if (request.statusCode === 404)
     return <NotFoundPage message={request.message} />;

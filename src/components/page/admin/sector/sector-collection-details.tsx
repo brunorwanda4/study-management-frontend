@@ -1,25 +1,48 @@
+"use client";
 import DataDetailsCard, {
   dataDetailsCardProps,
 } from "@/components/common/cards/data-details-card";
+import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
 import { SectorModel } from "@/lib/schema/admin/sectorSchema";
+import { useEffect, useState } from "react";
 
-const SectorCollectionDetails = ({ data }: { data: SectorModel[] }) => {
-  // 1. Total sectors
-  const totalSectors = data.length;
+interface Props {
+  initialSectors?: SectorModel[];
+}
 
-  // 2. Group by type
-  const typeCount: Record<string, number> = {};
-  data.forEach((sector) => {
-    typeCount[sector.type] = (typeCount[sector.type] || 0) + 1;
-  });
+const SectorCollectionDetails = ({ initialSectors = [] }: Props) => {
+  const { data: sectors } = useRealtimeData<SectorModel>();
+  const [displaySectors, setDisplaySectors] =
+    useState<SectorModel[]>(initialSectors);
 
-  // 3. Countries represented
-  const countryCount: Record<string, number> = {};
-  data.forEach((sector) => {
-    countryCount[sector.country] = (countryCount[sector.country] || 0) + 1;
-  });
+  // Sync with realtime data when available
+  useEffect(() => {
+    if (sectors && sectors.length > 0) {
+      setDisplaySectors(sectors);
+    }
+  }, [sectors]);
 
-  const components: dataDetailsCardProps[] = [
+  // --- Aggregations ---
+  const totalSectors = displaySectors.length;
+
+  const typeCount = displaySectors.reduce<Record<string, number>>(
+    (acc, sector) => {
+      acc[sector.type] = (acc[sector.type] || 0) + 1;
+      return acc;
+    },
+    {},
+  );
+
+  const countryCount = displaySectors.reduce<Record<string, number>>(
+    (acc, sector) => {
+      acc[sector.country] = (acc[sector.country] || 0) + 1;
+      return acc;
+    },
+    {},
+  );
+
+  // --- Cards configuration ---
+  const cards: dataDetailsCardProps[] = [
     {
       title: "Total Sectors",
       size: totalSectors,
@@ -29,34 +52,31 @@ const SectorCollectionDetails = ({ data }: { data: SectorModel[] }) => {
       title: "By Type",
       size: Object.keys(typeCount).length,
       icon: "/icons/application.png",
-      items: Object.entries(typeCount).map(([key, value]) => ({
-        key,
-        value,
-      })),
+      items: Object.entries(typeCount).map(([key, value]) => ({ key, value })),
     },
     {
       title: "Countries Represented",
       size: Object.keys(countryCount).length,
       icon: "/icons/world.png",
       items: Object.entries(countryCount).map(([key, value]) => ({
-        key, // country name
-        value, // number of sectors in that country
+        key,
+        value,
       })),
     },
   ];
 
   return (
-    <main className="grid grid-cols-4 gap-4">
-      {components.map((item, i) => (
+    <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {cards.map((card, index) => (
         <DataDetailsCard
-          key={i}
-          title={item.title}
-          icon={item.icon}
-          size={item.size}
-          items={item.items}
+          key={index}
+          title={card.title}
+          icon={card.icon}
+          size={card.size}
+          items={card.items}
         />
       ))}
-    </main>
+    </section>
   );
 };
 

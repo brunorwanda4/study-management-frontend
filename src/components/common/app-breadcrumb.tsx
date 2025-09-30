@@ -10,6 +10,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { formatText } from "@/lib/helpers/format-text";
 import { BsGrid1X2 } from "react-icons/bs";
 
 // Map segments to custom labels
@@ -53,11 +54,11 @@ export default function AppBreadcrumb() {
             <BreadcrumbItem>
               {index === crumbs.length - 1 ? (
                 <BreadcrumbPage className="capitalize">
-                  {crumb.label}
+                  {formatText(crumb.label)}
                 </BreadcrumbPage>
               ) : (
                 <BreadcrumbLink href={crumb.href} className="capitalize">
-                  {crumb.label}
+                  {formatText(crumb.label)}
                 </BreadcrumbLink>
               )}
             </BreadcrumbItem>

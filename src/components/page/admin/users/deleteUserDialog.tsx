@@ -42,7 +42,7 @@ const DeleteUserDialog = ({ user, auth }: Props) => {
         "delete",
         `/users/${user.id || user._id}`,
         undefined,
-        auth.token,
+        { token: auth.token },
       );
 
       if (deleteUser.statusCode !== 200) {

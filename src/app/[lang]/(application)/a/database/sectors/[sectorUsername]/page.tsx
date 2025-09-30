@@ -17,7 +17,7 @@ const SectorUsernamePage = async (props: {
     "get",
     `/sectors/username/${sectorUsername}`,
     undefined,
-    auth.token,
+    { token: auth.token },
   );
   if (request.statusCode === 404)
     return <NotFoundPage message={request.message} />;

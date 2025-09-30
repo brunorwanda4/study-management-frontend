@@ -54,7 +54,7 @@ const UpdateMainClassForm = ({ mainClass, auth }: Props) => {
           "get",
           "/trades",
           undefined,
-          auth.token,
+          { token: auth.token },
         );
 
         if (res.data) {
@@ -96,7 +96,7 @@ const UpdateMainClassForm = ({ mainClass, auth }: Props) => {
           "put",
           `/main-classes/${mainClass.id ?? mainClass._id}`,
           payload,
-          auth.token,
+          { token: auth.token },
         );
 
         if (!request.data) {

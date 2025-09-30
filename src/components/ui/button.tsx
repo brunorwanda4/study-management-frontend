@@ -104,12 +104,7 @@ const Button = React.forwardRef<HTMLButtonElement, UniversalButtonProps>(
           });
 
     return (
-      <Comp
-        data-them={theme}
-        ref={ref}
-        className={cn("cursor-pointer", styles)}
-        {...props}
-      />
+      <Comp ref={ref} className={cn("cursor-pointer", styles)} {...props} />
     );
   },
 );

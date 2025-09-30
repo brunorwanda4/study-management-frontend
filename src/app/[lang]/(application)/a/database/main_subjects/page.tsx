@@ -6,7 +6,7 @@ import { authUser } from "@/lib/utils/auth-user";
 import apiRequest from "@/service/api-client";
 import { redirect } from "next/navigation";
 
-const MainClassesPage = async () => {
+const MainSubjectsPage = async () => {
   const auth = await authUser();
   if (!auth) redirect("/auth/login");
   const request = await apiRequest<void, mainClassModelWithTrade[]>(
@@ -26,4 +26,4 @@ const MainClassesPage = async () => {
   );
 };
 
-export default MainClassesPage;
+export default MainSubjectsPage;

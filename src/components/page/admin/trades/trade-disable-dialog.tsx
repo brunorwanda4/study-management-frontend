@@ -41,7 +41,7 @@ const TradeDisableDialog = ({ trade, auth }: Props) => {
         "put",
         `/trades/${trade.id || trade._id}`,
         { disable: trade.disable ? false : true },
-        auth.token,
+        { token: auth.token },
       );
 
       if (!request.data) {

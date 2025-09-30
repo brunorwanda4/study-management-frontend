@@ -18,7 +18,7 @@ const UserAdminPage = async (props: {
     "get",
     `/users/username/${userUsername}`,
     undefined,
-    auth.token,
+    { token: auth.token },
   );
   if (request.statusCode === 404)
     return <NotFoundPage message={request.message} />;

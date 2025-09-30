@@ -13,7 +13,7 @@ const DatabasePage = async () => {
     "get",
     "/database/status",
     undefined,
-    auth.token,
+    { token: auth.token },
   );
 
   if (!request.data) {

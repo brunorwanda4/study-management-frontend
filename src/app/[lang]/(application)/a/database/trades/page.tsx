@@ -13,7 +13,7 @@ const TradesPage = async () => {
     "get",
     "/trades/others",
     undefined,
-    auth.token,
+    { token: auth.token },
   );
   if (!request.data)
     return <ErrorPage message={request.message} error={request.error} />;

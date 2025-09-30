@@ -75,7 +75,7 @@ const UpdateSectorForm = ({ auth, sector }: Props) => {
           "put",
           `/sectors/${sector.id || sector._id}`,
           values,
-          auth.token,
+          { token: auth.token },
         );
 
         if (!request.data) {

@@ -49,12 +49,9 @@ const CreateMainClassForm = ({ auth }: Props) => {
     const fetchOptions = async () => {
       try {
         const [tradesRes] = await Promise.all([
-          apiRequest<any, TradeModule[]>(
-            "get",
-            "/trades",
-            undefined,
-            auth.token,
-          ),
+          apiRequest<any, TradeModule[]>("get", "/trades", undefined, {
+            token: auth.token,
+          }),
         ]);
 
         if (tradesRes.data) {
@@ -91,7 +88,7 @@ const CreateMainClassForm = ({ auth }: Props) => {
           "post",
           "/main-classes",
           values,
-          auth.token,
+          { token: auth.token },
         );
 
         if (!request.data) {

@@ -13,13 +13,12 @@ const UserPageCollection = async () => {
 
   // Run requests in parallel
   const [usersRequest, statsRequest] = await Promise.all([
-    apiRequest<void, UserModel[]>(
-      "get",
-      "/users?limit=10",
-      undefined,
-      auth.token,
-    ),
-    apiRequest<void, UserStats>("get", "/users/stats", undefined, auth.token),
+    apiRequest<void, UserModel[]>("get", "/users?limit=10", undefined, {
+      token: auth.token,
+    }),
+    apiRequest<void, UserStats>("get", "/users/stats", undefined, {
+      token: auth.token,
+    }),
   ]);
 
   if (!usersRequest.data || !statsRequest.data) {

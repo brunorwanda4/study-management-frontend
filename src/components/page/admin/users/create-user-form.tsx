@@ -127,7 +127,7 @@ const CreateUserForm = ({ auth }: props) => {
         "post",
         "/users",
         values,
-        auth.token,
+        { token: auth.token },
       );
 
       if (!result.data) {

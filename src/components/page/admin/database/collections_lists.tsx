@@ -10,7 +10,13 @@ interface Props {
 }
 
 export function CollectionsList({ collection, className }: Props) {
-  const availablePages = ["users", "sectors", "trades", "main_classes"];
+  const availablePages = [
+    "users",
+    "sectors",
+    "trades",
+    "main_classes",
+    "main_subjects",
+  ];
   const hasPage = availablePages.includes(collection);
 
   if (hasPage)
