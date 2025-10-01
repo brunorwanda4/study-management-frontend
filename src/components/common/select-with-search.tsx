@@ -1,7 +1,12 @@
 "use client";
 
-import { CheckIcon, ChevronDownIcon, XCircleIcon } from "lucide-react";
-import { useId, useState } from "react";
+import {
+  CheckIcon,
+  ChevronDownIcon,
+  PlusCircleIcon,
+  XCircleIcon,
+} from "lucide-react";
+import { useId, useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -26,12 +31,15 @@ export type Option = {
 };
 
 interface SelectWithSearchProps {
-  options: Option[];
+  options: Option[] | string[]; // accept string[] or Option[]
   value?: string;
   onChange: (value: string) => void;
   placeholder?: string;
   disabled?: boolean;
   label?: string | React.ReactNode;
+  allowCustomOption?: boolean; // enable custom/new option creation
+  onCreateOption?: (value: string) => void; // called when user creates a new option
+  allowClear?: boolean; // show "Don't select" clear item
 }
 
 export default function SelectWithSearch({
@@ -41,11 +49,26 @@ export default function SelectWithSearch({
   placeholder = "Select option",
   disabled = false,
   label,
+  allowCustomOption = false,
+  onCreateOption,
+  allowClear = true,
 }: SelectWithSearchProps) {
   const id = useId();
   const [open, setOpen] = useState<boolean>(false);
+  const [search, setSearch] = useState("");
 
-  const selectedLabel = options.find((opt) => opt.value === value)?.label;
+  // normalize options to Option[]
+  const normalizedOptions = useMemo<Option[]>(
+    () =>
+      (options ?? []).map((opt) =>
+        typeof opt === "string" ? { value: opt, label: opt } : opt,
+      ),
+    [options],
+  );
+
+  const selectedLabel = normalizedOptions.find(
+    (opt) => opt.value === value,
+  )?.label;
 
   return (
     <div className="w-full space-y-2">
@@ -77,23 +100,54 @@ export default function SelectWithSearch({
             />
           </Button>
         </PopoverTrigger>
+
         <PopoverContent
           className="border-input w-full min-w-[var(--radix-popper-anchor-width)] p-0"
           align="start"
         >
           <Command>
-            <CommandInput placeholder="Search..." />
+            <CommandInput
+              placeholder="Search..."
+              value={search}
+              onValueChange={(val: string) => setSearch(val)}
+            />
             <CommandList>
-              <CommandEmpty>No results found.</CommandEmpty>
+              <CommandEmpty>
+                No results found.
+                {allowCustomOption && search && (
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    className="text-primary mt-2 flex cursor-pointer items-center gap-2 hover:underline"
+                    onClick={() => {
+                      onChange(search);
+                      if (onCreateOption) onCreateOption(search);
+                      setOpen(false);
+                      setSearch("");
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        onChange(search);
+                        if (onCreateOption) onCreateOption(search);
+                        setOpen(false);
+                        setSearch("");
+                      }
+                    }}
+                  >
+                    <PlusCircleIcon size={16} />
+                    Add "{search}"
+                  </div>
+                )}
+              </CommandEmpty>
 
-              {/* Clear option - only show if something is selected */}
-              {value && (
+              {allowClear && value && (
                 <CommandGroup>
                   <CommandItem
                     value="__clear__"
                     onSelect={() => {
-                      onChange(""); // clear selection
+                      onChange("");
                       setOpen(false);
+                      setSearch("");
                     }}
                   >
                     <XCircleIcon
@@ -105,15 +159,16 @@ export default function SelectWithSearch({
                 </CommandGroup>
               )}
 
-              {/* All Options */}
               <CommandGroup>
-                {options.map((opt) => (
+                {normalizedOptions.map((opt) => (
                   <CommandItem
                     key={opt.value}
                     value={opt.value}
-                    onSelect={(currentValue) => {
+                    className="cursor-pointer"
+                    onSelect={(currentValue: string) => {
                       onChange(currentValue);
                       setOpen(false);
+                      setSearch("");
                     }}
                   >
                     {opt.label}

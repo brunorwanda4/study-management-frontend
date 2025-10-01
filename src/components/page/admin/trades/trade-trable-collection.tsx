@@ -1,5 +1,6 @@
 "use client";
 
+import RealtimeEnabled from "@/components/common/realtime-enabled";
 import { CommonDataTable } from "@/components/common/table/common-data-table";
 import TableFilter from "@/components/common/table/table-filter";
 import CreateTradeDialog from "@/components/page/admin/trades/createTradeDialog";
@@ -11,7 +12,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
 import { TradeModelWithOthers } from "@/lib/schema/admin/tradeSchema";
+import { TradeWithNonNullableId } from "@/lib/types/tradeModel";
 import { AuthUserResult } from "@/lib/utils/auth-user";
 import {
   ColumnDef,
@@ -25,23 +28,44 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface Props {
-  data: TradeModelWithOthers[];
   auth: AuthUserResult;
+  initialTrades?: TradeModelWithOthers[];
+  realtimeEnabled?: boolean;
 }
 
-const TradesTableCollection = ({ data, auth }: Props) => {
+const TradesTableCollection = ({
+  auth,
+  initialTrades = [],
+  realtimeEnabled = false,
+}: Props) => {
+  const { data: trades, isConnected } =
+    useRealtimeData<TradeWithNonNullableId>();
+  const [displayTrades, setDisplayTrades] =
+    useState<TradeModelWithOthers[]>(initialTrades);
+
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([
     { id: "name", desc: false },
   ]);
 
+  // Sync with realtime data when available
+  useEffect(() => {
+    if (realtimeEnabled && trades) {
+      // Always use realtime data when realtime is enabled, even if empty array
+      setDisplayTrades(trades as TradeModelWithOthers[]);
+    } else if (!realtimeEnabled) {
+      // Fall back to initial data when realtime is disabled
+      setDisplayTrades(initialTrades);
+    }
+  }, [trades, realtimeEnabled, initialTrades]);
+
   const columns = getTradesTableColumns();
 
   const table = useReactTable<TradeModelWithOthers>({
-    data,
+    data: displayTrades,
     columns: columns as ColumnDef<TradeModelWithOthers, unknown>[],
     state: { sorting, columnFilters },
     onColumnFiltersChange: setColumnFilters,
@@ -58,7 +82,10 @@ const TradesTableCollection = ({ data, auth }: Props) => {
     <Card>
       <CardHeader className="flex items-center justify-between">
         <div className="space-y-2">
-          <CardTitle>Trades</CardTitle>
+          <CardTitle className="flex items-center gap-4">
+            <span>Trades</span>
+            {realtimeEnabled && <RealtimeEnabled isConnected={isConnected} />}
+          </CardTitle>
           <CardDescription>All registered education trades</CardDescription>
         </div>
         <CreateTradeDialog auth={auth} />
@@ -84,7 +111,7 @@ const TradesTableCollection = ({ data, auth }: Props) => {
         </div>
 
         {/* Data table */}
-        <CommonDataTable table={table} columns={columns} data={data} />
+        <CommonDataTable table={table} columns={columns} data={displayTrades} />
       </CardContent>
     </Card>
   );

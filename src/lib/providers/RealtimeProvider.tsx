@@ -2,6 +2,7 @@
 
 import { useRealtimeImproved } from "@/lib/hooks/useRealtimeImproved";
 import { WithId } from "@/lib/mode/with-id";
+import { cn } from "@/lib/utils";
 import { createContext, useContext, useEffect, useReducer } from "react";
 
 type RealtimeAction<T extends WithId> =
@@ -75,7 +76,9 @@ export function RealtimeProvider<T extends WithId>({
   channel,
   initialData,
   children,
+  className,
 }: {
+  className?: string;
   channel: string;
   initialData: T[];
   children: React.ReactNode;
@@ -148,7 +151,7 @@ export function RealtimeProvider<T extends WithId>({
         deleteItem,
       }}
     >
-      {children}
+      <section className={cn("space-y-4", className)}>{children}</section>
     </RealtimeContext.Provider>
   );
 }

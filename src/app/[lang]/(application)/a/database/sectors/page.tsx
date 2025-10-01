@@ -5,7 +5,13 @@ import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
 import { SectorModel } from "@/lib/schema/admin/sectorSchema";
 import { authUser } from "@/lib/utils/auth-user";
 import apiRequest from "@/service/api-client";
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "Sectors - collection",
+  description: "All sectors in database",
+};
 
 const SectorsPage = async () => {
   const auth = await authUser();
@@ -23,10 +29,8 @@ const SectorsPage = async () => {
 
   return (
     <RealtimeProvider<SectorModel> channel="sector" initialData={request.data}>
-      <div className="space-y-4">
-        <SectorCollectionDetails initialSectors={request.data} />
-        <SectorsTableCollection auth={auth} />
-      </div>
+      <SectorCollectionDetails initialSectors={request.data} />
+      <SectorsTableCollection realtimeEnabled auth={auth} />
     </RealtimeProvider>
   );
 };

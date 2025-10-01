@@ -1,17 +1,24 @@
-import MainClassCollectionDetails from "@/components/page/admin/main-class/main-class-collection-ditails";
-import MainClassesTableCollection from "@/components/page/admin/main-class/main-class-table-collection";
+import SubjectCollectionDetails from "@/components/page/admin/main-subject/main-subject-collection-detas";
+import MainSubjectsTableCollection from "@/components/page/admin/main-subject/main-subjects-table-collection";
 import ErrorPage from "@/components/page/error-page";
-import { mainClassModelWithTrade } from "@/lib/schema/admin/main-classes-schema";
+import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
+import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
 import { authUser } from "@/lib/utils/auth-user";
 import apiRequest from "@/service/api-client";
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "main classes - collection",
+  description: "All main subject in database",
+};
 
 const MainSubjectsPage = async () => {
   const auth = await authUser();
   if (!auth) redirect("/auth/login");
-  const request = await apiRequest<void, mainClassModelWithTrade[]>(
+  const request = await apiRequest<void, MainSubject[]>(
     "get",
-    "/main-classes/trade",
+    "/main-subjects",
     undefined,
     { token: auth.token },
   );
@@ -19,10 +26,15 @@ const MainSubjectsPage = async () => {
     return <ErrorPage message={request.message} error={request.error} />;
 
   return (
-    <div className="space-y-4">
-      <MainClassCollectionDetails data={request.data} />
-      <MainClassesTableCollection data={request.data} auth={auth} />
-    </div>
+    <RealtimeProvider<MainSubject>
+      channel="main_subject"
+      initialData={request.data}
+    >
+      <div className="space-y-8">
+        <SubjectCollectionDetails initialSubjects={request.data} />
+        <MainSubjectsTableCollection realtimeEnabled auth={auth} />
+      </div>
+    </RealtimeProvider>
   );
 };
 

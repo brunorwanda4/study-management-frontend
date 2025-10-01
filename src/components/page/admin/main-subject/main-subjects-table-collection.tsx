@@ -3,8 +3,8 @@
 import RealtimeEnabled from "@/components/common/realtime-enabled";
 import { CommonDataTable } from "@/components/common/table/common-data-table";
 import TableFilter from "@/components/common/table/table-filter";
-import CreateMainClassDialog from "@/components/page/admin/main-class/create-main-class-dialog";
-import { getMainClassesTableColumns } from "@/components/page/admin/main-class/getMainClassesTableColumns";
+import { getMainSubjectsTableColumns } from "@/components/page/admin/main-subject/getMainSubjectsTableColumns";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -13,7 +13,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
-import { mainClassModelWithTrade } from "@/lib/schema/admin/main-classes-schema";
+import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
+import { cn } from "@/lib/utils";
 import { AuthUserResult } from "@/lib/utils/auth-user";
 import {
   ColumnDef,
@@ -24,49 +25,30 @@ import {
   getFacetedUniqueValues,
   getFilteredRowModel,
   getSortedRowModel,
-  SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useState } from "react";
+import { BsPlus } from "react-icons/bs";
 
 interface Props {
   auth: AuthUserResult;
-  initialClasses?: mainClassModelWithTrade[];
   realtimeEnabled?: boolean;
 }
 
-const MainClassesTableCollection = ({
+const MainSubjectsTableCollection = ({
   auth,
-  initialClasses = [],
   realtimeEnabled = false,
 }: Props) => {
-  const { data: classes, isConnected } =
-    useRealtimeData<mainClassModelWithTrade>();
-  const [displayClasses, setDisplayClasses] =
-    useState<mainClassModelWithTrade[]>(initialClasses);
+  const { data: mainSubjects, isConnected } = useRealtimeData<MainSubject>();
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [sorting, setSorting] = useState<SortingState>([
-    { id: "name", desc: false },
-  ]);
 
-  // Sync with realtime data when available
-  useEffect(() => {
-    if (realtimeEnabled && classes) {
-      // Always use realtime data when realtime is enabled, even if empty array
-      setDisplayClasses(classes);
-    } else if (!realtimeEnabled) {
-      // Fall back to initial data when realtime is disabled
-      setDisplayClasses(initialClasses);
-    }
-  }, [classes, realtimeEnabled, initialClasses]);
+  const columns = getMainSubjectsTableColumns();
 
-  const columns = getMainClassesTableColumns();
-
-  const table = useReactTable<mainClassModelWithTrade>({
-    data: displayClasses,
-    columns: columns as ColumnDef<mainClassModelWithTrade, unknown>[],
-    state: { sorting, columnFilters },
+  const table = useReactTable<MainSubject>({
+    data: mainSubjects || [],
+    columns: columns as ColumnDef<MainSubject, unknown>[],
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -74,7 +56,6 @@ const MainClassesTableCollection = ({
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
-    onSortingChange: setSorting,
   });
 
   return (
@@ -82,24 +63,42 @@ const MainClassesTableCollection = ({
       <CardHeader className="flex items-center justify-between">
         <div className="space-y-2">
           <CardTitle className="flex items-center gap-4">
-            <span>Main Classes</span>
+            <span> Main Subjects</span>
             {realtimeEnabled && <RealtimeEnabled isConnected={isConnected} />}
           </CardTitle>
-          <CardDescription>All registered main classes</CardDescription>
+          <CardDescription>
+            All registered academic subjects
+            {realtimeEnabled && (
+              <div className="mt-1 flex items-center gap-2"></div>
+            )}
+          </CardDescription>
         </div>
-        <CreateMainClassDialog auth={auth} />
+        <Link
+          href={`/a/database/main_subjects/create`}
+          className={cn(buttonVariants({ library: "daisy", variant: "info" }))}
+        >
+          <BsPlus /> Add new main subject
+        </Link>
+        {/* <CreateMainSubjectDialog auth={auth} /> */}
       </CardHeader>
+
       <CardContent className="space-y-4">
-        {/* Example filters */}
+        {/* Filters */}
         <div className="flex flex-wrap gap-3">
           <div className="w-44">
             <TableFilter column={table.getColumn("name")!} />
           </div>
           <div className="w-36">
-            <TableFilter column={table.getColumn("username")!} />
+            <TableFilter column={table.getColumn("code")!} />
           </div>
-          <div className="w-40">
-            <TableFilter column={table.getColumn("trade")!} />
+          <div className="w-36">
+            <TableFilter column={table.getColumn("category")!} />
+          </div>
+          <div className="w-36">
+            <TableFilter column={table.getColumn("level")!} />
+          </div>
+          <div className="w-36">
+            <TableFilter column={table.getColumn("is_active")!} />
           </div>
         </div>
 
@@ -107,11 +106,11 @@ const MainClassesTableCollection = ({
         <CommonDataTable
           table={table}
           columns={columns}
-          data={displayClasses}
+          data={mainSubjects || []}
         />
       </CardContent>
     </Card>
   );
 };
 
-export default MainClassesTableCollection;
+export default MainSubjectsTableCollection;

@@ -1,26 +1,9 @@
-export interface TradeModelGet {
-  id: string;
-  name: string;
-  username?: string;
-  description?: string;
-  sector?: string;
-  class_rooms ?: number,
-  create_on: string;
-  updated_on?: string;
-}
+import { TradeModelWithOthers } from "@/lib/schema/admin/tradeSchema";
 
-export interface TradeModelNew {
-  name: string;
-  username?: string;
-  sector?: string;
-  description?: string;
-  class_rooms ?: number,
-}
-
-export interface TradeModelPut {
-  name?: string;
-  username?: string;
-  description?: string;
-  sector?: string;
-  class_rooms ?: number,
-}
+export type TradeWithNonNullableId = Omit<
+  TradeModelWithOthers,
+  "id" | "_id"
+> & {
+  id?: string;
+  _id?: string;
+};

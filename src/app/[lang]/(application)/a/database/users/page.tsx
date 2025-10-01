@@ -5,7 +5,13 @@ import { UserStats } from "@/lib/types/User-stats";
 import { UserModel } from "@/lib/types/userModel";
 import { authUser } from "@/lib/utils/auth-user";
 import apiRequest from "@/service/api-client";
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "Users - collection",
+  description: "All users in database",
+};
 
 const UserPageCollection = async () => {
   const auth = await authUser();

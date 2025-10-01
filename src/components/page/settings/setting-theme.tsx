@@ -6,25 +6,25 @@ const SettingTheme = () => {
   const themes = [
     "light",
     "cupcake",
-    "cmyk",
     "acid",
     "winter",
     "valentine",
-    "synthwave",
+    "dim",
     "business",
     "dark",
-    "night",
     "forest",
+    "night",
+    "synthwave",
     "black",
   ];
   return (
-    <div className=" basic-card">
-      <div className=" space-y-2">
-        <div className="  flex  justify-between w-full">
-          <h2 className=" basic-title">Application Theme</h2>
-          <div className=" space-x-2 flex items-center">
-            <BsPalette className=" text-primary"/>
-            <span className=" text-primary"> {theme}</span>
+    <div className="basic-card">
+      <div className="space-y-2">
+        <div className="flex w-full justify-between">
+          <h2 className="basic-title">Application Theme</h2>
+          <div className="flex items-center space-x-2">
+            <BsPalette className="text-primary" />
+            <span className="text-primary"> {theme}</span>
           </div>
         </div>
         <p>
@@ -32,7 +32,7 @@ const SettingTheme = () => {
           application will change theme
         </p>
       </div>
-      <div className=" mt-4 overflow-x-auto grid grid-cols-4 gap-2 w-full max-w-auto max-w-max ">
+      <div className="max-w-auto mt-4 grid w-full max-w-max grid-cols-4 gap-2 overflow-x-auto">
         {/* dark */}
         {themes.map((items) => {
           return (
@@ -40,12 +40,12 @@ const SettingTheme = () => {
               key={items}
               onClick={() => setTheme(items)}
               data-theme={items}
-              className="grid grid-cols-5 grid-rows-3 rounded-md max-w-28 cursor-pointer overflow-hidden"
+              className="grid max-w-28 cursor-pointer grid-cols-5 grid-rows-3 overflow-hidden rounded-md"
             >
               <div className="bg-base-200 col-start-1 row-span-2 row-start-1"></div>{" "}
               <div className="bg-base-300 bottom-0 col-start-1 row-start-3"></div>{" "}
-              <div className="bg-base-100 col-span-4 col-start-2 row-span-3 row-start-1 flex flex-col gap-1 p-2 relative">
-                <div className="font-bold capitalize line-clamp-1">{items}</div>{" "}
+              <div className="bg-base-100 relative col-span-4 col-start-2 row-span-3 row-start-1 flex flex-col gap-1 p-2">
+                <div className="line-clamp-1 font-bold capitalize">{items}</div>{" "}
                 <div className="flex flex-wrap gap-1">
                   <div className="bg-primary flex aspect-square w-5 items-center justify-center rounded lg:w-6">
                     <div className="text-primary-content text-sm font-bold">

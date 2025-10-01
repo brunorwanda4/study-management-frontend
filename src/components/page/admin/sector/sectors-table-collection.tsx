@@ -1,5 +1,6 @@
 "use client";
 
+import RealtimeEnabled from "@/components/common/realtime-enabled";
 import { CommonDataTable } from "@/components/common/table/common-data-table";
 import TableFilter from "@/components/common/table/table-filter";
 import CreateSectorDialog from "@/components/page/admin/sector/CreateSectorDialog";
@@ -61,22 +62,11 @@ const SectorsTableCollection = ({ auth, realtimeEnabled = false }: Props) => {
     <Card>
       <CardHeader className="flex items-center justify-between">
         <div className="space-y-2">
-          <CardTitle>Sectors</CardTitle>
-          <CardDescription>
-            All registered education sectors
-            {realtimeEnabled && (
-              <div className="mt-1 flex items-center gap-2">
-                <div
-                  className={`h-2 w-2 rounded-full ${
-                    isConnected ? "animate-pulse bg-green-500" : "bg-yellow-500"
-                  }`}
-                />
-                <span className="text-muted-foreground text-xs">
-                  {isConnected ? "Live updates connected" : "Connecting..."}
-                </span>
-              </div>
-            )}
-          </CardDescription>
+          <CardTitle className="flex items-center gap-4">
+            <span>Sectors</span>
+            {realtimeEnabled && <RealtimeEnabled isConnected={isConnected} />}
+          </CardTitle>
+          <CardDescription>All registered education sectors</CardDescription>
         </div>
 
         <CreateSectorDialog auth={auth} />

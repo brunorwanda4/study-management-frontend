@@ -3,32 +3,58 @@
 import DataDetailsCard, {
   dataDetailsCardProps,
 } from "@/components/common/cards/data-details-card";
-import { TradeModelWithOthers } from "@/lib/schema/admin/tradeSchema"; // adjust path if needed
+import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
+import { TradeModelWithOthers } from "@/lib/schema/admin/tradeSchema";
+import { TradeWithNonNullableId } from "@/lib/types/tradeModel";
+import { useEffect, useState } from "react";
 
-const TradeCollectionDetails = ({ data }: { data: TradeModelWithOthers[] }) => {
-  // 1. Total trades
-  const totalTrades = data.length;
+interface Props {
+  initialTrades?: TradeWithNonNullableId[];
+}
 
-  // 2. Group by type (Senior, Primary, Level, Nursing)
-  const typeCount: Record<string, number> = {};
-  data.forEach((trade) => {
-    typeCount[trade.type] = (typeCount[trade.type] || 0) + 1;
-  });
+const TradeCollectionDetails = ({ initialTrades = [] }: Props) => {
+  const { data: trades } = useRealtimeData<TradeWithNonNullableId>();
+  const [displayTrades, setDisplayTrades] =
+    useState<TradeModelWithOthers[]>(initialTrades);
 
-  // 3. Group by sector (if available)
-  const sectorCount: Record<string, number> = {};
-  data.forEach((trade) => {
-    const sectorName = trade.sector?.name || "Unassigned";
-    sectorCount[sectorName] = (sectorCount[sectorName] || 0) + 1;
-  });
+  // Sync with realtime data when available
+  useEffect(() => {
+    if (trades && trades.length > 0) {
+      setDisplayTrades(trades);
+    }
+  }, [trades]);
 
-  // 4. Disabled vs Active
-  const statusCount = {
-    Disabled: data.filter((t) => t.disable).length,
-    Active: data.filter((t) => !t.disable).length,
-  };
+  // --- Aggregations ---
+  const totalTrades = displayTrades.length;
 
-  const components: dataDetailsCardProps[] = [
+  const typeCount = displayTrades.reduce<Record<string, number>>(
+    (acc, trade) => {
+      acc[trade.type] = (acc[trade.type] || 0) + 1;
+      return acc;
+    },
+    {},
+  );
+
+  const sectorCount = displayTrades.reduce<Record<string, number>>(
+    (acc, trade) => {
+      const sectorName = trade.sector?.name || "Unassigned";
+      acc[sectorName] = (acc[sectorName] || 0) + 1;
+      return acc;
+    },
+    {},
+  );
+
+  const statusCount = displayTrades.reduce<Record<string, number>>(
+    (acc, trade) => {
+      const status = trade.disable ? "Disabled" : "Active";
+      acc[status] = (acc[status] || 0) + 1;
+      return acc;
+    },
+    {},
+  );
+
+  // --- Cards configuration ---
+  const cards: dataDetailsCardProps[] = [
     {
       title: "Total Trades",
       size: totalTrades,
@@ -38,10 +64,7 @@ const TradeCollectionDetails = ({ data }: { data: TradeModelWithOthers[] }) => {
       title: "By Type",
       size: Object.keys(typeCount).length,
       icon: "/icons/application.png",
-      items: Object.entries(typeCount).map(([key, value]) => ({
-        key,
-        value,
-      })),
+      items: Object.entries(typeCount).map(([key, value]) => ({ key, value })),
     },
     {
       title: "By Sector",
@@ -64,17 +87,17 @@ const TradeCollectionDetails = ({ data }: { data: TradeModelWithOthers[] }) => {
   ];
 
   return (
-    <main className="grid grid-cols-4 gap-4">
-      {components.map((item, i) => (
+    <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {cards.map((card, index) => (
         <DataDetailsCard
-          key={i}
-          title={item.title}
-          icon={item.icon}
-          size={item.size}
-          items={item.items}
+          key={index}
+          title={card.title}
+          icon={card.icon}
+          size={card.size}
+          items={card.items}
         />
       ))}
-    </main>
+    </section>
   );
 };
 

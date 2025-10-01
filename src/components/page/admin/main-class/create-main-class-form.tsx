@@ -191,7 +191,7 @@ const CreateMainClassForm = ({ auth }: Props) => {
                         value: String(t.id ?? t._id),
                         label: (
                           <div className="flex w-full justify-between">
-                            <span>{t.name}</span>
+                            <span>{t.name}</span>{" "}
                             <span>
                               {t.class_min} - {t.class_max}
                             </span>

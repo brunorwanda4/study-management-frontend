@@ -69,7 +69,7 @@ export async function refreshAuthToken(
       "post",
       "/auth/refresh",
       undefined,
-      oldToken,
+      { token: oldToken },
     );
 
     if (!request.data) {
