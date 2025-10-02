@@ -2,25 +2,27 @@ import {
   subjectAuths,
   SubjectCategories,
   SubjectLevels,
+  SubjectTypes,
 } from "@/lib/const/subject-const";
 import z from "zod";
+
+// Subject Category
 export const SubjectCategorySchema = z
-  .enum([...SubjectCategories] as [string, ...string[]])
+  .enum(SubjectCategories)
   .or(z.string())
   .transform((val) => val as any);
 
 export type SubjectCategory = z.infer<typeof SubjectCategorySchema>;
 
-export const SubjectLevelSchema = z
-  .enum([...SubjectLevels] as [string, ...string[]])
-  .or(z.string())
-  .transform((val) => val as any);
+// Subject Level
+export const SubjectLevelSchema = z.enum(SubjectLevels);
 
 export type SubjectLevel = z.infer<typeof SubjectLevelSchema>;
 
-export const subjectAuthSchema = z.enum([...subjectAuths] as [
-  string,
-  ...string[],
-]);
+// Subject Auth
+export const SubjectAuthSchema = z.enum(subjectAuths);
+export type SubjectAuth = z.infer<typeof SubjectAuthSchema>;
 
-export type subjectAuth = z.infer<typeof subjectAuthSchema>;
+// Subject Type
+export const SubjectTypeSchema = z.enum(SubjectTypes);
+export type SubjectType = z.infer<typeof SubjectTypeSchema>;

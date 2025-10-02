@@ -1,5 +1,5 @@
 import {
-  subjectAuthSchema,
+  SubjectAuthSchema,
   SubjectCategorySchema,
   SubjectLevelSchema,
 } from "@/lib/schema/admin/subjects/subject-category";
@@ -75,7 +75,7 @@ export const CreateMainSubjectFormSchema = z
             .string()
             .min(1, "Contributor name is required")
             .max(100, "Name must be less than 100 characters"),
-          role: subjectAuthSchema.optional(),
+          role: SubjectAuthSchema.optional(),
         }),
       )
       .default([]),

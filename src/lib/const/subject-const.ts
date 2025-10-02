@@ -1,4 +1,4 @@
-export const SubjectLevels = ["Beginner", "Intermediate", "Advanced"];
+export const SubjectLevels = ["Beginner", "Intermediate", "Advanced"] as const;
 export const SubjectCategories = [
   "Science",
   "Technology",
@@ -9,6 +9,14 @@ export const SubjectCategories = [
   "Arts",
   "TVET",
   "Other",
-];
+] as const;
 
-export const subjectAuths = ["Author", "Reviewer"];
+export const subjectAuths = ["Author", "Reviewer"] as const;
+
+export const SubjectTypes = ["MainSubject", "ClassSubject"] as const;
+
+export const DefaultCompetencyBlock = {
+  knowledge: [],
+  skills: [],
+  attitudes: [],
+};

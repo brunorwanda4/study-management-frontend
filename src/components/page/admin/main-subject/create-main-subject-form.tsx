@@ -2,7 +2,13 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircle, Plus, Trash2 } from "lucide-react";
-import { useEffect, useState, useTransition } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+  useTransition,
+} from "react";
 import { useFieldArray, useForm, type Resolver } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
@@ -10,6 +16,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -38,14 +45,14 @@ import apiRequest from "@/service/api-client";
 
 interface Props {
   auth: AuthUserResult;
+  setSubject: Dispatch<SetStateAction<MainSubject | undefined>>;
 }
 
-const CreateMainSubjectForm = ({ auth }: Props) => {
+const CreateMainSubjectForm = ({ auth, setSubject }: Props) => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
   const { showToast } = useToast();
-  const [categories, setCategories] = useState<string[]>(SubjectCategories);
 
   // Local state for main classes
   const [mainClasses, setMainClasses] = useState<MainClassModel[]>([]);
@@ -93,7 +100,7 @@ const CreateMainSubjectForm = ({ auth }: Props) => {
     name: "",
     code: "",
     description: "",
-    level: "",
+    level: "Beginner",
     estimated_hours: 0,
     credits: 0,
     category: "Science", // Make sure this matches the enum values exactly
@@ -138,11 +145,10 @@ const CreateMainSubjectForm = ({ auth }: Props) => {
           ending_year: values.ending_year
             ? new Date(values.ending_year).toISOString()
             : undefined,
+          created_by: auth.user.id,
         };
 
-        console.log("🥴🥴🥴", values);
-
-        const request = await apiRequest<typeof apiData, any>(
+        const request = await apiRequest<typeof apiData, MainSubject>(
           "post",
           "/main-subjects",
           apiData,
@@ -162,7 +168,8 @@ const CreateMainSubjectForm = ({ auth }: Props) => {
             description: `Created: ${request.data.name}`,
             type: "success",
           });
-          form.reset(defaultValues);
+          setSubject(request.data);
+          // form.reset(defaultValues);
         }
       } catch (err) {
         setError(`Unexpected error occurred [${err}]. Please try again.`);
@@ -336,14 +343,6 @@ const CreateMainSubjectForm = ({ auth }: Props) => {
                         loadingOptions ? "Loading sectors..." : "Select sector"
                       }
                       disabled={isPending || loadingOptions}
-                      onCreateOption={(newVal) => {
-                        setCategories((prev) =>
-                          prev.includes(newVal) ? prev : [...prev, newVal],
-                        );
-
-                        // Optionally: persist to backend here
-                        // fetch("/api/categories", { method: "POST", body: JSON.stringify({ value: newVal }) })
-                      }}
                     />
                   </FormControl>
 
@@ -465,9 +464,9 @@ const CreateMainSubjectForm = ({ auth }: Props) => {
                   </FormControl>
                   <div className="space-y-1 leading-none">
                     <FormLabel>Active Subject</FormLabel>
-                    <p className="text-muted-foreground text-sm">
+                    <FormDescription className="text-muted-foreground text-sm">
                       This subject will be available for use in classes
-                    </p>
+                    </FormDescription>
                   </div>
                 </FormItem>
               )}
@@ -482,7 +481,7 @@ const CreateMainSubjectForm = ({ auth }: Props) => {
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => append({ name: "", role: "" })}
+              onClick={() => append({ name: "", role: "Reviewer" })}
               disabled={isPending}
             >
               <Plus className="mr-2 h-4 w-4" />
