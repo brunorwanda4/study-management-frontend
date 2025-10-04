@@ -15,8 +15,7 @@ export const subjectAuths = ["Author", "Reviewer"] as const;
 
 export const SubjectTypes = ["MainSubject", "ClassSubject"] as const;
 
-export const DefaultCompetencyBlock = {
-  knowledge: [],
-  skills: [],
-  attitudes: [],
-};
+export const SubjectProgressTrackingConfigTypes = [
+  "MainSubject",
+  "ClassSubject",
+] as const;

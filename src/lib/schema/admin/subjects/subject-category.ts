@@ -2,6 +2,7 @@ import {
   subjectAuths,
   SubjectCategories,
   SubjectLevels,
+  SubjectProgressTrackingConfigTypes,
   SubjectTypes,
 } from "@/lib/const/subject-const";
 import z from "zod";
@@ -26,3 +27,11 @@ export type SubjectAuth = z.infer<typeof SubjectAuthSchema>;
 // Subject Type
 export const SubjectTypeSchema = z.enum(SubjectTypes);
 export type SubjectType = z.infer<typeof SubjectTypeSchema>;
+
+export const SubjectProgressTrackingConfigTypeSchema = z.enum(
+  SubjectProgressTrackingConfigTypes,
+);
+
+export type SubjectProgressTrackingConfigType = z.infer<
+  typeof SubjectProgressTrackingConfigTypeSchema
+>;

@@ -63,7 +63,7 @@ export function GenericStepper<T extends string>({
               <div className="space-y-0.5 px-2">
                 <StepperTitle>{title}</StepperTitle>
                 <StepperDescription className="max-sm:hidden">
-                  {description} ({completedSteps.length})
+                  {description}
                 </StepperDescription>
               </div>
             </StepperTrigger>
