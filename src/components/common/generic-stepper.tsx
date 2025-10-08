@@ -33,12 +33,13 @@ export function GenericStepper<T extends string>({
 
         const isClickable =
           step === currentStep ||
-          completedSteps.includes(step) || // allow past completed
-          step === lastCompletedStep + 1; // allow the next step
+          completedSteps.includes(step) ||
+          step === lastCompletedStep + 1;
 
-        // ✅ Ensure subject must exist after step 1
-        const allowStep =
-          step === 1 || idParam ? isClickable : step === currentStep;
+        const allowStep = step === 1 || idParam ? isClickable : false;
+
+        const isCompleted = completedSteps.includes(step);
+        const isActive = step === currentStep;
 
         return (
           <StepperItem

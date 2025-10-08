@@ -1,7 +1,9 @@
 import {
   subjectAuths,
   SubjectCategories,
+  SubjectLearningMaterialRoles,
   SubjectLevels,
+  SubjectMaterialTypes,
   SubjectProgressTrackingConfigTypes,
   SubjectTypes,
 } from "@/lib/const/subject-const";
@@ -35,3 +37,13 @@ export const SubjectProgressTrackingConfigTypeSchema = z.enum(
 export type SubjectProgressTrackingConfigType = z.infer<
   typeof SubjectProgressTrackingConfigTypeSchema
 >;
+
+export const SubjectLearningMaterialRoleEnum = z.enum(
+  SubjectLearningMaterialRoles,
+);
+export type SubjectLearningMaterialRole = z.infer<
+  typeof SubjectLearningMaterialRoleEnum
+>;
+
+export const SubjectMaterialTypeEnum = z.enum(SubjectMaterialTypes);
+export type SubjectMaterialType = z.infer<typeof SubjectMaterialTypeEnum>;

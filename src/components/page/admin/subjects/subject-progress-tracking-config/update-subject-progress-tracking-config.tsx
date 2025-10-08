@@ -119,7 +119,8 @@ const UpdateSubjectProgressTrackingConfigForm = ({
           });
 
           if (!!setStep) setStep(4, config?.id || config?._id);
-          if (!!markStepCompleted) markStepCompleted(2);
+          if (!!markStepCompleted)
+            markStepCompleted(2, undefined, config?.id || config?._id);
         }
       } catch (err) {
         setError(`Unexpected error occurred [${err}]. Please try again.`);

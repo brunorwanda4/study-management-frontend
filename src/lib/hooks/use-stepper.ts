@@ -10,6 +10,16 @@ export type Step<T extends string = string> = {
   description: string;
 };
 
+/**
+ * useStepper – A persistent, URL-synced step manager.
+ *
+ * ✅ Syncs with localStorage
+ * ✅ Syncs with URL (?step=1&id=xxx)
+ * ✅ Restores state after refresh
+ * ✅ Detects when ready (isReady)
+ * ✅ Supports backward navigation safely
+ * ✅ Resets when ID changes
+ */
 export function useStepper<T extends string>(
   steps: readonly Step<T>[],
   storageKey?: string,
@@ -17,104 +27,127 @@ export function useStepper<T extends string>(
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  // --- STATE ---
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [idParam, setIdParam] = useState<string | null>(null);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
+  const [isReady, setIsReady] = useState(false);
 
-  // Initialize from localStorage or URL
+  // --- INITIALIZE from URL or storage ---
   useEffect(() => {
     if (typeof window === "undefined") return;
+
+    const urlStep = parseInt(searchParams.get("step") || "1", 10);
+    const urlId = searchParams.get("id");
 
     let storedCompleted: number[] = [];
     let storedId: string | null = null;
 
     if (storageKey) {
-      const stored = localStorage.getItem(storageKey);
-      if (stored) {
-        try {
+      try {
+        const stored = localStorage.getItem(storageKey);
+        if (stored) {
           const parsed = JSON.parse(stored);
           storedCompleted = parsed.completedSteps || [];
           storedId = parsed.id || null;
-        } catch {
-          // ignore corrupted storage
         }
+      } catch {
+        // ignore corrupted storage
       }
     }
 
-    const urlStep = parseInt(searchParams.get("step") || "", 10);
-    const urlId = searchParams.get("id");
+    // If a different ID is in the URL → reset progress
+    if (urlId && urlId !== storedId) {
+      setCompletedSteps([]);
+      setCurrentStep(urlStep <= steps.length ? urlStep : 1);
+      setIdParam(urlId);
+      setIsReady(true);
+      return;
+    }
 
-    setCompletedSteps(storedCompleted);
-    setCurrentStep(
-      urlStep && urlStep <= steps.length
-        ? urlStep
-        : storedCompleted.length
-          ? Math.max(...storedCompleted) + 1
-          : 1,
-    );
+    // Use URL step if valid, otherwise fallback to stored progress
+    if (urlStep && urlStep <= steps.length) {
+      setCurrentStep(urlStep);
+    } else if (storedCompleted.length) {
+      setCurrentStep(Math.max(...storedCompleted) + 1);
+    } else {
+      setCurrentStep(1);
+    }
+
     setIdParam(urlId || storedId || null);
+    setCompletedSteps(storedCompleted);
+    setIsReady(true);
   }, [storageKey, searchParams, steps.length]);
 
-  // Save to localStorage
+  // --- SAVE to localStorage ---
   useEffect(() => {
-    if (storageKey) {
-      localStorage.setItem(
-        storageKey,
-        JSON.stringify({
-          completedSteps,
-          id: idParam,
-        }),
-      );
-    }
-  }, [completedSteps, idParam, storageKey]);
+    if (!isReady || !storageKey || typeof window === "undefined") return;
+    localStorage.setItem(
+      storageKey,
+      JSON.stringify({
+        completedSteps,
+        id: idParam,
+      }),
+    );
+  }, [completedSteps, idParam, storageKey, isReady]);
 
-  // Sync with URL
+  // --- SYNC URL with current state ---
   useEffect(() => {
+    if (!isReady) return;
     const params = new URLSearchParams(searchParams.toString());
     params.set("step", String(currentStep));
     if (idParam) params.set("id", idParam);
     else params.delete("id");
-    router.replace(`?${params.toString()}`);
-  }, [currentStep, idParam, router, searchParams]);
 
-  // ✅ Set step (forward only if allowed, always allow backward)
+    router.replace(`?${params.toString()}`);
+  }, [currentStep, idParam, router, searchParams, isReady]);
+
+  // --- STEP CONTROL FUNCTIONS ---
   function setStep(step: number, id?: string) {
     const maxCompleted = completedSteps.length
       ? Math.max(...completedSteps)
       : 0;
 
+    // Going backward → always allow (no completed change)
     if (step < currentStep) {
-      // 🔙 going back: just allow if step was completed (do not touch completedSteps)
-      if (completedSteps.includes(step)) {
-        setCurrentStep(step);
-        if (id) setIdParam(id);
-      }
-    } else {
-      // ⏩ going forward: only allow if previous step is completed
-      if (step <= maxCompleted + 1) {
-        setCurrentStep(step);
-        if (id) setIdParam(id);
-      }
+      setCurrentStep(step);
+      if (id) setIdParam(id);
+      return;
     }
-  }
 
-  // ✅ Mark step completed and optionally auto-advance
-  function markStepCompleted(step: number, autoNext = true, id?: string) {
-    if (!completedSteps.includes(step)) {
-      setCompletedSteps((prev) => [...prev, step]);
-    }
-    if (autoNext && step < steps.length) {
-      setCurrentStep(step + 1);
+    // Going forward → only allow one ahead of completed
+    if (step <= maxCompleted + 1 && step <= steps.length) {
+      setCurrentStep(step);
       if (id) setIdParam(id);
     }
   }
 
+  function markStepCompleted(step: number, autoNext = true, id?: string) {
+    setCompletedSteps((prev) => {
+      const updated = Array.from(new Set([...prev, step]));
+      // If last step, mark all steps as completed
+      if (step === steps.length) {
+        const allSteps = steps.map((s) => s.step);
+        return Array.from(new Set([...updated, ...allSteps]));
+      }
+      return updated;
+    });
+
+    if (autoNext && step < steps.length) {
+      setCurrentStep(step + 1);
+    }
+
+    if (id) setIdParam(id);
+  }
+
   function resetStepper() {
     setCurrentStep(1);
-    setIdParam(null);
     setCompletedSteps([]);
+    setIdParam(null);
+    setIsReady(false);
     if (storageKey) localStorage.removeItem(storageKey);
     router.push(`?step=1`);
+    setTimeout(() => setIsReady(true), 100); // re-enable after reset
   }
 
   return {
@@ -125,5 +158,6 @@ export function useStepper<T extends string>(
     setStep,
     markStepCompleted,
     resetStepper,
+    isReady, // ✅ new flag to ensure hook initialized
   };
 }

@@ -28,28 +28,35 @@ import { Textarea } from "@/components/ui/textarea";
 import { FormError, FormSuccess } from "@/components/common/form-message";
 import SelectWithSearch from "@/components/common/select-with-search";
 import TagField from "@/components/common/tag-field";
+import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import MultipleSelector from "@/components/ui/multiselect";
 import { SubjectTypes } from "@/lib/const/subject-const";
 import { useToast } from "@/lib/context/toast/ToastContext";
 import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
-import {
-  CreateLearningOutcomeFormData,
-  CreateLearningOutcomeFormSchema,
-} from "@/lib/schema/admin/subjects/subject-learning-outcome-schema/create-subject-learning-outcome-schema";
 import { LearningOutcome } from "@/lib/schema/admin/subjects/subject-learning-outcome-schema/learning-outcome-schema";
+import {
+  UpdateLearningOutcomeFormData,
+  UpdateLearningOutcomeFormSchema,
+} from "@/lib/schema/admin/subjects/subject-learning-outcome-schema/update-learning-outcome-schema";
 import { AuthUserResult } from "@/lib/utils/auth-user";
 import apiRequest from "@/service/api-client";
 
 interface Props {
   auth: AuthUserResult;
-  mainSubject: MainSubject; // Pass main subjects as prop or fetch internally
+  mainSubject: MainSubject;
+  learningOutcome: LearningOutcome; // The existing learning outcome to edit
   setLearningOutcome?: Dispatch<SetStateAction<LearningOutcome | undefined>>;
+  isDialog?: boolean;
+  onSuccess?: () => void;
 }
 
-const CreateLearningOutcomeForm = ({
+const UpdateLearningOutcomeForm = ({
   auth,
   mainSubject,
+  learningOutcome,
+  isDialog = true,
   setLearningOutcome,
+  onSuccess,
 }: Props) => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
@@ -67,9 +74,9 @@ const CreateLearningOutcomeForm = ({
         const [outcomes, mainSubjects] = await Promise.all([
           apiRequest<void, LearningOutcome[]>(
             "get",
-            "/learning-outcomes",
+            `/learning-outcomes/subject/${mainSubject._id || mainSubject.id}`,
             undefined,
-            { token: auth.token },
+            { token: auth.token, realtime: true },
           ),
           apiRequest<void, MainSubject[]>("get", "/main-subjects", undefined, {
             token: auth.token,
@@ -95,55 +102,70 @@ const CreateLearningOutcomeForm = ({
     };
 
     fetchExistingOutcomes();
-  }, [auth.token]);
+  }, [auth.token, mainSubject]);
 
-  // Default values matching the create schema
-  const defaultValues: CreateLearningOutcomeFormData = {
-    subject_id: mainSubject ? mainSubject.id || mainSubject._id : "",
-    title: "",
-    description: "",
-    order: 1,
-    estimated_hours: 0,
-    key_competencies: {
+  // Transform prerequisites from string array to MultipleSelector format
+  const transformPrerequisites = (prereqIds: string[] = []) => {
+    return prereqIds.map((prereqId) => {
+      const outcome = existingOutcomes.find(
+        (o) => o.id === prereqId || o._id === prereqId,
+      );
+      return {
+        value: prereqId,
+        label: outcome
+          ? `${outcome.title} (Order: ${outcome.order})`
+          : prereqId,
+      };
+    });
+  };
+
+  // Default values from existing learning outcome
+  const defaultValues: UpdateLearningOutcomeFormData = {
+    subject_id:
+      learningOutcome.subject_id || mainSubject.id || mainSubject._id || "",
+    title: learningOutcome.title || "",
+    description: learningOutcome.description || "",
+    order: learningOutcome.order || 1,
+    estimated_hours: learningOutcome.estimated_hours || 0,
+    key_competencies: learningOutcome.key_competencies || {
       knowledge: [],
       skills: [],
       attitudes: [],
     },
-    assessment_criteria: [],
-    role: mainSubject ? "MainSubject" : "MainSubject", // Default role
-    prerequisites: [],
-    is_mandatory: true,
+    assessment_criteria: learningOutcome.assessment_criteria || [],
+    role: learningOutcome.role || "MainSubject",
+    prerequisites: transformPrerequisites(learningOutcome.prerequisites),
+    is_mandatory: learningOutcome.is_mandatory ?? true,
   };
 
-  const form = useForm<CreateLearningOutcomeFormData>({
+  const form = useForm<UpdateLearningOutcomeFormData>({
     resolver: zodResolver(
-      CreateLearningOutcomeFormSchema,
-    ) as Resolver<CreateLearningOutcomeFormData>,
+      UpdateLearningOutcomeFormSchema,
+    ) as Resolver<UpdateLearningOutcomeFormData>,
     defaultValues,
     mode: "onChange",
   });
 
-  const handleSubmit = (values: CreateLearningOutcomeFormData) => {
+  const handleSubmit = (values: UpdateLearningOutcomeFormData) => {
     setError("");
     setSuccess("");
 
     startTransition(async () => {
       try {
-        // Transform data for API - handle prerequisites format
+        // Transform data for API
         const apiData = {
           ...values,
           estimated_hours: Number(values.estimated_hours),
           order: Number(values.order),
-          // Convert empty string to undefined for subject_id
           subject_id: values.subject_id || undefined,
           // Extract just the values from prerequisites if using MultipleSelector format
           prerequisites: values.prerequisites?.map((p) => p.value) || [],
-          created_by: auth.user.id,
+          updated_by: auth.user.id,
         };
 
         const request = await apiRequest<typeof apiData, LearningOutcome>(
-          "post",
-          "/learning-outcomes",
+          "put",
+          `/learning-outcomes/${learningOutcome.id || learningOutcome._id}`,
           apiData,
           { token: auth.token },
         );
@@ -151,20 +173,20 @@ const CreateLearningOutcomeForm = ({
         if (!request.data) {
           setError(request.message);
           showToast({
-            title: "Error",
+            title: "Error updating learning outcome",
             description: request.message,
             type: "error",
           });
         } else {
-          setSuccess("Learning outcome created successfully!");
+          setSuccess("Learning outcome updated successfully!");
           showToast({
-            title: "Learning outcome created",
-            description: `Created: ${request.data.title}`,
+            title: "Learning outcome updated",
+            description: `Updated: ${request.data.title}`,
             type: "success",
           });
 
-          if (!!setLearningOutcome) setLearningOutcome(request.data);
-          // form.reset(defaultValues);
+          if (setLearningOutcome) setLearningOutcome(request.data);
+          if (onSuccess) onSuccess();
         }
       } catch (err) {
         setError(`Unexpected error occurred [${err}]. Please try again.`);
@@ -186,7 +208,7 @@ const CreateLearningOutcomeForm = ({
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Subject *</FormLabel>
+                    <FormLabel>Subject</FormLabel>
                     {loadingOptions ? (
                       <div className="skeleton h-10 rounded-md" />
                     ) : (
@@ -216,10 +238,11 @@ const CreateLearningOutcomeForm = ({
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Title *</FormLabel>
+                  <FormLabel>Title</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
+                      value={field.value || ""}
                       placeholder="Enter learning outcome title"
                       disabled={isPending}
                     />
@@ -260,12 +283,12 @@ const CreateLearningOutcomeForm = ({
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Order *</FormLabel>
+                    <FormLabel>Order</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
                         min="1"
-                        value={field.value}
+                        value={field.value || 1}
                         onChange={(e) => field.onChange(Number(e.target.value))}
                         disabled={isPending}
                       />
@@ -285,7 +308,7 @@ const CreateLearningOutcomeForm = ({
                         type="number"
                         min="0"
                         numberMode="hours"
-                        value={field.value}
+                        value={field.value || 0}
                         onChange={(e) => field.onChange(Number(e.target.value))}
                         disabled={isPending}
                       />
@@ -302,14 +325,14 @@ const CreateLearningOutcomeForm = ({
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Target Role *</FormLabel>
+                  <FormLabel>Target Role</FormLabel>
                   <FormControl>
                     <SelectWithSearch
                       options={SubjectTypes.map((type) => ({
                         value: type,
                         label: type,
                       }))}
-                      value={field.value}
+                      value={field.value || "MainSubject"}
                       onChange={field.onChange}
                       placeholder="Select target role"
                       disabled={isPending}
@@ -337,10 +360,16 @@ const CreateLearningOutcomeForm = ({
                       <MultipleSelector
                         value={field.value || []}
                         onChange={field.onChange}
-                        defaultOptions={existingOutcomes.map((outcome) => ({
-                          value: outcome.id || outcome._id || "",
-                          label: `${outcome.title} (Order: ${outcome.order})`,
-                        }))}
+                        defaultOptions={existingOutcomes
+                          .filter(
+                            (outcome) =>
+                              outcome.id !== learningOutcome.id &&
+                              outcome._id !== learningOutcome._id,
+                          )
+                          .map((outcome) => ({
+                            value: outcome.id || outcome._id || "",
+                            label: `${outcome.title} (Order: ${outcome.order})`,
+                          }))}
                         placeholder="Select prerequisite learning outcomes"
                         hidePlaceholderWhenSelected
                         disabled={isPending}
@@ -360,7 +389,7 @@ const CreateLearningOutcomeForm = ({
                 <FormItem className="flex flex-row items-start space-y-0 space-x-3 rounded-md border p-4">
                   <FormControl>
                     <Checkbox
-                      checked={field.value}
+                      checked={field.value ?? true}
                       onCheckedChange={field.onChange}
                       disabled={isPending}
                     />
@@ -388,7 +417,7 @@ const CreateLearningOutcomeForm = ({
               control={form.control}
               render={({ field }) => (
                 <FormItem className="h-fit">
-                  <FormLabel>Knowledge *</FormLabel>
+                  <FormLabel>Knowledge</FormLabel>
                   <FormControl>
                     <TagField
                       tags={field.value || []}
@@ -407,7 +436,7 @@ const CreateLearningOutcomeForm = ({
               control={form.control}
               render={({ field }) => (
                 <FormItem className="h-fit">
-                  <FormLabel>Skills *</FormLabel>
+                  <FormLabel>Skills</FormLabel>
                   <FormControl>
                     <TagField
                       tags={field.value || []}
@@ -426,7 +455,7 @@ const CreateLearningOutcomeForm = ({
               control={form.control}
               render={({ field }) => (
                 <FormItem className="h-fit">
-                  <FormLabel>Attitudes *</FormLabel>
+                  <FormLabel>Attitudes</FormLabel>
                   <FormControl>
                     <TagField
                       tags={field.value || []}
@@ -465,26 +494,54 @@ const CreateLearningOutcomeForm = ({
         {/* Messages */}
         <FormError message={error} />
         <FormSuccess message={success} />
-        <Button
-          variant={"info"}
-          type="submit"
-          disabled={isPending}
-          className="w-full sm:w-auto"
-          library={"daisy"}
-        >
-          Create learning outcome{" "}
-          {isPending && (
-            <LoaderCircle
-              className="-ms-1 me-2 animate-spin"
-              size={12}
-              strokeWidth={2}
-              aria-hidden="true"
-            />
-          )}
-        </Button>
+
+        {isDialog ? (
+          <DialogFooter className="flex items-center justify-end gap-4">
+            <Button
+              variant={"info"}
+              type="submit"
+              disabled={isPending}
+              className="w-full sm:w-auto"
+              library={"daisy"}
+            >
+              Update learning outcome{" "}
+              {isPending && (
+                <LoaderCircle
+                  className="-ms-1 me-2 animate-spin"
+                  size={12}
+                  strokeWidth={2}
+                  aria-hidden="true"
+                />
+              )}
+            </Button>
+            <DialogClose asChild>
+              <Button library="daisy" variant={"outline"}>
+                Cancel
+              </Button>
+            </DialogClose>
+          </DialogFooter>
+        ) : (
+          <Button
+            variant={"info"}
+            type="submit"
+            disabled={isPending}
+            className="w-full sm:w-auto"
+            library={"daisy"}
+          >
+            Update learning outcome{" "}
+            {isPending && (
+              <LoaderCircle
+                className="-ms-1 me-2 animate-spin"
+                size={12}
+                strokeWidth={2}
+                aria-hidden="true"
+              />
+            )}
+          </Button>
+        )}
       </form>
     </Form>
   );
 };
 
-export default CreateLearningOutcomeForm;
+export default UpdateLearningOutcomeForm;

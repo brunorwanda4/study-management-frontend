@@ -19,3 +19,18 @@ export const SubjectProgressTrackingConfigTypes = [
   "MainSubject",
   "ClassSubject",
 ] as const;
+
+export const SubjectMaterialTypes = [
+  "Book",
+  "Article",
+  "Video",
+  "Note",
+  "ExternalLink",
+  "Document",
+] as const;
+
+export const SubjectLearningMaterialRoles = [
+  "MainSubject",
+  "ClassSubject",
+  "SubjectTopic",
+] as const;
