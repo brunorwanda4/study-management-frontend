@@ -39,19 +39,12 @@ export default async function CreateMainSubjectPage({
           token: auth.token,
           realtime: "main_subject",
         }),
-    subjectId
-      ? apiRequest<void, SubjectProgressTrackingConfig>(
-          "get",
-          `/subject-progress-configs/reference/${subjectId}`,
-          undefined,
-          { token: auth.token, realtime: "subject_progress_config" },
-        )
-      : apiRequest<void, SubjectProgressTrackingConfig[]>(
-          "get",
-          `/subject-progress-configs`,
-          undefined,
-          { token: auth.token, realtime: "subject_progress_config" },
-        ),
+    apiRequest<void, SubjectProgressTrackingConfig[]>(
+      "get",
+      `/subject-progress-configs`,
+      undefined,
+      { token: auth.token, realtime: "subject_progress_config" },
+    ),
     subjectId
       ? apiRequest<void, LearningOutcomeWithOthers[]>(
           "get",
