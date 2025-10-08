@@ -109,10 +109,11 @@ const CreateSubjectTopicForm = ({ auth, subject, learningOutcome }: Props) => {
 
     startTransition(async () => {
       try {
-        const request = await apiRequest<CreateSubjectTopic, any>(
+        const apiData = { ...values, created_by: auth.user.id };
+        const request = await apiRequest<CreateSubjectTopic, SubjectTopic>(
           "post",
           "/subject-topics",
-          values,
+          apiData,
           { token: auth.token },
         );
 

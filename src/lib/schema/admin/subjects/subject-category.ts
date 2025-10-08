@@ -1,6 +1,7 @@
 import {
   subjectAuths,
   SubjectCategories,
+  subjectGradingTypes,
   SubjectLearningMaterialRoles,
   SubjectLevels,
   SubjectMaterialTypes,
@@ -47,3 +48,7 @@ export type SubjectLearningMaterialRole = z.infer<
 
 export const SubjectMaterialTypeEnum = z.enum(SubjectMaterialTypes);
 export type SubjectMaterialType = z.infer<typeof SubjectMaterialTypeEnum>;
+
+export const SubjectGradingTypeEnum = z.enum(subjectGradingTypes);
+
+export type SubjectGradingType = z.infer<typeof SubjectGradingTypeEnum>;

@@ -172,3 +172,7 @@ Goal: manage schools, users, classes, and communication seamlessly.
 ### Join school request id to data page is for UI
 
 - https://dashui.codescandy.com/dashuipro/pages/mail.html
+
+### FIX on creating main subject
+
+- add realtime on create subject topic and fix on how it look

@@ -34,3 +34,10 @@ export const SubjectLearningMaterialRoles = [
   "ClassSubject",
   "SubjectTopic",
 ] as const;
+
+export const subjectGradingTypes = [
+  "LetterGrade",
+  "Percentage",
+  "Points",
+  "PassFail",
+] as const;

@@ -12,6 +12,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -24,6 +25,8 @@ import { useStepper } from "@/lib/hooks/use-stepper";
 // ✅ Updated import
 
 import UpdateLearningOutcomeDialog from "@/components/page/admin/subjects/learning-outcome/update-learning-outcome-dialog";
+import CreateSubjectGradingSchemaDefaultButton from "@/components/page/admin/subjects/subject-grading/create-subject-grading-schema-default-button";
+import CreateSubjectGradingDialog from "@/components/page/admin/subjects/subject-grading/create-subject-grading-schema-dialog";
 import CreateSubjectTopicDialog from "@/components/page/admin/subjects/subject-topic/create-subject-topic-dialog";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
 import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
@@ -34,6 +37,7 @@ import {
 import { SubjectProgressTrackingConfig } from "@/lib/schema/admin/subjects/subject-progress-tracking-config-schema/subject-progress-tracking-config-schema";
 import { AuthUserResult } from "@/lib/utils/auth-user";
 import apiRequest from "@/service/api-client";
+import { ArrowRight } from "lucide-react";
 
 interface Props {
   auth: AuthUserResult;
@@ -234,6 +238,7 @@ export default function CreateMainSubjectClientPage({ auth }: Props) {
                                   className=""
                                 >
                                   {topic.title}
+                                  {/* TODO: Fix on topics on creating */}
                                 </li>
                               );
                             })}
@@ -256,6 +261,20 @@ export default function CreateMainSubjectClientPage({ auth }: Props) {
               </div>
             </div>
           )}
+
+          <CardFooter className="mt-4">
+            <div className="flex w-full items-center justify-end">
+              <Button
+                library="daisy"
+                onClick={() => {
+                  setStep(4, subject._id || subject.id);
+                  markStepCompleted(4, undefined, subject._id || subject.id);
+                }}
+              >
+                Next <ArrowRight />
+              </Button>
+            </div>
+          </CardFooter>
         </CardContent>
       </Card>
     );
@@ -266,10 +285,42 @@ export default function CreateMainSubjectClientPage({ auth }: Props) {
         <CardHeader>
           <CardTitle>Grading Config for {subject.name}</CardTitle>
         </CardHeader>
-        <CardContent>
-          <Button onClick={resetStepper} variant="destructive">
-            Reset & Create New Subject
-          </Button>
+        <CardContent className="grid grid-cols-2 gap-4 md:grid-cols-3">
+          <CreateSubjectGradingDialog
+            action={() => {
+              resetStepper;
+            }}
+            auth={auth}
+            subject={subject}
+          />
+
+          <CreateSubjectGradingSchemaDefaultButton
+            action={() => {
+              resetStepper;
+            }}
+            auth={auth}
+            subject={subject}
+            type="Percentage"
+            data={{
+              role: "MainSubject",
+              created_by: auth.user.id,
+              reference_id: subject._id || subject.id,
+            }}
+          />
+
+          <CreateSubjectGradingSchemaDefaultButton
+            action={() => {
+              resetStepper;
+            }}
+            auth={auth}
+            subject={subject}
+            type="LetterGrade"
+            data={{
+              role: "MainSubject",
+              created_by: auth.user.id,
+              reference_id: subject._id || subject.id,
+            }}
+          />
         </CardContent>
       </Card>
     );
