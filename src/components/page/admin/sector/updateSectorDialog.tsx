@@ -1,6 +1,5 @@
-import MyImage from "@/components/common/myImage";
 import UpdateSectorForm from "@/components/page/admin/sector/update-sector-form";
-import { buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -15,18 +14,27 @@ import { AuthUserResult } from "@/lib/utils/auth-user";
 interface Props {
   sector: SectorModel;
   auth: AuthUserResult;
+  isIcon?: boolean;
 }
 
-const UpdateSectorDialog = ({ sector, auth }: Props) => {
+const UpdateSectorDialog = ({ sector, auth, isIcon }: Props) => {
   return (
     <Dialog>
-      <DialogTrigger
-        className={cn(
-          buttonVariants({ library: "shadcn" }),
-          "w-full cursor-pointer",
-        )}
-      >
-        <MyImage role="ICON" src="/icons/edit.png" /> Update sector
+      <DialogTrigger asChild>
+        <Button
+          className={cn(
+            "w-full cursor-pointer",
+            isIcon && "tooltip tooltip-top tooltip-warning w-fit",
+          )}
+          library="daisy"
+          role="update"
+          size={"sm"}
+          variant={"warning"}
+          type="button"
+          data-tip={isIcon && " Update sector"}
+        >
+          <span className={cn(isIcon && "sr-only")}>Update sector</span>
+        </Button>
       </DialogTrigger>
       <DialogContent className="max- max-h-[95vh] overflow-y-auto sm:max-w-4xl">
         <DialogHeader>

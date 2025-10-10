@@ -5,8 +5,11 @@ import SectorDisableDialog from "@/components/page/admin/sector/sector-disable-d
 import UpdateSectorDialog from "@/components/page/admin/sector/updateSectorDialog";
 import OpenImages from "@/components/page/admin/users/open-images";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
 import { SectorModel } from "@/lib/schema/admin/sectorSchema";
 import { AuthUserResult } from "@/lib/utils/auth-user";
+import { formatReadableDate } from "@/lib/utils/format-date";
+import { useEffect, useState } from "react";
 
 interface PropsSector {
   sector: SectorModel;
@@ -14,14 +17,25 @@ interface PropsSector {
 }
 
 const SectorInformationCard = ({ sector, auth }: PropsSector) => {
+  const { data } = useRealtimeData<SectorModel>("main_sector");
+  const [currentSector, setCurrentSector] = useState(sector);
+
+  useEffect(() => {
+    if (data && data.length > 0) {
+      const updated = data.find((d) => d._id === sector._id);
+      if (updated) setCurrentSector(updated);
+    }
+  }, [data, sector._id]);
+
   return (
     <Card className="max-w-fit">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Sector</CardTitle>
           <div className="flex items-center gap-4">
-            <SectorDisableDialog sector={sector} auth={auth} />
-            <DeleteSectorDialog sector={sector} auth={auth} />
+            <UpdateSectorDialog isIcon sector={currentSector} auth={auth} />
+            <SectorDisableDialog isIcon sector={currentSector} auth={auth} />
+            <DeleteSectorDialog sector={currentSector} auth={auth} />
           </div>
         </div>
       </CardHeader>
@@ -29,85 +43,70 @@ const SectorInformationCard = ({ sector, auth }: PropsSector) => {
         <aside className="md:w-72">
           {/* Logo */}
           <OpenImages
-            images={sector.logo || "/images/default-sector.png"}
-            className="md:size-72"
+            images={currentSector.logo || "/images/default-sector.png"}
+            className="h-60 md:size-72"
             classname=" object-contain"
           />
 
           <div className="mt-2 space-y-2">
             {/* Name */}
-            {sector.name && (
-              <h1 className="text-2xl font-medium">{sector.name}</h1>
+            {currentSector.name && (
+              <h1 className="text-2xl font-medium">{currentSector.name}</h1>
             )}
 
             {/* Username */}
-            {sector.username && (
+            {currentSector.username && (
               <div className="flex gap-2">
                 <p className="text-xl font-normal opacity-80">
-                  @{sector.username}
+                  @{currentSector.username}
                 </p>
               </div>
             )}
 
-            {/* Edit Button */}
-            <div className="mt-4">
-              <UpdateSectorDialog sector={sector} auth={auth} />
-            </div>
-
             {/* Description */}
-            {sector.description && (
+            {currentSector.description && (
               <div>
                 <span>Description:</span>
-                <p className="font-medium">{sector.description}</p>
+                <p className="font-medium">{currentSector.description}</p>
               </div>
             )}
 
             {/* Country */}
-            {sector.country && (
+            {currentSector.country && (
               <div className="flex gap-2">
                 <span>Country:</span>
-                <p className="font-medium">{sector.country}</p>
+                <p className="font-medium">{currentSector.country}</p>
               </div>
             )}
 
             {/* Type */}
-            {sector.type && (
+            {currentSector.type && (
               <div className="flex gap-2">
                 <span>Type:</span>
-                <p className="font-medium capitalize">{sector.type}</p>
+                <p className="font-medium capitalize">{currentSector.type}</p>
               </div>
             )}
 
             {/* Curriculum (start - end years) */}
-            {sector.curriculum && (
+            {currentSector.curriculum && (
               <div className="flex gap-2">
                 <span>Curriculum:</span>
                 <p className="font-medium">
-                  {sector.curriculum[0]} - {sector.curriculum[1]}
+                  {currentSector.curriculum[0]} - {currentSector.curriculum[1]}
                 </p>
               </div>
             )}
 
             {/* Created & Updated dates */}
-            {sector.created_at && (
+            {currentSector.created_at && (
               <div className="flex text-sm text-gray-500">
-                Created at{" "}
-                {new Date(sector.created_at).toLocaleDateString(undefined, {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
+                Created at {formatReadableDate(currentSector.created_at)}
               </div>
             )}
 
-            {sector.updated_at && (
+            {currentSector.updated_at && (
               <div className="flex text-sm text-gray-500">
-                Updated at{" "}
-                {new Date(sector.updated_at).toLocaleDateString(undefined, {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
+                Updated at {formatReadableDate(currentSector.updated_at)}
               </div>
             )}
           </div>

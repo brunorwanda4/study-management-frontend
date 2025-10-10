@@ -1,7 +1,6 @@
 "use client";
 
 import { FormError, FormSuccess } from "@/components/common/form-message";
-import MyImage from "@/components/common/myImage";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,21 +12,21 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { useToast } from "@/lib/context/toast/ToastContext";
 import { SectorModel } from "@/lib/schema/admin/sectorSchema";
 import { cn } from "@/lib/utils";
 import { AuthUserResult } from "@/lib/utils/auth-user";
 import apiRequest from "@/service/api-client";
-import { LoaderCircle } from "lucide-react";
 import { useState, useTransition } from "react";
 
 interface Props {
   sector: SectorModel;
   auth: AuthUserResult;
+  isIcon?: boolean;
 }
 
-const SectorDisableDialog = ({ auth, sector }: Props) => {
+const SectorDisableDialog = ({ auth, sector, isIcon }: Props) => {
   const [error, setError] = useState<undefined | string>("");
   const [success, setSuccess] = useState<undefined | string>("");
   const [isPending, startTransition] = useTransition();
@@ -43,7 +42,7 @@ const SectorDisableDialog = ({ auth, sector }: Props) => {
         {
           disable: sector.disable ? false : true,
         },
-        auth?.token,
+        { token: auth?.token },
       );
 
       if (!request.data) {
@@ -71,29 +70,24 @@ const SectorDisableDialog = ({ auth, sector }: Props) => {
 
   return (
     <AlertDialog>
-      <AlertDialogTrigger
-        className={cn(
-          buttonVariants({
-            size: "sm",
-            variant: "ghost",
-            library: "shadcn",
-          }),
-          "cursor-pointer",
-        )}
-      >
-        <MyImage
-          role="ICON"
-          src={sector.disable ? "/icons/checked.png" : "/icons/disabled.png"}
-        />
-        <span className="">{sector.disable ? "Enable" : "Disable"}</span>
-        {isPending && (
-          <LoaderCircle
-            className="-ms-1 me-2 animate-spin"
-            size={12}
-            strokeWidth={2}
-            aria-hidden="true"
-          />
-        )}
+      <AlertDialogTrigger asChild>
+        <Button
+          library="daisy"
+          role={isPending ? "loading" : sector.disable ? "check" : "block"}
+          size={"sm"}
+          variant={sector.disable ? "warning" : "secondary"}
+          type="button"
+          data-tip={isIcon && sector.disable ? "Enable" : "Disable"}
+          className={cn(
+            "cursor-pointer",
+            isIcon && "tooltip tooltip-top w-fit",
+            isIcon && sector.disable ? "tooltip-warning" : "tooltip-secondary",
+          )}
+        >
+          <span className={cn(isIcon && "sr-only")}>
+            {sector.disable ? "Enable" : "Disable"}
+          </span>
+        </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -115,20 +109,21 @@ const SectorDisableDialog = ({ auth, sector }: Props) => {
           <FormSuccess message={success} />
         </div>
         <AlertDialogFooter>
-          <AlertDialogCancel type="button" className="cursor-pointer">
-            Cancel
+          <AlertDialogCancel asChild type="button" className="cursor-pointer">
+            <Button library="daisy" variant={"outline"}>
+              Cancel
+            </Button>
           </AlertDialogCancel>
-          <AlertDialogAction
-            onClick={() => handleToggle()}
-            className={cn(
-              buttonVariants({
-                variant: sector.disable ? "success" : "warning",
-                library: "daisy",
-              }),
-              "cursor-pointer",
-            )}
-          >
-            {sector.disable ? "Enable" : "Disable"}
+          <AlertDialogAction asChild>
+            <Button
+              type="button"
+              onClick={() => handleToggle()}
+              variant={sector.disable ? "warning" : "secondary"}
+              library="daisy"
+              role={isPending ? "loading" : undefined}
+            >
+              {sector.disable ? "Enable" : "Disable"}
+            </Button>
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

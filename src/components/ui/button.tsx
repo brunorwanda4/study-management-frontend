@@ -4,7 +4,8 @@ import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import { Loader2, Pen } from "lucide-react"; // ⬅️ using lucide-react icons
 import * as React from "react";
-import { CiCirclePlus } from "react-icons/ci";
+import { CiCircleCheck, CiCirclePlus } from "react-icons/ci";
+import { MdBlockFlipped } from "react-icons/md";
 
 // ShadCN-style variants
 export const shadcnVariants = cva(
@@ -82,7 +83,7 @@ export type ShadcnButtonProps =
 export type DaisyButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   asChild?: boolean;
   library: "daisy";
-  role?: "create" | "loading" | "update";
+  role?: "create" | "loading" | "update" | "block" | "check";
 } & VariantProps<typeof daisyVariants>;
 
 type UniversalButtonProps = ShadcnButtonProps | DaisyButtonProps;
@@ -114,6 +115,10 @@ const Button = React.forwardRef<HTMLButtonElement, UniversalButtonProps>(
           return <CiCirclePlus className="size-4" />;
         case "loading":
           return <Loader2 className="-ms-1 size-4 animate-spin" />;
+        case "block":
+          return <MdBlockFlipped className="size-4" />;
+        case "check":
+          return <CiCircleCheck className="size-4" />;
         case "update":
           return <Pen className="size-4" />;
         default:
@@ -145,12 +150,12 @@ const buttonVariants = (
     | (VariantProps<typeof shadcnVariants> & {
         library?: "shadcn";
         className?: string;
-        role?: "create" | "loading" | null;
+        role?: "create" | "loading" | "update" | "block" | "check";
       })
     | (VariantProps<typeof daisyVariants> & {
         library: "daisy";
         className?: string;
-        role?: "create" | "loading" | null;
+        role?: "create" | "loading" | "update" | "block" | "check";
       }) = {
     library: "shadcn",
   },
