@@ -75,7 +75,7 @@ const MainSubjectsTableCollection = ({
           </CardDescription>
         </div>
         <Link
-          href={`/a/database/main_subjects/create`}
+          href={`/a/collections/main_subjects/create`}
           className={cn(buttonVariants({ library: "daisy", variant: "info" }))}
         >
           <BsPlus /> Add new main subject

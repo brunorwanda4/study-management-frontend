@@ -58,7 +58,7 @@ const DeleteSectorDialog = ({ sector, auth }: Props) => {
           description: <p>{request.message}</p>,
           type: "success",
         });
-        redirect("/a/database/sectors");
+        redirect("/a/collections/sectors");
       }
     });
   };

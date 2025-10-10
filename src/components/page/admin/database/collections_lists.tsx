@@ -1,5 +1,6 @@
 "use client";
 
+import { mainCollections } from "@/lib/const/main-collections";
 import { formatText } from "@/lib/helpers/format-text";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -10,24 +11,21 @@ interface Props {
 }
 
 export function CollectionsList({ collection, className }: Props) {
-  const availablePages = [
-    "users",
-    "sectors",
-    "trades",
-    "main_classes",
-    "main_subjects",
-  ];
-  const hasPage = availablePages.includes(collection);
+  const matchedCollection = mainCollections.find(
+    (col) => col.name === collection,
+  );
 
-  if (hasPage)
+  if (matchedCollection)
     return (
       <Link
         className={cn("link-hover font-medium", className)}
-        href={`/en/a/database/${collection}`}
+        href={matchedCollection.href}
       >
-        {formatText(collection)}
+        {matchedCollection.label || formatText(collection)}
       </Link>
     );
+
+  // If not found — disabled label
   return (
     <span
       aria-disabled

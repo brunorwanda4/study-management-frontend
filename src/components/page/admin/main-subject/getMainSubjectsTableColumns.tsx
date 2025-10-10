@@ -14,7 +14,7 @@ export const getMainSubjectsTableColumns = (): ColumnDef<MainSubject>[] => {
       meta: { filterVariant: "text" },
       cell: ({ row }) => (
         <Link
-          href={`/a/database/main_subjects/${row.original.code}`}
+          href={`/a/collections/main_subjects/${row.original.code}`}
           className={cn(
             "flex flex-col gap-1",
             !row.original.is_active

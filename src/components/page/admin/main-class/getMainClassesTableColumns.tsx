@@ -14,7 +14,7 @@ export const getMainClassesTableColumns =
         meta: { filterVariant: "text" },
         cell: ({ row }) => (
           <Link
-            href={`/a/database/main_classes/${row.original.username}`}
+            href={`/a/collections/main_classes/${row.original.username}`}
             className={cn(
               "flex flex-row items-center gap-2",
               row.original.disable
@@ -33,7 +33,7 @@ export const getMainClassesTableColumns =
         meta: { filterVariant: "text" },
         cell: ({ row }) => (
           <Link
-            href={`/a/database/main_classes/${row.original.username}`}
+            href={`/a/collections/main_classes/${row.original.username}`}
             className={cn(
               "flex items-center gap-2",
               row.original.disable
@@ -59,7 +59,9 @@ export const getMainClassesTableColumns =
               </span>
             );
           return (
-            <Link href={`/a/database/trades/${row.original.trade?.username}`}>
+            <Link
+              href={`/a/collections/trades/${row.original.trade?.username}`}
+            >
               {row.original.trade?.name}
             </Link>
           );

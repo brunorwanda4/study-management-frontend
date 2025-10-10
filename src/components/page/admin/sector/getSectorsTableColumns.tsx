@@ -15,7 +15,7 @@ export const getSectorsTableColumns = (): ColumnDef<SectorModel>[] => {
       meta: { filterVariant: "text" },
       cell: ({ row }) => (
         <Link
-          href={`/a/database/sectors/${row.original.username}`}
+          href={`/a/collections/sectors/${row.original.username}`}
           className={cn(
             "flex flex-row items-center gap-2",
             row.original.disable ? "text-warning tooltip tooltip-warning" : "",
@@ -37,7 +37,7 @@ export const getSectorsTableColumns = (): ColumnDef<SectorModel>[] => {
       meta: { filterVariant: "text" },
       cell: ({ row }) => (
         <Link
-          href={`/a/database/sectors/${row.original.username}`}
+          href={`/a/collections/sectors/${row.original.username}`}
           className={cn(
             "flex items-center gap-2",
             row.original.disable ? "text-warning tooltip tooltip-warning" : "",

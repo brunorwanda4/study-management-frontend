@@ -26,7 +26,7 @@ const CreateSectorDialog = ({ auth, onSectorCreated }: props) => {
           <BsPlus /> Add new sector
         </Button>
       </DialogTrigger>
-      <DialogContent className="max- max-h-[95vh] overflow-y-auto sm:max-w-4xl">
+      <DialogContent className="max- max-h-[95vh] overflow-y-auto sm:max-w-5xl">
         <DialogHeader>
           <DialogTitle>Add New Sector</DialogTitle>
         </DialogHeader>

@@ -79,7 +79,7 @@ const TradeInformationCard = ({ trade, auth }: PropsTrade) => {
             {trade.sector && (
               <div className="mt-2">
                 <Link
-                  href={`/a/database/sectors/${trade.sector.username}`}
+                  href={`/a/collections/sectors/${trade.sector.username}`}
                   className="flex flex-row items-center gap-2"
                 >
                   <span>Sector:</span>
@@ -107,7 +107,7 @@ const TradeInformationCard = ({ trade, auth }: PropsTrade) => {
             {trade.parent_trade && (
               <div className="mt-2">
                 <Link
-                  href={`/a/database/trades/${trade.parent_trade.username}`}
+                  href={`/a/collections/trades/${trade.parent_trade.username}`}
                   className="flex items-center gap-2"
                 >
                   <span>Parent Trade:</span>

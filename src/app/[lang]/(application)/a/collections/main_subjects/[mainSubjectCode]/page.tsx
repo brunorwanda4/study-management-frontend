@@ -93,7 +93,7 @@ const MainSubjectCodePage = async ({ params }: MainSubjectCodePageProps) => {
     >("post", "/subject-progress-configs/default", apiBody, {
       token: auth.token,
       realtime: "subject_progress_config",
-      revalidatePath: `/a/database/main_subjects/${mainSubjectCode}`,
+      revalidatePath: `/a/collections/main_subjects/${mainSubjectCode}`,
     });
 
     if (!createDefaultProgress.data) {
@@ -120,7 +120,7 @@ const MainSubjectCodePage = async ({ params }: MainSubjectCodePageProps) => {
     >("post", "/subject-grading-schemes/default/percentage", apiBody, {
       token: auth.token,
       realtime: "subject_grading_scheme",
-      revalidatePath: `/a/database/main_subjects/${mainSubjectCode}`,
+      revalidatePath: `/a/collections/main_subjects/${mainSubjectCode}`,
     });
 
     if (!createDefaultProgress.data) {

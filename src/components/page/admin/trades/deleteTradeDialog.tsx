@@ -58,7 +58,7 @@ const DeleteTradeDialog = ({ trade, auth }: Props) => {
           description: <p>{request.message}</p>,
           type: "success",
         });
-        redirect("/a/database/trades");
+        redirect("/a/collections/trades");
       }
     });
   };

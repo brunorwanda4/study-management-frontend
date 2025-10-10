@@ -55,7 +55,7 @@ const CreateSubjectGradingSchemaDefaultButton = ({
           type: "success",
         });
         if (!!action) action();
-        redirect(`/a/database/main_subjects/${subject.code}`);
+        redirect(`/a/collections/main_subjects/${subject.code}`);
       }
     });
   };

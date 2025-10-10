@@ -31,7 +31,7 @@ const SectorInformationCard = ({ sector, auth }: PropsSector) => {
           <OpenImages
             images={sector.logo || "/images/default-sector.png"}
             className="md:size-72"
-            classname="mask mask-squircle"
+            classname=" object-contain"
           />
 
           <div className="mt-2 space-y-2">

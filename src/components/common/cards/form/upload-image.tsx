@@ -56,14 +56,13 @@ export default function UploadImage({
   const [urlInput, setUrlInput] = useState("");
   const [isUrl, setIsUrl] = useState(false);
 
-  // when a new file is selected, preview it + send base64 to backend
+  // Convert selected file -> base64
   useEffect(() => {
     const fileToUpload = files[0]?.file;
     if (fileToUpload instanceof File) {
       const objectUrl = URL.createObjectURL(fileToUpload);
       setUploadedUrl(objectUrl);
 
-      // ✅ convert blob -> base64 before sending to backend
       fileToBase64(fileToUpload).then((base64) => {
         onChange(base64);
       });
@@ -103,92 +102,130 @@ export default function UploadImage({
   return (
     <div
       className={cn(
-        "flex size-60 w-full max-w-lg flex-col gap-4 rounded-xl shadow-md",
+        "max-size-60 relative flex size-60 w-full max-w-lg flex-col gap-4 rounded-xl shadow-md",
         className,
       )}
     >
       <div className={cn("relative", className)}>
-        <div
-          role="button"
-          tabIndex={0}
-          onClick={!disabled && !displayUrl ? openFileDialog : undefined}
-          onKeyDown={(e) =>
-            e.key === "Enter" && !displayUrl && openFileDialog()
-          }
-          onDragEnter={handleDragEnter}
-          onDragLeave={handleDragLeave}
-          onDragOver={handleDragOver}
-          onDrop={handleDrop}
-          data-dragging={isDragging || undefined}
-          className={cn(
-            isUrl
-              ? "min-h-0"
-              : "border-input card data-[dragging=true]:border-primary relative flex min-h-64 w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-xl border-2 border-dashed transition-all duration-300 ease-in-out",
-            { "bg-base-200 card border-solid": displayUrl },
-            { "hover:border-neutral card bg-base-100": !displayUrl },
-            disabled
-              ? "bg-base-300 card border-base-300 cursor-not-allowed border-solid hover:border-none"
-              : "",
-            Classname,
-          )}
-          aria-disabled={disabled}
-        >
-          <input
-            {...getInputProps()}
-            className="sr-only"
-            aria-label="Upload file"
-            disabled={disabled}
-          />
-
-          {displayUrl ? (
-            <Image
-              src={displayUrl}
-              alt={files[0]?.file?.name || "Uploaded image"}
-              fill
-              className={cn("object-cover", classname)}
+        {isUrl && !displayUrl ? (
+          <div
+            className={cn(
+              "border-input card data-[dragging=true]:border-primary relative grid h-full min-h-40 w-full cursor-pointer flex-col place-content-center items-center justify-center overflow-hidden rounded-xl border-2 border-dashed transition-all duration-300 ease-in-out",
+              Classname,
+            )}
+          >
+            <div className="flex items-center gap-2">
+              <Input
+                type="text"
+                value={urlInput}
+                onChange={(e) => setUrlInput(e.target.value)}
+                placeholder="Or paste an image URL"
+                className="w-86 flex-grow"
+                aria-label="Image URL"
+              />
+              <Button
+                type="button"
+                variant={!urlInput ? "outline" : "info"}
+                size="sm"
+                onClick={() => {
+                  if (urlInput) {
+                    setUploadedUrl(urlInput);
+                    onChange(urlInput); // already a normal URL
+                    setUrlInput("");
+                  }
+                }}
+                disabled={!urlInput}
+                aria-label="Upload from URL"
+                library="daisy"
+                shape="circle"
+              >
+                <LinkIcon size={20} />
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div
+            role="button"
+            tabIndex={0}
+            onClick={!disabled && !displayUrl ? openFileDialog : undefined}
+            onKeyDown={(e) =>
+              e.key === "Enter" && !displayUrl && openFileDialog()
+            }
+            onDragEnter={handleDragEnter}
+            onDragLeave={handleDragLeave}
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
+            data-dragging={isDragging || undefined}
+            className={cn(
+              isUrl
+                ? "min-h-0"
+                : "border-input card data-[dragging=true]:border-primary relative flex min-h-64 w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-xl border-2 border-dashed transition-all duration-300 ease-in-out",
+              { "bg-base-200 card border-solid": displayUrl },
+              { "hover:border-neutral card bg-base-100": !displayUrl },
+              disabled
+                ? "bg-base-300 card border-base-300 cursor-not-allowed border-solid hover:border-none"
+                : "",
+              Classname,
+            )}
+            aria-disabled={disabled}
+          >
+            <input
+              {...getInputProps()}
+              className="sr-only"
+              aria-label="Upload file"
+              disabled={disabled}
             />
-          ) : (
-            <>
-              {!isUrl && !displayUrl && (
-                <div className="flex flex-col items-center justify-center text-center">
-                  <ImageUpIcon
-                    className={cn(
-                      "mb-4 size-12 text-gray-400",
-                      disabled ? "text-neutral" : "",
-                    )}
-                  />
-                  <p className="mb-1.5 text-lg font-semibold text-gray-700">
-                    Drop your image here
-                  </p>
-                  <p
-                    className={cn(
-                      "text-sm text-gray-500",
-                      disabled ? "text-neutral" : "",
-                    )}
-                  >
-                    or{" "}
-                    <span
+
+            {displayUrl ? (
+              <Image
+                src={displayUrl}
+                alt={files[0]?.file?.name || "Uploaded image"}
+                fill
+                className={cn("object-contain", classname)}
+              />
+            ) : (
+              <>
+                {!isUrl && !displayUrl && (
+                  <div className="flex flex-col items-center justify-center text-center">
+                    <ImageUpIcon
                       className={cn(
-                        "text-base-content font-medium",
+                        "mb-4 size-12 text-gray-400",
+                        disabled ? "text-neutral" : "",
+                      )}
+                    />
+                    <p className="mb-1.5 text-lg font-semibold text-gray-700">
+                      Drop your image here
+                    </p>
+                    <p
+                      className={cn(
+                        "text-sm text-gray-500",
                         disabled ? "text-neutral" : "",
                       )}
                     >
-                      click to browse
-                    </span>
-                  </p>
-                  <p
-                    className={cn(
-                      "mt-2 text-xs text-gray-400",
-                      disabled ? "text-neutral" : "",
-                    )}
-                  >
-                    Max file size: {maxSizeMB}MB
-                  </p>
-                </div>
-              )}
-            </>
-          )}
-        </div>
+                      or{" "}
+                      <span
+                        className={cn(
+                          "text-base-content font-medium",
+                          disabled ? "text-neutral" : "",
+                        )}
+                      >
+                        click to browse
+                      </span>
+                    </p>
+                    <p
+                      className={cn(
+                        "mt-2 text-xs text-gray-400",
+                        disabled ? "text-neutral" : "",
+                      )}
+                    >
+                      Max file size: {maxSizeMB}MB
+                    </p>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        )}
 
         {!displayUrl && (
           <Button
@@ -215,41 +252,7 @@ export default function UploadImage({
         )}
       </div>
 
-      {/* URL input */}
-      {isUrl && !displayUrl && (
-        <div className="grid h-full w-full place-content-center">
-          <div className="flex items-center gap-2">
-            <Input
-              type="text"
-              value={urlInput}
-              onChange={(e) => setUrlInput(e.target.value)}
-              placeholder="Or paste an image URL"
-              className="w-86 flex-grow"
-              aria-label="Image URL"
-            />
-            <Button
-              type="button"
-              variant={!urlInput ? "outline" : "info"}
-              size="sm"
-              onClick={() => {
-                if (urlInput) {
-                  setUploadedUrl(urlInput);
-                  onChange(urlInput); // already a normal URL
-                  setUrlInput("");
-                }
-              }}
-              disabled={!urlInput}
-              aria-label="Upload from URL"
-              library="daisy"
-              shape="circle"
-            >
-              <LinkIcon size={20} />
-            </Button>
-          </div>
-        </div>
-      )}
-
-      {/* Errors */}
+      {/* Error message */}
       {allErrors.length > 0 && (
         <div
           className="bg-destructive/10 text-destructive flex items-center gap-2 rounded-md p-3 text-sm font-medium"

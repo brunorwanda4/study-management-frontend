@@ -32,7 +32,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/lib/context/toast/ToastContext";
 import apiRequest from "@/service/api-client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoaderCircle } from "lucide-react";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 
@@ -324,26 +323,20 @@ const CreateSectorForm = ({ auth, onSectorCreated }: props) => {
         {/* Footer */}
         <DialogFooter className="px-6 pb-6 sm:justify-end">
           <DialogClose asChild>
-            <Button type="button" variant="outline">
+            <Button library="daisy" type="button" variant="outline">
               Cancel
             </Button>
           </DialogClose>
           <DialogClose asChild>
             <Button
+              library="daisy"
               type="submit"
-              variant="default"
+              variant="primary"
               disabled={isPending}
               className="w-full sm:w-auto"
+              role={isPending ? "loading" : undefined}
             >
-              Add Sector{" "}
-              {isPending && (
-                <LoaderCircle
-                  className="-ms-1 me-2 animate-spin"
-                  size={12}
-                  strokeWidth={2}
-                  aria-hidden="true"
-                />
-              )}
+              Add Sector
             </Button>
           </DialogClose>
         </DialogFooter>

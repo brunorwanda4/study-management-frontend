@@ -15,7 +15,7 @@ export const getUsersTableCollectionColumns = (): ColumnDef<UserModel>[] => [
     cell: ({ row }) => {
       return (
         <Link
-          href={`/a/database/users/${row.original.username}`}
+          href={`/a/collections/users/${row.original.username}`}
           className={cn(
             "flex flex-row items-center gap-2",
             row.original.disable && "text-warning tooltip tooltip-warning",
@@ -44,7 +44,7 @@ export const getUsersTableCollectionColumns = (): ColumnDef<UserModel>[] => [
     cell: ({ row }) => {
       return (
         <Link
-          href={`/a/database/users/${row.original.username}`}
+          href={`/a/collections/users/${row.original.username}`}
           className={cn(
             "flex items-center gap-2",
             row.original.disable ? "text-warning tooltip tooltip-warning" : "",
@@ -62,7 +62,7 @@ export const getUsersTableCollectionColumns = (): ColumnDef<UserModel>[] => [
     meta: { filterVariant: "text" },
     cell: ({ row }) => {
       return (
-        <Link href={`/a/database/users/${row.original.username}`}>
+        <Link href={`/a/collections/users/${row.original.username}`}>
           {row.original.email}
         </Link>
       );

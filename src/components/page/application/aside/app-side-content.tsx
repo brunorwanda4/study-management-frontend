@@ -1,6 +1,7 @@
 "use client";
 
 import { Locale } from "@/i18n";
+import { mainCollections } from "@/lib/const/main-collections";
 import { ReactNode } from "react";
 
 export type SidebarItem = {
@@ -36,36 +37,13 @@ export const adminSidebarGroups: sidebarGroupsProps[] = [
       },
       {
         title: "Collections",
-        url: "/a/collections",
         icon: "/icons/data-collection.png",
-      },
-    ],
-  },
-  {
-    label: "Main collections",
-    items: [
-      {
-        title: "Users",
-        url: "/collection/users",
-        icon: "/icons/family.png",
-        children: [
-          {
-            icon: "/icons/classroom.png",
-            title: "Students",
-            url: "/a/users/students",
-          },
-          { title: "Teachers", url: "/a/users/teachers" },
-          { title: "Manage Users", url: "/a/users/crud" },
-        ],
-      },
-      {
-        title: "Classes",
-        icon: "/icons/classroom.png",
-        children: [
-          { title: "All Classes", url: "/a/classes/all" },
-          { title: "Create Class", url: "/a/classes/create" },
-          { title: "Manage Classes", url: "/a/classes/manage" },
-        ],
+        url: "/a/collections",
+        children: mainCollections.map((col) => ({
+          title: col.label,
+          url: col.href,
+          icon: col.icon,
+        })),
       },
     ],
   },

@@ -230,7 +230,8 @@ const UpdateMainSubjectForm = ({
             description: `Updated: ${request.data.name}`,
             type: "success",
           });
-          if (revalidate) redirect(`/a/database/main_subjects/${subject.code}`);
+          if (revalidate)
+            redirect(`/a/collections/main_subjects/${subject.code}`);
           if (!!setSubject) setSubject(request.data);
         }
       } catch (err) {

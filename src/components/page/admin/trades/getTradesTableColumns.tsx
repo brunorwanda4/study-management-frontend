@@ -14,7 +14,7 @@ export const getTradesTableColumns = (): ColumnDef<TradeModelWithOthers>[] => {
       meta: { filterVariant: "text" },
       cell: ({ row }) => (
         <Link
-          href={`/a/database/trades/${row.original.username}`}
+          href={`/a/collections/trades/${row.original.username}`}
           className={cn(
             "flex flex-row items-center gap-2",
             row.original.disable ? "text-warning tooltip tooltip-warning" : "",
@@ -31,7 +31,7 @@ export const getTradesTableColumns = (): ColumnDef<TradeModelWithOthers>[] => {
       meta: { filterVariant: "text" },
       cell: ({ row }) => (
         <Link
-          href={`/a/database/trades/${row.original.username}`}
+          href={`/a/collections/trades/${row.original.username}`}
           className={cn(
             "flex items-center gap-2",
             row.original.disable ? "text-warning tooltip tooltip-warning" : "",
@@ -61,7 +61,7 @@ export const getTradesTableColumns = (): ColumnDef<TradeModelWithOthers>[] => {
           );
         return (
           <Link
-            href={`/a/database/sectors/${row.original.sector?.username}`}
+            href={`/a/collections/sectors/${row.original.sector?.username}`}
             className="flex items-center gap-2"
           >
             {row.original.sector?.logo && (
@@ -86,7 +86,7 @@ export const getTradesTableColumns = (): ColumnDef<TradeModelWithOthers>[] => {
           );
         return (
           <Link
-            href={`/a/database/trades/${row.original.parent_trade?.username}`}
+            href={`/a/collections/trades/${row.original.parent_trade?.username}`}
           >
             {row.original.parent_trade?.name}
           </Link>

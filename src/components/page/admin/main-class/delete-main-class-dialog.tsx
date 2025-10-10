@@ -58,7 +58,7 @@ const DeleteMainClassDialog = ({ mainClass, auth }: Props) => {
           description: <p>{request.message}</p>,
           type: "success",
         });
-        redirect("/a/database/main_classes");
+        redirect("/a/collections/main_classes");
       }
     });
   };

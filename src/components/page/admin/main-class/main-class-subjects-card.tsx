@@ -66,7 +66,7 @@ const MainClassSubjectsCard = ({ MainClass, auth, subjects }: props) => {
             {displaySubjects.map((item, i) => {
               return (
                 <Item key={`${item.id || item._id}-${i}`} variant="outline">
-                  <Link href={`/a/database/main_subjects/${item.code}`}>
+                  <Link href={`/a/collections/main_subjects/${item.code}`}>
                     <ItemContent>
                       <ItemTitle>{item.name}</ItemTitle>
                       <ItemDescription>{item.description}</ItemDescription>

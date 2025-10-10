@@ -60,7 +60,7 @@ const UserInformation = ({ user, auth }: PropsUser) => {
             <div className="mt-4">
               <Link
                 className={cn(buttonVariants({ library: "shadcn" }), "w-full")}
-                href={`/a/database/users/${user.username}/edit`}
+                href={`/a/collections/users/${user.username}/edit`}
               >
                 <MyImage role="ICON" src="/icons/edit.png" /> Edit Profile
               </Link>

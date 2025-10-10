@@ -176,7 +176,7 @@ const CreateSubjectGradingSchemeForm = ({ auth, subject, action }: Props) => {
           });
           if (!!action) action();
           form.reset();
-          redirect(`/a/database/main_subjects/${subject.code}`);
+          redirect(`/a/collections/main_subjects/${subject.code}`);
         }
       } catch (err) {
         setError(`Unexpected error: ${err}`);

@@ -22,6 +22,7 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import { Locale } from "@/i18n";
+import { isActivePath } from "@/lib/helpers/link-is-active";
 import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
 import Image from "next/image";
@@ -33,34 +34,6 @@ interface AppSidebarProps {
   items: sidebarGroupsProps[];
   lang: Locale;
 }
-
-const isActivePath = (
-  currentPath: string,
-  targetUrl: string | undefined,
-  lang?: Locale,
-) => {
-  if (!targetUrl) return false;
-
-  const normalizedTarget = lang ? `/${lang}${targetUrl}` : targetUrl;
-
-  const exactMatchRoutes = ["/a/", "/a", "/s-t", "/s-t/"];
-
-  const requiresExactMatch = exactMatchRoutes.some(
-    (route) => route === targetUrl || `/${lang}${route}` === normalizedTarget,
-  );
-
-  if (requiresExactMatch) {
-    return (
-      currentPath === normalizedTarget || currentPath === `${normalizedTarget}/`
-    );
-  }
-
-  return (
-    currentPath.startsWith(normalizedTarget) &&
-    (currentPath === normalizedTarget ||
-      currentPath.startsWith(`${normalizedTarget}/`))
-  );
-};
 
 export function AppSidebar({ items, lang }: AppSidebarProps) {
   const path = usePathname();
@@ -111,19 +84,38 @@ export function AppSidebar({ items, lang }: AppSidebarProps) {
                           <AccordionContent>
                             <SidebarMenuSub>
                               {item.children.map((subItem, subIndex) => (
-                                <SidebarMenuSubItem key={subIndex}>
+                                <SidebarMenuSubItem
+                                  className={cn(
+                                    buttonVariants({
+                                      variant: "ghost",
+                                      size: "sm",
+                                    }),
+                                    isActivePath(path, subItem.url, lang) &&
+                                      "bg-base-300",
+
+                                    "hover:bg-base-200 ml-6 justify-start rounded-l-none",
+                                  )}
+                                  key={subIndex}
+                                >
                                   <Link
                                     href={subItem.url || "/"}
-                                    className={cn(
-                                      buttonVariants({ variant: "ghost" }),
-                                      isActivePath(path, subItem.url, lang) &&
-                                        "btn-info",
-                                      "hover:bg-base-200 ml-6 justify-start rounded-l-none",
-                                    )}
+                                    className="flex w-full items-center justify-between"
                                   >
-                                    <span className="text-base-content">
-                                      {subItem.title}
-                                    </span>
+                                    <div className="flex items-center gap-2">
+                                      {subItem.icon && (
+                                        <Image
+                                          src={subItem.icon}
+                                          alt={subItem.title}
+                                          width={20}
+                                          height={20}
+                                          className="h-5 min-h-[20px] w-5 min-w-[20px]"
+                                        />
+                                      )}
+                                      <span className="text-base-content">
+                                        {subItem.title}
+                                      </span>
+                                    </div>
+                                    <LoadingIndicator />
                                   </Link>
                                 </SidebarMenuSubItem>
                               ))}

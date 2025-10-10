@@ -78,7 +78,7 @@ const MainClassInformationCard = ({ mainClass, auth }: Props) => {
               <div className="mt-2">
                 <div>
                   <Link
-                    href={`/a/database/trades/${currentClass.trade.username}`}
+                    href={`/a/collections/trades/${currentClass.trade.username}`}
                     className="flex flex-row gap-1"
                   >
                     <span>Trade:</span>
@@ -102,7 +102,7 @@ const MainClassInformationCard = ({ mainClass, auth }: Props) => {
                 {currentClass.trade.sector && (
                   <div>
                     <Link
-                      href={`/a/database/sectors/${currentClass.trade.sector.username}`}
+                      href={`/a/collections/sectors/${currentClass.trade.sector.username}`}
                       className="mt-1 flex items-center gap-2"
                     >
                       <span>Sector:</span>
@@ -133,7 +133,7 @@ const MainClassInformationCard = ({ mainClass, auth }: Props) => {
                 {currentClass.trade.parent_trade && (
                   <div className="mt-1">
                     <Link
-                      href={`/a/database/trades/${currentClass.trade.parent_trade.username}`}
+                      href={`/a/collections/trades/${currentClass.trade.parent_trade.username}`}
                       className="flex items-center gap-2"
                     >
                       <span>Parent Trade:</span>

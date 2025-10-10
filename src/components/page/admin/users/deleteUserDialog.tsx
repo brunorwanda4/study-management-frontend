@@ -64,7 +64,7 @@ const DeleteUserDialog = ({ user, auth }: Props) => {
             </p>
           ),
         });
-        redirect("/a/database/users");
+        redirect("/a/collections/users");
       }
     });
   };
