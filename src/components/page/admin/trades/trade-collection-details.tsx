@@ -13,7 +13,7 @@ interface Props {
 }
 
 const TradeCollectionDetails = ({ initialTrades = [] }: Props) => {
-  const { data: trades } = useRealtimeData<TradeWithNonNullableId>();
+  const { data: trades } = useRealtimeData<TradeWithNonNullableId>("trade");
   const [displayTrades, setDisplayTrades] =
     useState<TradeModelWithOthers[]>(initialTrades);
 

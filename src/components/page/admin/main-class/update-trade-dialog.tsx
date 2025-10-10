@@ -22,7 +22,7 @@ const UpdateMainClassDialog = ({ mainClass, auth }: Props) => {
     <Dialog>
       <DialogTrigger
         className={cn(
-          buttonVariants({ library: "shadcn" }),
+          buttonVariants({ library: "daisy", variant: "warning" }),
           "w-full cursor-pointer",
         )}
       >

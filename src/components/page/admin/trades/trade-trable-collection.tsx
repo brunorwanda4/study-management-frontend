@@ -42,7 +42,7 @@ const TradesTableCollection = ({
   realtimeEnabled = false,
 }: Props) => {
   const { data: trades, isConnected } =
-    useRealtimeData<TradeWithNonNullableId>();
+    useRealtimeData<TradeWithNonNullableId>("trade");
   const [displayTrades, setDisplayTrades] =
     useState<TradeModelWithOthers[]>(initialTrades);
 

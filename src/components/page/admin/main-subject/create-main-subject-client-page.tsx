@@ -56,9 +56,12 @@ export default function CreateMainSubjectClientPage({ auth }: Props) {
 
   const { showToast } = useToast();
 
-  const subjectsCtx = useRealtimeData<MainSubject>();
-  const progressCtx = useRealtimeData<SubjectProgressTrackingConfig>();
-  const outcomesCtx = useRealtimeData<LearningOutcomeWithOthers>();
+  const subjectsCtx = useRealtimeData<MainSubject>("main_subject");
+  const progressCtx = useRealtimeData<SubjectProgressTrackingConfig>(
+    "subject_progress_config",
+  );
+  const outcomesCtx =
+    useRealtimeData<LearningOutcomeWithOthers>("learning_outcome");
 
   // ✅ Local states
   const [subject, setSubject] = useState<MainSubject>();

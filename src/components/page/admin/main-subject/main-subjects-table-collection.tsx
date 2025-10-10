@@ -40,7 +40,8 @@ const MainSubjectsTableCollection = ({
   auth,
   realtimeEnabled = false,
 }: Props) => {
-  const { data: mainSubjects, isConnected } = useRealtimeData<MainSubject>();
+  const { data: mainSubjects, isConnected } =
+    useRealtimeData<MainSubject>("main_subject");
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 

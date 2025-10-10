@@ -9,7 +9,10 @@ import Link from "next/link";
 import DeleteMainClassDialog from "@/components/page/admin/main-class/delete-main-class-dialog";
 import MainClassDisableDialog from "@/components/page/admin/main-class/disable-main-class-dialog";
 import UpdateMainClassDialog from "@/components/page/admin/main-class/update-trade-dialog";
+import { useRealtimeData } from "@/lib/providers/RealtimeProvider"; // ✅ import this
 import { MainClassModelWithOthers } from "@/lib/schema/admin/main-classes-schema";
+import { formatReadableDate } from "@/lib/utils/format-date";
+import { useEffect, useState } from "react";
 
 interface Props {
   mainClass: MainClassModelWithOthers;
@@ -17,14 +20,25 @@ interface Props {
 }
 
 const MainClassInformationCard = ({ mainClass, auth }: Props) => {
+  const { data } = useRealtimeData<MainClassModelWithOthers>("main_class"); // ✅ listen to realtime updates
+  const [currentClass, setCurrentClass] = useState(mainClass);
+
+  // ✅ Sync local state with realtime data
+  useEffect(() => {
+    if (data && data.length > 0) {
+      const updated = data.find((d) => d._id === mainClass._id);
+      if (updated) setCurrentClass(updated);
+    }
+  }, [data, mainClass._id]);
+
   return (
-    <Card className="max-w-fit">
+    <Card className="max-w-full lg:max-w-fit">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Main Class</CardTitle>
           <div className="flex items-center gap-4">
-            <MainClassDisableDialog mainClass={mainClass} auth={auth} />
-            <DeleteMainClassDialog mainClass={mainClass} auth={auth} />
+            <MainClassDisableDialog mainClass={currentClass} auth={auth} />
+            <DeleteMainClassDialog mainClass={currentClass} auth={auth} />
           </div>
         </div>
       </CardHeader>
@@ -33,97 +47,98 @@ const MainClassInformationCard = ({ mainClass, auth }: Props) => {
         <aside className="md:w-72">
           <div className="mt-2 space-y-2">
             {/* Name */}
-            {mainClass.name && (
-              <h1 className="text-2xl font-medium">{mainClass.name}</h1>
+            {currentClass.name && (
+              <h1 className="text-2xl font-medium">{currentClass.name}</h1>
             )}
 
             {/* Username */}
-            {mainClass.username && (
+            {currentClass.username && (
               <div className="flex gap-2">
                 <p className="text-xl font-normal opacity-80">
-                  @{mainClass.username}
+                  @{currentClass.username}
                 </p>
               </div>
             )}
 
             {/* Edit Button */}
             <div className="mt-4">
-              <UpdateMainClassDialog mainClass={mainClass} auth={auth} />
+              <UpdateMainClassDialog mainClass={currentClass} auth={auth} />
             </div>
 
             {/* Description */}
-            {mainClass.description && (
+            {currentClass.description && (
               <div>
                 <span>Description:</span>
-                <p className="font-medium">{mainClass.description}</p>
+                <p className="font-medium">{currentClass.description}</p>
               </div>
             )}
 
             {/* Linked Trade */}
-            {mainClass.trade && (
+            {currentClass.trade && (
               <div className="mt-2">
                 <div>
                   <Link
-                    href={`/a/database/trades/${mainClass.trade.username}`}
+                    href={`/a/database/trades/${currentClass.trade.username}`}
                     className="flex flex-row gap-1"
                   >
                     <span>Trade:</span>
-                    <p className="font-medium">{mainClass.trade.name}</p>
+                    <p className="font-medium">{currentClass.trade.name}</p>
                   </Link>
-                  {mainClass.trade.class_max && mainClass.trade.class_min && (
+                  {currentClass.trade.class_max &&
+                    currentClass.trade.class_min && (
+                      <p className="text-sm text-gray-500">
+                        Class range: {currentClass.trade.class_min} -{" "}
+                        {currentClass.trade.class_max}
+                      </p>
+                    )}
+                  {currentClass.trade.type && (
                     <p className="text-sm text-gray-500">
-                      Class range: {mainClass.trade.class_min} -{" "}
-                      {mainClass.trade.class_max}
-                    </p>
-                  )}
-                  {mainClass.trade.type && (
-                    <p className="text-sm text-gray-500">
-                      Type: {mainClass.trade.type}
+                      Type: {currentClass.trade.type}
                     </p>
                   )}
                 </div>
 
                 {/* Trade sector */}
-                {mainClass.trade.sector && (
+                {currentClass.trade.sector && (
                   <div>
                     <Link
-                      href={`/a/database/sectors/${mainClass.trade.sector.username}`}
+                      href={`/a/database/sectors/${currentClass.trade.sector.username}`}
                       className="mt-1 flex items-center gap-2"
                     >
                       <span>Sector:</span>
-                      {mainClass.trade.sector.logo && (
+                      {currentClass.trade.sector.logo && (
                         <MyImage
-                          src={mainClass.trade.sector.logo}
+                          src={currentClass.trade.sector.logo}
                           role="ICON"
                         />
                       )}
                       <p className="font-medium">
-                        {mainClass.trade.sector.name}
+                        {currentClass.trade.sector.name}
                       </p>
                     </Link>
-                    {mainClass.trade.sector.country && (
+                    {currentClass.trade.sector.country && (
                       <p className="text-sm text-gray-500">
-                        Country: {mainClass.trade.sector.country}
+                        Country: {currentClass.trade.sector.country}
                       </p>
                     )}
-                    {mainClass.trade.sector.type && (
+                    {currentClass.trade.sector.type && (
                       <p className="text-sm text-gray-500">
-                        Type: {mainClass.trade.sector.type}
+                        Type: {currentClass.trade.sector.type}
                       </p>
                     )}
                   </div>
                 )}
 
                 {/* Parent trade */}
-                {mainClass.trade.parent_trade && (
+                {currentClass.trade.parent_trade && (
                   <div className="mt-1">
                     <Link
-                      href={`/a/database/trades/${mainClass.trade.parent_trade.username}`}
+                      href={`/a/database/trades/${currentClass.trade.parent_trade.username}`}
                       className="flex items-center gap-2"
                     >
                       <span>Parent Trade:</span>
                       <p className="font-medium">
-                        {mainClass.trade.parent_trade.name}
+                        {currentClass.trade.parent_trade.name}
                       </p>
                     </Link>
                   </div>
@@ -132,42 +147,34 @@ const MainClassInformationCard = ({ mainClass, auth }: Props) => {
             )}
 
             {/* Disabled */}
-            {typeof mainClass.disable === "boolean" && (
+            {typeof currentClass.disable === "boolean" && (
               <div className="flex gap-2">
                 <span>Status:</span>
                 <p
                   className={cn(
                     "font-medium",
-                    mainClass.disable ? "text-red-500" : "text-green-600",
+                    currentClass.disable ? "text-red-500" : "text-green-600",
                   )}
                 >
-                  {mainClass.disable ? "Disabled" : "Active"}
+                  {currentClass.disable ? "Disabled" : "Active"}
                 </p>
               </div>
             )}
 
-            {/* Created & Updated */}
-            {mainClass.created_at && (
-              <div className="flex text-sm text-gray-500">
-                Created at{" "}
-                {new Date(mainClass.created_at).toLocaleDateString(undefined, {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </div>
-            )}
-
-            {mainClass.updated_at && (
-              <div className="flex text-sm text-gray-500">
-                Updated at{" "}
-                {new Date(mainClass.updated_at).toLocaleDateString(undefined, {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </div>
-            )}
+            <div className="space-y-2 border-t pt-4">
+              {currentClass.created_at && (
+                <div className="text-muted-foreground flex justify-between text-xs">
+                  <span>Created:</span>
+                  <span>{formatReadableDate(currentClass.created_at)}</span>
+                </div>
+              )}
+              {currentClass.updated_at && (
+                <div className="text-muted-foreground flex justify-between text-xs">
+                  <span>Updated:</span>
+                  <span>{formatReadableDate(currentClass.updated_at)}</span>
+                </div>
+              )}
+            </div>
           </div>
         </aside>
       </CardContent>

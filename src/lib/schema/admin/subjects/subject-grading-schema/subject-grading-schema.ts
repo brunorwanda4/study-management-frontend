@@ -16,6 +16,7 @@ export type DefaultLetterGrade = z.infer<typeof DefaultLetterGradeSchema>;
 // --- Main Schema: SubjectGradingScheme ---
 export const SubjectGradingSchemeSchema = z.object({
   id: z.string().optional(),
+  _id: z.string().optional(),
   reference_id: z.string().optional(),
   scheme_type: SubjectGradingTypeEnum,
   grade_boundaries: z.record(z.string(), z.number()),

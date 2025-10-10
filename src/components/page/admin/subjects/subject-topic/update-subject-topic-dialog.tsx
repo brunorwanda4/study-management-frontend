@@ -1,4 +1,4 @@
-import CreateSubjectTopicForm from "@/components/page/admin/subjects/subject-topic/create-subject-topic-form";
+import UpdateSubjectTopicForm from "@/components/page/admin/subjects/subject-topic/update-subject-topic-form";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -18,52 +18,51 @@ interface props {
   auth: AuthUserResult;
   learningOutCome: LearningOutcome;
   subject?: MainSubject;
+  topic: SubjectTopic;
   icon?: boolean;
-  topic?: SubjectTopic;
-  name?: string;
 }
 
-const CreateSubjectTopicDialog = ({
+const UpdateSubjectTopicDialog = ({
   auth,
   learningOutCome,
   subject,
-  icon = false,
+  icon,
   topic,
-  name,
 }: props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button
-          role="create"
-          className={cn(icon && "tooltip tooltip-top tooltip-primary")}
-          data-tip={icon && "Create topic"}
-          size={"sm"}
+          size={icon ? "sm" : "xs"}
           type="button"
-          variant={"outline"}
+          role="update"
+          variant={"warning"}
           library="daisy"
+          className={cn(icon && "tooltip tooltip-top tooltip-warning")}
+          data-tip={icon && `Update topic ${topic.title}`}
         >
-          {!icon && "Add topic"}
+          <span className={cn(icon && "sr-only")}>
+            Update topic ${topic.title}
+          </span>
         </Button>
       </DialogTrigger>
       <DialogContent className="h-[80vh] sm:max-w-4xl">
         <DialogHeader>
-          <DialogTitle>
-            Add subject topic in learning outcome {learningOutCome.title}
-          </DialogTitle>
+          <DialogTitle>Update subject topic {topic?.title} </DialogTitle>
           <DialogDescription>
-            Add subject topic in learning out {learningOutCome.title}
+            Update subject topic {topic?.title} in learning out{" "}
+            {learningOutCome.title}
           </DialogDescription>
         </DialogHeader>
-        <CreateSubjectTopicForm
+        <UpdateSubjectTopicForm
+          topic={topic}
           subject={subject}
           learningOutcome={learningOutCome}
           auth={auth}
-          topic={topic}
         />
       </DialogContent>
     </Dialog>
   );
 };
 
-export default CreateSubjectTopicDialog;
+export default UpdateSubjectTopicDialog;

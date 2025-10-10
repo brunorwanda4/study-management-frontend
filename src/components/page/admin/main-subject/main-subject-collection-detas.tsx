@@ -11,7 +11,7 @@ interface Props {
 }
 
 const SubjectCollectionDetails = ({ initialSubjects = [] }: Props) => {
-  const { data: subjects } = useRealtimeData<MainSubject>();
+  const { data: subjects } = useRealtimeData<MainSubject>("main_subject");
   const [displaySubjects, setDisplaySubjects] =
     useState<MainSubject[]>(initialSubjects);
 

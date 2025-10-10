@@ -35,7 +35,7 @@ interface Props {
 }
 
 const SectorsTableCollection = ({ auth, realtimeEnabled = false }: Props) => {
-  const { data: sectors, isConnected } = useRealtimeData<SectorModel>();
+  const { data: sectors, isConnected } = useRealtimeData<SectorModel>("sector");
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([

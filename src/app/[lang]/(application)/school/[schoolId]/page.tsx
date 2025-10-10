@@ -6,6 +6,7 @@ import SchoolImages from "@/components/page/school/school-images";
 import { Separator } from "@/components/ui/separator";
 import { Locale } from "@/i18n";
 import { getSchoolServer } from "@/lib/utils/auth";
+import { authUser } from "@/lib/utils/auth-user";
 import { getSchoolByIdService } from "@/service/school/school.service";
 import { redirect } from "next/navigation";
 
@@ -26,19 +27,19 @@ const SchoolIdPage = async (props: props) => {
   const school = await getSchoolByIdService(schoolId);
   if (!school.data) return <NotFoundPage />;
   return (
-    <div className=" px-4 space-y-4">
+    <div className="space-y-4 px-4">
       <SchoolHeader
         currentSchool={currentSchool ?? undefined}
         currentUser={currentUser}
         lang={lang}
       />
       <Separator />
-      <div className=" flex space-x-4 ">
-        <div className=" w-1/2  space-y-2">
+      <div className="flex space-x-4">
+        <div className="w-1/2 space-y-2">
           <SchoolHomeAbout school={school.data} isAboutSchool lang={lang} />
           <SchoolImages />
         </div>
-        <div className=" w-1/2 space-y-2">
+        <div className="w-1/2 space-y-2">
           <SchoolContacts school={school.data} />
           {/* <SchoolStaff lang={lang} /> */}
         </div>

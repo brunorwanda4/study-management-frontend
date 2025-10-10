@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoaderCircle } from "lucide-react";
 import { useState, useTransition } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -19,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { FormError, FormSuccess } from "@/components/common/form-message";
+import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import { useToast } from "@/lib/context/toast/ToastContext";
 import { SubjectProgressTrackingConfig } from "@/lib/schema/admin/subjects/subject-progress-tracking-config-schema/subject-progress-tracking-config-schema";
 import {
@@ -31,8 +31,9 @@ import apiRequest from "@/service/api-client";
 interface Props {
   auth: AuthUserResult;
   config: SubjectProgressTrackingConfig;
-  setStep: (step: number, id?: string) => void;
+  setStep?: (step: number, id?: string) => void;
   markStepCompleted?: (step: number, autoNext?: boolean, id?: string) => void;
+  isDialog?: boolean;
 }
 
 const UpdateSubjectProgressTrackingConfigForm = ({
@@ -40,6 +41,7 @@ const UpdateSubjectProgressTrackingConfigForm = ({
   config,
   setStep,
   markStepCompleted,
+  isDialog = false,
 }: Props) => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
@@ -454,20 +456,37 @@ const UpdateSubjectProgressTrackingConfigForm = ({
         <FormError message={error} />
         <FormSuccess message={success} />
 
-        {/* Action Buttons */}
-        <div className="flex space-x-3 pt-4">
-          <Button type="submit" variant="default" disabled={isPending}>
-            Update Configuration{" "}
-            {isPending && (
-              <LoaderCircle
-                className="-ms-1 me-2 animate-spin"
-                size={12}
-                strokeWidth={2}
-                aria-hidden="true"
-              />
-            )}
-          </Button>
-        </div>
+        {isDialog ? (
+          <DialogFooter className="px-6 pb-6 sm:justify-end">
+            <DialogClose asChild>
+              <Button library="daisy" type="button" variant="outline">
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button
+              type="submit"
+              variant="primary"
+              library="daisy"
+              disabled={isPending}
+              className="w-full sm:w-auto"
+              role={isPending ? "loading" : undefined}
+            >
+              Update Topic
+            </Button>
+          </DialogFooter>
+        ) : (
+          <div className="flex space-x-3 pt-4">
+            <Button
+              type="submit"
+              variant="primary"
+              library="daisy"
+              role={isPending ? "loading" : undefined}
+              disabled={isPending}
+            >
+              Update Configuration
+            </Button>
+          </div>
+        )}
       </form>
     </Form>
   );

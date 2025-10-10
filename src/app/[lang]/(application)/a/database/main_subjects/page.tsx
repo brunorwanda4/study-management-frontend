@@ -9,7 +9,7 @@ import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: "main classes - collection",
+  title: "main subject collection | space-together",
   description: "All main subject in database",
 };
 
@@ -27,8 +27,7 @@ const MainSubjectsPage = async () => {
 
   return (
     <RealtimeProvider<MainSubject>
-      channel="main_subject"
-      initialData={request.data}
+      channels={[{ name: "main_subject", initialData: request.data }]}
     >
       <div className="space-y-8">
         <SubjectCollectionDetails initialSubjects={request.data} />

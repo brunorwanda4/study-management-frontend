@@ -11,7 +11,7 @@ interface Props {
 }
 
 const SectorCollectionDetails = ({ initialSectors = [] }: Props) => {
-  const { data: sectors } = useRealtimeData<SectorModel>();
+  const { data: sectors } = useRealtimeData<SectorModel>("sector");
   const [displaySectors, setDisplaySectors] =
     useState<SectorModel[]>(initialSectors);
 

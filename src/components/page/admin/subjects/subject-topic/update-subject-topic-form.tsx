@@ -25,39 +25,38 @@ import apiRequest from "@/service/api-client";
 
 import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
 import { LearningOutcome } from "@/lib/schema/admin/subjects/subject-learning-outcome-schema/learning-outcome-schema";
-import {
-  CreateSubjectTopic,
-  CreateSubjectTopicSchema,
-} from "@/lib/schema/admin/subjects/subject-topic-schema/create-subject-topic-schema";
 import { SubjectTopic } from "@/lib/schema/admin/subjects/subject-topic-schema/subject-topic-schema";
+import {
+  UpdateSubjectTopic,
+  UpdateSubjectTopicSchema,
+} from "@/lib/schema/admin/subjects/subject-topic-schema/update-subject-topic-schema";
 import { AuthUserResult } from "@/lib/utils/auth-user";
 
 interface Props {
   auth: AuthUserResult;
-  learningOutcome?: LearningOutcome;
+  topic: SubjectTopic;
   subject?: MainSubject;
-  topic?: SubjectTopic;
+  learningOutcome?: LearningOutcome;
 }
 
-const CreateSubjectTopicForm = ({
+const UpdateSubjectTopicForm = ({
   auth,
+  topic,
   subject,
   learningOutcome,
-  topic,
 }: Props) => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
   const { showToast } = useToast();
 
-  // Local state for select options
   const [learningOutcomes, setLearningOutcomes] = useState<LearningOutcome[]>(
     [],
   );
   const [parentTopics, setParentTopics] = useState<SubjectTopic[]>([]);
   const [loadingOptions, setLoadingOptions] = useState(true);
 
-  // Fetch dropdown data (Learning Outcomes + Topics)
+  // Fetch dropdown data
   useEffect(() => {
     const fetchOptions = async () => {
       try {
@@ -93,33 +92,34 @@ const CreateSubjectTopicForm = ({
     fetchOptions();
   }, [auth.token]);
 
-  // React Hook Form + Zod setup
-  const form = useForm<CreateSubjectTopic>({
-    resolver: zodResolver(CreateSubjectTopicSchema),
+  // Setup form with defaults from existing topic
+  const form = useForm<UpdateSubjectTopic>({
+    resolver: zodResolver(UpdateSubjectTopicSchema),
     defaultValues: {
-      title: "",
-      description: "",
-      order: 1,
-      learning_outcome_id: learningOutcome
-        ? learningOutcome._id || learningOutcome.id
-        : undefined,
-      parent_topic_id: topic ? topic.id || topic._id : undefined,
+      title: topic.title ?? "",
+      description: topic.description ?? "",
+      order: topic.order ?? 1,
+      learning_outcome_id:
+        topic.learning_outcome_id ??
+        learningOutcome?._id ??
+        learningOutcome?.id ??
+        undefined,
+      parent_topic_id: topic.parent_topic_id ?? undefined,
     },
     mode: "onChange",
   });
 
-  // Handle Submit
-  const handleSubmit = (values: CreateSubjectTopic) => {
+  // Submit handler
+  const handleSubmit = (values: UpdateSubjectTopic) => {
     setError("");
     setSuccess("");
 
     startTransition(async () => {
       try {
-        const apiData = { ...values, created_by: auth.user.id };
-        const request = await apiRequest<CreateSubjectTopic, SubjectTopic>(
-          "post",
-          "/subject-topics",
-          apiData,
+        const request = await apiRequest<UpdateSubjectTopic, SubjectTopic>(
+          "put",
+          `/subject-topics/${topic._id || topic.id}`,
+          values,
           { token: auth.token },
         );
 
@@ -131,13 +131,12 @@ const CreateSubjectTopicForm = ({
             type: "error",
           });
         } else {
-          setSuccess("Subject Topic created successfully!");
+          setSuccess("Subject Topic updated successfully!");
           showToast({
-            title: "Success",
-            description: `Created topic: ${request.data.title}`,
+            title: "Updated",
+            description: `Updated topic: ${request.data.title}`,
             type: "success",
           });
-          form.reset();
         }
       } catch (err) {
         setError(`Unexpected error occurred [${err}]. Please try again.`);
@@ -149,7 +148,9 @@ const CreateSubjectTopicForm = ({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
+          {/* Left Column */}
           <div className="flex flex-col space-y-4">
+            {/* Title */}
             <FormField
               name="title"
               control={form.control}
@@ -159,8 +160,10 @@ const CreateSubjectTopicForm = ({
                   <FormControl>
                     <Input
                       {...field}
+                      type="text"
                       placeholder="Enter topic title"
                       disabled={isPending}
+                      value={field.value ?? ""}
                     />
                   </FormControl>
                   <FormMessage />
@@ -190,7 +193,7 @@ const CreateSubjectTopicForm = ({
             />
           </div>
 
-          {/* Right Side */}
+          {/* Right Column */}
           <div className="flex flex-col space-y-4">
             {/* Learning Outcome */}
             {!learningOutcome && (
@@ -225,32 +228,30 @@ const CreateSubjectTopicForm = ({
             )}
 
             {/* Parent Topic */}
-            {!topic && (
-              <FormField
-                name="parent_topic_id"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Parent Topic</FormLabel>
-                    <SelectWithSearch
-                      options={parentTopics.map((pa) => ({
-                        value: pa.id || pa._id || "",
-                        label: pa.title,
-                      }))}
-                      value={field.value ?? ""}
-                      onChange={field.onChange}
-                      placeholder={
-                        loadingOptions
-                          ? "Loading topics..."
-                          : "Select parent topic"
-                      }
-                      disabled={isPending || loadingOptions}
-                    />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
+            <FormField
+              name="parent_topic_id"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Parent Topic</FormLabel>
+                  <SelectWithSearch
+                    options={parentTopics.map((pt) => ({
+                      value: pt.id || pt._id || "",
+                      label: pt.title,
+                    }))}
+                    value={field.value ?? ""}
+                    onChange={field.onChange}
+                    placeholder={
+                      loadingOptions
+                        ? "Loading topics..."
+                        : "Select parent topic"
+                    }
+                    disabled={isPending || loadingOptions}
+                  />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             {/* Order */}
             <FormField
@@ -292,7 +293,7 @@ const CreateSubjectTopicForm = ({
             disabled={isPending}
             className="w-full sm:w-auto"
           >
-            Create Topic{" "}
+            Update Topic{" "}
             {isPending && (
               <LoaderCircle
                 className="-ms-1 me-2 animate-spin"
@@ -308,4 +309,4 @@ const CreateSubjectTopicForm = ({
   );
 };
 
-export default CreateSubjectTopicForm;
+export default UpdateSubjectTopicForm;

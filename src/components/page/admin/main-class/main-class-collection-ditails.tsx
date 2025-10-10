@@ -12,7 +12,8 @@ interface Props {
 }
 
 const MainClassCollectionDetails = ({ initialClasses = [] }: Props) => {
-  const { data: classes } = useRealtimeData<mainClassModelWithTrade>();
+  const { data: classes } =
+    useRealtimeData<mainClassModelWithTrade>("main_class");
   const [displayClasses, setDisplayClasses] =
     useState<mainClassModelWithTrade[]>(initialClasses);
 

@@ -69,7 +69,12 @@ export default async function CreateMainSubjectPage({
     progressRes.data === undefined ||
     outcomesRes.data === undefined
   ) {
-    return <ErrorPage message="Failed to fetch one or more datasets" />;
+    return (
+      <ErrorPage
+        error={subjectRes.error || progressRes.error || outcomesRes.error}
+        message="Failed to fetch one or more datasets"
+      />
+    );
   }
 
   // ✅ Normalize data to arrays for RealtimeProvider
@@ -93,21 +98,22 @@ export default async function CreateMainSubjectPage({
 
   // ✅ Render main component
   return (
-    <RealtimeProvider<MainSubject>
-      channel="main_subject"
-      initialData={subjectData}
+    <RealtimeProvider<
+      MainSubject | SubjectProgressTrackingConfig | LearningOutcomeWithOthers
     >
-      <RealtimeProvider<SubjectProgressTrackingConfig>
-        channel="subject_progress_config"
-        initialData={progressData}
-      >
-        <RealtimeProvider<LearningOutcomeWithOthers>
-          channel="learning_outcome"
-          initialData={outcomeData}
-        >
-          <CreateMainSubjectClientPage auth={auth} subjectId={subjectId} />
-        </RealtimeProvider>
-      </RealtimeProvider>
+      channels={[
+        { name: "main_subject", initialData: subjectData },
+        {
+          name: "subject_progress_config",
+          initialData: progressData,
+        },
+        {
+          name: "learning_outcome",
+          initialData: outcomeData,
+        },
+      ]}
+    >
+      <CreateMainSubjectClientPage auth={auth} subjectId={subjectId} />
     </RealtimeProvider>
   );
 }

@@ -2,7 +2,9 @@
 import { cn } from "@/lib/utils";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
+import { Loader2, Pen } from "lucide-react"; // ⬅️ using lucide-react icons
 import * as React from "react";
+import { CiCirclePlus } from "react-icons/ci";
 
 // ShadCN-style variants
 export const shadcnVariants = cva(
@@ -10,7 +12,7 @@ export const shadcnVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-base-content  shadow-xs hover:bg-primary/90",
+        default: "bg-primary text-base-content shadow-xs hover:bg-primary/90",
         destructive:
           "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
         outline:
@@ -70,38 +72,68 @@ const daisyVariants = cva("btn", {
   },
 });
 
-// Props for ShadCN version
 export type ShadcnButtonProps =
   React.ButtonHTMLAttributes<HTMLButtonElement> & {
     asChild?: boolean;
     library?: "shadcn";
+    role?: "create" | "loading";
   } & VariantProps<typeof shadcnVariants>;
 
-// Props for DaisyUI version
 export type DaisyButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   asChild?: boolean;
   library: "daisy";
+  role?: "create" | "loading" | "update";
 } & VariantProps<typeof daisyVariants>;
 
-// Union of both
 type UniversalButtonProps = ShadcnButtonProps | DaisyButtonProps;
 
 const Button = React.forwardRef<HTMLButtonElement, UniversalButtonProps>(
-  ({ className, asChild = false, library = "shadcn", ...props }, ref) => {
+  (
+    {
+      className,
+      asChild = false,
+      library = "shadcn",
+      role,
+      children,
+      disabled,
+      ...props
+    },
+    ref,
+  ) => {
     const Comp = asChild ? Slot : "button";
+
     const styles =
       library === "daisy"
-        ? daisyVariants({
-            ...(props as DaisyButtonProps),
-            className,
-          })
-        : shadcnVariants({
-            ...(props as ShadcnButtonProps),
-            className,
-          });
+        ? daisyVariants({ ...(props as DaisyButtonProps), className })
+        : shadcnVariants({ ...(props as ShadcnButtonProps), className });
+
+    // 👇 Define role-based icons
+    const renderIcon = () => {
+      switch (role) {
+        case "create":
+          return <CiCirclePlus className="size-4" />;
+        case "loading":
+          return <Loader2 className="-ms-1 size-4 animate-spin" />;
+        case "update":
+          return <Pen className="size-4" />;
+        default:
+          return null;
+      }
+    };
+
+    const isLoading = role === "loading";
 
     return (
-      <Comp ref={ref} className={cn("cursor-pointer", styles)} {...props} />
+      <Comp
+        ref={ref}
+        className={cn("cursor-pointer", styles)}
+        disabled={isLoading || disabled}
+        {...props}
+      >
+        {/* Icon (left side) */}
+        {renderIcon()}
+        {children}
+      </Comp>
     );
   },
 );
@@ -113,20 +145,20 @@ const buttonVariants = (
     | (VariantProps<typeof shadcnVariants> & {
         library?: "shadcn";
         className?: string;
+        role?: "create" | "loading" | null;
       })
     | (VariantProps<typeof daisyVariants> & {
         library: "daisy";
         className?: string;
+        role?: "create" | "loading" | null;
       }) = {
     library: "shadcn",
   },
 ) => {
   const { library = "shadcn", ...rest } = options as any;
-
   if (library === "daisy") {
     return daisyVariants(rest as VariantProps<typeof daisyVariants>);
   }
-
   return shadcnVariants(rest as VariantProps<typeof shadcnVariants>);
 };
 

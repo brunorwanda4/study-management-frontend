@@ -1,8 +1,35 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
+// ✅ New: helper for safe revalidation
+async function safeRevalidate(path: string) {
+  try {
+    // Use environment variable for base URL if available
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://127.0.0.1:4646";
+
+    // POST to Next.js revalidation route (if it exists)
+    const response = await fetch(`${baseUrl}/api/revalidate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ path }),
+    });
+
+    if (!response.ok) {
+      console.warn(
+        `⚠️ Revalidation failed for ${path}: ${response.status} ${response.statusText}`,
+      );
+    } else {
+      console.log(`✅ Successfully revalidated path: ${path}`);
+    }
+  } catch (error) {
+    // Fail silently to avoid breaking server logic
+    console.warn(
+      `⚠️ Skipping revalidation for ${path}: ${String(error)} (safe fallback)`,
+    );
+  }
+}
+
 type HttpMethod = "get" | "post" | "put" | "delete" | "patch";
 
-// Define the API response interface
 export interface APIResponse<T = unknown> {
   data?: T;
   message?: string;
@@ -14,7 +41,6 @@ export interface APIResponse<T = unknown> {
   };
 }
 
-// Define the options interface
 export interface ApiRequestOptions {
   token?: string;
   role?: string;
@@ -26,10 +52,14 @@ export interface ApiRequestOptions {
    * Callback for real-time events
    */
   onRealtimeEvent?: (event: any) => void;
+  /**
+   * Automatically revalidate this path after success
+   */
+  revalidatePath?: string | string[];
 }
 
 /**
- * Reusable API request function
+ * Reusable API request function with safe revalidation support
  */
 async function apiRequest<TRequest = unknown, TResponse = unknown>(
   method: HttpMethod,
@@ -70,6 +100,20 @@ async function apiRequest<TRequest = unknown, TResponse = unknown>(
         entityType:
           typeof options.realtime === "string" ? options.realtime : undefined,
       };
+    }
+
+    // ✅ Auto revalidate if required
+    if (
+      options.revalidatePath &&
+      ["post", "put", "patch", "delete"].includes(method)
+    ) {
+      const paths = Array.isArray(options.revalidatePath)
+        ? options.revalidatePath
+        : [options.revalidatePath];
+
+      for (const path of paths) {
+        await safeRevalidate(path);
+      }
     }
 
     return result;

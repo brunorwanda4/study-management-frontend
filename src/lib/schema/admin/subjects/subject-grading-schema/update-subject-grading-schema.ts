@@ -12,4 +12,6 @@ export const UpdateSubjectGradingSchemeSchema = z.object({
   role: SubjectTypeSchema.optional(),
 });
 
-export type UpdateSubjectGradingScheme = z.infer<typeof SubjectTypeSchema>;
+export type UpdateSubjectGradingScheme = z.infer<
+  typeof UpdateSubjectGradingSchemeSchema
+>;

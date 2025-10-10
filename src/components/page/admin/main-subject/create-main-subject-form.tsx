@@ -27,6 +27,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 import { FormError, FormSuccess } from "@/components/common/form-message";
 import SelectWithSearch from "@/components/common/select-with-search";
+import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import MultipleSelector from "@/components/ui/multiselect";
 import {
   subjectAuths,
@@ -45,10 +46,17 @@ import apiRequest from "@/service/api-client";
 
 interface Props {
   auth: AuthUserResult;
-  setSubject: Dispatch<SetStateAction<MainSubject | undefined>>;
+  setSubject?: Dispatch<SetStateAction<MainSubject | undefined>>;
+  mainClass?: MainClassModel;
+  isDialog?: boolean;
 }
 
-const CreateMainSubjectForm = ({ auth, setSubject }: Props) => {
+const CreateMainSubjectForm = ({
+  auth,
+  setSubject,
+  mainClass,
+  isDialog,
+}: Props) => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
@@ -63,12 +71,14 @@ const CreateMainSubjectForm = ({ auth, setSubject }: Props) => {
     const fetchMainClasses = async () => {
       try {
         const [classes, subjects] = await Promise.all([
-          apiRequest<void, MainClassModel[]>(
-            "get",
-            "/main-classes",
-            undefined,
-            { token: auth.token },
-          ),
+          !mainClass
+            ? apiRequest<void, MainClassModel[]>(
+                "get",
+                "/main-classes",
+                undefined,
+                { token: auth.token },
+              )
+            : { data: [] },
           apiRequest<void, MainSubject[]>("get", "/main-subjects", undefined, {
             token: auth.token,
           }),
@@ -104,7 +114,15 @@ const CreateMainSubjectForm = ({ auth, setSubject }: Props) => {
     estimated_hours: 0,
     credits: 0,
     category: "Science", // Make sure this matches the enum values exactly
-    main_class_ids: [],
+    main_class_ids: mainClass
+      ? [
+          {
+            value: mainClass.id ?? mainClass._id ?? "",
+            label: mainClass.name ?? "Unknown",
+          },
+        ]
+      : [],
+
     prerequisites: [],
     contributors: [],
     starting_year: "",
@@ -138,6 +156,7 @@ const CreateMainSubjectForm = ({ auth, setSubject }: Props) => {
           // Ensure numbers are properly formatted
           estimated_hours: Number(values.estimated_hours),
           credits: Number(values.credits),
+
           // Convert empty strings to undefined for dates
           starting_year: values.starting_year
             ? new Date(values.starting_year).toISOString()
@@ -145,6 +164,13 @@ const CreateMainSubjectForm = ({ auth, setSubject }: Props) => {
           ending_year: values.ending_year
             ? new Date(values.ending_year).toISOString()
             : undefined,
+
+          // Only send array of IDs (values)
+          main_class_ids: mainClass
+            ? [mainClass.id || mainClass._id || ""]
+            : (values.main_class_ids?.map((item) => item.value) ?? []),
+          prerequisites: values.prerequisites?.map((item) => item.value) ?? [],
+
           created_by: auth.user.id,
         };
 
@@ -168,8 +194,8 @@ const CreateMainSubjectForm = ({ auth, setSubject }: Props) => {
             description: `Created: ${request.data.name}`,
             type: "success",
           });
-          setSubject(request.data);
-          // form.reset(defaultValues);
+          if (!!setSubject) setSubject(request.data);
+          form.reset(defaultValues);
         }
       } catch (err) {
         setError(`Unexpected error occurred [${err}]. Please try again.`);
@@ -352,33 +378,35 @@ const CreateMainSubjectForm = ({ auth, setSubject }: Props) => {
             />
 
             {/* Main Class IDs - Multi-select */}
-            <FormField
-              name="main_class_ids"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Linked Main Classes</FormLabel>
-                  {loadingOptions ? (
-                    <div className="skeleton h-12 rounded-md" />
-                  ) : (
-                    <FormControl>
-                      <MultipleSelector
-                        value={field.value}
-                        onChange={field.onChange}
-                        defaultOptions={mainClasses.map((item) => ({
-                          value: item.id || item._id || item.trade_id || "",
-                          label: item.name,
-                          disable: item.disable || false,
-                        }))}
-                        placeholder="e.g., Level 4 Software development"
-                        hidePlaceholderWhenSelected
-                      />
-                    </FormControl>
-                  )}
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {!mainClass && (
+              <FormField
+                name="main_class_ids"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Linked Main Classes</FormLabel>
+                    {loadingOptions ? (
+                      <div className="skeleton h-12 rounded-md" />
+                    ) : (
+                      <FormControl>
+                        <MultipleSelector
+                          value={field.value}
+                          onChange={field.onChange}
+                          defaultOptions={mainClasses.map((item) => ({
+                            value: item.id || item._id || item.trade_id || "",
+                            label: item.name,
+                            disable: item.disable || false,
+                          }))}
+                          placeholder="e.g., Level 4 Software development"
+                          hidePlaceholderWhenSelected
+                        />
+                      </FormControl>
+                    )}
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
             {/* Prerequisites - Multi-select */}
             <FormField
@@ -575,23 +603,48 @@ const CreateMainSubjectForm = ({ auth, setSubject }: Props) => {
         {/* Messages */}
         <FormError message={error} />
         <FormSuccess message={success} />
-        <Button
-          variant={"info"}
-          type="submit"
-          disabled={isPending}
-          className="w-full sm:w-auto"
-          library={"daisy"}
-        >
-          Create main subject{" "}
-          {isPending && (
-            <LoaderCircle
-              className="-ms-1 me-2 animate-spin"
-              size={12}
-              strokeWidth={2}
-              aria-hidden="true"
-            />
-          )}
-        </Button>
+        {isDialog ? (
+          <DialogFooter className="flex justify-end">
+            <DialogClose>
+              <Button variant={"outline"}>Cancel</Button>
+            </DialogClose>
+            <Button
+              variant={"primary"}
+              type="submit"
+              disabled={isPending}
+              className="w-full sm:w-auto"
+              library={"daisy"}
+            >
+              Create main subject{" "}
+              {isPending && (
+                <LoaderCircle
+                  className="-ms-1 me-2 animate-spin"
+                  size={12}
+                  strokeWidth={2}
+                  aria-hidden="true"
+                />
+              )}
+            </Button>
+          </DialogFooter>
+        ) : (
+          <Button
+            variant={"primary"}
+            type="submit"
+            disabled={isPending}
+            className="w-full sm:w-auto"
+            library={"daisy"}
+          >
+            Create main subject{" "}
+            {isPending && (
+              <LoaderCircle
+                className="-ms-1 me-2 animate-spin"
+                size={12}
+                strokeWidth={2}
+                aria-hidden="true"
+              />
+            )}
+          </Button>
+        )}
       </form>
     </Form>
   );

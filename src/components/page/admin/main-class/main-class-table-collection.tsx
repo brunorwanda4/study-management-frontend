@@ -41,7 +41,7 @@ const MainClassesTableCollection = ({
   realtimeEnabled = false,
 }: Props) => {
   const { data: classes, isConnected } =
-    useRealtimeData<mainClassModelWithTrade>();
+    useRealtimeData<mainClassModelWithTrade>("main_class");
   const [displayClasses, setDisplayClasses] =
     useState<mainClassModelWithTrade[]>(initialClasses);
 

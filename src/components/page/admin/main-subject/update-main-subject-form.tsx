@@ -27,6 +27,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 import { FormError, FormSuccess } from "@/components/common/form-message";
 import SelectWithSearch from "@/components/common/select-with-search";
+import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import MultipleSelector from "@/components/ui/multiselect";
 import {
   subjectAuths,
@@ -42,19 +43,26 @@ import {
 } from "@/lib/schema/admin/subjects/main-subject-schema/update-main-subject-schema";
 import { AuthUserResult } from "@/lib/utils/auth-user";
 import apiRequest from "@/service/api-client";
+import { redirect } from "next/navigation";
 
 interface Props {
   auth: AuthUserResult;
   subject: MainSubject;
-  setSubject: Dispatch<SetStateAction<MainSubject | undefined>>;
+  setSubject?: Dispatch<SetStateAction<MainSubject | undefined>>;
   onCancel?: () => void;
+  isDialog?: boolean;
+  mainClass?: MainClassModel;
+  revalidate?: boolean;
 }
 
 const UpdateMainSubjectForm = ({
   auth,
+  isDialog,
   subject,
   setSubject,
   onCancel,
+  mainClass,
+  revalidate,
 }: Props) => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
@@ -182,10 +190,9 @@ const UpdateMainSubjectForm = ({
         const apiData = {
           ...values,
           // Ensure numbers are properly formatted
-          estimated_hours: values.estimated_hours
-            ? Number(values.estimated_hours)
-            : undefined,
-          credits: values.credits ? Number(values.credits) : undefined,
+          estimated_hours: Number(values.estimated_hours),
+          credits: Number(values.credits),
+
           // Convert empty strings to undefined for dates
           starting_year: values.starting_year
             ? new Date(values.starting_year).toISOString()
@@ -193,10 +200,13 @@ const UpdateMainSubjectForm = ({
           ending_year: values.ending_year
             ? new Date(values.ending_year).toISOString()
             : undefined,
-          // Convert arrays to just IDs for API
-          main_class_ids:
-            values.main_class_ids?.map((item) => item.value) || [],
-          prerequisites: values.prerequisites?.map((item) => item.value) || [],
+
+          // Only send array of IDs (values)
+          main_class_ids: mainClass
+            ? [mainClass.id || mainClass._id || ""]
+            : (values.main_class_ids?.map((item) => item.value) ?? []),
+          prerequisites: values.prerequisites?.map((item) => item.value) ?? [],
+
           updated_by: auth.user.id,
         };
         const request = await apiRequest<typeof apiData, MainSubject>(
@@ -220,7 +230,8 @@ const UpdateMainSubjectForm = ({
             description: `Updated: ${request.data.name}`,
             type: "success",
           });
-          setSubject(request.data);
+          if (revalidate) redirect(`/a/database/main_subjects/${subject.code}`);
+          if (!!setSubject) setSubject(request.data);
         }
       } catch (err) {
         setError(`Unexpected error occurred [${err}]. Please try again.`);
@@ -614,37 +625,64 @@ const UpdateMainSubjectForm = ({
         <FormSuccess message={success} />
 
         {/* Action Buttons */}
-        <div className="flex gap-3">
-          <Button
-            variant={"info"}
-            type="submit"
-            disabled={isPending}
-            className="sm:w-auto"
-            library={"daisy"}
-          >
-            Update main subject{" "}
-            {isPending && (
-              <LoaderCircle
-                className="-ms-1 me-2 animate-spin"
-                size={12}
-                strokeWidth={2}
-                aria-hidden="true"
-              />
-            )}
-          </Button>
-
-          {onCancel && (
+        {isDialog ? (
+          <DialogFooter className="flex justify-end">
+            <DialogClose>
+              <Button variant={"outline"} type="button" library="daisy">
+                Cancel
+              </Button>
+            </DialogClose>
             <Button
-              type="button"
-              variant="outline"
-              onClick={onCancel}
+              variant={"primary"}
+              type="submit"
+              disabled={isPending}
+              className="w-full sm:w-auto"
+              library={"daisy"}
+            >
+              update main subject{" "}
+              {isPending && (
+                <LoaderCircle
+                  className="-ms-1 me-2 animate-spin"
+                  size={12}
+                  strokeWidth={2}
+                  aria-hidden="true"
+                />
+              )}
+            </Button>
+          </DialogFooter>
+        ) : (
+          <div className="flex gap-3">
+            <Button
+              variant={"info"}
+              type="submit"
               disabled={isPending}
               className="sm:w-auto"
+              library={"daisy"}
             >
-              Cancel
+              Update main subject{" "}
+              {isPending && (
+                <LoaderCircle
+                  className="-ms-1 me-2 animate-spin"
+                  size={12}
+                  strokeWidth={2}
+                  aria-hidden="true"
+                />
+              )}
             </Button>
-          )}
-        </div>
+
+            {onCancel && (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onCancel}
+                disabled={isPending}
+                className="sm:w-auto"
+              >
+                Cancel
+              </Button>
+            )}
+          </div>
+        )}
       </form>
     </Form>
   );

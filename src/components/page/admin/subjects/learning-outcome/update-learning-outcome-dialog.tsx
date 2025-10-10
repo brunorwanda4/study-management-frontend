@@ -9,8 +9,8 @@ import {
 } from "@/components/ui/dialog";
 import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
 import { LearningOutcome } from "@/lib/schema/admin/subjects/subject-learning-outcome-schema/learning-outcome-schema";
+import { cn } from "@/lib/utils";
 import { AuthUserResult } from "@/lib/utils/auth-user";
-import { Pen } from "lucide-react";
 import { Dispatch, SetStateAction } from "react";
 
 interface props {
@@ -19,6 +19,7 @@ interface props {
   learningOutcome: LearningOutcome; // The existing learning outcome to edit
   setLearningOutcome?: Dispatch<SetStateAction<LearningOutcome | undefined>>;
   onSuccess?: () => void;
+  icon?: boolean;
 }
 
 const UpdateLearningOutcomeDialog = ({
@@ -27,12 +28,21 @@ const UpdateLearningOutcomeDialog = ({
   learningOutcome,
   setLearningOutcome,
   onSuccess,
+  icon = false,
 }: props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size={"sm"} type="button" variant={"warning"} library="daisy">
-          <Pen size={20} /> Update learning outcome
+        <Button
+          size={"sm"}
+          type="button"
+          variant={"warning"}
+          library="daisy"
+          role="update"
+          data-tip={icon && "Update learning outcome"}
+          className={cn(icon && "tooltip tooltip-top tooltip-warning")}
+        >
+          {!icon && "Update learning outcome"}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-h-[90vh] overflow-auto sm:max-w-6xl">

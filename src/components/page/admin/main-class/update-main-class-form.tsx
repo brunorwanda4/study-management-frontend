@@ -256,7 +256,8 @@ const UpdateMainClassForm = ({ mainClass, auth }: Props) => {
           <DialogClose asChild>
             <Button
               type="submit"
-              variant="default"
+              variant="primary"
+              library="daisy"
               disabled={isPending}
               className="w-full sm:w-auto"
             >
