@@ -3,6 +3,7 @@ import { BasicInformationForm } from "@/components/page/school-staff/school-sett
 import { ContactLocationForm } from "@/components/page/school-staff/school-setting/forms/contact-location";
 import { Locale } from "@/i18n";
 import { getSchoolServer } from "@/lib/utils/auth";
+import { authUser } from "@/lib/utils/auth-user";
 import { getSchoolByIdService } from "@/service/school/school.service";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
@@ -17,15 +18,24 @@ interface props {
 const SchoolSettingsPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
-  const [currentUser, currentSchool] = await Promise.all([authUser(), getSchoolServer()]);
-  if (!currentUser?.role) return redirect(`/${lang}/auth/login`);
-  if (!currentSchool) return <NotFoundPage message="You need to have school to access this page"/>
+  const [currentUser, currentSchool] = await Promise.all([
+    authUser(),
+    getSchoolServer(),
+  ]);
+  if (!currentUser?.user.role) return redirect(`/${lang}/auth/login`);
+  if (!currentSchool)
+    return (
+      <NotFoundPage message="You need to have school to access this page" />
+    );
   const school = await getSchoolByIdService(currentSchool.schoolId);
-  if (!school.data) return <NotFoundPage />
+  if (!school.data) return <NotFoundPage />;
   return (
-    <div className=" space-y-4">
-      <h2 className=" title-page">School Public Information</h2>
-      <BasicInformationForm schoolId={school.data.id} initialData={school.data} />
+    <div className="space-y-4">
+      <h2 className="title-page">School Public Information</h2>
+      <BasicInformationForm
+        schoolId={school.data.id}
+        initialData={school.data}
+      />
       {/* <AcademicDetailsForm
         initialData={{
           ...school.data,
@@ -34,7 +44,10 @@ const SchoolSettingsPage = async (props: props) => {
             : undefined,
         }}
       /> */}
-      <ContactLocationForm schoolId={school.data.id} initialData={school.data}/>
+      <ContactLocationForm
+        schoolId={school.data.id}
+        initialData={school.data}
+      />
       {/* <FacilitiesOperationsForm initialData={school.data}/> */}
       {/* <UpdateSchoolPublicInfo lang={lang} initialData={school.data} /> */}
     </div>

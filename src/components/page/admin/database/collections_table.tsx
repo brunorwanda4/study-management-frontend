@@ -10,17 +10,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { mainCollections } from "@/lib/const/main-collections";
 import { CollectionStats, DatabaseStats } from "@/lib/types/databaseStatus";
 import {
   ColumnDef,
   ColumnFiltersState,
+  SortingState,
   getCoreRowModel,
   getFacetedMinMaxValues,
   getFacetedRowModel,
   getFacetedUniqueValues,
   getFilteredRowModel,
   getSortedRowModel,
-  SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 import { useState } from "react";
@@ -31,26 +32,43 @@ interface Props {
 
 const CollectionsTable = ({ data }: Props) => {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
+  // ✅ our custom sorting: main collections first, others after, alphabetically
+  const mainNames = mainCollections.map((m) => m.name);
   const [sorting, setSorting] = useState<SortingState>([
-    { id: "name", desc: false },
+    {
+      id: "name",
+      desc: false,
+      // @ts-ignore: we attach custom compare logic to this sorting
+      compareFn: (a: string, b: string) => {
+        const aIsMain = mainNames.includes(a);
+        const bIsMain = mainNames.includes(b);
+
+        if (aIsMain && !bIsMain) return -1;
+        if (!aIsMain && bIsMain) return 1;
+        return a.localeCompare(b);
+      },
+    },
   ]);
 
-  // ✅ Pass database stats into column builder
-  const columns = getCollectionsTableColumns(data);
+  const columns = getCollectionsTableColumns(data) as ColumnDef<
+    CollectionStats,
+    unknown
+  >[];
 
-  // ✅ Table must be based on CollectionStats, not DatabaseStats
+  // ✅ Let table use that new sorting
   const table = useReactTable<CollectionStats>({
     data: data.collections,
-    columns: columns as ColumnDef<CollectionStats, unknown>[],
+    columns,
     state: { sorting, columnFilters },
     onColumnFiltersChange: setColumnFilters,
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
-    onSortingChange: setSorting,
   });
 
   return (
@@ -59,11 +77,13 @@ const CollectionsTable = ({ data }: Props) => {
         <div className="space-y-2">
           <CardTitle>Collections</CardTitle>
           <CardDescription>
-            All collections are in database 'Mongodb'
+            All collections are in database <strong>MongoDB</strong>.
           </CardDescription>
         </div>
       </CardHeader>
+
       <CardContent className="space-y-4">
+        {/* Filters */}
         <div className="flex flex-wrap gap-3">
           <div className="w-44">
             <TableFilter column={table.getColumn("name")!} />
@@ -75,6 +95,8 @@ const CollectionsTable = ({ data }: Props) => {
             <TableFilter column={table.getColumn("size_bytes")!} />
           </div>
         </div>
+
+        {/* Table */}
         <CommonDataTable
           table={table}
           columns={columns}

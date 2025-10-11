@@ -8,11 +8,11 @@ import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: "Database | space-together",
-  description: "All things are in database",
+  title: "Collections | space-together",
+  description: "All things are in collections",
 };
 
-const DatabasePage = async () => {
+const CollectionsPage = async () => {
   const auth = await authUser();
   if (!auth) redirect("/auth/login");
   const request = await apiRequest<void, DatabaseStats>(
@@ -34,4 +34,4 @@ const DatabasePage = async () => {
   );
 };
 
-export default DatabasePage;
+export default CollectionsPage;

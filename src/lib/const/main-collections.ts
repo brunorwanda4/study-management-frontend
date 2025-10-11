@@ -27,6 +27,6 @@ export const mainCollections = [
     name: "main_subjects",
     href: "/a/collections/main_subjects",
     label: "Main subjects",
-    icon: "/icons/notebook.png",
+    icon: "/icons/book-stack.png",
   },
 ];

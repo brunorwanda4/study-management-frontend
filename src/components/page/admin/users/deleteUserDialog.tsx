@@ -1,7 +1,6 @@
 "use client";
 
 import { FormError, FormSuccess } from "@/components/common/form-message";
-import MyImage from "@/components/common/myImage";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,22 +12,22 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { useToast } from "@/lib/context/toast/ToastContext";
 import { UserModel } from "@/lib/types/userModel";
 import { cn } from "@/lib/utils";
 import { AuthUserResult } from "@/lib/utils/auth-user";
 import apiRequest from "@/service/api-client";
-import { LoaderCircle } from "lucide-react";
 import { redirect } from "next/navigation";
 import { useState, useTransition } from "react";
 
 interface Props {
   user: UserModel;
   auth: AuthUserResult;
+  isIcon?: boolean;
 }
 
-const DeleteUserDialog = ({ user, auth }: Props) => {
+const DeleteUserDialog = ({ user, auth, isIcon }: Props) => {
   const [error, setError] = useState<undefined | string>("");
   const [success, setSuccess] = useState<undefined | string>("");
   const [isPending, startTransition] = useTransition();
@@ -70,27 +69,17 @@ const DeleteUserDialog = ({ user, auth }: Props) => {
   };
   return (
     <AlertDialog>
-      <AlertDialogTrigger
-        className={cn(
-          buttonVariants({
-            size: "sm",
-            variant: "ghost",
-            library: "shadcn",
-            shape: "circle",
-          }),
-          "cursor-pointer",
-        )}
-      >
-        <MyImage role="ICON" src="/icons/delete.png" />{" "}
-        <span className="">Delete</span>
-        {isPending && (
-          <LoaderCircle
-            className="-ms-1 me-2 animate-spin"
-            size={12}
-            strokeWidth={2}
-            aria-hidden="true"
-          />
-        )}
+      <AlertDialogTrigger asChild>
+        <Button
+          size={"sm"}
+          library="daisy"
+          variant={"ghost"}
+          role={isPending ? "loading" : "delete"}
+          data-tip={isIcon && "Delete user"}
+          className={cn(isIcon && "tooltip tooltip-top tooltip-error")}
+        >
+          <span className={cn(isIcon && "sr-only")}>Delete user</span>
+        </Button>
       </AlertDialogTrigger>
       <AlertDialogContent className="">
         <AlertDialogHeader>
@@ -112,14 +101,15 @@ const DeleteUserDialog = ({ user, auth }: Props) => {
           <AlertDialogCancel type="button" className="cursor-pointer">
             Cancel
           </AlertDialogCancel>
-          <AlertDialogAction
-            onClick={handleDelete}
-            className={cn(
-              buttonVariants({ variant: "destructive", library: "shadcn" }),
-              "cursor-pointer",
-            )}
-          >
-            Delete
+          <AlertDialogAction asChild>
+            <Button
+              onClick={() => handleDelete()}
+              library={"daisy"}
+              variant={"error"}
+              role={isPending ? "loading" : undefined}
+            >
+              Delete
+            </Button>
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

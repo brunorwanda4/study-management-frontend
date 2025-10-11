@@ -1,4 +1,5 @@
 "use client";
+import NoItemsPage from "@/components/common/pages/no-items-page";
 import { Button } from "@/components/ui/button";
 import {
   TableBody,
@@ -26,6 +27,7 @@ interface DataTableProps<TData, TValue> {
   pageIndex?: number;
   setPageIndex?: (i: number) => void;
   pageSize?: number;
+  noFooter?: boolean;
 }
 
 export function CommonDataTable<TData, TValue>({
@@ -36,6 +38,7 @@ export function CommonDataTable<TData, TValue>({
   serverMode,
   pageIndex,
   setPageIndex,
+  noFooter = false,
   pageSize = 10,
 }: DataTableProps<TData, TValue>) {
   const internalTable = useReactTable({
@@ -97,7 +100,7 @@ export function CommonDataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="text-muted-foreground h-24 text-center text-sm"
                 >
-                  No results.
+                  <NoItemsPage title="It look no items founds! 😥" />
                 </TableCell>
               </TableRow>
             )}
@@ -105,52 +108,54 @@ export function CommonDataTable<TData, TValue>({
         </TableComponent>
       </div>
 
-      <div className="flex items-center justify-start gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          // onClick={() => {
-          //   if (serverMode && setPageIndex) {
-          //     setPageIndex(Math.max((pageIndex ?? 0) - 1, 0));
-          //   } else {
-          //     table.previousPage();
-          //   }
-          // }}
-          disabled={
-            serverMode ? (pageIndex ?? 0) === 0 : !table.getCanPreviousPage()
-          }
-        >
-          Previous
-        </Button>
+      {!noFooter && (
+        <div className="flex items-center justify-start gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.previousPage()}
+            // onClick={() => {
+            //   if (serverMode && setPageIndex) {
+            //     setPageIndex(Math.max((pageIndex ?? 0) - 1, 0));
+            //   } else {
+            //     table.previousPage();
+            //   }
+            // }}
+            disabled={
+              serverMode ? (pageIndex ?? 0) === 0 : !table.getCanPreviousPage()
+            }
+          >
+            Previous
+          </Button>
 
-        <span className="text-sm">
-          {/* Page {table.getState().pagination.pageIndex + 1} */}
-          Page{" "}
-          {serverMode
-            ? (pageIndex ?? 0) + 1
-            : table.getState().pagination.pageIndex + 1}{" "}
-        </span>
+          <span className="text-sm">
+            {/* Page {table.getState().pagination.pageIndex + 1} */}
+            Page{" "}
+            {serverMode
+              ? (pageIndex ?? 0) + 1
+              : table.getState().pagination.pageIndex + 1}{" "}
+          </span>
 
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          // disabled={!table.getCanNextPage()}
-          // onClick={() => {
-          //   if (serverMode && setPageIndex) {
-          //     setPageIndex((pageIndex ?? 0) + 1);
-          //   } else {
-          //     table.nextPage();
-          //   }
-          // }}
-          disabled={
-            serverMode ? data.length < pageSize : !table.getCanNextPage()
-          }
-        >
-          Next
-        </Button>
-      </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.nextPage()}
+            // disabled={!table.getCanNextPage()}
+            // onClick={() => {
+            //   if (serverMode && setPageIndex) {
+            //     setPageIndex((pageIndex ?? 0) + 1);
+            //   } else {
+            //     table.nextPage();
+            //   }
+            // }}
+            disabled={
+              serverMode ? data.length < pageSize : !table.getCanNextPage()
+            }
+          >
+            Next
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

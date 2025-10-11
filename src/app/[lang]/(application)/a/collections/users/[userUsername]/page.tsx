@@ -1,10 +1,38 @@
 import UserInformation from "@/components/page/admin/users/user-information-card";
 import ErrorPage from "@/components/page/error-page";
 import NotFoundPage from "@/components/page/not-found";
+import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
 import { UserModel } from "@/lib/types/userModel";
 import { authUser } from "@/lib/utils/auth-user";
 import apiRequest from "@/service/api-client";
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ userUsername: string }>;
+}): Promise<Metadata> {
+  const { userUsername } = await params;
+  const auth = await authUser();
+  if (!auth) return { title: "Main Class" };
+
+  const request = await apiRequest<void, UserModel>(
+    "get",
+    `/users/username/${userUsername}`,
+    undefined,
+    { token: auth.token },
+  );
+
+  if (!request.data) return { title: "user not found | Space-Together" };
+
+  const nameOrUsername = request.data.name || request.data.username || "User";
+
+  return {
+    title: `${nameOrUsername} | Main Class`,
+    description: `${request.data.bio}, Details for user ${nameOrUsername}`,
+  };
+}
 
 const UserAdminPage = async (props: {
   params: Promise<{ userUsername: string }>;
@@ -14,21 +42,25 @@ const UserAdminPage = async (props: {
 
   const auth = await authUser();
   if (!auth) redirect("/auth/login");
-  const request = await apiRequest<void, UserModel>(
+  const userRes = await apiRequest<void, UserModel>(
     "get",
     `/users/username/${userUsername}`,
     undefined,
-    { token: auth.token },
+    { token: auth.token, realtime: "user" },
   );
-  if (request.statusCode === 404)
-    return <NotFoundPage message={request.message} />;
-  if (!request.data)
-    return <ErrorPage message={request.message} error={request.error} />;
+  if (userRes.statusCode === 404)
+    return <NotFoundPage message={userRes.message} />;
+  if (!userRes.data)
+    return <ErrorPage message={userRes.message} error={userRes.error} />;
 
   return (
-    <div>
-      <UserInformation auth={auth} user={request.data} />
-    </div>
+    <RealtimeProvider<UserModel>
+      channels={[{ name: "user", initialData: [userRes.data] }]}
+    >
+      <main>
+        <UserInformation auth={auth} initialUser={userRes.data} />
+      </main>
+    </RealtimeProvider>
   );
 };
 

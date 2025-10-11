@@ -25,7 +25,7 @@ export async function generateMetadata({
 
   const request = await apiRequest<void, MainClassModelWithOthers>(
     "get",
-    `/main-classes/username/others/${mainClassUsername}`,
+    `/main-classes/username/${mainClassUsername}`,
     undefined,
     { token: auth.token },
   );

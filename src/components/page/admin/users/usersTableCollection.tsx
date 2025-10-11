@@ -83,7 +83,7 @@ const UsersTableCollection = ({
         "get",
         `/users${query}`,
         undefined,
-        token,
+        { token: auth.token },
       );
 
       if (request.statusCode === 200 && request.data) {

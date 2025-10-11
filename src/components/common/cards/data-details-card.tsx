@@ -28,7 +28,13 @@ const DataDetailsCard = ({
             <CardTitle>{title}</CardTitle>
             <span className="text-2xl font-semibold">{size}</span>
           </div>
-          <MyImage src={icon} className="size-12" alt={`icon: ${icon}`} />
+          <MyImage
+            priority
+            original
+            src={icon}
+            className="size-12"
+            alt={`icon: ${icon}`}
+          />
         </div>
         <div className={cn("grid grid-cols-2 gap-2", ClassNameItems)}>
           {!!items &&

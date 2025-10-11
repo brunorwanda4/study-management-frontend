@@ -43,29 +43,16 @@ const SubjectCollectionDetails = ({ initialSubjects = [] }: Props) => {
     {},
   );
 
-  const activeSubjects = displaySubjects.filter(
-    (subject) => subject.is_active,
-  ).length;
-
   const totalEstimatedHours = displaySubjects.reduce(
     (sum, subject) => sum + (subject.estimated_hours || 0),
     0,
   );
-
-  const averageHoursPerSubject =
-    totalSubjects > 0 ? Math.round(totalEstimatedHours / totalSubjects) : 0;
-
   // --- Cards configuration ---
   const cards: dataDetailsCardProps[] = [
     {
       title: "Total Subjects",
       size: totalSubjects,
       icon: "/icons/graduation-hat.png",
-    },
-    {
-      title: "Active Subjects",
-      size: activeSubjects,
-      icon: "/icons/checked.png",
     },
     {
       title: "By Category",
@@ -84,16 +71,6 @@ const SubjectCollectionDetails = ({ initialSubjects = [] }: Props) => {
         key,
         value,
       })),
-    },
-    {
-      title: "Total Hours",
-      size: totalEstimatedHours,
-      icon: "/icons/clock.png",
-    },
-    {
-      title: "Avg Hours/Subject",
-      size: averageHoursPerSubject,
-      icon: "/icons/average.png",
     },
   ];
 

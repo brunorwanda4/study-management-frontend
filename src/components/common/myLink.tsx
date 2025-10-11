@@ -1,16 +1,20 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import Link, { useLinkStatus } from "next/link";
 import { Button, DaisyButtonProps, ShadcnButtonProps } from "../ui/button";
-import { cn } from "@/lib/utils";
 
-export function LoadingIndicator() {
+interface props {
+  className?: string;
+}
+
+export function LoadingIndicator({ className }: props) {
   const { pending } = useLinkStatus();
   return pending ? (
     <div
       role="status"
       aria-label="Loading"
-      className={cn("loading loading-spinner")}
+      className={cn("loading loading-spinner", className)}
     />
   ) : null;
 }

@@ -31,7 +31,12 @@ export const getMainSubjectsTableColumns = (): ColumnDef<MainSubject>[] => {
       header: "Code",
       accessorKey: "code",
       meta: { filterVariant: "text" },
-      cell: ({ row }) => <span className="">{row.original.code}</span>,
+      cell: ({ row }) => (
+        <Link href={`/a/collections/main_subjects/${row.original.code}`}>
+          {" "}
+          <span className="">{row.original.code}</span>
+        </Link>
+      ),
     },
     {
       header: "Category",
@@ -99,23 +104,6 @@ export const getMainSubjectsTableColumns = (): ColumnDef<MainSubject>[] => {
           </div>
         );
       },
-    },
-    {
-      header: "Status",
-      accessorKey: "is_active",
-      meta: { filterVariant: "select" },
-      cell: ({ row }) => (
-        <Badge
-          variant={row.original.is_active ? "default" : "secondary"}
-          className={cn(
-            row.original.is_active
-              ? "bg-green-100 text-green-800 hover:bg-green-100"
-              : "bg-gray-100 text-gray-800 hover:bg-gray-100",
-          )}
-        >
-          {row.original.is_active ? "Active" : "Inactive"}
-        </Badge>
-      ),
     },
     {
       header: "Created / Updated",

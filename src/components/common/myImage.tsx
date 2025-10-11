@@ -1,8 +1,8 @@
 "use client";
 
-import { cn } from "@/lib/utils"; // Assuming this is your utility for classnames
-import NextImage from "next/image"; // Renamed to avoid conflict with component name
-import { SyntheticEvent, useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
+import NextImage from "next/image";
+import { RefObject, SyntheticEvent, useEffect, useState } from "react";
 
 const TINY_TRANSPARENT_GIF =
   "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
@@ -18,12 +18,45 @@ interface MyImageProps {
   quality?: number;
   sizes?: string;
   onClick?: () => void;
-
-  /** ✅ Added width/height props */
   width?: number | string;
   height?: number | string;
   useSkeleton?: boolean;
   draggable?: boolean;
+  loading?: "lazy" | "eager";
+  original?: boolean;
+  ref?: RefObject<HTMLImageElement | null>;
+}
+
+/**
+ * Generates a small blurry version of an image for placeholder.
+ * Uses an offscreen <canvas> to downscale it.
+ */
+async function generateLowQualityPreview(src: string): Promise<string> {
+  try {
+    const img = document.createElement("img");
+    img.crossOrigin = "anonymous";
+    img.src = src;
+    await new Promise((res, rej) => {
+      img.onload = res;
+      img.onerror = rej;
+    });
+
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("Canvas not supported");
+
+    const scale = 0.03; // 3% of original size
+    const w = Math.max(8, img.width * scale);
+    const h = Math.max(8, img.height * scale);
+
+    canvas.width = w;
+    canvas.height = h;
+
+    ctx.drawImage(img, 0, 0, w, h);
+    return canvas.toDataURL("image/jpeg", 0.3); // Very low quality
+  } catch {
+    return TINY_TRANSPARENT_GIF;
+  }
 }
 
 const MyImage = ({
@@ -39,37 +72,45 @@ const MyImage = ({
   quality = 75,
   onClick,
   sizes = "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
-
-  /** ✅ Destructure width/height props */
   width,
   height,
+  loading = "lazy",
+  original = false,
+  ref,
 }: MyImageProps) => {
-  const [currentAttemptSrc, setCurrentAttemptSrc] = useState(initialSrc);
+  const [currentSrc, setCurrentSrc] = useState(initialSrc);
+  const [previewSrc, setPreviewSrc] = useState<string>(TINY_TRANSPARENT_GIF);
   const [imageStatus, setImageStatus] = useState<
     "loading" | "loaded" | "failedInitial" | "failedFallback"
   >("loading");
 
+  // Whenever the source changes, regenerate preview
   useEffect(() => {
-    setCurrentAttemptSrc(initialSrc);
+    let active = true;
+
     setImageStatus("loading");
+    setCurrentSrc(initialSrc);
+
+    // Generate auto low-quality preview
+    generateLowQualityPreview(initialSrc)
+      .then((blurred) => {
+        if (active) setPreviewSrc(blurred);
+      })
+      .catch(() => setPreviewSrc(TINY_TRANSPARENT_GIF));
+
+    return () => {
+      active = false;
+    };
   }, [initialSrc]);
 
   const handleLoadingComplete = () => setImageStatus("loaded");
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleError = (_e: SyntheticEvent<HTMLImageElement, Event>) => {
-    if (imageStatus === "loading" && currentAttemptSrc === initialSrc) {
-      if (initialSrc === fallbackSrc) {
-        setImageStatus("failedFallback");
-      } else {
-        setCurrentAttemptSrc(fallbackSrc);
-        setImageStatus("failedInitial");
-      }
-    } else if (
-      imageStatus === "failedInitial" &&
-      currentAttemptSrc === fallbackSrc
-    ) {
+    if (currentSrc === fallbackSrc) {
       setImageStatus("failedFallback");
+    } else {
+      setCurrentSrc(fallbackSrc);
+      setImageStatus("failedInitial");
     }
   };
 
@@ -80,37 +121,36 @@ const MyImage = ({
 
   const imageElement = !showPermanentFailurePlaceholder ? (
     <NextImage
-      key={currentAttemptSrc}
-      src={currentAttemptSrc}
-      draggable
+      key={currentSrc}
+      src={currentSrc}
+      draggable={draggable}
       onClick={onClick}
+      ref={ref}
       alt={alt}
       className={cn(
-        "object-cover transition-opacity duration-300 ease-in-out",
-        showImage ? "opacity-100" : "opacity-0",
+        "object-cover transition-all duration-700 ease-in-out",
+        showImage ? "blur-0 opacity-100" : "opacity-60 blur-md",
         role === "AVATAR" && "mask mask-squircle size-8",
         classname,
       )}
-      /** ✅ Allow width/height OR fallback to `fill` */
       {...(width && height
         ? { width: Number(width), height: Number(height) }
         : { fill: true })}
-      sizes={sizes}
+      sizes={original ? undefined : sizes}
       placeholder="blur"
-      blurDataURL={TINY_TRANSPARENT_GIF}
-      quality={quality}
+      blurDataURL={previewSrc} // ✅ Auto-generated low-quality preview
+      quality={original ? undefined : quality}
       priority={priority}
+      loading={priority ? undefined : loading}
       onLoad={handleLoadingComplete}
       onError={handleError}
-      unoptimized={
-        currentAttemptSrc.startsWith("data:") ||
-        currentAttemptSrc === TINY_TRANSPARENT_GIF
-      }
+      unoptimized={original}
     />
   ) : null;
 
   return (
     <div
+      ref={ref}
       className={cn(
         "relative overflow-hidden",
         role === "ICON" ? "size-4" : "size-32",

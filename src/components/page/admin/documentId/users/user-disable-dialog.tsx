@@ -1,7 +1,6 @@
 "use client";
 
 import { FormError, FormSuccess } from "@/components/common/form-message";
-import MyImage from "@/components/common/myImage";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,21 +12,21 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { useToast } from "@/lib/context/toast/ToastContext";
 import { UserModel } from "@/lib/types/userModel";
 import { cn } from "@/lib/utils";
 import { AuthUserResult } from "@/lib/utils/auth-user";
 import apiRequest from "@/service/api-client";
-import { LoaderCircle } from "lucide-react";
 import { useState, useTransition } from "react";
 
 interface Props {
   user: UserModel;
   auth: AuthUserResult;
+  isIcon?: boolean;
 }
 
-const UserDisableDialog = ({ auth, user }: Props) => {
+const UserDisableDialog = ({ auth, user, isIcon }: Props) => {
   const [error, setError] = useState<undefined | string>("");
   const [success, setSuccess] = useState<undefined | string>("");
   const [isPending, startTransition] = useTransition();
@@ -43,7 +42,7 @@ const UserDisableDialog = ({ auth, user }: Props) => {
         {
           disable: user.disable ? false : true,
         },
-        auth?.token,
+        { token: auth?.token },
       );
 
       if (!request.data) {
@@ -71,29 +70,23 @@ const UserDisableDialog = ({ auth, user }: Props) => {
 
   return (
     <AlertDialog>
-      <AlertDialogTrigger
-        className={cn(
-          buttonVariants({
-            size: "sm",
-            variant: "ghost",
-            library: "shadcn",
-          }),
-          "cursor-pointer",
-        )}
-      >
-        <MyImage
-          role="ICON"
-          src={user.disable ? "/icons/checked.png" : "/icons/disabled.png"}
-        />
-        <span className="">{user.disable ? "Enable" : "Disable"}</span>
-        {isPending && (
-          <LoaderCircle
-            className="-ms-1 me-2 animate-spin"
-            size={12}
-            strokeWidth={2}
-            aria-hidden="true"
-          />
-        )}
+      <AlertDialogTrigger asChild>
+        <Button
+          size={"sm"}
+          library="daisy"
+          variant={user.disable ? "success" : "ghost"}
+          role={isPending ? "loading" : user.disable ? "check" : "block"}
+          data-tip={isIcon && user.disable ? "Enable user" : "Disable user"}
+          className={cn(
+            isIcon && user.disable
+              ? "tooltip tooltip-top tooltip-success"
+              : "tooltip tooltip-top",
+          )}
+        >
+          <span className={cn(isIcon && "sr-only")}>
+            {user.disable ? "Enable" : "Disable"}
+          </span>
+        </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -116,20 +109,20 @@ const UserDisableDialog = ({ auth, user }: Props) => {
           <FormSuccess message={success} />
         </div>
         <AlertDialogFooter>
-          <AlertDialogCancel type="button" className="cursor-pointer">
-            Cancel
+          <AlertDialogCancel asChild>
+            <Button type="button" library="daisy" variant={"outline"}>
+              Cancel
+            </Button>
           </AlertDialogCancel>
-          <AlertDialogAction
-            onClick={() => handleToggle()}
-            className={cn(
-              buttonVariants({
-                variant: user.disable ? "success" : "warning",
-                library: "daisy",
-              }),
-              "cursor-pointer",
-            )}
-          >
-            {user.disable ? "Enable" : "Disable"}
+          <AlertDialogAction asChild>
+            <Button
+              onClick={() => handleToggle()}
+              library={"daisy"}
+              variant={"primary"}
+              role={isPending ? "loading" : undefined}
+            >
+              {user.disable ? "Enable" : "Disable"}
+            </Button>
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

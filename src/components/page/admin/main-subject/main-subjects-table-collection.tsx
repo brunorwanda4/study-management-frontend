@@ -98,9 +98,6 @@ const MainSubjectsTableCollection = ({
           <div className="w-36">
             <TableFilter column={table.getColumn("level")!} />
           </div>
-          <div className="w-36">
-            <TableFilter column={table.getColumn("is_active")!} />
-          </div>
         </div>
 
         {/* Data table */}
