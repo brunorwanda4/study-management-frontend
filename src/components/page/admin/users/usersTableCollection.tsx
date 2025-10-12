@@ -4,7 +4,7 @@ import TableFilter from "@/components/common/table/table-filter";
 import CreateNewUserDialog from "@/components/page/admin/users/createNewUserDialog";
 import { getUsersTableCollectionColumns } from "@/components/page/admin/users/users_table_collection_columns";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { UserModel } from "@/lib/types/userModel";
+import { UserModel } from "@/lib/schema/user/user-schema";
 import { AuthUserResult } from "@/lib/utils/auth-user";
 import apiRequest from "@/service/api-client";
 import {

@@ -1,10 +1,10 @@
 // utils/auth.ts
-import { Locale } from '@/i18n';
-import { authUser } from '@/lib/utils/auth-user';
-import { jwtDecode } from 'jwt-decode';
-import { redirect } from 'next/navigation';
-import { AuthUserDto } from '../schema/user/user.dto';
-import { getSchoolToken, removeUserToken } from './auth-cookies';
+import { Locale } from "@/i18n";
+import { authUser } from "@/lib/utils/auth-user";
+import { jwtDecode } from "jwt-decode";
+import { redirect } from "next/navigation";
+import { AuthUserDto } from "../schema/user/user-schema";
+import { getSchoolToken, removeUserToken } from "./auth-cookies";
 
 export function getUserFromToken(token: string): AuthUserDto | null {
   try {
@@ -17,13 +17,12 @@ export function getUserFromToken(token: string): AuthUserDto | null {
 }
 
 export function authLogout(lang: Locale) {
-  if (typeof window !== 'undefined') {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('userId');
+  if (typeof window !== "undefined") {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userId");
     window.location.href = `/${lang}/auth/login`;
   }
 }
-
 
 export const logout = async (lang: Locale) => {
   await removeUserToken();

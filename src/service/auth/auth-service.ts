@@ -4,7 +4,7 @@ import {
   LoginUserDto,
   onboardingDto,
   UserDto,
-} from "@/lib/schema/user/user.dto";
+} from "@/lib/schema/user/user-schema";
 import { setSchoolCookies } from "@/lib/utils/auth-cookies";
 import { authUser, setAuthCookie } from "@/lib/utils/auth-user";
 import apiRequest from "../api-client";

@@ -27,14 +27,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { genders, userRoles } from "@/lib/const/common-details-const";
 import { useToast } from "@/lib/context/toast/ToastContext";
-import { genders } from "@/lib/types/Gender";
-import { userRoles } from "@/lib/types/user-role";
 import {
-  UserModel,
-  UserModelPut,
-  UserModelPutSchema,
-} from "@/lib/types/userModel";
+  UpdateUser,
+  UpdateUserSchema,
+} from "@/lib/schema/user/update-user-schema";
+import { UserModel } from "@/lib/schema/user/user-schema";
 import { AuthUserResult } from "@/lib/utils/auth-user";
 import apiRequest from "@/service/api-client";
 
@@ -89,8 +88,8 @@ const EditUserForm = ({ auth, user, isDialog = false }: props) => {
     return "Strong password";
   };
 
-  const form = useForm<UserModelPut>({
-    resolver: zodResolver(UserModelPutSchema),
+  const form = useForm<UpdateUser>({
+    resolver: zodResolver(UpdateUserSchema),
     defaultValues: {
       name: user.name ? user.name : "",
       email: user.email ? user.email : "",
@@ -130,7 +129,7 @@ const EditUserForm = ({ auth, user, isDialog = false }: props) => {
     fieldChange(newPassword);
   };
 
-  const handleSubmit = (values: UserModelPut) => {
+  const handleSubmit = (values: UpdateUser) => {
     setError(null);
     setSuccess(null);
 
@@ -140,7 +139,7 @@ const EditUserForm = ({ auth, user, isDialog = false }: props) => {
     }
 
     startTransition(async () => {
-      const result = await apiRequest<UserModelPut, any>(
+      const result = await apiRequest<UpdateUser, UserModel>(
         "put", // Changed from POST to PUT for update
         `/users/${user.id || user._id}`, // Updated endpoint to include user ID
         values,
@@ -358,17 +357,14 @@ const EditUserForm = ({ auth, user, isDialog = false }: props) => {
                     >
                       {userRoles.map((role) => (
                         <FormItem
-                          key={role.id}
+                          key={role}
                           className="flex items-center space-x-2"
                         >
                           <FormControl>
-                            <RadioGroupItem
-                              value={role.id}
-                              className="size-5"
-                            />
+                            <RadioGroupItem value={role} className="size-5" />
                           </FormControl>
                           <FormLabel className="cursor-pointer text-base font-normal">
-                            {role.role}
+                            {role}
                           </FormLabel>
                         </FormItem>
                       ))}
@@ -417,14 +413,14 @@ const EditUserForm = ({ auth, user, isDialog = false }: props) => {
                     >
                       {genders.map((g) => (
                         <FormItem
-                          key={g.id}
+                          key={g}
                           className="flex items-center space-x-2"
                         >
                           <FormControl>
-                            <RadioGroupItem value={g.id} className="size-5" />
+                            <RadioGroupItem value={g} className="size-5" />
                           </FormControl>
                           <FormLabel className="cursor-pointer text-base font-normal">
-                            {g.role}
+                            {g}
                           </FormLabel>
                         </FormItem>
                       ))}

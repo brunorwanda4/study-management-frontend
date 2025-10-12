@@ -1,4 +1,12 @@
-import { userSchemeType } from "@/lib/schema/admin/user-schema";
+import {
+  UserModel,
+  UserModelDeleteMany,
+  UserModelPut,
+  UserModelUpdateMany,
+  UserRoleModel,
+  UserRoleModelNew,
+  userSchemeType,
+} from "@/lib/schema/user/user-schema";
 import {
   ClassModelGet,
   ClassModelNew,
@@ -35,14 +43,6 @@ import {
   TradeModelNew,
   TradeModelPut,
 } from "@/lib/types/tradeModel";
-import {
-  UserModel,
-  UserModelDeleteMany,
-  UserModelPut,
-  UserModelUpdateMany,
-  UserRoleModel,
-  UserRoleModelNew,
-} from "@/lib/types/userModel";
 import { ApiClient } from "@/service/admin/fetchingAPIClient";
 
 const apiClient = new ApiClient();

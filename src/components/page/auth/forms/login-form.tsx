@@ -5,16 +5,17 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  //   FormDescription,
   FormField,
   FormItem,
-  // FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Locale } from "@/i18n";
 import { redirectContents } from "@/lib/hooks/redirect";
-import { LoginUserDto, LoginUserSchema } from "@/lib/schema/user/user.dto";
+import {
+  LoginUserDto,
+  LoginUserSchema,
+} from "@/lib/schema/user/auth-user-schema";
 import { loginService } from "@/service/auth/auth-service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EyeIcon, EyeOffIcon } from "lucide-react";

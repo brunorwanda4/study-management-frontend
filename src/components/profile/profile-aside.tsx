@@ -1,16 +1,16 @@
 import { Locale } from "@/i18n";
 import { userImage } from "@/lib/context/images";
-import { userAndOther } from "@/lib/schema/user/user.dto";
+import { UserModel } from "@/lib/schema/user/user-schema";
 import { Phone, User } from "lucide-react";
 import { FaSchool } from "react-icons/fa6";
-import { MdClass, MdEmail } from "react-icons/md";
+import { MdEmail } from "react-icons/md";
 import MyImage from "../common/myImage";
 import MyLink from "../common/myLink";
 import { Separator } from "../ui/separator";
 
 interface props {
   lang: Locale;
-  user: userAndOther;
+  user: UserModel;
 }
 
 const ProfileAside = ({ lang, user }: props) => {
@@ -47,14 +47,14 @@ const ProfileAside = ({ lang, user }: props) => {
           </div>
           <div className="flex items-center space-x-2">
             <FaSchool size={16} />
-            <span>{user.school?.name}</span>
+            {/* <span>{user.school?.name}</span> */}
           </div>
-          {user.cls && (
+          {/* {user.cls && (
             <div className="flex items-center space-x-2">
               <MdClass size={16} />
               <span>{user.cls.name}</span>
             </div>
-          )}
+          )} */}
         </div>
         <p className="mt-4">{user.bio}</p>
       </div>

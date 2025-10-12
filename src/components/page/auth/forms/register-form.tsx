@@ -13,14 +13,16 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Locale } from "@/i18n";
-import { CreateUserDto, CreateUserSchema } from "@/lib/schema/user/user.dto";
+import {
+  RegisterUser,
+  RegisterUserSchema,
+} from "@/lib/schema/user/auth-user-schema";
 import { registerUserService } from "@/service/auth/auth-service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckIcon, EyeIcon, EyeOffIcon, XIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useMemo, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
-
 interface props {
   lang: Locale;
 }
@@ -32,8 +34,8 @@ const RegisterForm = ({ lang }: props) => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
-  const form = useForm<CreateUserDto>({
-    resolver: zodResolver(CreateUserSchema),
+  const form = useForm<RegisterUser>({
+    resolver: zodResolver(RegisterUserSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -87,7 +89,7 @@ const RegisterForm = ({ lang }: props) => {
     fieldChange(newPassword); // Update react-hook-form's state for validation
   };
 
-  function onSubmit(values: CreateUserDto) {
+  function onSubmit(values: RegisterUser) {
     setError(null);
     setSuccess(null);
     startTransition(async () => {

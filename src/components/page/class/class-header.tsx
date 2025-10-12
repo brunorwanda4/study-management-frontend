@@ -7,7 +7,7 @@ import {
   teacherImage,
 } from "@/lib/context/images";
 import { ClassAndOthers } from "@/lib/schema/class/class.schema";
-import { AuthUserDto } from "@/lib/schema/user/user.dto";
+import { AuthUserDto } from "@/lib/schema/user/auth-user-schema";
 import { UserSchool } from "@/lib/utils/auth";
 
 interface props {

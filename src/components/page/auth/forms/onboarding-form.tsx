@@ -26,7 +26,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Locale } from "@/i18n";
 import { CountriesContext } from "@/lib/data/locations";
 import { redirectContents } from "@/lib/hooks/redirect";
-import { onboardingDto, OnboardingSchema } from "@/lib/schema/user/user.dto";
+import {
+  onboardingDto,
+  OnboardingSchema,
+} from "@/lib/schema/user/update-user-schema";
 import { onboardingService } from "@/service/auth/auth-service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTheme } from "next-themes";

@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/lib/context/toast/ToastContext";
-import { UserModel } from "@/lib/types/userModel";
+import { UserModel } from "@/lib/schema/user/user-schema";
 import { cn } from "@/lib/utils";
 import { AuthUserResult } from "@/lib/utils/auth-user";
 import apiRequest from "@/service/api-client";

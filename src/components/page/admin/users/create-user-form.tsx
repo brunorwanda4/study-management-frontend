@@ -27,10 +27,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { genders, userRoles } from "@/lib/const/common-details-const";
 import { useToast } from "@/lib/context/toast/ToastContext";
-import { genders } from "@/lib/types/Gender";
-import { userRoles } from "@/lib/types/user-role";
-import { UserModelNew, UserModelNewSchema } from "@/lib/types/userModel";
+import {
+  CreateUser,
+  CreateUserSchema,
+} from "@/lib/schema/user/create-user-schema";
+import { UserModel } from "@/lib/schema/user/user-schema";
 import { AuthUserResult } from "@/lib/utils/auth-user";
 import apiRequest from "@/service/api-client";
 
@@ -83,8 +86,8 @@ const CreateUserForm = ({ auth }: props) => {
     return "Strong password";
   };
 
-  const form = useForm<UserModelNew>({
-    resolver: zodResolver(UserModelNewSchema),
+  const form = useForm<CreateUser>({
+    resolver: zodResolver(CreateUserSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -118,12 +121,12 @@ const CreateUserForm = ({ auth }: props) => {
     fieldChange(newPassword);
   };
 
-  const handleSubmit = (values: UserModelNew) => {
+  const handleSubmit = (values: CreateUser) => {
     setError(null);
     setSuccess(null);
 
     startTransition(async () => {
-      const result = await apiRequest<UserModelNew, any>(
+      const result = await apiRequest<CreateUser, UserModel>(
         "post",
         "/users",
         values,
@@ -338,17 +341,14 @@ const CreateUserForm = ({ auth }: props) => {
                     >
                       {userRoles.map((role) => (
                         <FormItem
-                          key={role.id}
+                          key={role}
                           className="flex items-center space-x-2"
                         >
                           <FormControl>
-                            <RadioGroupItem
-                              value={role.id}
-                              className="size-5"
-                            />
+                            <RadioGroupItem value={role} className="size-5" />
                           </FormControl>
                           <FormLabel className="cursor-pointer text-base font-normal">
-                            {role.role}
+                            {role}
                           </FormLabel>
                         </FormItem>
                       ))}
@@ -397,14 +397,14 @@ const CreateUserForm = ({ auth }: props) => {
                     >
                       {genders.map((g) => (
                         <FormItem
-                          key={g.id}
+                          key={g}
                           className="flex items-center space-x-2"
                         >
                           <FormControl>
-                            <RadioGroupItem value={g.id} className="size-5" />
+                            <RadioGroupItem value={g} className="size-5" />
                           </FormControl>
                           <FormLabel className="cursor-pointer text-base font-normal">
-                            {g.role}
+                            {g}
                           </FormLabel>
                         </FormItem>
                       ))}

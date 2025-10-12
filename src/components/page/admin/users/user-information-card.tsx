@@ -12,7 +12,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
-import { UserModel } from "@/lib/types/userModel";
+import { UserModel } from "@/lib/schema/user/user-schema";
 import { cn } from "@/lib/utils";
 import { AuthUserResult } from "@/lib/utils/auth-user";
 import { calculateAge } from "@/lib/utils/calculate-age";

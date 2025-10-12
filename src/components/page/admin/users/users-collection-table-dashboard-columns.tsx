@@ -1,7 +1,7 @@
 "use client";
 
 import MyImage from "@/components/common/myImage";
-import { UserModel } from "@/lib/types/userModel";
+import { UserModel } from "@/lib/schema/user/user-schema";
 import { cn } from "@/lib/utils";
 import { generateImageProfile } from "@/lib/utils/generate-profile-image";
 import { ColumnDef } from "@tanstack/react-table";

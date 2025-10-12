@@ -1,7 +1,7 @@
 "use client";
 import { Locale } from "@/i18n";
 import { redirectContents } from "@/lib/hooks/redirect";
-import { UserRoleDto } from "@/lib/schema/user/user.dto";
+import { userRole } from "@/lib/schema/common-details-schema";
 import { useRouter } from "next/navigation";
 import { BsArrowLeft } from "react-icons/bs";
 import MyImage from "../common/myImage";
@@ -11,7 +11,7 @@ import { Button } from "../ui/button";
 interface props {
   description?: string;
   lang: Locale;
-  role: UserRoleDto;
+  role: userRole;
 }
 
 const PermissionPage = ({ description, lang, role }: props) => {

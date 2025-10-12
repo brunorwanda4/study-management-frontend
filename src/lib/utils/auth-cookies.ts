@@ -4,7 +4,7 @@ import {
   expiresOneWeek,
   expiresThreeDays,
 } from "@/lib/const/time-expres";
-import { UserRoleDto } from "@/lib/schema/user/user.dto";
+import { UserRoleDto } from "@/lib/schema/user/user-schema";
 import { cookies } from "next/headers";
 import {
   schoolStaffAccessTokenSchool,

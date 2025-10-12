@@ -16,8 +16,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { UpdateUserDto, UpdateUserSchema } from "@/lib/schema/user/user.dto";
-import { UserModel } from "@/lib/types/userModel";
+import {
+  UpdateUser,
+  UpdateUserSchema,
+} from "@/lib/schema/user/update-user-schema";
+import { UserModel } from "@/lib/schema/user/user-schema";
 import { cn } from "@/lib/utils";
 import { getLocalTimeZone, today, toZoned } from "@internationalized/date";
 import { CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
@@ -59,7 +62,7 @@ const UserUserDataForm = ({ currentUser }: props) => {
     //  startTransition
   ] = useTransition();
   const { theme } = useTheme();
-  const form = useForm<UpdateUserDto>({
+  const form = useForm<UpdateUser>({
     resolver: zodResolver(UpdateUserSchema),
     defaultValues: {
       name: currentUser.name ? currentUser.name : "",
@@ -103,7 +106,7 @@ const UserUserDataForm = ({ currentUser }: props) => {
     maxFiles: 1,
   });
   const now = today(getLocalTimeZone());
-  const handleSubmit = (values: UpdateUserDto) => {
+  const handleSubmit = (values: UpdateUser) => {
     setError("");
     setSuccess("");
 
@@ -217,7 +220,7 @@ const UserUserDataForm = ({ currentUser }: props) => {
                                     <>
                                       <DateSegment
                                         segment={segment}
-                                        className="data-[focused]:bg-accent data-[invalid]:data-[focused]:bg-destructive data-[focused]:data-[placeholder]: data-[focused]: data-[invalid]:data-[focused]:data-[placeholder]:text-destructive-foreground data-[invalid]:data-[focused]:text-destructive-foreground data-[invalid]:data-[placeholder]:text-destructive data-[invalid]:text-destructive data-[placeholder]: /70 data-[type=literal]: /70 inline rounded p-0.5 caret-transparent outline outline-0 data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50 data-[type=literal]:px-0"
+                                        className="data-[focused]:bg-accent data-[invalid]:data-[focused]:bg-destructive data-[focused]:data-[placeholder]: data-[focused]: data-[invalid]:data-[focused]:data-[placeholder]:text-destructive-foreground data-[invalid]:data-[focused]:text-destructive-foreground data-[invalid]:data-[placeholder]:text-destructive data-[invalid]:text-destructive data-[placeholder]: /70 data-[type=literal]: /70 inline rounded p-0.5 caret-transparent outline data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50 data-[type=literal]:px-0"
                                       />
                                       {segment.type !== "year" && (
                                         <span>/</span>
@@ -229,7 +232,7 @@ const UserUserDataForm = ({ currentUser }: props) => {
                                 }
                               </DateInput>
                             </Group>
-                            <ButtonDate className="hover:text-info data-[focus-visible]:outline-ring/70 z-10 -ms-9 -me-px flex w-9 items-center justify-center rounded-e-lg outline-offset-2 transition-colors focus-visible:outline-none data-[focus-visible]:outline data-[focus-visible]:outline-2">
+                            <ButtonDate className="hover:text-info data-[focus-visible]:outline-ring/70 z-10 -ms-9 -me-px flex w-9 items-center justify-center rounded-e-lg outline-offset-2 transition-colors focus-visible:outline-none data-[focus-visible]:outline">
                               <CalendarIcon size={16} strokeWidth={2} />
                             </ButtonDate>
                           </div>
@@ -243,14 +246,14 @@ const UserUserDataForm = ({ currentUser }: props) => {
                                 <header className="flex w-full items-center gap-1 pb-1">
                                   <ButtonDate
                                     slot="previous"
-                                    className="hover:bg-accent hover: data-[focus-visible]:outline-ring/70 flex size-9 items-center justify-center rounded-lg outline-offset-2 transition-colors data-[focus-visible]:outline data-[focus-visible]:outline-2"
+                                    className="hover:bg-accent hover: data-[focus-visible]:outline-ring/70 flex size-9 items-center justify-center rounded-lg outline-offset-2 transition-colors data-[focus-visible]:outline"
                                   >
                                     <ChevronLeft size={16} strokeWidth={2} />
                                   </ButtonDate>
                                   <Heading className="grow text-center text-sm font-medium" />
                                   <ButtonDate
                                     slot="next"
-                                    className="hover:bg-accent hover: data-[focus-visible]:outline-ring/70 flex size-9 items-center justify-center rounded-lg outline-offset-2 transition-colors data-[focus-visible]:outline data-[focus-visible]:outline-2"
+                                    className="hover:bg-accent hover: data-[focus-visible]:outline-ring/70 flex size-9 items-center justify-center rounded-lg outline-offset-2 transition-colors data-[focus-visible]:outline"
                                   >
                                     <ChevronRight size={16} strokeWidth={2} />
                                   </ButtonDate>
@@ -268,7 +271,7 @@ const UserUserDataForm = ({ currentUser }: props) => {
                                       <CalendarCell
                                         date={date}
                                         className={cn(
-                                          "data-[hovered]:bg-accent data-[selected]:bg-info data-[hovered]: data-[selected]:text-primary-foreground data-[focus-visible]:outline-ring/70 data-[invalid]:data-[selected]:[&:not([data-hover])]:bg-destructive data-[invalid]:data-[selected]:[&:not([data-hover])]:text-destructive-foreground relative flex size-9 items-center justify-center rounded-lg border border-transparent p-0 text-sm font-normal whitespace-nowrap outline-offset-2 transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-30 data-[focus-visible]:z-10 data-[focus-visible]:outline data-[focus-visible]:outline-2 data-[unavailable]:pointer-events-none data-[unavailable]:line-through data-[unavailable]:opacity-30",
+                                          "data-[hovered]:bg-accent data-[selected]:bg-info data-[hovered]: data-[selected]:text-primary-foreground data-[focus-visible]:outline-ring/70 data-[invalid]:data-[selected]:[&:not([data-hover])]:bg-destructive data-[invalid]:data-[selected]:[&:not([data-hover])]:text-destructive-foreground relative flex size-9 items-center justify-center rounded-lg border border-transparent p-0 text-sm font-normal whitespace-nowrap outline-offset-2 transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-30 data-[focus-visible]:z-10 data-[focus-visible]:outline data-[unavailable]:pointer-events-none data-[unavailable]:line-through data-[unavailable]:opacity-30",
                                           date.compare(now) === 0 &&
                                             "after:bg-info data-[selected]:after:bg-info after:pointer-events-none after:absolute after:start-1/2 after:bottom-1 after:z-10 after:size-[3px] after:-translate-x-1/2 after:rounded-full",
                                         )}

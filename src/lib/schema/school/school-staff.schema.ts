@@ -1,5 +1,5 @@
-import * as z from "zod"
-import { AgeSchema, GenderEnum } from "../user/user.dto";
+import * as z from "zod";
+import { AgeSchema, GenderEnum } from "../user/user-schema";
 export const SchoolStaffSchema = z.object({
   id: z.string(),
   userId: z.string(),
@@ -13,7 +13,7 @@ export const SchoolStaffSchema = z.object({
   age: AgeSchema.optional(),
   gender: GenderEnum.optional(),
   createAt: z.date().optional(),
-  updatedAt: z.date().optional()
+  updatedAt: z.date().optional(),
 });
 
 export type SchoolStaffDto = z.infer<typeof SchoolStaffSchema>;

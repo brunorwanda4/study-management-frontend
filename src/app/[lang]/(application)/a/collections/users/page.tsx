@@ -1,8 +1,8 @@
 import UserCollectionDetails from "@/components/page/admin/users/user-collection-details";
 import UsersTableCollection from "@/components/page/admin/users/usersTableCollection";
 import ErrorPage from "@/components/page/error-page";
+import { UserModel } from "@/lib/schema/user/user-schema";
 import { UserStats } from "@/lib/types/User-stats";
-import { UserModel } from "@/lib/types/userModel";
 import { authUser } from "@/lib/utils/auth-user";
 import apiRequest from "@/service/api-client";
 import { Metadata } from "next";

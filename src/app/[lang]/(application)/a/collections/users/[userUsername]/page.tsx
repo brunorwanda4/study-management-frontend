@@ -2,7 +2,7 @@ import UserInformation from "@/components/page/admin/users/user-information-card
 import ErrorPage from "@/components/page/error-page";
 import NotFoundPage from "@/components/page/not-found";
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
-import { UserModel } from "@/lib/types/userModel";
+import { UserModel } from "@/lib/schema/user/user-schema";
 import { authUser } from "@/lib/utils/auth-user";
 import apiRequest from "@/service/api-client";
 import { Metadata } from "next";

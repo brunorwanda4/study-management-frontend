@@ -4,8 +4,8 @@ import MainCollectionsCard from "@/components/page/admin/dashboard/main-collecti
 import UsersCollectionTableDashboard from "@/components/page/admin/users/users-collection-table-dashboard";
 import ErrorPage from "@/components/page/error-page";
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
+import { UserModel } from "@/lib/schema/user/user-schema";
 import { DatabaseStats } from "@/lib/types/databaseStatus";
-import { UserModel } from "@/lib/types/userModel";
 import { authUser } from "@/lib/utils/auth-user";
 import apiRequest from "@/service/api-client";
 import { Metadata } from "next";

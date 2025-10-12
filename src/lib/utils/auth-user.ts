@@ -1,7 +1,10 @@
 "use server";
 import { expiresOneWeek } from "@/lib/const/time-expres";
 import { TOKEN_KEY, UserId } from "@/lib/env";
-import { AuthUserDto, AuthUserSchema } from "@/lib/schema/user/user.dto";
+import {
+  AuthUserDto,
+  AuthUserSchema,
+} from "@/lib/schema/user/auth-user-schema";
 import apiRequest from "@/service/api-client";
 import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
