@@ -26,7 +26,8 @@ export const getUsersTableCollectionColumns = (): ColumnDef<UserModel>[] => [
             role="AVATAR"
             className="size-12"
             src={
-              row.original.image || generateImageProfile(row.original.gender)
+              row.original.image ||
+              generateImageProfile(row.original.name, row.original.gender)
             }
           />
           <div className="flex flex-col gap-1">

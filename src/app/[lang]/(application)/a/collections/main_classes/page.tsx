@@ -9,7 +9,7 @@ import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: "main classes - collection",
+  title: "main classes collection | space-together",
   description: "All main classes in database",
 };
 

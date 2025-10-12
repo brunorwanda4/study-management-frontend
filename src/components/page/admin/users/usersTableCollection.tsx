@@ -42,7 +42,7 @@ const UsersTableCollection = ({
   const [pageSize] = useState(10);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([
-    { id: "name", desc: false },
+    { id: "updated_at", desc: false },
   ]);
 
   const columns = getUsersTableCollectionColumns();

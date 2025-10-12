@@ -18,6 +18,7 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 interface props {
@@ -64,10 +65,12 @@ const UsersCollectionTableDashboard = ({
     <Card className="w-full">
       <CardHeader>
         <div className="flex w-full items-center justify-between">
-          <div className="flex items-center gap-2">
-            <MyImage src="/icons/family.png" role="ICON" loading="lazy" />
-            <CardTitle>Users</CardTitle>
-          </div>
+          <Link href={"/a/collections/users"}>
+            <div className="flex items-center gap-2">
+              <MyImage src="/icons/family.png" role="ICON" loading="lazy" />
+              <CardTitle>Users</CardTitle>
+            </div>
+          </Link>
           <Button
             href="/a/collections/users"
             type="button"

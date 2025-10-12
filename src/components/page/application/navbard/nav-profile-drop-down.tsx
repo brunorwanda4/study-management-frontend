@@ -25,7 +25,7 @@ interface props {
 
 const NavProfileDropDown = ({ lang, user }: props) => {
   const { theme } = useTheme();
-  const image = generateImageProfile(user.gender);
+  const image = generateImageProfile(user.name, user.gender);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

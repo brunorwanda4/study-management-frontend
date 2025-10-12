@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 import { AuthUserResult } from "@/lib/utils/auth-user";
 import { calculateAge } from "@/lib/utils/calculate-age";
 import { formatReadableDate } from "@/lib/utils/format-date";
+import { generateImageProfile } from "@/lib/utils/generate-profile-image";
 import { useEffect, useState } from "react";
 
 interface PropsUser {
@@ -69,7 +70,10 @@ const UserInformation = ({ auth, initialUser }: PropsUser) => {
         <aside className="md:w-72">
           {/* Avatar */}
           <OpenImages
-            images={currentUser.image || "/images/default-avatar.jpg"}
+            images={
+              currentUser.image ||
+              generateImageProfile(currentUser.name, currentUser.gender)
+            }
             className="md:size-72"
             classname="mask mask-squircle"
           />
