@@ -5,7 +5,7 @@ import { TiContacts } from "react-icons/ti";
 
 import MyImage from "@/components/common/myImage"; // Assuming MyImage handles its own styling and accessibility for icons
 import { Card, CardHeader } from "@/components/ui/card";
-import { SchoolDto, SocialMediaDto } from "@/lib/schema/school.dto"; // Assuming SocialMediaItem is defined in school.dto or can be inferred
+import { SchoolDto, SocialMediaDto } from "@/lib/schema/school/school.dto"; // Assuming SocialMediaItem is defined in school.dto or can be inferred
 
 // --- Helper for Social Media Icons ---
 // This makes the social media mapping much cleaner and easier to extend.

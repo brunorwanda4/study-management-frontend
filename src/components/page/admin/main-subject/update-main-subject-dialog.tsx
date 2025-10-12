@@ -36,13 +36,13 @@ const UpdateMainSubjectDialog = ({
             "w-full",
             icon && "tooltip tooltip-top tooltip-warning w-fit",
           )}
-          variant={"warning"}
-          size={icon ? "sm" : undefined}
+          variant={"ghost"}
+          size={"sm"}
           library="daisy"
           role="update"
           data-tip={icon && " Update main subject"}
         >
-          {!icon && "Update main subject"}
+          <span className={cn(icon && "sr-only")}>Update main subject</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="max-h-[90vh] overflow-auto sm:max-w-6xl">

@@ -12,6 +12,8 @@ export const AddressSchema = z.object({
   cell: z.string().optional(),
   village: z.string().optional(),
   state: z.string().optional(),
+  street: z.string().optional(),
+  city: z.string().optional(),
   postal_code: z.string().optional(),
   google_map_url: z
     .string()
@@ -64,3 +66,30 @@ export type Gender = z.infer<typeof GenderSchema>;
 
 export const userRoleSchema = z.enum(userRoles);
 export type userRole = z.infer<typeof userRoleSchema>;
+
+export const ContactSchema = z
+  .object({
+    phone: z.string().min(1, "Phone is required"),
+    email: z.string().email("Invalid email format"),
+    whatsapp: z.string().optional(),
+    alt_phone: z.string().optional(),
+  })
+  .optional();
+
+export type contact = z.infer<typeof ContactSchema>;
+
+export const SocialMediaSchema = z.object({
+  platform: z.string().min(1, "Platform is required"),
+  url: z.string().url("Must be a valid URL"),
+});
+
+export type SocialMedia = z.infer<typeof SocialMediaSchema>;
+
+export const OptionSchema = z.object({
+  value: z.string(),
+  label: z.string(),
+  disable: z.boolean().optional(),
+  fixed: z.boolean().optional(),
+});
+
+export type Option = z.infer<typeof OptionSchema>;

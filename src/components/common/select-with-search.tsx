@@ -23,12 +23,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Option } from "@/lib/schema/common-details-schema";
 import { cn } from "@/lib/utils";
-
-export type Option = {
-  value: string;
-  label: string | React.ReactNode;
-};
 
 interface SelectWithSearchProps {
   options: Option[] | string[]; // accept string[] or Option[]
@@ -80,7 +76,6 @@ export default function SelectWithSearch({
             id={id}
             type="button"
             variant="outline"
-            role="combobox"
             aria-expanded={open}
             disabled={disabled}
             className="bg-background hover:bg-background border-input w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]"

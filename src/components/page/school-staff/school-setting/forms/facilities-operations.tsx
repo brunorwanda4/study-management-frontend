@@ -2,10 +2,11 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useState } from "react";
 import { useTheme } from "next-themes";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -16,6 +17,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import MultipleSelector, { Option } from "@/components/ui/multiselect";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -23,16 +27,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import MultipleSelector, { Option } from "@/components/ui/multiselect";
-import { schoolLabs, SchoolSportsExtracurricular } from "@/lib/context/school.context";
-import { AttendanceSystemEnum } from "@/lib/schema/school.dto";
-import { FacilitiesOperationsDto, FacilitiesOperationsSchema } from "./schema/facilities-operations";
+import {
+  schoolLabs,
+  SchoolSportsExtracurricular,
+} from "@/lib/context/school.context";
+import { AttendanceSystemEnum } from "@/lib/schema/school/school.dto";
+import {
+  FacilitiesOperationsDto,
+  FacilitiesOperationsSchema,
+} from "./schema/facilities-operations";
 
 interface FacilitiesOperationsFormProps {
-  initialData: FacilitiesOperationsDto; 
+  initialData: FacilitiesOperationsDto;
 }
 
 const stringsToOptions = (items: string[] | null | undefined): Option[] => {
@@ -71,17 +77,17 @@ export const FacilitiesOperationsForm = ({
     setError(null);
     startTransition(true);
 
-    console.log(values)
+    console.log(values);
   };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
         <div className="space-y-6">
-          <h3 className="text-xl font-semibold mb-4 border-b pb-2">
+          <h3 className="mb-4 border-b pb-2 text-xl font-semibold">
             Facilities & Operations
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             <FormField
               control={form.control}
               name="studentCapacity"
@@ -99,7 +105,7 @@ export const FacilitiesOperationsForm = ({
                         field.onChange(
                           e.target.value === ""
                             ? undefined
-                            : parseInt(e.target.value, 10)
+                            : parseInt(e.target.value, 10),
                         )
                       }
                     />
@@ -126,7 +132,7 @@ export const FacilitiesOperationsForm = ({
                         field.onChange(
                           e.target.value === ""
                             ? undefined
-                            : parseInt(e.target.value, 10)
+                            : parseInt(e.target.value, 10),
                         )
                       }
                     />
@@ -142,7 +148,10 @@ export const FacilitiesOperationsForm = ({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Attendance System</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value ?? ""}>
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value ?? ""}
+                  >
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select attendance system" />
@@ -169,11 +178,17 @@ export const FacilitiesOperationsForm = ({
                   <FormLabel>Uniform Required?</FormLabel>
                   <FormControl>
                     <RadioGroup
-                      onValueChange={(value) => field.onChange(value === "true")}
-                      value={field.value === undefined ? undefined : String(field.value)}
+                      onValueChange={(value) =>
+                        field.onChange(value === "true")
+                      }
+                      value={
+                        field.value === undefined
+                          ? undefined
+                          : String(field.value)
+                      }
                       className="flex space-x-4"
                     >
-                      <FormItem className="flex items-center space-x-2 space-y-0">
+                      <FormItem className="flex items-center space-y-0 space-x-2">
                         <FormControl>
                           <RadioGroupItem value="true" id="uniform-yes" />
                         </FormControl>
@@ -181,7 +196,7 @@ export const FacilitiesOperationsForm = ({
                           Yes
                         </Label>
                       </FormItem>
-                      <FormItem className="flex items-center space-x-2 space-y-0">
+                      <FormItem className="flex items-center space-y-0 space-x-2">
                         <FormControl>
                           <RadioGroupItem value="false" id="uniform-no" />
                         </FormControl>
@@ -204,19 +219,28 @@ export const FacilitiesOperationsForm = ({
                   <FormLabel>Scholarships Available?</FormLabel>
                   <FormControl>
                     <RadioGroup
-                      onValueChange={(value) => field.onChange(value === "true")}
-                      value={field.value === undefined ? undefined : String(field.value)}
+                      onValueChange={(value) =>
+                        field.onChange(value === "true")
+                      }
+                      value={
+                        field.value === undefined
+                          ? undefined
+                          : String(field.value)
+                      }
                       className="flex space-x-4"
                     >
-                      <FormItem className="flex items-center space-x-2 space-y-0">
+                      <FormItem className="flex items-center space-y-0 space-x-2">
                         <FormControl>
                           <RadioGroupItem value="true" id="scholarship-yes" />
                         </FormControl>
-                        <Label htmlFor="scholarship-yes" className="font-normal">
+                        <Label
+                          htmlFor="scholarship-yes"
+                          className="font-normal"
+                        >
                           Yes
                         </Label>
                       </FormItem>
-                      <FormItem className="flex items-center space-x-2 space-y-0">
+                      <FormItem className="flex items-center space-y-0 space-x-2">
                         <FormControl>
                           <RadioGroupItem value="false" id="scholarship-no" />
                         </FormControl>
@@ -239,11 +263,17 @@ export const FacilitiesOperationsForm = ({
                   <FormLabel>Library Available?</FormLabel>
                   <FormControl>
                     <RadioGroup
-                      onValueChange={(value) => field.onChange(value === "true")}
-                      value={field.value === undefined ? undefined : String(field.value)}
+                      onValueChange={(value) =>
+                        field.onChange(value === "true")
+                      }
+                      value={
+                        field.value === undefined
+                          ? undefined
+                          : String(field.value)
+                      }
                       className="flex space-x-4"
                     >
-                      <FormItem className="flex items-center space-x-2 space-y-0">
+                      <FormItem className="flex items-center space-y-0 space-x-2">
                         <FormControl>
                           <RadioGroupItem value="true" id="library-yes" />
                         </FormControl>
@@ -251,7 +281,7 @@ export const FacilitiesOperationsForm = ({
                           Yes
                         </Label>
                       </FormItem>
-                      <FormItem className="flex items-center space-x-2 space-y-0">
+                      <FormItem className="flex items-center space-y-0 space-x-2">
                         <FormControl>
                           <RadioGroupItem value="false" id="library-no" />
                         </FormControl>
@@ -274,11 +304,17 @@ export const FacilitiesOperationsForm = ({
                   <FormLabel>Online Classes Offered?</FormLabel>
                   <FormControl>
                     <RadioGroup
-                      onValueChange={(value) => field.onChange(value === "true")}
-                      value={field.value === undefined ? undefined : String(field.value)}
+                      onValueChange={(value) =>
+                        field.onChange(value === "true")
+                      }
+                      value={
+                        field.value === undefined
+                          ? undefined
+                          : String(field.value)
+                      }
                       className="flex space-x-4"
                     >
-                      <FormItem className="flex items-center space-x-2 space-y-0">
+                      <FormItem className="flex items-center space-y-0 space-x-2">
                         <FormControl>
                           <RadioGroupItem value="true" id="online-yes" />
                         </FormControl>
@@ -286,7 +322,7 @@ export const FacilitiesOperationsForm = ({
                           Yes
                         </Label>
                       </FormItem>
-                      <FormItem className="flex items-center space-x-2 space-y-0">
+                      <FormItem className="flex items-center space-y-0 space-x-2">
                         <FormControl>
                           <RadioGroupItem value="false" id="online-no" />
                         </FormControl>
@@ -310,7 +346,9 @@ export const FacilitiesOperationsForm = ({
                   <FormControl>
                     <MultipleSelector
                       value={stringsToOptions(field.value)}
-                      onChange={(options) => field.onChange(optionsToStrings(options))}
+                      onChange={(options) =>
+                        field.onChange(optionsToStrings(options))
+                      }
                       defaultOptions={schoolLabs}
                       placeholder="Select labs..."
                       creatable

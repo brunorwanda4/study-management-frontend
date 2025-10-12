@@ -7,8 +7,8 @@ import {
   OptionalSubjects,
   TvetPrograms,
 } from "@/lib/context/school.context";
-import { SchoolDto } from "@/lib/schema/school.dto";
-import { Dot, BookOpen } from "lucide-react"; // Added BookOpen for variety
+import { SchoolDto } from "@/lib/schema/school/school.dto";
+import { BookOpen, Dot } from "lucide-react"; // Added BookOpen for variety
 import Link from "next/link";
 import { FaSchool } from "react-icons/fa6";
 import { MdOutlineSchool, MdSchool } from "react-icons/md";
@@ -22,7 +22,7 @@ interface SchoolHomeAboutProps {
 // Helper function to map subject values to labels
 const getSubjectLabels = (
   subjectValues?: string[],
-  subjectOptions?: Option[]
+  subjectOptions?: Option[],
 ): string[] => {
   if (!subjectValues || subjectValues.length === 0) {
     return [];
@@ -49,10 +49,10 @@ const SchoolHomeAbout = ({
   return (
     <Card className="w-full space-y-4 p-4 md:p-6">
       {/* School Description Section */}
-      <CardHeader className=" border-0 space-y-1">
-        <div className="flex space-x-2 items-center">
-          <FaSchool className="text-xl " />
-          <h3 className="font-semibold text-lg ">About School</h3>
+      <CardHeader className="space-y-1 border-0">
+        <div className="flex items-center space-x-2">
+          <FaSchool className="text-xl" />
+          <h3 className="text-lg font-semibold">About School</h3>
         </div>
         {school.description && <p className="text-sm">{school.description}</p>}
       </CardHeader>
@@ -62,17 +62,16 @@ const SchoolHomeAbout = ({
         {/* Increased spacing for better separation */}
         {/* School Curriculum Section */}
         <div className="space-y-2">
-          <div className="flex space-x-2 items-center text-myGray">
+          <div className="text-myGray flex items-center space-x-2">
             {" "}
             {/* Assuming myGray is a custom color */}
-            <MdSchool className="text-xl   " />
-            <h4 className="font-semibold text-md   ">School Curriculum</h4>
+            <MdSchool className="text-xl" />
+            <h4 className="text-md font-semibold">School Curriculum</h4>
           </div>
           <div className="space-y-2 pl-2">
             {school.curriculum.map((item) => (
               <div key={item} className="flex items-center space-x-2">
-                <Dot size={28} className="   -ml-1" />{" "}
-                {/* Adjusted dot styling */}
+                <Dot size={28} className="-ml-1" /> {/* Adjusted dot styling */}
                 {/* <Avatar className="size-8 border border-gray-200">
                   <AvatarImage
                     src={
@@ -90,25 +89,25 @@ const SchoolHomeAbout = ({
                   />
                   <AvatarFallback>LOGO</AvatarFallback>
                 </Avatar> */}
-                <h6 className="font-medium    text-sm">{item}</h6>
+                <h6 className="text-sm font-medium">{item}</h6>
               </div>
             ))}
           </div>
         </div>
         {/* Schooling Type Section (Boarding/Days) - Static as per original */}
         <div className="space-y-2">
-          <div className="flex space-x-2 items-center text-myGray">
-            <MdOutlineSchool className="text-xl   " />
-            <h4 className="font-semibold text-md   ">Schooling Type</h4>
+          <div className="text-myGray flex items-center space-x-2">
+            <MdOutlineSchool className="text-xl" />
+            <h4 className="text-md font-semibold">Schooling Type</h4>
           </div>
           <div className="space-y-1 pl-2">
             <div className="flex items-center space-x-2">
-              <Dot size={28} className="   -ml-1" />
-              <h6 className="font-medium    text-sm">Boarding</h6>
+              <Dot size={28} className="-ml-1" />
+              <h6 className="text-sm font-medium">Boarding</h6>
             </div>
             <div className="flex items-center space-x-2">
-              <Dot size={28} className="   -ml-1" />
-              <h6 className="font-medium    text-sm">Day Scholars</h6>
+              <Dot size={28} className="-ml-1" />
+              <h6 className="text-sm font-medium">Day Scholars</h6>
             </div>
           </div>
         </div>
@@ -120,26 +119,26 @@ const SchoolHomeAbout = ({
             {/* Education Levels Offered Section */}
             {school.educationLevel && school.educationLevel.length > 0 && (
               <div className="space-y-2">
-                <div className="flex space-x-2 items-center text-myGray">
-                  <BookOpen className="text-xl   " />{" "}
+                <div className="text-myGray flex items-center space-x-2">
+                  <BookOpen className="text-xl" />{" "}
                   {/* Using a different icon */}
-                  <h4 className="font-semibold text-md   ">
+                  <h4 className="text-md font-semibold">
                     Education Levels Offered
                   </h4>
                 </div>
                 <div className="space-y-1 pl-2">
                   {school.educationLevel.map((level) => (
                     <div key={level} className="flex items-center space-x-2">
-                      <Dot size={28} className="   -ml-1" />
-                      <h6 className="font-medium    text-sm">{level}</h6>
-                      <span className="text-xs   ">
+                      <Dot size={28} className="-ml-1" />
+                      <h6 className="text-sm font-medium">{level}</h6>
+                      <span className="text-xs">
                         {level === "Primary"
                           ? "(P1 - P6)"
                           : level === "OLevel"
-                          ? "(S1 - S3)"
-                          : level === "ALevel"
-                          ? "(S4 - S6)"
-                          : null}
+                            ? "(S1 - S3)"
+                            : level === "ALevel"
+                              ? "(S4 - S6)"
+                              : null}
                       </span>
                     </div>
                   ))}
@@ -243,30 +242,28 @@ const SchoolHomeAbout = ({
                 {/* A-Level Combinations & Optional Subjects */}
                 {(academicProfile.aLevelOptionSubjects?.length || 0) > 0 && (
                   <div className="space-y-2">
-                    <div className="flex space-x-2 items-center text-myGray">
-                      <BookOpen className="text-xl   " />
-                      <h4 className="font-semibold text-md   ">
+                    <div className="text-myGray flex items-center space-x-2">
+                      <BookOpen className="text-xl" />
+                      <h4 className="text-md font-semibold">
                         A-Level Programs
                       </h4>
                     </div>
                     {academicProfile.aLevelSubjectCombination &&
                       academicProfile.aLevelSubjectCombination.length > 0 && (
-                        <div className="ml-4 space-y-1 mt-1">
-                          <p className="text-xs font-semibold   ">
+                        <div className="mt-1 ml-4 space-y-1">
+                          <p className="text-xs font-semibold">
                             Subject Combinations:
                           </p>
                           {getSubjectLabels(
                             academicProfile.aLevelSubjectCombination,
-                            AdvancedLevels
+                            AdvancedLevels,
                           ).map((label) => (
                             <div
                               key={`alevel-combo-${label}`}
                               className="flex items-center space-x-2"
                             >
-                              <Dot size={24} className="   -ml-1" />
-                              <h6 className="font-medium    text-sm">
-                                {label}
-                              </h6>
+                              <Dot size={24} className="-ml-1" />
+                              <h6 className="text-sm font-medium">{label}</h6>
                             </div>
                           ))}
                         </div>
@@ -278,54 +275,48 @@ const SchoolHomeAbout = ({
                 {(academicProfile.tvetSpecialization?.length || 0) > 0 ||
                   ((academicProfile.tvetOptionSubjects?.length || 0) > 0 && (
                     <div className="space-y-2">
-                      <div className="flex space-x-2 items-center text-myGray">
-                        <FaSchool className="text-xl   " />{" "}
+                      <div className="text-myGray flex items-center space-x-2">
+                        <FaSchool className="text-xl" />{" "}
                         {/* Changed icon for TVET */}
-                        <h4 className="font-semibold text-md   ">
-                          TVET Programs
-                        </h4>
+                        <h4 className="text-md font-semibold">TVET Programs</h4>
                       </div>
                       {academicProfile.tvetSpecialization &&
                         academicProfile.tvetSpecialization.length > 0 && (
-                          <div className="ml-4 space-y-1 mt-1">
-                            <p className="text-xs font-semibold   ">
+                          <div className="mt-1 ml-4 space-y-1">
+                            <p className="text-xs font-semibold">
                               Specializations:
                             </p>
                             {getSubjectLabels(
                               academicProfile.tvetSpecialization,
-                              TvetPrograms
+                              TvetPrograms,
                             ).map((label) => (
                               <div
                                 key={`tvet-spec-${label}`}
                                 className="flex items-center space-x-2"
                               >
-                                <Dot size={24} className="     -ml-1" />
-                                <h6 className="font-medium    text-sm">
-                                  {label}
-                                </h6>
+                                <Dot size={24} className="-ml-1" />
+                                <h6 className="text-sm font-medium">{label}</h6>
                               </div>
                             ))}
                           </div>
                         )}
                       {academicProfile.tvetOptionSubjects &&
                         academicProfile.tvetOptionSubjects.length > 0 && (
-                          <div className="ml-4 space-y-1 mt-2">
-                            <p className="text-xs font-semibold   ">
+                          <div className="mt-2 ml-4 space-y-1">
+                            <p className="text-xs font-semibold">
                               Optional Subjects (TVET):
                             </p>
                             {/* Ensure you have a relevant list for TVET optional subjects, using OptionalSubjects as a placeholder */}
                             {getSubjectLabels(
                               academicProfile.tvetOptionSubjects,
-                              OptionalSubjects
+                              OptionalSubjects,
                             ).map((label) => (
                               <div
                                 key={`tvet-opt-${label}`}
                                 className="flex items-center space-x-2"
                               >
-                                <Dot size={24} className="     -ml-1" />
-                                <h6 className="font-medium    text-sm">
-                                  {label}
-                                </h6>
+                                <Dot size={24} className="-ml-1" />
+                                <h6 className="text-sm font-medium">{label}</h6>
                               </div>
                             ))}
                           </div>
@@ -340,7 +331,7 @@ const SchoolHomeAbout = ({
 
       {/* "See more" Button Section */}
       {!isAboutSchool && (
-        <Link href={`/${lang}/school/about`} className="block mt-6">
+        <Link href={`/${lang}/school/about`} className="mt-6 block">
           {" "}
           {/* Added margin top */}
           <Button variant="ghost" size="sm" className="w-full">

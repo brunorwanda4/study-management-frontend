@@ -30,7 +30,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { schoolLogoImage } from "@/lib/context/images";
 import { useToast } from "@/lib/context/toast/ToastContext";
-import { SchoolMembers, SchoolTypeEnum } from "@/lib/schema/school.dto";
+import { SchoolMembers, SchoolTypeEnum } from "@/lib/schema/school/school.dto";
 import { updateSchoolSchoolService } from "@/service/school/school.service";
 import {
   BasicInformationDto,

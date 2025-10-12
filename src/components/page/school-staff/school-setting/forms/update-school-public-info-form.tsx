@@ -45,7 +45,7 @@ import {
   SchoolDto,
   SchoolMembers,
   SchoolTypeEnum,
-} from "@/lib/schema/school.dto";
+} from "@/lib/schema/school/school.dto";
 import { updateSchoolSchoolService } from "@/service/school/school.service";
 import {
   PublicSchoolUpdateDto,

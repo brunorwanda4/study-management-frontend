@@ -2,18 +2,10 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTheme } from "next-themes";
-import { ChangeEvent, useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 
-import { Locale } from "@/i18n"; // Assuming you might need this
-import {
-  AffiliationTypeEnum,
-  AttendanceSystemEnum,
-  CreateSchoolDto,
-  CreateSchoolSchema,
-  SchoolMembers,
-  SchoolTypeEnum,
-} from "@/lib/schema/school.dto"; // Adjust import path
+import { Locale } from "@/i18n";
 
 // Import Shadcn UI Components
 import { Button } from "@/components/ui/button";
@@ -27,7 +19,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
@@ -38,104 +29,164 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
-// Import Custom Components (Ensure these exist)
-import { FormError, FormSuccess } from "@/components/common/form-message"; // Assuming this exists
-import MyImage from "@/components/common/myImage"; // Assuming this exists
+// Import Custom Components
+import UploadImage from "@/components/common/cards/form/upload-image";
+import { FormError, FormSuccess } from "@/components/common/form-message";
+import MyImage from "@/components/common/myImage";
 import {
-  SchoolCurriculum,
-  schoolEducationLevel,
+  AffiliationTypes,
+  AttendanceSystems,
+  schoolMembers,
+  schoolTypes,
+} from "@/lib/const/common-details-const";
+import {
   schoolLabs,
   SchoolSportsExtracurricular,
 } from "@/lib/context/school.context";
 import { useToast } from "@/lib/context/toast/ToastContext";
-import { createSchoolService } from "@/service/school/school.service";
+import { SectorModel } from "@/lib/schema/admin/sectorSchema";
+import { TradeModule } from "@/lib/schema/admin/tradeSchema";
+import {
+  CreateSchool,
+  CreateSchoolSchema,
+} from "@/lib/schema/school/create-school-schema";
+import { School } from "@/lib/schema/school/school-schema";
+import { AuthUserResult } from "@/lib/utils/auth-user";
+import apiRequest from "@/service/api-client";
 import { useRouter } from "next/navigation";
 import MultipleSelector from "../../ui/multiselect";
 
 interface Props {
   lang: Locale;
-  userId: string;
+  auth: AuthUserResult;
 }
 
-const CreateSchoolForm = ({ lang, userId }: Props) => {
+const CreateSchoolForm = ({ lang, auth }: Props) => {
   const [error, setError] = useState<string | null | undefined>("");
   const [success, setSuccess] = useState<string | null | undefined>("");
   const [isPending, startTransition] = useTransition();
   const { theme } = useTheme();
   const router = useRouter();
   const { showToast } = useToast();
-  const form = useForm<CreateSchoolDto>({
+
+  // Local state for sectors & trades
+  const [sectors, setSectors] = useState<SectorModel[]>([]);
+  const [trades, setTrades] = useState<TradeModule[]>([]);
+  const [loadingOptions, setLoadingOptions] = useState(true);
+
+  useEffect(() => {
+    const fetchOptions = async () => {
+      try {
+        const [sectorsRes, tradesRes] = await Promise.all([
+          apiRequest<void, SectorModel[]>("get", "/sectors", undefined, {
+            token: auth.token,
+          }),
+          apiRequest<void, TradeModule[]>("get", "/trades", undefined, {
+            token: auth.token,
+          }),
+        ]);
+
+        if (sectorsRes.data) {
+          const activeSectors = sectorsRes.data.filter((s) => !s.disable);
+          setSectors(activeSectors);
+        }
+
+        if (tradesRes.data) {
+          const filteredTrades = tradesRes.data.filter(
+            (t) => !t.disable && !t.trade_id,
+          );
+          setTrades(filteredTrades);
+        }
+      } finally {
+        setLoadingOptions(false);
+      }
+    };
+
+    fetchOptions();
+  }, [auth.token]);
+
+  const form = useForm<CreateSchool>({
     resolver: zodResolver(CreateSchoolSchema),
     defaultValues: {
-      creatorId: userId,
+      // Core
       username: "",
-      logo: undefined,
       name: "",
+
+      // Optional visuals and metadata
+      logo: undefined,
       description: "",
-      schoolType: undefined,
-      curriculum: [],
-      educationLevel: [],
-      schoolMembers: undefined,
-      accreditationNumber: "",
+
+      // Categorical fields
+      school_type: undefined,
+      curriculum: undefined,
+      education_level: undefined,
+      accreditation_number: "",
       affiliation: undefined,
+      school_members: "Mixed",
+
+      // Location and contact
       address: {
         street: "",
         city: "",
         state: "",
-        postalCode: "",
-        country: "Rwanda", // Default or make it selectable
-        googleMapUrl: undefined,
+        postal_code: "",
+        country: "Rwanda",
+        google_map_url: undefined,
       },
       contact: {
         phone: "",
         email: "",
       },
       website: undefined,
-      socialMedia: [], // Simplified or omitted for now
-      studentCapacity: undefined,
-      uniformRequired: true,
-      attendanceSystem: undefined,
-      scholarshipAvailable: false,
+      social_media: [],
+
+      // Academic and administrative characteristics
+      student_capacity: undefined,
+      uniform_required: true,
+      attendance_system: undefined,
+      scholarship_available: false,
+
+      // Facilities
       classrooms: undefined,
       library: true,
       labs: [],
-      sportsExtracurricular: [],
-      onlineClasses: true,
+      sports_extracurricular: [],
+      online_classes: true,
     },
   });
 
-  // Image handler adapted for Logo
-  const handleLogoChange = (
-    e: ChangeEvent<HTMLInputElement>,
-    fieldChange: (value: string) => void,
-  ) => {
-    setError("");
-    e.preventDefault();
-    const fileReader = new FileReader();
-
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      if (!file.type.includes("image")) {
-        return setError("Please select an image file for the logo.");
-      }
-      const maxSizeInBytes = 2 * 1024 * 1024; // 2MB limit
-      if (file.size > maxSizeInBytes) {
-        return setError("Logo image size should be less than 2MB.");
-      }
-      fileReader.onload = async (event) => {
-        const imageDataUrl = event.target?.result?.toString() || "";
-        fieldChange(imageDataUrl);
-      };
-      fileReader.readAsDataURL(file);
-    }
-  };
-
-  const onSubmit = (values: CreateSchoolDto) => {
+  const onSubmit = (values: CreateSchool) => {
     setSuccess(null);
     setError(null);
     startTransition(async () => {
-      const create = await createSchoolService(values);
-      if (create?.data?.id) {
+      const apiData = {
+        ...values,
+        sports_extracurricular:
+          values.sports_extracurricular?.map((sport) => sport.value) ?? [],
+        labs: values.labs?.map((lab) => lab.value) ?? [],
+        curriculum:
+          values.curriculum?.map((curriculum) => curriculum.value) ?? [],
+        education_level:
+          values.education_level?.map(
+            (education_level) => education_level.value,
+          ) ?? [],
+      };
+      const create = await apiRequest<typeof apiData, School>(
+        "post",
+        "/schools",
+        apiData,
+        { token: auth.token },
+      );
+
+      if (!create?.data) {
+        create?.message;
+        showToast({
+          type: "error",
+          title: "Something went wrong to create school",
+          description: create.message,
+        });
+        setError(`message : ${create.message}`);
+      } else {
         setSuccess("School is registered successful ☺️");
         showToast({
           type: "success",
@@ -154,17 +205,8 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
               Has been created successful 🌻
             </div>
           ),
-          duration: 4000,
         });
         router.push(`/${lang}/s-t/new/${create.data.id}/academic`);
-      } else if (create?.message) {
-        showToast({
-          type: "error",
-          title: "Some thing went wrong to create school 🌋",
-          description: create.message,
-          duration: 3000,
-        });
-        setError(`message : ${create.message}`);
       }
     });
   };
@@ -184,7 +226,7 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
               control={form.control}
               name="name"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="h-fit">
                   <FormLabel>School Name *</FormLabel>
                   <FormControl>
                     <Input
@@ -198,7 +240,7 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
               )}
             />
 
-            {/* School school member */}
+            {/* School Username */}
             <FormField
               control={form.control}
               name="username"
@@ -215,13 +257,14 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
                 </FormItem>
               )}
             />
-            {/* school type  */}
+
+            {/* School Type */}
             <FormField
               control={form.control}
-              name="schoolType"
+              name="school_type"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>School Type *</FormLabel>
+                  <FormLabel>School Type</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -232,37 +275,37 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent data-theme={theme}>
-                      {SchoolTypeEnum.options.map((type) => (
+                      {schoolTypes.map((type) => (
                         <SelectItem key={type} value={type}>
                           {type}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
-                  <FormDescription>School type of you school</FormDescription>
+                  <FormDescription>School type of your school</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            {/* School member */}
+            {/* School Members */}
             <FormField
               control={form.control}
-              name="schoolMembers"
+              name="school_members"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Student *</FormLabel>
+                  <FormLabel>Student Gender</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select school type" />
+                        <SelectValue placeholder="Select student gender" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent data-theme={theme}>
-                      {SchoolMembers.options.map((type) => (
+                      {schoolMembers.map((type) => (
                         <SelectItem key={type} value={type}>
                           {type}
                         </SelectItem>
@@ -280,49 +323,20 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
 
           {/* Logo Upload */}
           <FormField
-            control={form.control}
             name="logo"
+            control={form.control}
             render={({ field }) => (
-              <FormItem className="mt-4 flex flex-col gap-2">
+              <FormItem className="row-span-3 mt-2 flex flex-col space-y-2">
                 <FormLabel>School Logo</FormLabel>
-                <div className="flex items-center gap-4">
-                  <Label htmlFor="logo-upload" className="cursor-pointer">
-                    <MyImage
-                      src={
-                        field.value ||
-                        "https://img.freepik.com/free-vector/illustration-gallery-icon_53876-27002.jpg"
-                      } // Default placeholder
-                      className="size-24 rounded border" // Adjust styling as needed
-                      classname=" object-contain" // Adjust styling as needed
-                      alt="School Logo"
-                    />
-                  </Label>
-                  <FormControl>
-                    <Input
-                      id="logo-upload"
-                      disabled={isPending}
-                      type="file"
-                      accept="image/*"
-                      placeholder="Upload Logo"
-                      className="hidden" // Hide default input, trigger via label/MyImage
-                      onChange={(e) => handleLogoChange(e, field.onChange)}
-                    />
-                  </FormControl>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() =>
-                      document.getElementById("logo-upload")?.click()
-                    }
+                <FormControl>
+                  <UploadImage
+                    onChange={field.onChange}
                     disabled={isPending}
-                  >
-                    {field.value ? "Change Logo" : "Upload Logo"}
-                  </Button>
-                </div>
-                <FormDescription>
-                  Recommended size: 200x200px, Max 2MB.
-                </FormDescription>
+                    className="size-40 w-full md:mb-4"
+                    Classname=" w-full min-h-44"
+                    value={field.value?.toString() ?? null}
+                  />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
@@ -358,18 +372,32 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
               name="curriculum"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Curriculum *</FormLabel>
-                  <FormControl>
-                    <MultipleSelector
-                      value={field.value}
-                      onChange={field.onChange}
-                      defaultOptions={SchoolCurriculum}
-                      placeholder="e.g., REB, TVET"
-                      hidePlaceholderWhenSelected
-                    />
-                  </FormControl>
+                  <FormLabel>Curriculum</FormLabel>
+                  {loadingOptions ? (
+                    <div className="skeleton h-12 rounded-md" />
+                  ) : (
+                    <FormControl>
+                      <MultipleSelector
+                        value={field.value}
+                        onChange={field.onChange}
+                        defaultOptions={sectors.map((sector) => ({
+                          value: sector.id || sector._id || "",
+                          label: sector.name,
+                          disable: sector.disable || false,
+                        }))}
+                        placeholder={
+                          loadingOptions
+                            ? "loading curriculum..."
+                            : "e.g., REB, TVET"
+                        }
+                        hidePlaceholderWhenSelected
+                        disabled={isPending || loadingOptions}
+                      />
+                    </FormControl>
+                  )}
                   <FormDescription>
-                    Enter one or more curricula, separated by commas.
+                    Enter one or more curricula, separated by commas.{" "}
+                    {sectors.length}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -379,21 +407,34 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
             {/* Education Level */}
             <FormField
               control={form.control}
-              name="educationLevel"
+              name="education_level"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Education Levels Offered *</FormLabel>
-                  <FormControl>
-                    <MultipleSelector
-                      value={field.value}
-                      onChange={field.onChange}
-                      defaultOptions={schoolEducationLevel}
-                      placeholder="e.g., Primary, Ordinary Level"
-                      hidePlaceholderWhenSelected
-                    />
-                  </FormControl>
+                  <FormLabel>Education Levels Offered</FormLabel>
+                  {loadingOptions ? (
+                    <div className="skeleton h-12 rounded-md" />
+                  ) : (
+                    <FormControl>
+                      <MultipleSelector
+                        value={field.value}
+                        onChange={field.onChange}
+                        defaultOptions={trades.map((trade) => ({
+                          value: trade.id || trade._id || "",
+                          label: trade.name,
+                          disable: trade.disable || false,
+                        }))}
+                        placeholder={
+                          loadingOptions
+                            ? "Loading educationLevel"
+                            : "e.g., Primary, Ordinary Level"
+                        }
+                        hidePlaceholderWhenSelected
+                        disabled={isPending || loadingOptions}
+                      />
+                    </FormControl>
+                  )}
                   <FormDescription>
-                    Enter levels, separated by commas.
+                    Enter levels, separated by commas. {trades.length}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -403,12 +444,13 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
             {/* Accreditation Number */}
             <FormField
               control={form.control}
-              name="accreditationNumber"
+              name="accreditation_number"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Accreditation Number</FormLabel>
                   <FormControl>
                     <Input
+                      type="number"
                       placeholder="Optional accreditation number"
                       {...field}
                     />
@@ -431,11 +473,11 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select school Affiliation" />
+                        <SelectValue placeholder="Select school affiliation" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent data-theme={theme}>
-                      {AffiliationTypeEnum.options.map((type) => (
+                      {AffiliationTypes.map((type) => (
                         <SelectItem key={type} value={type}>
                           {type}
                         </SelectItem>
@@ -495,7 +537,7 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
             />
             <FormField
               control={form.control}
-              name="address.postalCode"
+              name="address.postal_code"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Postal Code</FormLabel>
@@ -521,7 +563,7 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
             />
             <FormField
               control={form.control}
-              name="address.googleMapUrl"
+              name="address.google_map_url"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Google map URL</FormLabel>
@@ -536,6 +578,7 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
               )}
             />
           </div>
+
           {/* Contact Fields */}
           <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-2">
             <FormField
@@ -573,6 +616,7 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
               )}
             />
           </div>
+
           {/* Website */}
           <FormField
             control={form.control}
@@ -591,19 +635,16 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
               </FormItem>
             )}
           />
-          {/* Social Media (Simplified) - Add more complex logic if needed */}
-          <FormDescription className="mt-4">
-            Provide website OR social media links (add social links in
-            description or dedicated section later).
-          </FormDescription>
         </div>
+
+        {/* Section: Facilities & Operations */}
         <div className="">
           <h3 className="mb-4 text-lg font-medium">Facilities & Operations</h3>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {/* Student Capacity */}
             <FormField
               control={form.control}
-              name="studentCapacity"
+              name="student_capacity"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Student Capacity</FormLabel>
@@ -613,7 +654,6 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
                       min="1"
                       placeholder="Total student capacity"
                       {...field}
-                      // Ensure value is passed as number
                       onChange={(e) =>
                         field.onChange(
                           parseInt(e.target.value, 10) || undefined,
@@ -654,7 +694,7 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
             {/* Attendance System */}
             <FormField
               control={form.control}
-              name="attendanceSystem"
+              name="attendance_system"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Attendance System</FormLabel>
@@ -668,7 +708,7 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent data-theme={theme}>
-                      {AttendanceSystemEnum.options.map((type) => (
+                      {AttendanceSystems.map((type) => (
                         <SelectItem key={type} value={type}>
                           {type}
                         </SelectItem>
@@ -683,7 +723,7 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
             {/* Uniform Required */}
             <FormField
               control={form.control}
-              name="uniformRequired"
+              name="uniform_required"
               render={({ field }) => (
                 <FormItem className="space-y-2 pt-2">
                   <FormLabel>Uniform Required?</FormLabel>
@@ -691,7 +731,7 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
                     <RadioGroup
                       onValueChange={(value) =>
                         field.onChange(value === "true")
-                      } // Convert string value back to boolean
+                      }
                       defaultValue={
                         field.value === undefined
                           ? undefined
@@ -721,7 +761,7 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
             {/* Scholarship Available */}
             <FormField
               control={form.control}
-              name="scholarshipAvailable"
+              name="scholarship_available"
               render={({ field }) => (
                 <FormItem className="space-y-2 pt-2">
                   <FormLabel>Scholarships Available?</FormLabel>
@@ -797,9 +837,9 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
             {/* Online Classes */}
             <FormField
               control={form.control}
-              name="onlineClasses"
+              name="online_classes"
               render={({ field }) => (
-                <FormItem className="space-y-2 pt-2">
+                <FormItem className="h-fit space-y-2 pt-2">
                   <FormLabel>Online Classes Offered?</FormLabel>
                   <FormControl>
                     <RadioGroup
@@ -837,7 +877,7 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
               control={form.control}
               name="labs"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="h-fit">
                   <FormLabel>Labs Available</FormLabel>
                   <FormControl>
                     <MultipleSelector
@@ -859,9 +899,9 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
             {/* Sports & Extracurricular */}
             <FormField
               control={form.control}
-              name="sportsExtracurricular"
+              name="sports_extracurricular"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="h-fit">
                   <FormLabel>Sports & Extracurricular</FormLabel>
                   <FormControl>
                     <MultipleSelector
@@ -894,14 +934,13 @@ const CreateSchoolForm = ({ lang, userId }: Props) => {
           library="daisy"
           variant={"info"}
           className="w-full"
-          // variant="primary" // Or your desired variant
         >
           {isPending ? (
             <>
               <div
                 role="status"
                 aria-label="Loading"
-                className="loading loading-spinner mr-2 h-4 w-4" // Adjust spinner styling
+                className="loading loading-spinner mr-2 h-4 w-4"
               />
               Creating School...
             </>

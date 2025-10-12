@@ -1,7 +1,7 @@
 import { UserModel } from "@/lib/schema/user/user-schema";
 import { z } from "zod";
 import { ClassDto } from "../../class/class.schema";
-import { SchoolDto } from "../../school.dto";
+import { SchoolDto } from "../school.dto";
 
 export const SchoolJoinRequestSchema = z.object({
   id: z.string(),

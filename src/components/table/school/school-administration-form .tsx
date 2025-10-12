@@ -40,7 +40,7 @@ import { SchoolStaffRoles } from "@/lib/context/school.context";
 import {
   SchoolAdministrationDto,
   SchoolAdministrationSchema,
-} from "@/lib/schema/school.dto";
+} from "@/lib/schema/school/school.dto";
 import { cn } from "@/lib/utils";
 import { AuthUserDto } from "@/lib/utils/auth";
 import { administrationSchoolRequestToJoinSchool } from "@/service/school/school.service";

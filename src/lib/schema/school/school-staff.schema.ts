@@ -1,5 +1,5 @@
+import { AgeSchema, GenderSchema } from "@/lib/schema/common-details-schema";
 import * as z from "zod";
-import { AgeSchema, GenderEnum } from "../user/user-schema";
 export const SchoolStaffSchema = z.object({
   id: z.string(),
   userId: z.string(),
@@ -11,7 +11,7 @@ export const SchoolStaffSchema = z.object({
   phone: z.string().optional(),
   image: z.string().optional(),
   age: AgeSchema.optional(),
-  gender: GenderEnum.optional(),
+  gender: GenderSchema.optional(),
   createAt: z.date().optional(),
   updatedAt: z.date().optional(),
 });

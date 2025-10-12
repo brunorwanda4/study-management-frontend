@@ -1,6 +1,10 @@
 // schemas/contact-location.ts
+import {
+  ContactSchema,
+  SchoolAddress,
+  SocialMediaSchema,
+} from "@/lib/schema/school/school.dto";
 import { z } from "zod";
-import { SchoolAddress, ContactSchema, SocialMediaSchema } from "@/lib/schema/school.dto";
 
 export const ContactLocationSchema = z.object({
   address: SchoolAddress.optional(),

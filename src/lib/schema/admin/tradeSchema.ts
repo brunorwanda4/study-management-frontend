@@ -2,8 +2,8 @@ import { sectorSchema } from "@/lib/schema/admin/sectorSchema";
 import z from "zod";
 
 export const tradeSchema = z.object({
-  id: z.string().optional().nullable(),
-  _id: z.string().optional().nullable(),
+  id: z.string().optional(),
+  _id: z.string().optional(),
   sector_id: z.string().optional().nullable(),
   trade_id: z.string().optional().nullable(), // self relation
   name: z

@@ -1,6 +1,5 @@
-import MyImage from "@/components/common/myImage";
 import UpdateTradeForm from "@/components/page/admin/trades/update-trade-form";
-import { buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -15,18 +14,25 @@ import { AuthUserResult } from "@/lib/utils/auth-user";
 interface Props {
   trade: TradeModule;
   auth: AuthUserResult;
+  isIcon?: boolean;
 }
 
-const UpdateTradeDialog = ({ trade, auth }: Props) => {
+const UpdateTradeDialog = ({ trade, auth, isIcon = false }: Props) => {
   return (
     <Dialog>
-      <DialogTrigger
-        className={cn(
-          buttonVariants({ library: "shadcn" }),
-          "w-full cursor-pointer",
-        )}
-      >
-        <MyImage role="ICON" src="/icons/edit.png" /> Update Trade{" "}
+      <DialogTrigger asChild>
+        <Button
+          library="daisy"
+          role="update"
+          size={"sm"}
+          data-tip={isIcon && " Update trade"}
+          className={cn(
+            "w-full",
+            isIcon && "tooltip tooltip-top tooltip-warning w-fit",
+          )}
+        >
+          <span className={cn(isIcon && "sr-only")}>Update Trade</span>
+        </Button>
       </DialogTrigger>
       <DialogContent className="max- max-h-[95vh] overflow-y-auto sm:max-w-4xl">
         <DialogHeader>

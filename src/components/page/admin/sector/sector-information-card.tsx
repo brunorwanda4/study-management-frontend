@@ -17,7 +17,7 @@ interface PropsSector {
 }
 
 const SectorInformationCard = ({ sector, auth }: PropsSector) => {
-  const { data } = useRealtimeData<SectorModel>("main_sector");
+  const { data } = useRealtimeData<SectorModel>("sector");
   const [currentSector, setCurrentSector] = useState(sector);
 
   useEffect(() => {

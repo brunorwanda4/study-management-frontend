@@ -2,10 +2,11 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useState } from "react";
 import { useTheme } from "next-themes";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -16,6 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import MultipleSelector, { Option } from "@/components/ui/multiselect";
 import {
   Select,
   SelectContent,
@@ -23,10 +25,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import MultipleSelector, { Option } from "@/components/ui/multiselect";
 import { schoolEducationLevel } from "@/lib/context/school.context";
-import { AffiliationTypeEnum } from "@/lib/schema/school.dto";
+import { AffiliationTypeEnum } from "@/lib/schema/school/school.dto";
 import {
   AcademicDetailsDto,
   AcademicDetailsSchema,
@@ -74,11 +74,11 @@ export const AcademicDetailsForm = ({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
         <div className="space-y-6">
-          <h3 className="text-xl font-semibold mb-4 border-b pb-2">
+          <h3 className="mb-4 border-b pb-2 text-xl font-semibold">
             Academic Details
           </h3>
-          {error && <div className=" alert alert-error">{error}</div>}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {error && <div className="alert alert-error">{error}</div>}
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <FormField
               control={form.control}
               name="educationLevel"

@@ -14,10 +14,13 @@ interface props {
 const SchoolStaffRegisterSchool = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
-  const currentUser = (await authUser())?.user;
-  if (!currentUser) return redirect(`/${lang}/auth/login`);
-  if (currentUser.role !== "SCHOOLSTAFF")
-    return <PermissionPage lang={lang} role={currentUser.role ?? "STUDENT"} />;
+
+  const auth = await authUser();
+  if (!auth) return redirect(`/${lang}/auth/login`);
+
+  const allowedRoles = ["ADMIN", "SCHOOLSTAFF"];
+  if (!auth.user.role || !allowedRoles.includes(auth.user.role))
+    return <PermissionPage lang={lang} role={auth.user.role ?? "STUDENT"} />;
 
   return (
     <div className="mt-4 space-y-2 px-4">
@@ -30,7 +33,7 @@ const SchoolStaffRegisterSchool = async (props: props) => {
           school.
         </p>
       </div>
-      <CreateSchoolForm userId={currentUser.id} lang={lang} />
+      <CreateSchoolForm auth={auth} lang={lang} />
     </div>
   );
 };

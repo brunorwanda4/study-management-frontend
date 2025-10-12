@@ -1,15 +1,18 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
 import { AuthUserResult } from "@/lib/utils/auth-user";
 
 import MyImage from "@/components/common/myImage";
 import DeleteTradeDialog from "@/components/page/admin/trades/deleteTradeDialog";
 import TradeDisableDialog from "@/components/page/admin/trades/trade-disable-dialog";
 import UpdateTradeDialog from "@/components/page/admin/trades/updateTradeDialog";
+import { Badge } from "@/components/ui/badge";
+import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
 import { TradeModelWithOthers } from "@/lib/schema/admin/tradeSchema";
+import { formatReadableDate } from "@/lib/utils/format-date";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 interface PropsTrade {
   trade: TradeModelWithOthers;
@@ -17,14 +20,24 @@ interface PropsTrade {
 }
 
 const TradeInformationCard = ({ trade, auth }: PropsTrade) => {
+  const { data } = useRealtimeData<TradeModelWithOthers>("trade");
+  const [currentTrade, setCurrentTrade] = useState(trade);
+
+  useEffect(() => {
+    if (data && data.length > 0) {
+      const updated = data.find((d) => d._id === trade._id);
+      if (updated) setCurrentTrade(updated);
+    }
+  }, [data, trade._id]);
   return (
     <Card className="max-w-fit">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Trade</CardTitle>
-          <div className="flex items-center gap-4">
-            <TradeDisableDialog trade={trade} auth={auth} />
-            <DeleteTradeDialog trade={trade} auth={auth} />
+          <div className="flex items-center gap-2">
+            <UpdateTradeDialog isIcon trade={currentTrade} auth={auth} />
+            <TradeDisableDialog trade={currentTrade} auth={auth} />
+            <DeleteTradeDialog trade={currentTrade} auth={auth} />
           </div>
         </div>
       </CardHeader>
@@ -33,129 +46,111 @@ const TradeInformationCard = ({ trade, auth }: PropsTrade) => {
         <aside className="md:w-72">
           <div className="mt-2 space-y-2">
             {/* Name */}
-            {trade.name && (
-              <h1 className="text-2xl font-medium">{trade.name}</h1>
+            {currentTrade.name && (
+              <h1 className="text-2xl font-medium">{currentTrade.name}</h1>
             )}
 
             {/* Username */}
-            {trade.username && (
+            {currentTrade.username && (
               <div className="flex gap-2">
                 <p className="text-xl font-normal opacity-80">
-                  @{trade.username}
+                  @{currentTrade.username}
                 </p>
               </div>
             )}
-
-            {/* Edit Button */}
-            <div className="mt-4">
-              <UpdateTradeDialog trade={trade} auth={auth} />
-            </div>
 
             {/* Class Min/Max */}
             <div className="flex gap-2">
               <span>Class Range:</span>
               <p className="font-medium">
-                {trade.class_min} - {trade.class_max}
+                {currentTrade.class_min} - {currentTrade.class_max}
               </p>
             </div>
 
             {/* Type */}
-            {trade.type && (
+            {currentTrade.type && (
               <div className="flex gap-2">
                 <span>Type:</span>
-                <p className="font-medium capitalize">{trade.type}</p>
+                <p className="font-medium capitalize">{currentTrade.type}</p>
               </div>
             )}
 
             {/* Description */}
-            {trade.description && (
+            {currentTrade.description && (
               <div>
                 <span>Description:</span>
-                <p className="font-medium">{trade.description}</p>
+                <p className="font-medium">{currentTrade.description}</p>
               </div>
             )}
 
             {/* Sector */}
-            {trade.sector && (
+            {currentTrade.sector && (
               <div className="mt-2">
                 <Link
-                  href={`/a/collections/sectors/${trade.sector.username}`}
+                  href={`/a/collections/sectors/${currentTrade.sector.username}`}
                   className="flex flex-row items-center gap-2"
                 >
                   <span>Sector:</span>
                   <div className="flex items-center gap-1">
-                    {trade.sector.logo && (
-                      <MyImage src={trade.sector.logo} role="ICON" />
+                    {currentTrade.sector.logo && (
+                      <MyImage src={currentTrade.sector.logo} role="ICON" />
                     )}
-                    <p className="font-medium">{trade.sector.name}</p>
+                    <p className="font-medium">{currentTrade.sector.name}</p>
                   </div>
                 </Link>
-                {trade.sector.country && (
+                {currentTrade.sector.country && (
                   <p className="text-sm text-gray-500">
-                    Country: {trade.sector.country}
+                    Country: {currentTrade.sector.country}
                   </p>
                 )}
-                {trade.sector.type && (
+                {currentTrade.sector.type && (
                   <p className="text-sm text-gray-500">
-                    Type: {trade.sector.type}
+                    Type: {currentTrade.sector.type}
                   </p>
                 )}
               </div>
             )}
 
-            {/* Parent Trade */}
-            {trade.parent_trade && (
+            {/* Parent CurrentTrade */}
+            {currentTrade.parent_trade && (
               <div className="mt-2">
                 <Link
-                  href={`/a/collections/trades/${trade.parent_trade.username}`}
+                  href={`/a/collections/trades/${currentTrade.parent_trade.username}`}
                   className="flex items-center gap-2"
                 >
                   <span>Parent Trade:</span>
-                  <p className="font-medium">{trade.parent_trade.name}</p>
+                  <p className="font-medium">
+                    {currentTrade.parent_trade.name}
+                  </p>
                 </Link>
-                {trade.parent_trade.type && (
+                {currentTrade.parent_trade.type && (
                   <p className="text-sm text-gray-500">
-                    Type: {trade.parent_trade.type}
+                    Type: {currentTrade.parent_trade.type}
                   </p>
                 )}
               </div>
             )}
 
             {/* Disabled */}
-            {typeof trade.disable === "boolean" && (
+            {typeof currentTrade.disable === "boolean" && (
               <div className="flex gap-2">
                 <span>Status:</span>
-                <p
-                  className={cn(
-                    "font-medium",
-                    trade.disable ? "text-red-500" : "text-green-600",
-                  )}
-                >
-                  {trade.disable ? "Disabled" : "Active"}
-                </p>
+                <Badge variant={currentTrade.disable ? "secondary" : "default"}>
+                  {currentTrade.disable ? "Disabled" : "Active"}
+                </Badge>
               </div>
             )}
 
             {/* Created & Updated */}
-            {trade.created_at && (
+            {currentTrade.created_at && (
               <div className="flex text-sm text-gray-500">
-                Created at{" "}
-                {new Date(trade.created_at).toLocaleDateString(undefined, {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
+                Created at {formatReadableDate(currentTrade.created_at)}
               </div>
             )}
 
-            {trade.updated_at && (
+            {currentTrade.updated_at && (
               <div className="flex text-sm text-gray-500">
-                Updated at{" "}
-                {new Date(trade.updated_at).toLocaleDateString(undefined, {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
+                Updated at {formatReadableDate(currentTrade.updated_at)}
               </div>
             )}
           </div>

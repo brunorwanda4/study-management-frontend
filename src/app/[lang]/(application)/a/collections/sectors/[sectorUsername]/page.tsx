@@ -15,7 +15,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { sectorUsername } = await params;
   return {
-    title: `${sectorUsername} | Sector`,
+    title: `${sectorUsername} Sector | space-together`,
     description: `Details for Sector ${sectorUsername}`,
   };
 }

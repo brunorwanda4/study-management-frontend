@@ -32,7 +32,7 @@ import {
   schoolAcademicDto,
   SchoolAcademicSchema,
   SchoolDto,
-} from "@/lib/schema/school.dto";
+} from "@/lib/schema/school/school.dto";
 import { academicSchoolService } from "@/service/school/school.service";
 import { useRouter } from "next/navigation";
 interface props {
