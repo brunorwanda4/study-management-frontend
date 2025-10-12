@@ -22,7 +22,7 @@ const SchoolSettingsPage = async (props: props) => {
     authUser(),
     getSchoolServer(),
   ]);
-  if (!currentUser?.user.role) return redirect(`/${lang}/auth/login`);
+  if (!currentUser) return redirect(`/${lang}/auth/login`);
   if (!currentSchool)
     return (
       <NotFoundPage message="You need to have school to access this page" />

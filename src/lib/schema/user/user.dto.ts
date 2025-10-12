@@ -124,17 +124,14 @@ export const AuthUserSchema = z.object({
   username: z.string(),
   name: z.string().min(1, { message: "Minimum 1 character" }),
   image: z.string().nullable().optional(),
+  phone: z.string().nullable().optional(),
   role: UserRoleEnum.optional(),
-  currentSchoolId: z.string().optional(),
-  gender: GenderSchema.optional(),
-  bio: z
-    .string()
-    .max(500, { message: "Bio cannot exceed 500 characters" })
-    .nullable()
-    .optional(),
+  current_school_id: z.string().nullable().optional(),
+  gender: GenderSchema.nullable().optional(),
+  bio: z.string().max(500).nullable().optional(),
   accessToken: z.string().optional(),
   schoolAccessToken: z.string().optional(),
-  disable: z.boolean().optional(),
+  disable: z.boolean().nullable().optional(),
   exp: z.number(),
   iat: z.number(),
 });

@@ -2,9 +2,10 @@ import OnboardingForm from "@/components/page/auth/forms/onboarding-form";
 import { Locale } from "@/i18n";
 import { authUser } from "@/lib/utils/auth-user";
 import { Metadata } from "next";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: "Onboarding",
+  title: "Onboarding | space-together",
   description: "Update user information",
 };
 interface Props {
@@ -15,8 +16,8 @@ const OnboardingPage = async (props: Props) => {
   const { lang } = params;
   // const token = await getUserToken();
   // const school = await getSchoolServer();
-  const user = await authUser();
-  console.log(user);
+  const auth = await authUser();
+  if (!auth) redirect("/auth/login");
   return (
     <div className=" ">
       <div className="space-y-1 text-center">

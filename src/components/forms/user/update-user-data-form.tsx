@@ -16,11 +16,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  UpdateUserDto,
-  UpdateUserSchema,
-  UserDto,
-} from "@/lib/schema/user/user.dto";
+import { UpdateUserDto, UpdateUserSchema } from "@/lib/schema/user/user.dto";
+import { UserModel } from "@/lib/types/userModel";
 import { cn } from "@/lib/utils";
 import { getLocalTimeZone, today, toZoned } from "@internationalized/date";
 import { CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
@@ -51,7 +48,7 @@ import {
 } from "../component-form-need";
 
 interface props {
-  currentUser: UserDto;
+  currentUser: UserModel;
 }
 
 const UserUserDataForm = ({ currentUser }: props) => {
