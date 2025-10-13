@@ -29,14 +29,14 @@ import {
 } from "@/lib/context/school.context";
 import { useToast } from "@/lib/context/toast/ToastContext";
 import {
+  School,
   schoolAcademicDto,
   SchoolAcademicSchema,
-  SchoolDto,
-} from "@/lib/schema/school/school.dto";
+} from "@/lib/schema/school/school-schema";
 import { academicSchoolService } from "@/service/school/school.service";
 import { useRouter } from "next/navigation";
 interface props {
-  school: SchoolDto;
+  school: School;
   lang: Locale;
 }
 
@@ -47,16 +47,16 @@ export function SchoolAcademicForm({ school, lang }: props) {
   const router = useRouter();
   const { showToast } = useToast();
   const hasPrimary = useMemo(
-    () => school.educationLevel?.includes("Primary"),
-    [school.educationLevel],
+    () => school.education_level?.includes("Primary"),
+    [school.education_level],
   );
   const hasOLevel = useMemo(
-    () => school.educationLevel?.includes("OLevel"),
-    [school.educationLevel],
+    () => school.education_level?.includes("OLevel"),
+    [school.education_level],
   );
   const hasALevel = useMemo(
-    () => school.educationLevel?.includes("ALevel"),
-    [school.educationLevel],
+    () => school.education_level?.includes("ALevel"),
+    [school.education_level],
   );
   const hasTVET = useMemo(
     () => school.curriculum?.includes("TVET"),

@@ -10,17 +10,17 @@ export const metadata: Metadata = {
   title: "school new Administration",
 };
 interface props {
-  params: Promise<{ lang: Locale; schoolId: string }>;
+  params: Promise<{ lang: Locale; schoolUsername: string }>;
 }
 
 const AdministrationPage = async (props: props) => {
   const params = await props.params;
-  const { lang, schoolId } = params;
+  const { lang, schoolUsername } = params;
   const currentUser = (await authUser())?.user;
   if (!currentUser) return redirect(`/${lang}/auth/login`);
   if (currentUser.role !== "SCHOOLSTAFF")
     return <PermissionPage lang={lang} role={currentUser.role ?? "STUDENT"} />;
-  const school = await getSchoolByIdService(schoolId);
+  const school = await getSchoolByIdService(schoolUsername);
   if (!school.data) return <NotFoundPage />;
   if (school.data.creatorId !== currentUser.id)
     return <PermissionPage lang={lang} role={currentUser.role ?? "STUDENT"} />;
@@ -34,7 +34,7 @@ const AdministrationPage = async (props: props) => {
         </p>
       </div>
       <SchoolAdministrationForm
-        schoolId={schoolId}
+        schoolUsername={schoolUsername}
         lang={lang}
         currentUser={currentUser}
       />

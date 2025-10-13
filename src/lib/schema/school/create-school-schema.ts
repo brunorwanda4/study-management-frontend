@@ -23,8 +23,8 @@ export const CreateSchoolSchema = z.object({
 
   // Categorical fields
   school_type: SchoolTypeEnum.optional(),
-  curriculum: z.array(OptionSchema).optional(),
-  education_level: z.array(OptionSchema).optional(),
+  // curriculum: z.array(OptionSchema).optional(),
+  // education_level: z.array(OptionSchema).optional(),
   accreditation_number: z.string().optional(),
   affiliation: AffiliationTypeSchema.optional(),
   school_members: SchoolMemberSchema.optional(),

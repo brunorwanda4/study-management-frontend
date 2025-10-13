@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTheme } from "next-themes";
-import { useEffect, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 
 import { Locale } from "@/i18n";
@@ -44,8 +44,6 @@ import {
   SchoolSportsExtracurricular,
 } from "@/lib/context/school.context";
 import { useToast } from "@/lib/context/toast/ToastContext";
-import { SectorModel } from "@/lib/schema/admin/sectorSchema";
-import { TradeModule } from "@/lib/schema/admin/tradeSchema";
 import {
   CreateSchool,
   CreateSchoolSchema,
@@ -54,7 +52,7 @@ import { School } from "@/lib/schema/school/school-schema";
 import { AuthUserResult } from "@/lib/utils/auth-user";
 import apiRequest from "@/service/api-client";
 import { useRouter } from "next/navigation";
-import MultipleSelector from "../../ui/multiselect";
+import MultipleSelector from "../../../ui/multiselect";
 
 interface Props {
   lang: Locale;
@@ -70,40 +68,40 @@ const CreateSchoolForm = ({ lang, auth }: Props) => {
   const { showToast } = useToast();
 
   // Local state for sectors & trades
-  const [sectors, setSectors] = useState<SectorModel[]>([]);
-  const [trades, setTrades] = useState<TradeModule[]>([]);
-  const [loadingOptions, setLoadingOptions] = useState(true);
+  // const [sectors, setSectors] = useState<SectorModel[]>([]);
+  // const [trades, setTrades] = useState<TradeModule[]>([]);
+  // const [loadingOptions, setLoadingOptions] = useState(true);
 
-  useEffect(() => {
-    const fetchOptions = async () => {
-      try {
-        const [sectorsRes, tradesRes] = await Promise.all([
-          apiRequest<void, SectorModel[]>("get", "/sectors", undefined, {
-            token: auth.token,
-          }),
-          apiRequest<void, TradeModule[]>("get", "/trades", undefined, {
-            token: auth.token,
-          }),
-        ]);
+  // useEffect(() => {
+  //   const fetchOptions = async () => {
+  //     try {
+  //       const [sectorsRes, tradesRes] = await Promise.all([
+  //         apiRequest<void, SectorModel[]>("get", "/sectors", undefined, {
+  //           token: auth.token,
+  //         }),
+  //         apiRequest<void, TradeModule[]>("get", "/trades", undefined, {
+  //           token: auth.token,
+  //         }),
+  //       ]);
 
-        if (sectorsRes.data) {
-          const activeSectors = sectorsRes.data.filter((s) => !s.disable);
-          setSectors(activeSectors);
-        }
+  //       if (sectorsRes.data) {
+  //         const activeSectors = sectorsRes.data.filter((s) => !s.disable);
+  //         setSectors(activeSectors);
+  //       }
 
-        if (tradesRes.data) {
-          const filteredTrades = tradesRes.data.filter(
-            (t) => !t.disable && !t.trade_id,
-          );
-          setTrades(filteredTrades);
-        }
-      } finally {
-        setLoadingOptions(false);
-      }
-    };
+  //       if (tradesRes.data) {
+  //         const filteredTrades = tradesRes.data.filter(
+  //           (t) => !t.disable && !t.trade_id,
+  //         );
+  //         setTrades(filteredTrades);
+  //       }
+  //     } finally {
+  //       setLoadingOptions(false);
+  //     }
+  //   };
 
-    fetchOptions();
-  }, [auth.token]);
+  //   fetchOptions();
+  // }, [auth.token]);
 
   const form = useForm<CreateSchool>({
     resolver: zodResolver(CreateSchoolSchema),
@@ -118,8 +116,8 @@ const CreateSchoolForm = ({ lang, auth }: Props) => {
 
       // Categorical fields
       school_type: undefined,
-      curriculum: undefined,
-      education_level: undefined,
+      // curriculum: undefined,
+      // education_level: undefined,
       accreditation_number: "",
       affiliation: undefined,
       school_members: "Mixed",
@@ -143,7 +141,7 @@ const CreateSchoolForm = ({ lang, auth }: Props) => {
       // Academic and administrative characteristics
       student_capacity: undefined,
       uniform_required: true,
-      attendance_system: undefined,
+      attendance_system: "Online",
       scholarship_available: false,
 
       // Facilities
@@ -164,12 +162,7 @@ const CreateSchoolForm = ({ lang, auth }: Props) => {
         sports_extracurricular:
           values.sports_extracurricular?.map((sport) => sport.value) ?? [],
         labs: values.labs?.map((lab) => lab.value) ?? [],
-        curriculum:
-          values.curriculum?.map((curriculum) => curriculum.value) ?? [],
-        education_level:
-          values.education_level?.map(
-            (education_level) => education_level.value,
-          ) ?? [],
+        creator_id: auth.user.id,
       };
       const create = await apiRequest<typeof apiData, School>(
         "post",
@@ -192,21 +185,28 @@ const CreateSchoolForm = ({ lang, auth }: Props) => {
           type: "success",
           title: (
             <div className="flex space-x-2">
-              <MyImage src={"/logo.png"} className="size-10" />
+              <MyImage src={"/logo.png"} className="size-10" priority />
               <h3>space-together</h3>
             </div>
           ),
           description: (
-            <div className="flex space-x-2">
-              {create.data.logo && (
-                <MyImage src={create.data.logo} role="ICON" />
-              )}
-              <h3 className="text-lg">{create.data.name}</h3>
-              Has been created successful 🌻
+            <div className="flex flex-col">
+              <div className="flex gap-2">
+                {create.data.logo && (
+                  <MyImage
+                    src={create.data.logo}
+                    role="ICON"
+                    priority
+                    loading="lazy"
+                  />
+                )}
+                <h3 className="text-lg">{create.data.name}</h3>
+              </div>
+              <p> Has been created successful 🌻</p>
             </div>
           ),
         });
-        router.push(`/${lang}/s-t/new/${create.data.id}/academic`);
+        router.push(`/${lang}/s-t/new/${create.data.username}/academic`);
       }
     });
   };
@@ -367,7 +367,7 @@ const CreateSchoolForm = ({ lang, auth }: Props) => {
           <h3 className="mb-4 text-lg font-medium">Academic Details</h3>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {/* Curriculum */}
-            <FormField
+            {/* <FormField
               control={form.control}
               name="curriculum"
               render={({ field }) => (
@@ -402,10 +402,10 @@ const CreateSchoolForm = ({ lang, auth }: Props) => {
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
 
             {/* Education Level */}
-            <FormField
+            {/* <FormField
               control={form.control}
               name="education_level"
               render={({ field }) => (
@@ -439,7 +439,7 @@ const CreateSchoolForm = ({ lang, auth }: Props) => {
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
 
             {/* Accreditation Number */}
             <FormField

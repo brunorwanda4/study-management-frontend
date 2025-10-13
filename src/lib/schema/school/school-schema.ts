@@ -189,6 +189,7 @@ export type sendAdministrationJoinRequestsDto = z.infer<
 // 🏫 Main School Schema
 export const SchoolSchema = z.object({
   id: z.string().optional(), // Mongo ObjectId as string
+  _id: z.string().optional(), // Mongo ObjectId as string
   creator_id: z.string().optional(),
 
   username: z.string(),

@@ -1,5 +1,5 @@
 import PermissionPage from "@/components/page/permission-page";
-import CreateSchoolForm from "@/components/table/school/create-school-form";
+import CreateSchoolForm from "@/components/page/school/create/create-school-form";
 import { Locale } from "@/i18n";
 import { authUser } from "@/lib/utils/auth-user";
 import { Metadata } from "next";
