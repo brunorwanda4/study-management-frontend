@@ -25,7 +25,7 @@ const NotFoundPage = ({ message }: props) => {
 
   return (
     <div className="flex w-full justify-center">
-      <div className="flex flex-col">
+      <div className="flex flex-col items-center">
         <MyImage className="size-96" src="/notFound.svg" />
         <div>
           <div className="text-center">

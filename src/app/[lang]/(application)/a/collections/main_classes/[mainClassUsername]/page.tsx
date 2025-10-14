@@ -3,7 +3,10 @@ import MainClassSubjectsCard from "@/components/page/admin/main-class/main-class
 import ErrorPage from "@/components/page/error-page";
 import NotFoundPage from "@/components/page/not-found";
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
-import { MainClassModelWithOthers } from "@/lib/schema/admin/main-classes-schema";
+import {
+  MainClassModel,
+  MainClassModelWithOthers,
+} from "@/lib/schema/admin/main-classes-schema";
 import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
 import { authUser } from "@/lib/utils/auth-user";
 import apiRequest from "@/service/api-client";
@@ -49,9 +52,9 @@ const MainClassUsernamePage = async (props: {
   const auth = await authUser();
   if (!auth) redirect("/auth/login");
 
-  const request = await apiRequest<void, MainClassModelWithOthers>(
+  const request = await apiRequest<void, MainClassModel>(
     "get",
-    `/main-classes/username/others/${mainClassUsername}`,
+    `/main-classes/username/${mainClassUsername}`,
     undefined,
     { token: auth.token, realtime: "main_class" },
   );
@@ -78,7 +81,7 @@ const MainClassUsernamePage = async (props: {
     );
 
   return (
-    <RealtimeProvider<MainClassModelWithOthers | MainSubject>
+    <RealtimeProvider<MainClassModel | MainSubject>
       channels={[
         { name: "main_class", initialData: [request.data] },
         { name: "main_subject", initialData: getMainSubjects.data },

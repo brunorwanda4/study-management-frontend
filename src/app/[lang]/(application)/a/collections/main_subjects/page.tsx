@@ -18,9 +18,9 @@ const MainSubjectsPage = async () => {
   if (!auth) redirect("/auth/login");
   const request = await apiRequest<void, MainSubject[]>(
     "get",
-    "/main-subjects",
+    "/main-subjects?limit=10",
     undefined,
-    { token: auth.token },
+    { token: auth.token, realtime: "main_subject" },
   );
   if (!request.data)
     return <ErrorPage message={request.message} error={request.error} />;
@@ -31,7 +31,12 @@ const MainSubjectsPage = async () => {
     >
       <div className="space-y-8">
         <SubjectCollectionDetails initialSubjects={request.data} />
-        <MainSubjectsTableCollection realtimeEnabled auth={auth} />
+        <MainSubjectsTableCollection
+          currentSubjects={request.data}
+          realtimeEnabled
+          auth={auth}
+          serverMode
+        />
       </div>
     </RealtimeProvider>
   );

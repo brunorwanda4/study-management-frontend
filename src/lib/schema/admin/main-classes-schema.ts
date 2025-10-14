@@ -17,6 +17,7 @@ export const mainClassSchema = z.object({
     .min(1, { message: "Username is required" })
     .max(50, { message: "Maximum character is 50" }),
   trade_id: z.string().optional(), // maps to Option<ObjectId>
+  level: z.string().optional(),
   description: z
     .string()
     .max(200, { message: "Maximum character is 200" })
@@ -32,10 +33,11 @@ export type MainClassModel = z.infer<typeof mainClassSchema>;
 export const updateMainClassSchema = z.object({
   name: z.string().max(50).optional(),
   username: z.string().max(50).optional(),
-  trade_id: z.string().optional(),
+  // trade_id: z.string().optional(),
   description: z.string().max(200).optional(),
   disable: z.boolean().optional(),
   updated_at: z.string().datetime().optional(),
+  level: z.string().optional(),
 });
 
 export type UpdateMainClassModel = z.infer<typeof updateMainClassSchema>;

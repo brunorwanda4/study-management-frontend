@@ -7,6 +7,7 @@ import {
   Clock,
   DollarSign,
   Percent,
+  Star,
 } from "lucide-react";
 import * as React from "react";
 import {
@@ -17,7 +18,7 @@ import {
   NumberFieldProps,
 } from "react-aria-components";
 
-type NumberInputMode = "currency" | "hours" | "percent" | "default";
+type NumberInputMode = "currency" | "hours" | "percent" | "default" | "level";
 
 type BaseInputProps = Omit<React.ComponentProps<"input">, "step"> & {
   type?: string;
@@ -31,6 +32,7 @@ const modeIcons: Record<NumberInputMode, React.ReactNode> = {
   currency: <DollarSign size={16} />,
   hours: <Clock size={16} />,
   percent: <Percent size={16} />,
+  level: <Star size={16} />,
   default: null,
 };
 

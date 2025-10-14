@@ -9,14 +9,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { TradeModule } from "@/lib/schema/admin/tradeSchema";
 import { AuthUserResult } from "@/lib/utils/auth-user";
 import { BsPlus } from "react-icons/bs";
 
 interface props {
   auth: AuthUserResult;
+  trade?: TradeModule;
 }
 
-const CreateMainClassDialog = ({ auth }: props) => {
+const CreateMainClassDialog = ({ auth, trade }: props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -28,7 +30,7 @@ const CreateMainClassDialog = ({ auth }: props) => {
         <DialogHeader>
           <DialogTitle>Add New Main class</DialogTitle>
         </DialogHeader>
-        <CreateMainClassForm auth={auth} />
+        <CreateMainClassForm trade={trade} auth={auth} />
       </DialogContent>
     </Dialog>
   );

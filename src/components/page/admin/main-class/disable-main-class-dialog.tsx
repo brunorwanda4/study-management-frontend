@@ -1,7 +1,6 @@
 "use client";
 
 import { FormError, FormSuccess } from "@/components/common/form-message";
-import MyImage from "@/components/common/myImage";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,21 +12,21 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { useToast } from "@/lib/context/toast/ToastContext";
 import { MainClassModel } from "@/lib/schema/admin/main-classes-schema";
 import { cn } from "@/lib/utils";
 import { AuthUserResult } from "@/lib/utils/auth-user";
 import apiRequest from "@/service/api-client";
-import { LoaderCircle } from "lucide-react";
 import { useState, useTransition } from "react";
 
 interface Props {
   mainClass: MainClassModel;
   auth: AuthUserResult;
+  isIcon?: boolean;
 }
 
-const MainClassDisableDialog = ({ mainClass, auth }: Props) => {
+const MainClassDisableDialog = ({ mainClass, auth, isIcon }: Props) => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
@@ -75,12 +74,21 @@ const MainClassDisableDialog = ({ mainClass, auth }: Props) => {
           "cursor-pointer",
         )}
       >
-        <MyImage
-          role="ICON"
-          src={mainClass.disable ? "/icons/checked.png" : "/icons/disabled.png"}
-        />
-        <span>{mainClass.disable ? "Enable" : "Disable"}</span>
-        {isPending && <LoaderCircle className="ms-2 animate-spin" size={12} />}
+        <Button
+          className={cn(
+            "w-full",
+            isIcon && "tooltip tooltip-top tooltip-error w-fit",
+          )}
+          variant={"ghost"}
+          size={"sm"}
+          library="daisy"
+          role={mainClass.disable ? "check" : "block"}
+          data-tip={isIcon && " Update main class"}
+        >
+          <span className={cn(isIcon && "sr-only")}>
+            {mainClass.disable ? "Enable" : "Disable"}
+          </span>
+        </Button>
       </AlertDialogTrigger>
 
       <AlertDialogContent>

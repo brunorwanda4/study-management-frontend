@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoaderCircle, Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import {
   Dispatch,
   SetStateAction,
@@ -306,7 +306,7 @@ const CreateMainSubjectForm = ({
                 name="estimated_hours"
                 control={form.control}
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="h-fit">
                     <FormLabel>Estimated Hours *</FormLabel>
                     <FormControl>
                       <Input
@@ -606,7 +606,9 @@ const CreateMainSubjectForm = ({
         {isDialog ? (
           <DialogFooter className="flex justify-end">
             <DialogClose>
-              <Button variant={"outline"}>Cancel</Button>
+              <Button library="daisy" variant={"outline"}>
+                Cancel
+              </Button>
             </DialogClose>
             <Button
               variant={"primary"}
@@ -614,16 +616,9 @@ const CreateMainSubjectForm = ({
               disabled={isPending}
               className="w-full sm:w-auto"
               library={"daisy"}
+              role={isPending ? "loading" : undefined}
             >
-              Create main subject{" "}
-              {isPending && (
-                <LoaderCircle
-                  className="-ms-1 me-2 animate-spin"
-                  size={12}
-                  strokeWidth={2}
-                  aria-hidden="true"
-                />
-              )}
+              Create main subject
             </Button>
           </DialogFooter>
         ) : (
@@ -633,16 +628,9 @@ const CreateMainSubjectForm = ({
             disabled={isPending}
             className="w-full sm:w-auto"
             library={"daisy"}
+            role={isPending ? "loading" : undefined}
           >
-            Create main subject{" "}
-            {isPending && (
-              <LoaderCircle
-                className="-ms-1 me-2 animate-spin"
-                size={12}
-                strokeWidth={2}
-                aria-hidden="true"
-              />
-            )}
+            Create main subject
           </Button>
         )}
       </form>

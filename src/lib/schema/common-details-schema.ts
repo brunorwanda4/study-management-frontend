@@ -89,7 +89,6 @@ export const OptionSchema = z.object({
   value: z.string(),
   label: z.string(),
   disable: z.boolean().optional(),
-  fixed: z.boolean().optional(),
 });
 
 export type Option = z.infer<typeof OptionSchema>;

@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoaderCircle } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 
@@ -33,9 +32,10 @@ import apiRequest from "@/service/api-client";
 
 interface Props {
   auth: AuthUserResult;
+  trade?: TradeModule;
 }
 
-const CreateMainClassForm = ({ auth }: Props) => {
+const CreateMainClassForm = ({ auth, trade }: Props) => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
@@ -49,9 +49,11 @@ const CreateMainClassForm = ({ auth }: Props) => {
     const fetchOptions = async () => {
       try {
         const [tradesRes] = await Promise.all([
-          apiRequest<any, TradeModule[]>("get", "/trades", undefined, {
-            token: auth.token,
-          }),
+          trade
+            ? { data: [] }
+            : apiRequest<any, TradeModule[]>("get", "/trades", undefined, {
+                token: auth.token,
+              }),
         ]);
 
         if (tradesRes.data) {
@@ -72,8 +74,9 @@ const CreateMainClassForm = ({ auth }: Props) => {
       name: "",
       username: "",
       description: "",
-      trade_id: undefined,
+      trade_id: trade ? trade._id || trade.id : undefined,
       disable: false,
+      level: "1",
     },
     mode: "onChange",
   });
@@ -83,11 +86,13 @@ const CreateMainClassForm = ({ auth }: Props) => {
     setSuccess("");
 
     startTransition(async () => {
+      console.log("🫡🫡", values);
       try {
-        const request = await apiRequest<MainClassModel, any>(
+        const api_data = { ...values, level: Number(values.level) };
+        const request = await apiRequest<typeof api_data, any>(
           "post",
           "/main-classes",
-          values,
+          api_data,
           { token: auth.token },
         );
 
@@ -178,34 +183,53 @@ const CreateMainClassForm = ({ auth }: Props) => {
             />
           </div>
           <div className="flex w-1/2 flex-col space-y-4">
+            {!trade && (
+              <FormField
+                name="trade_id"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Trade</FormLabel>
+                    <SelectWithSearch
+                      options={trades
+                        .filter((t) => t.id || t._id)
+                        .map((t) => ({
+                          value: String(t.id ?? t._id),
+                          label: (
+                            <div className="flex w-full justify-between">
+                              <span>{t.name}</span>
+                            </div>
+                          ),
+                        }))}
+                      value={field.value ?? ""}
+                      onChange={field.onChange}
+                      placeholder={
+                        loadingOptions ? "Loading trades..." : "Select trade"
+                      }
+                      disabled={isPending || loadingOptions}
+                    />
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+            {/* level */}
             <FormField
-              name="trade_id"
+              name="level"
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Trade</FormLabel>
-                  <SelectWithSearch
-                    options={trades
-                      .filter((t) => t.id || t._id)
-                      .map((t) => ({
-                        value: String(t.id ?? t._id),
-                        label: (
-                          <div className="flex w-full justify-between">
-                            <span>{t.name}</span>{" "}
-                            <span>
-                              {t.class_min} - {t.class_max}
-                            </span>
-                          </div>
-                        ),
-                      }))}
-                    value={field.value ?? ""}
-                    onChange={field.onChange}
-                    placeholder={
-                      loadingOptions ? "Loading trades..." : "Select trade"
-                    }
-                    disabled={isPending || loadingOptions}
-                  />
-
+                  <FormLabel>Level</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="number"
+                      placeholder="level"
+                      numberMode="level"
+                      disabled={isPending}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -242,24 +266,15 @@ const CreateMainClassForm = ({ auth }: Props) => {
               Cancel
             </Button>
           </DialogClose>
-          <DialogClose asChild>
-            <Button
-              type="submit"
-              variant="default"
-              disabled={isPending}
-              className="w-full sm:w-auto"
-            >
-              Add Main Class{" "}
-              {isPending && (
-                <LoaderCircle
-                  className="-ms-1 me-2 animate-spin"
-                  size={12}
-                  strokeWidth={2}
-                  aria-hidden="true"
-                />
-              )}
-            </Button>
-          </DialogClose>
+          <Button
+            type="submit"
+            variant="default"
+            disabled={isPending}
+            className="w-full sm:w-auto"
+            role={isPending ? "loading" : undefined}
+          >
+            Add Main Class
+          </Button>
         </DialogFooter>
       </form>
     </Form>

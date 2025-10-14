@@ -35,9 +35,10 @@ import apiRequest from "@/service/api-client";
 
 interface Props {
   auth: AuthUserResult;
+  sector?: SectorModel;
 }
 
-const CreateTradeForm = ({ auth }: Props) => {
+const CreateTradeForm = ({ auth, sector }: Props) => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
@@ -53,9 +54,11 @@ const CreateTradeForm = ({ auth }: Props) => {
     const fetchOptions = async () => {
       try {
         const [sectorsRes, tradesRes] = await Promise.all([
-          apiRequest<any, SectorModel[]>("get", "/sectors", undefined, {
-            token: auth.token,
-          }),
+          sector
+            ? { data: [] }
+            : apiRequest<any, SectorModel[]>("get", "/sectors", undefined, {
+                token: auth.token,
+              }),
           apiRequest<any, TradeModule[]>("get", "/trades", undefined, {
             token: auth.token,
           }),
@@ -88,7 +91,7 @@ const CreateTradeForm = ({ auth }: Props) => {
       class_max: 0,
       type: undefined,
       disable: false,
-      sector_id: undefined,
+      sector_id: sector ? sector._id || sector.id : undefined,
       trade_id: undefined,
     },
     mode: "onChange",
@@ -220,30 +223,32 @@ const CreateTradeForm = ({ auth }: Props) => {
           {/* Right Side */}
           <div className="flex w-1/2 flex-col space-y-4">
             {/* Sector Select */}
-            <FormField
-              name="sector_id"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Sector</FormLabel>
-                  <SelectWithSearch
-                    options={sectors
-                      .filter((s) => s.id || s._id)
-                      .map((s) => ({
-                        value: String(s.id ?? s._id),
-                        label: s.name,
-                      }))}
-                    value={field.value ?? ""}
-                    onChange={field.onChange}
-                    placeholder={
-                      loadingOptions ? "Loading sectors..." : "Select sector"
-                    }
-                    disabled={isPending || loadingOptions}
-                  />
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {!sector && (
+              <FormField
+                name="sector_id"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Sector</FormLabel>
+                    <SelectWithSearch
+                      options={sectors
+                        .filter((s) => s.id || s._id)
+                        .map((s) => ({
+                          value: String(s.id ?? s._id),
+                          label: s.name,
+                        }))}
+                      value={field.value ?? ""}
+                      onChange={field.onChange}
+                      placeholder={
+                        loadingOptions ? "Loading sectors..." : "Select sector"
+                      }
+                      disabled={isPending || loadingOptions}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
             {/* Parent Trade Select */}
             <FormField

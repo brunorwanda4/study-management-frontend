@@ -1,9 +1,11 @@
 "use client";
+import RealtimeEnabled from "@/components/common/realtime-enabled";
 import { CommonDataTable } from "@/components/common/table/common-data-table";
 import TableFilter from "@/components/common/table/table-filter";
 import CreateNewUserDialog from "@/components/page/admin/users/createNewUserDialog";
 import { getUsersTableCollectionColumns } from "@/components/page/admin/users/users_table_collection_columns";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
 import { UserModel } from "@/lib/schema/user/user-schema";
 import { AuthUserResult } from "@/lib/utils/auth-user";
 import apiRequest from "@/service/api-client";
@@ -24,19 +26,31 @@ interface Props {
   users: UserModel[];
   auth: AuthUserResult;
   serverMode?: boolean; // flag: true = server fetching, false = SSR
+  realtimeEnabled?: boolean;
 }
 
 const UsersTableCollection = ({
   users: initialUsers,
   auth,
   serverMode = true,
+  realtimeEnabled,
 }: Props) => {
+  const { data: currentUsers, isConnected } =
+    useRealtimeData<UserModel>("user");
+  const [displayUsers, setDisplayUsers] = useState<UserModel[]>(initialUsers);
+
+  useEffect(() => {
+    if (currentUsers && currentUsers.length > 0) {
+      setDisplayUsers(currentUsers);
+    }
+  }, [currentUsers]);
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = auth.token;
   // ✅ restore page index from URL
   const initialPage = parseInt(searchParams.get("page") ?? "1", 10) - 1;
-  const [data, setData] = useState<UserModel[]>(initialUsers);
+  const [data, setData] = useState<UserModel[]>(displayUsers);
 
   const [pageIndex, setPageIndex] = useState(initialPage);
   const [pageSize] = useState(10);
@@ -98,7 +112,10 @@ const UsersTableCollection = ({
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>Users</CardTitle>
+          <CardTitle>
+            Users{" "}
+            {realtimeEnabled && <RealtimeEnabled isConnected={isConnected} />}
+          </CardTitle>
           <CreateNewUserDialog auth={auth} />
         </div>
       </CardHeader>
@@ -128,7 +145,7 @@ const UsersTableCollection = ({
         <CommonDataTable
           table={table}
           columns={columns}
-          data={serverMode ? data : initialUsers}
+          data={serverMode ? data : displayUsers}
           serverMode={serverMode}
           pageIndex={pageIndex}
           setPageIndex={setPageIndex}

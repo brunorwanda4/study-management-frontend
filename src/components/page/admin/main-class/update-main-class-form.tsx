@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoaderCircle } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 
@@ -22,7 +21,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { FormError, FormSuccess } from "@/components/common/form-message";
 import { useToast } from "@/lib/context/toast/ToastContext";
 
-import SelectWithSearch from "@/components/common/select-with-search";
 import {
   MainClassModel,
   UpdateMainClassModel,
@@ -75,8 +73,9 @@ const UpdateMainClassForm = ({ mainClass, auth }: Props) => {
       name: mainClass.name ?? "",
       username: mainClass.username ?? "",
       description: mainClass.description ?? "",
-      trade_id: mainClass.trade_id ?? mainClass.trade_id ?? undefined,
+      // trade_id: mainClass.trade_id ?? mainClass.trade_id ?? undefined,
       disable: mainClass.disable ?? false,
+      level: mainClass.level ?? undefined,
     },
     mode: "onChange",
   });
@@ -84,18 +83,15 @@ const UpdateMainClassForm = ({ mainClass, auth }: Props) => {
   const handleSubmit = (values: UpdateMainClassModel) => {
     setError("");
     setSuccess("");
-
+    console.log("😭😭😭😁", values);
     startTransition(async () => {
       try {
-        const payload = {
-          ...values,
-          updated_at: new Date().toISOString(),
-        };
-
-        const request = await apiRequest<UpdateMainClassModel, any>(
+        const api_data = { ...values, level: Number(values.level) || 1 };
+        console.log("🌻🌻", api_data);
+        const request = await apiRequest<typeof api_data, any>(
           "put",
           `/main-classes/${mainClass.id ?? mainClass._id}`,
-          payload,
+          api_data,
           { token: auth.token },
         );
 
@@ -189,7 +185,7 @@ const UpdateMainClassForm = ({ mainClass, auth }: Props) => {
           {/* Right column */}
           <div className="flex w-1/2 flex-col space-y-4">
             {/* Trade select */}
-            <FormField
+            {/* <FormField
               name="trade_id"
               control={form.control}
               render={({ field }) => (
@@ -203,9 +199,6 @@ const UpdateMainClassForm = ({ mainClass, auth }: Props) => {
                         label: (
                           <div className="flex w-full justify-between">
                             <span>{t.name}</span>
-                            <span>
-                              {t.class_min} - {t.class_max}
-                            </span>
                           </div>
                         ),
                       }))}
@@ -219,8 +212,27 @@ const UpdateMainClassForm = ({ mainClass, auth }: Props) => {
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
 
+            <FormField
+              name="level"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Level</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="number"
+                      placeholder="level"
+                      numberMode="level"
+                      disabled={isPending}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             {/* Disable toggle */}
             <FormField
               name="disable"
@@ -249,29 +261,20 @@ const UpdateMainClassForm = ({ mainClass, auth }: Props) => {
         {/* Footer */}
         <DialogFooter className="px-6 pb-6 sm:justify-end">
           <DialogClose asChild>
-            <Button type="button" variant="outline">
+            <Button library="daisy" type="button" variant="outline">
               Cancel
             </Button>
           </DialogClose>
-          <DialogClose asChild>
-            <Button
-              type="submit"
-              variant="primary"
-              library="daisy"
-              disabled={isPending}
-              className="w-full sm:w-auto"
-            >
-              Update Main Class{" "}
-              {isPending && (
-                <LoaderCircle
-                  className="-ms-1 me-2 animate-spin"
-                  size={12}
-                  strokeWidth={2}
-                  aria-hidden="true"
-                />
-              )}
-            </Button>
-          </DialogClose>
+          <Button
+            type="submit"
+            variant="primary"
+            library="daisy"
+            disabled={isPending}
+            role={isPending ? "loading" : undefined}
+            className="w-full sm:w-auto"
+          >
+            Update Main Class
+          </Button>
         </DialogFooter>
       </form>
     </Form>

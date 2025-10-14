@@ -1,6 +1,5 @@
-import MyImage from "@/components/common/myImage";
 import UpdateMainClassForm from "@/components/page/admin/main-class/update-main-class-form";
-import { buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -15,23 +14,31 @@ import { AuthUserResult } from "@/lib/utils/auth-user";
 interface Props {
   mainClass: MainClassModel;
   auth: AuthUserResult;
+  isIcon?: boolean;
 }
 
-const UpdateMainClassDialog = ({ mainClass, auth }: Props) => {
+const UpdateMainClassDialog = ({ mainClass, auth, isIcon }: Props) => {
   return (
     <Dialog>
-      <DialogTrigger
-        className={cn(
-          buttonVariants({ library: "daisy", variant: "warning" }),
-          "w-full cursor-pointer",
-        )}
-      >
-        <MyImage role="ICON" src="/icons/edit.png" /> Update main class{" "}
+      <DialogTrigger asChild>
+        <Button
+          className={cn(
+            "w-full",
+            isIcon && "tooltip tooltip-top tooltip-warning w-fit",
+          )}
+          variant={"ghost"}
+          size={"sm"}
+          library="daisy"
+          role="update"
+          data-tip={isIcon && " Update main class"}
+        >
+          <span className={cn(isIcon && "sr-only")}> Update main class</span>
+        </Button>
       </DialogTrigger>
       <DialogContent className="max- max-h-[95vh] overflow-y-auto sm:max-w-4xl">
         <DialogHeader>
           <DialogTitle>
-            Update trade <strong>{mainClass.name}</strong>
+            Update main class <strong>{mainClass.name}</strong>
           </DialogTitle>
         </DialogHeader>
         <UpdateMainClassForm auth={auth} mainClass={mainClass} />

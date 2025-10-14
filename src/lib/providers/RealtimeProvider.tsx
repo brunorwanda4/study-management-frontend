@@ -3,7 +3,7 @@
 import { useRealtimeImproved } from "@/lib/hooks/useRealtimeImproved";
 import { WithId } from "@/lib/mode/with-id";
 import { cn } from "@/lib/utils";
-import { createContext, useContext, useEffect, useReducer } from "react";
+import { createContext, useContext, useReducer } from "react";
 
 type ChannelName = string;
 
@@ -55,6 +55,7 @@ function realtimeReducer<T extends WithId>(
 type ChannelConfig<T extends WithId> = {
   name: ChannelName;
   initialData: T[];
+  enabled?: boolean; // ✅ allow disabling realtime for this channel
 };
 
 type RealtimeContextType<T extends WithId> = {
@@ -69,14 +70,15 @@ const RealtimeContext = createContext<RealtimeContextType<any> | null>(null);
 
 type RealtimeProviderProps<T extends WithId> =
   | {
-      /** ✅ Single-channel mode */
+      /** Single-channel mode */
       channel: string;
-      initialData: T[]; // Must be array for reducer consistency
+      initialData: T[];
       className?: string;
       children: React.ReactNode;
+      enabled?: boolean;
     }
   | {
-      /** ✅ Multi-channel mode */
+      /** Multi-channel mode */
       channels: ChannelConfig<T>[];
       className?: string;
       children: React.ReactNode;
@@ -85,10 +87,15 @@ type RealtimeProviderProps<T extends WithId> =
 export function RealtimeProvider<T extends WithId>(
   props: RealtimeProviderProps<T>,
 ) {
-  // Handle both single-channel and multi-channel modes
   const channels =
     "channel" in props
-      ? [{ name: props.channel, initialData: props.initialData }]
+      ? [
+          {
+            name: props.channel,
+            initialData: props.initialData,
+            enabled: props.enabled ?? true,
+          },
+        ]
       : props.channels;
 
   const { className, children } = props;
@@ -100,7 +107,12 @@ export function RealtimeProvider<T extends WithId>(
   const [state, dispatch] = useReducer(realtimeReducer<T>, initialState);
   const connectionMap: Record<string, boolean> = {};
 
-  channels.forEach(({ name }) => {
+  channels.forEach(({ name, enabled = true }) => {
+    if (!enabled) {
+      connectionMap[name] = false;
+      return; // ✅ skip realtime hook
+    }
+
     const { isConnected } = useRealtimeImproved<T>(
       name,
       (created) => dispatch({ type: "add", channel: name, payload: created }),
@@ -119,10 +131,6 @@ export function RealtimeProvider<T extends WithId>(
   const deleteItem = (channel: ChannelName, id: string) =>
     dispatch({ type: "delete", channel, payload: id });
 
-  useEffect(() => {
-    console.log("📡 RealtimeProvider state updated:", state);
-  }, [state]);
-
   return (
     <RealtimeContext.Provider
       value={{
@@ -138,13 +146,16 @@ export function RealtimeProvider<T extends WithId>(
   );
 }
 
-// ✅ Hook to access a specific channel
-export function useRealtimeData<T extends WithId>(channel: string) {
+// ✅ Updated hook: now supports optional `enabled` param
+export function useRealtimeData<T extends WithId>(
+  channel: string,
+  enabled: boolean = true, // default true
+) {
   const ctx = useContext(RealtimeContext);
   if (!ctx) throw new Error("useRealtimeData must be inside RealtimeProvider");
 
   const data = ctx.state[channel] || [];
-  const connected = ctx.isConnected[channel] ?? false;
+  const connected = enabled ? (ctx.isConnected[channel] ?? false) : false;
 
   return {
     data: data as T[],

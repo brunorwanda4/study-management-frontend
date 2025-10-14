@@ -1,4 +1,5 @@
 "use client";
+import LoadingPage from "@/components/common/pages/loading-page";
 import NoItemsPage from "@/components/common/pages/no-items-page";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,6 +29,7 @@ interface DataTableProps<TData, TValue> {
   setPageIndex?: (i: number) => void;
   pageSize?: number;
   noFooter?: boolean;
+  loading?: boolean;
 }
 
 export function CommonDataTable<TData, TValue>({
@@ -40,6 +42,7 @@ export function CommonDataTable<TData, TValue>({
   setPageIndex,
   noFooter = false,
   pageSize = 10,
+  loading = false,
 }: DataTableProps<TData, TValue>) {
   const internalTable = useReactTable({
     data,
@@ -74,7 +77,16 @@ export function CommonDataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getPaginationRowModel().rows.length ? (
+            {loading ? (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="text-muted-foreground h-24 text-center text-sm"
+                >
+                  <LoadingPage />
+                </TableCell>
+              </TableRow>
+            ) : table.getPaginationRowModel().rows.length ? (
               table.getPaginationRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
@@ -148,9 +160,9 @@ export function CommonDataTable<TData, TValue>({
             //     table.nextPage();
             //   }
             // }}
-            disabled={
-              serverMode ? data.length < pageSize : !table.getCanNextPage()
-            }
+            // disabled={
+            //   serverMode ? data.length < pageSize : !table.getCanNextPage()
+            // }
           >
             Next
           </Button>

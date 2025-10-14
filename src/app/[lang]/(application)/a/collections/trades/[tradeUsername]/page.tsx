@@ -1,7 +1,9 @@
 import TradeInformationCard from "@/components/page/admin/trades/trade-information-card";
+import TradeMainClassesCard from "@/components/page/admin/trades/trade-main-classes-card";
 import ErrorPage from "@/components/page/error-page";
 import NotFoundPage from "@/components/page/not-found";
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
+import { MainClassModel } from "@/lib/schema/admin/main-classes-schema";
 import {
   TradeModelWithOthers,
   TradeModule,
@@ -41,11 +43,41 @@ const TradeUsernamePage = async (props: {
   if (!tradeRes.data)
     return <ErrorPage message={tradeRes.message} error={tradeRes.error} />;
 
+  const [mainClassRes] = await Promise.all([
+    apiRequest<void, MainClassModel[]>(
+      "get",
+      `/main-classes/trade/${tradeRes.data._id || tradeRes.data.id}`,
+      undefined,
+      { token: auth.token, realtime: "trade" },
+    ),
+  ]);
+
+  if (!mainClassRes.data)
+    return (
+      <ErrorPage message={mainClassRes.message} error={mainClassRes.error} />
+    );
+
   return (
-    <RealtimeProvider<TradeModule>
-      channels={[{ name: "trade", initialData: [tradeRes.data] }]}
+    <RealtimeProvider<TradeModule | MainClassModel>
+      channels={[
+        { name: "trade", initialData: [tradeRes.data] },
+        { name: "main_class", initialData: mainClassRes.data },
+      ]}
     >
-      <TradeInformationCard trade={tradeRes.data} auth={auth} />
+      <main className="flex flex-col gap-4 lg:flex-row">
+        <TradeInformationCard
+          main_classes={mainClassRes.data}
+          trade={tradeRes.data}
+          auth={auth}
+        />
+        <div className="w-full">
+          <TradeMainClassesCard
+            trade={tradeRes.data}
+            mainClasses={mainClassRes.data}
+            auth={auth}
+          />
+        </div>
+      </main>
     </RealtimeProvider>
   );
 };

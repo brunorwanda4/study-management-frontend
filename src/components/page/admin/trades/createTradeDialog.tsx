@@ -9,14 +9,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { SectorModel } from "@/lib/schema/admin/sectorSchema";
 import { AuthUserResult } from "@/lib/utils/auth-user";
 import { BsPlus } from "react-icons/bs";
 
 interface props {
   auth: AuthUserResult;
+  sector?: SectorModel;
 }
 
-const CreateTradeDialog = ({ auth }: props) => {
+const CreateTradeDialog = ({ auth, sector }: props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -28,7 +30,7 @@ const CreateTradeDialog = ({ auth }: props) => {
         <DialogHeader>
           <DialogTitle>Add New trade</DialogTitle>
         </DialogHeader>
-        <CreateTradeForm auth={auth} />
+        <CreateTradeForm auth={auth} sector={sector} />
       </DialogContent>
     </Dialog>
   );

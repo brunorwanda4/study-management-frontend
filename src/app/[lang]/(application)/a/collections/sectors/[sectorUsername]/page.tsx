@@ -1,8 +1,10 @@
 import SectorInformationCard from "@/components/page/admin/sector/sector-information-card";
+import SectorTradesCard from "@/components/page/admin/sector/sector-trades-card";
 import ErrorPage from "@/components/page/error-page";
 import NotFoundPage from "@/components/page/not-found";
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
 import { SectorModel } from "@/lib/schema/admin/sectorSchema";
+import { TradeModule } from "@/lib/schema/admin/tradeSchema";
 import { authUser } from "@/lib/utils/auth-user";
 import apiRequest from "@/service/api-client";
 import { Metadata } from "next";
@@ -39,12 +41,34 @@ const SectorUsernamePage = async (props: {
   if (!sectorRes.data)
     return <ErrorPage message={sectorRes.message} error={sectorRes.error} />;
 
+  const [tradesRes] = await Promise.all([
+    apiRequest<void, TradeModule[]>(
+      "get",
+      `/trades/sector/${sectorRes.data._id || sectorRes.data.id}`,
+      undefined,
+      { token: auth.token, realtime: "trade" },
+    ),
+  ]);
+
+  if (!tradesRes.data)
+    return <ErrorPage message={tradesRes.message} error={tradesRes.error} />;
+
   return (
-    <RealtimeProvider<SectorModel>
-      channels={[{ name: "sector", initialData: [sectorRes.data] }]}
+    <RealtimeProvider<SectorModel | TradeModule>
+      channels={[
+        { name: "sector", initialData: [sectorRes.data] },
+        { name: "trade", initialData: tradesRes.data },
+      ]}
     >
-      <main>
+      <main className="flex flex-col gap-4 lg:flex-row">
         <SectorInformationCard auth={auth} sector={sectorRes.data} />
+        <div className="w-full">
+          <SectorTradesCard
+            sector={sectorRes.data}
+            trades={tradesRes.data}
+            auth={auth}
+          />
+        </div>
       </main>
     </RealtimeProvider>
   );
