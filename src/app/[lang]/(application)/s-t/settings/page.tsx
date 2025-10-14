@@ -3,7 +3,7 @@ import { BasicInformationForm } from "@/components/page/school-staff/school-sett
 import { ContactLocationForm } from "@/components/page/school-staff/school-setting/forms/contact-location";
 import { Locale } from "@/i18n";
 import { getSchoolServer } from "@/lib/utils/auth";
-import { authUser } from "@/lib/utils/auth-user";
+import { authContext } from "@/lib/utils/auth-context";
 import { getSchoolByIdService } from "@/service/school/school.service";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
@@ -19,7 +19,7 @@ const SchoolSettingsPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
   const [currentUser, currentSchool] = await Promise.all([
-    authUser(),
+    authContext(),
     getSchoolServer(),
   ]);
   if (!currentUser) return redirect(`/${lang}/auth/login`);

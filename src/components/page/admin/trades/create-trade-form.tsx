@@ -30,11 +30,11 @@ import {
 import { useToast } from "@/lib/context/toast/ToastContext";
 import { SectorModel } from "@/lib/schema/admin/sectorSchema";
 import { TradeModule, tradeSchema } from "@/lib/schema/admin/tradeSchema";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 
 interface Props {
-  auth: AuthUserResult;
+  auth: AuthContext;
   sector?: SectorModel;
 }
 

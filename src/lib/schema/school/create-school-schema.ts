@@ -52,3 +52,10 @@ export const CreateSchoolSchema = z.object({
 });
 
 export type CreateSchool = z.infer<typeof CreateSchoolSchema>;
+
+export const createSchoolAcademicSchema = z.object({
+  sector_ids: z.array(OptionSchema).optional(),
+  trade_ids: z.array(OptionSchema).optional(),
+});
+
+export type createSchoolAcademic = z.infer<typeof createSchoolAcademicSchema>;

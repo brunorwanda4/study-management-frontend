@@ -8,7 +8,7 @@ import {
   TradeModelWithOthers,
   TradeModule,
 } from "@/lib/schema/admin/tradeSchema";
-import { authUser } from "@/lib/utils/auth-user";
+import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
@@ -30,7 +30,7 @@ const TradeUsernamePage = async (props: {
 }) => {
   const params = await props.params;
   const { tradeUsername } = params;
-  const auth = await authUser();
+  const auth = await authContext();
   if (!auth) redirect("/auth/login");
   const tradeRes = await apiRequest<void, TradeModelWithOthers>(
     "get",

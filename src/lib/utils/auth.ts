@@ -1,14 +1,14 @@
 // utils/auth.ts
 import { Locale } from "@/i18n";
-import { authUser } from "@/lib/utils/auth-user";
+import { authContext } from "@/lib/utils/auth-context";
 import { jwtDecode } from "jwt-decode";
 import { redirect } from "next/navigation";
-import { AuthUserDto } from "../schema/user/user-schema";
+import { authContextDto } from "../schema/user/user-schema";
 import { getSchoolToken, removeUserToken } from "./auth-cookies";
 
-export function getUserFromToken(token: string): AuthUserDto | null {
+export function getUserFromToken(token: string): authContextDto | null {
   try {
-    const decoded = jwtDecode<AuthUserDto>(token);
+    const decoded = jwtDecode<authContextDto>(token);
     if (decoded.exp && Date.now() >= decoded.exp * 1000) return null;
     return decoded;
   } catch {
@@ -46,7 +46,7 @@ export interface UserSchool {
 
 export async function getSchoolServer() {
   try {
-    const currentUser = (await authUser())?.user;
+    const currentUser = (await authContext())?.user;
     if (!currentUser?.role) return null;
     const token = await getSchoolToken(currentUser.role);
     if (!token) return null;

@@ -9,12 +9,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 import { PlusCircle } from "lucide-react";
 
 interface props {
   subject: MainSubject;
-  auth: AuthUserResult;
+  auth: AuthContext;
 }
 
 const CreateLearningOutcomeDialog = ({ subject, auth }: props) => {

@@ -4,7 +4,7 @@ import UpdateSubjectGradingSchemeDialog from "@/components/page/admin/subjects/s
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
 import { SubjectGrading } from "@/lib/schema/admin/subjects/subject-grading-schema/subject-grading-schema";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 import {
   BarChart2,
   Clock,
@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 
 interface Props {
   grading: SubjectGrading;
-  auth: AuthUserResult;
+  auth: AuthContext;
 }
 
 const MainSubjectGradingSchemeCard = ({ grading, auth }: Props) => {

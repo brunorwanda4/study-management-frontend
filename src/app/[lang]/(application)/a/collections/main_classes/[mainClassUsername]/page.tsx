@@ -8,7 +8,7 @@ import {
   MainClassModelWithOthers,
 } from "@/lib/schema/admin/main-classes-schema";
 import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
-import { authUser } from "@/lib/utils/auth-user";
+import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
@@ -23,7 +23,7 @@ export async function generateMetadata({
   params: Promise<{ mainClassUsername: string }>;
 }): Promise<Metadata> {
   const { mainClassUsername } = await params;
-  const auth = await authUser();
+  const auth = await authContext();
   if (!auth) return { title: "Main Class" };
 
   const request = await apiRequest<void, MainClassModelWithOthers>(
@@ -49,7 +49,7 @@ const MainClassUsernamePage = async (props: {
 }) => {
   const params = await props.params;
   const { mainClassUsername } = params;
-  const auth = await authUser();
+  const auth = await authContext();
   if (!auth) redirect("/auth/login");
 
   const request = await apiRequest<void, MainClassModel>(

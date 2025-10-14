@@ -48,15 +48,14 @@ import {
   CreateSchool,
   CreateSchoolSchema,
 } from "@/lib/schema/school/create-school-schema";
-import { School } from "@/lib/schema/school/school-schema";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext, setAuthCookies } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { useRouter } from "next/navigation";
 import MultipleSelector from "../../../ui/multiselect";
 
 interface Props {
   lang: Locale;
-  auth: AuthUserResult;
+  auth: AuthContext;
 }
 
 const CreateSchoolForm = ({ lang, auth }: Props) => {
@@ -164,7 +163,7 @@ const CreateSchoolForm = ({ lang, auth }: Props) => {
         labs: values.labs?.map((lab) => lab.value) ?? [],
         creator_id: auth.user.id,
       };
-      const create = await apiRequest<typeof apiData, School>(
+      const create = await apiRequest<typeof apiData, any>(
         "post",
         "/schools",
         apiData,
@@ -206,6 +205,8 @@ const CreateSchoolForm = ({ lang, auth }: Props) => {
             </div>
           ),
         });
+        setAuthCookies(auth.token, auth.user.id, create.data.token);
+        console.log("🌻✨😭", create.data.token);
         router.push(`/${lang}/s-t/new/${create.data.username}/academic`);
       }
     });

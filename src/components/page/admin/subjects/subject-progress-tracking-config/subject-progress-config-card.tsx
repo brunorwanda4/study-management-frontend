@@ -6,7 +6,7 @@ import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
 import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
 import { SubjectProgressTrackingConfig } from "@/lib/schema/admin/subjects/subject-progress-tracking-config-schema/subject-progress-tracking-config-schema";
 import { cn } from "@/lib/utils";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 import {
   Activity,
   AlertTriangle,
@@ -22,7 +22,7 @@ import { useEffect, useState } from "react";
 
 interface Props {
   progress: SubjectProgressTrackingConfig;
-  auth: AuthUserResult;
+  auth: AuthContext;
   subject?: MainSubject;
 }
 

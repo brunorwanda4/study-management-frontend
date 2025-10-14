@@ -1,6 +1,6 @@
 import NotFoundPage from "@/components/page/not-found";
 import PermissionPage from "@/components/page/permission-page";
-import { SchoolAcademicForm } from "@/components/page/school/create/school-academic-form";
+import CreateSchoolAcademicForm from "@/components/page/school/create/create-school-academic-form";
 import {
   Card,
   CardContent,
@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Locale } from "@/i18n";
 import { School } from "@/lib/schema/school/school-schema";
-import { authUser } from "@/lib/utils/auth-user";
+import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
@@ -25,7 +25,7 @@ interface props {
 const SchoolAcademicOnboardingPage = async (props: props) => {
   const params = await props.params;
   const { lang, schoolUsername } = params;
-  const auth = await authUser();
+  const auth = await authContext();
   if (!auth) return redirect(`/${lang}/auth/login`);
 
   const allowedRoles = ["ADMIN", "SCHOOLSTAFF"];
@@ -53,7 +53,7 @@ const SchoolAcademicOnboardingPage = async (props: props) => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <SchoolAcademicForm school={school.data} lang={lang} />
+          <CreateSchoolAcademicForm school={school.data} auth={auth} />
         </CardContent>
       </Card>
     </div>

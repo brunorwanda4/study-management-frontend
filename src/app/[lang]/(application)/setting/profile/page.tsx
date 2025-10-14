@@ -4,13 +4,13 @@ import SettingPrivacyBody from "@/components/page/settings/profile/setting-priva
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Locale } from "@/i18n";
 import { UserModel } from "@/lib/schema/user/user-schema";
-import { authUser } from "@/lib/utils/auth-user";
+import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const auth = await authUser();
+  const auth = await authContext();
   if (!auth)
     return {
       title: "user profile | space-together",
@@ -28,7 +28,7 @@ interface props {
 const SettingProfilePage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
-  const auth = await authUser();
+  const auth = await authContext();
   if (!auth) {
     return redirect(`/${lang}/auth/login`);
   }

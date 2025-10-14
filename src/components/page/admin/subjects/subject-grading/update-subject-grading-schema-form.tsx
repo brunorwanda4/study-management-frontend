@@ -39,10 +39,10 @@ import {
   UpdateSubjectGradingScheme,
   UpdateSubjectGradingSchemeSchema,
 } from "@/lib/schema/admin/subjects/subject-grading-schema/update-subject-grading-schema";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 
 interface Props {
-  auth: AuthUserResult;
+  auth: AuthContext;
   gradingScheme: SubjectGrading;
   action?: () => void;
   isDialog?: boolean;

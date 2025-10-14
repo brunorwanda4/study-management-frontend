@@ -10,7 +10,7 @@ import { Button } from "../ui/button";
 
 interface props {
   lang: Locale;
-  role: userRole;
+  role?: userRole;
 }
 
 const DevelopingPage = ({ lang, role }: props) => {

@@ -22,7 +22,7 @@ import {
   createSectorSchema,
   SectorModel,
 } from "@/lib/schema/admin/sectorSchema";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 
 import UploadImage from "@/components/common/cards/form/upload-image";
 import { FormError, FormSuccess } from "@/components/common/form-message";
@@ -36,7 +36,7 @@ import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 
 interface props {
-  auth: AuthUserResult;
+  auth: AuthContext;
   onSectorCreated?: (sector: SectorModel) => void;
 }
 
@@ -124,7 +124,7 @@ const CreateSectorForm = ({ auth, onSectorCreated }: props) => {
               name="logo"
               render={({ field }) => (
                 <FormItem className="row-span-3 flex flex-col space-y-2">
-                  <FormLabel>Profile Image</FormLabel>
+                  <FormLabel>Sector Logo</FormLabel>
                   <FormControl>
                     <UploadImage
                       onChange={field.onChange}

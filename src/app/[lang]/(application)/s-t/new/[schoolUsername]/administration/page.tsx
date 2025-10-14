@@ -2,8 +2,9 @@ import NotFoundPage from "@/components/page/not-found";
 import PermissionPage from "@/components/page/permission-page";
 import SchoolAdministrationForm from "@/components/table/school/school-administration-form ";
 import { Locale } from "@/i18n";
-import { authUser } from "@/lib/utils/auth-user";
-import { getSchoolByIdService } from "@/service/school/school.service";
+import { School } from "@/lib/schema/school/school-schema";
+import { authContext } from "@/lib/utils/auth-context";
+import apiRequest from "@/service/api-client";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 export const metadata: Metadata = {
@@ -16,14 +17,22 @@ interface props {
 const AdministrationPage = async (props: props) => {
   const params = await props.params;
   const { lang, schoolUsername } = params;
-  const currentUser = (await authUser())?.user;
-  if (!currentUser) return redirect(`/${lang}/auth/login`);
-  if (currentUser.role !== "SCHOOLSTAFF")
-    return <PermissionPage lang={lang} role={currentUser.role ?? "STUDENT"} />;
-  const school = await getSchoolByIdService(schoolUsername);
+  const auth = await authContext();
+  if (!auth) return redirect(`/${lang}/auth/login`);
+
+  if (auth.user.role !== "SCHOOLSTAFF")
+    return <PermissionPage lang={lang} role={auth.user.role ?? "STUDENT"} />;
+
+  const school = await apiRequest<void, School>(
+    "get",
+    `/schools/username/${schoolUsername}`,
+    undefined,
+    { token: auth.token },
+  );
   if (!school.data) return <NotFoundPage />;
-  if (school.data.creatorId !== currentUser.id)
-    return <PermissionPage lang={lang} role={currentUser.role ?? "STUDENT"} />;
+  if (school.data.creator_id !== auth.user.id)
+    return <PermissionPage lang={lang} role={auth.user.role ?? "STUDENT"} />;
+
   return (
     <div className="mt-4 space-y-2 px-4">
       <div>
@@ -33,11 +42,7 @@ const AdministrationPage = async (props: props) => {
           administration and staff.
         </p>
       </div>
-      <SchoolAdministrationForm
-        schoolUsername={schoolUsername}
-        lang={lang}
-        currentUser={currentUser}
-      />
+      <SchoolAdministrationForm school={school.data} lang={lang} auth={auth} />
     </div>
   );
 };

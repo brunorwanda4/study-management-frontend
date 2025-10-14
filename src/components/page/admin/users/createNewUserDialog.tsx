@@ -10,10 +10,10 @@ import {
 import { BsPlus } from "react-icons/bs";
 
 import CreateUserForm from "@/components/page/admin/users/create-user-form";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 
 interface props {
-  auth: AuthUserResult;
+  auth: AuthContext;
 }
 
 const CreateNewUserDialog = ({ auth }: props) => {

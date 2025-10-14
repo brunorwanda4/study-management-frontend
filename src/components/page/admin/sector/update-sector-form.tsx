@@ -22,7 +22,7 @@ import {
   UpdateSectorModel,
   updateSectorSchema,
 } from "@/lib/schema/admin/sectorSchema";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 
 import UploadImage from "@/components/common/cards/form/upload-image";
 import { FormError, FormSuccess } from "@/components/common/form-message";
@@ -37,7 +37,7 @@ import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 
 interface Props {
-  auth: AuthUserResult;
+  auth: AuthContext;
   sector: SectorModel;
 }
 

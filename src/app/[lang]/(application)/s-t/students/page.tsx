@@ -28,7 +28,7 @@ const SchoolStaffStudentPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
   const [currentUser, currentSchool] = await Promise.all([
-    authUser(),
+    authContext(),
     getSchoolServer(),
   ]);
 
@@ -42,9 +42,9 @@ const SchoolStaffStudentPage = async (props: props) => {
     getClassesBySchoolIdViewData(currentSchool.schoolId),
   ]);
   return (
-    <div className="p-4 space-y-4">
-      <h2 className=" title-page">Students</h2>
-      <div className=" flex space-x-4">
+    <div className="space-y-4 p-4">
+      <h2 className="title-page">Students</h2>
+      <div className="flex space-x-4">
         <StaffPeople
           icon="/icons/student.png"
           link={`/${lang}/s-t/students`}

@@ -3,7 +3,7 @@ import MyLink from "@/components/common/myLink";
 import { Button } from "@/components/ui/button";
 import { Locale } from "@/i18n";
 import { TeacherDto } from "@/lib/schema/school/teacher.dto";
-import { AuthUserDto } from "@/lib/utils/auth";
+import { authContextDto } from "@/lib/utils/auth";
 import Link from "next/link";
 import { BsPlusCircle } from "react-icons/bs";
 
@@ -11,7 +11,7 @@ interface props {
   lang: Locale;
   onThePage?: boolean;
   teachers: TeacherDto[];
-  currentUser: AuthUserDto;
+  currentUser: authContextDto;
 }
 
 const SchoolTeachers = ({ lang, onThePage, currentUser, teachers }: props) => {

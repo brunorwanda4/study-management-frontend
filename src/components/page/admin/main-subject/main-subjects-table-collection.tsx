@@ -15,7 +15,7 @@ import {
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
 import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
 import { cn } from "@/lib/utils";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import {
   ColumnDef,
@@ -35,7 +35,7 @@ import { useEffect, useMemo, useState } from "react";
 import { BsPlus } from "react-icons/bs";
 
 interface Props {
-  auth: AuthUserResult;
+  auth: AuthContext;
   realtimeEnabled?: boolean;
   currentSubjects: MainSubject[];
   serverMode?: boolean;

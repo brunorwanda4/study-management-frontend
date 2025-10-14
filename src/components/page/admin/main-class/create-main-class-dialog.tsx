@@ -10,11 +10,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { TradeModule } from "@/lib/schema/admin/tradeSchema";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 import { BsPlus } from "react-icons/bs";
 
 interface props {
-  auth: AuthUserResult;
+  auth: AuthContext;
   trade?: TradeModule;
 }
 

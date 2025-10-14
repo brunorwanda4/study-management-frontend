@@ -14,14 +14,14 @@ import {
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
 import { UserModel } from "@/lib/schema/user/user-schema";
 import { cn } from "@/lib/utils";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 import { calculateAge } from "@/lib/utils/calculate-age";
 import { formatReadableDate } from "@/lib/utils/format-date";
 import { generateImageProfile } from "@/lib/utils/generate-profile-image";
 import { useEffect, useState } from "react";
 
 interface PropsUser {
-  auth: AuthUserResult;
+  auth: AuthContext;
   initialUser: UserModel;
 }
 

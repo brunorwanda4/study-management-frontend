@@ -7,14 +7,14 @@ import {
   teacherImage,
 } from "@/lib/context/images";
 import { ClassAndOthers } from "@/lib/schema/class/class.schema";
-import { AuthUserDto } from "@/lib/schema/user/auth-user-schema";
+import { authContextDto } from "@/lib/schema/user/auth-user-schema";
 import { UserSchool } from "@/lib/utils/auth";
 
 interface props {
   currentCls: ClassAndOthers;
   lang: Locale;
   currentSchool?: UserSchool;
-  currentUser: AuthUserDto;
+  currentUser: authContextDto;
 }
 
 const ClassHeader = ({

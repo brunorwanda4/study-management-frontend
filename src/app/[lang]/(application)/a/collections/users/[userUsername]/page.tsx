@@ -3,7 +3,7 @@ import ErrorPage from "@/components/page/error-page";
 import NotFoundPage from "@/components/page/not-found";
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
 import { UserModel } from "@/lib/schema/user/user-schema";
-import { authUser } from "@/lib/utils/auth-user";
+import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
@@ -14,7 +14,7 @@ export async function generateMetadata({
   params: Promise<{ userUsername: string }>;
 }): Promise<Metadata> {
   const { userUsername } = await params;
-  const auth = await authUser();
+  const auth = await authContext();
   if (!auth) return { title: "Main Class" };
 
   const request = await apiRequest<void, UserModel>(
@@ -40,7 +40,7 @@ const UserAdminPage = async (props: {
   const params = await props.params;
   const { userUsername } = params;
 
-  const auth = await authUser();
+  const auth = await authContext();
   if (!auth) redirect("/auth/login");
   const userRes = await apiRequest<void, UserModel>(
     "get",

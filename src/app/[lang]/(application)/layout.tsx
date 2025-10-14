@@ -9,7 +9,7 @@ import { AppSidebar } from "@/components/page/application/aside/app-sidebar";
 import AppNav from "@/components/page/application/navbard/app-nav";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Locale } from "@/i18n";
-import { authUser } from "@/lib/utils/auth-user";
+import { authContext } from "@/lib/utils/auth-context";
 import { redirect } from "next/navigation";
 
 interface props {
@@ -21,7 +21,7 @@ const ApplicationLayout = async (props: props) => {
   const { children } = props;
   const params = await props.params;
   const { lang } = params;
-  const currentUser = (await authUser())?.user;
+  const currentUser = (await authContext())?.user;
   if (!currentUser) {
     redirect(`/${lang}/auth/login`);
   }

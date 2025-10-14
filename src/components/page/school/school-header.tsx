@@ -8,7 +8,7 @@ import {
   schoolLogoImage,
 } from "@/lib/context/images";
 import { SchoolAndOthers } from "@/lib/schema/school/school.dto";
-import { AuthUserDto, UserSchool } from "@/lib/utils/auth";
+import { authContextDto, UserSchool } from "@/lib/utils/auth";
 import Link from "next/link";
 import { TfiWorld } from "react-icons/tfi";
 
@@ -17,7 +17,7 @@ interface props {
   onThePage?: boolean;
   school?: SchoolAndOthers;
   currentSchool?: UserSchool;
-  currentUser: AuthUserDto;
+  currentUser: authContextDto;
 }
 
 const SchoolHeader = ({

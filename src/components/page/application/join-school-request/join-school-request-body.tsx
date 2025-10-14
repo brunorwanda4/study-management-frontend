@@ -1,17 +1,17 @@
 import SchoolJoinRequestCard from "@/components/cards/school-Join-request-card";
 import { Locale } from "@/i18n";
 import { SchoolJoinRequestAndSchool } from "@/lib/schema/school/school-join-school/school-join-request.schema";
-import { AuthUserDto } from "@/lib/utils/auth";
+import { authContextDto } from "@/lib/utils/auth";
 
 interface props {
   requests: SchoolJoinRequestAndSchool[];
   lang: Locale;
-  currentUser: AuthUserDto;
+  currentUser: authContextDto;
 }
 
 const JoinSchoolRequestBody = ({ lang, requests, currentUser }: props) => {
   return (
-    <div className="flex flex-row gap-4 justify-center items-center">
+    <div className="flex flex-row items-center justify-center gap-4">
       {requests.slice(0, 3).map((item) => {
         if (item.status !== "pending") return null;
         return (

@@ -16,13 +16,13 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/lib/context/toast/ToastContext";
 import { UserModel } from "@/lib/schema/user/user-schema";
 import { cn } from "@/lib/utils";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { useState, useTransition } from "react";
 
 interface Props {
   user: UserModel;
-  auth: AuthUserResult;
+  auth: AuthContext;
   isIcon?: boolean;
 }
 

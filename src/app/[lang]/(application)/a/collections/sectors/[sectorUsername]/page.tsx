@@ -5,7 +5,7 @@ import NotFoundPage from "@/components/page/not-found";
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
 import { SectorModel } from "@/lib/schema/admin/sectorSchema";
 import { TradeModule } from "@/lib/schema/admin/tradeSchema";
-import { authUser } from "@/lib/utils/auth-user";
+import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
@@ -27,7 +27,7 @@ const SectorUsernamePage = async (props: {
 }) => {
   const params = await props.params;
   const { sectorUsername } = params;
-  const auth = await authUser();
+  const auth = await authContext();
   if (!auth) redirect("/auth/login");
 
   const sectorRes = await apiRequest<void, SectorModel>(

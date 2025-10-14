@@ -10,11 +10,11 @@ import {
 import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
 import { LearningOutcome } from "@/lib/schema/admin/subjects/subject-learning-outcome-schema/learning-outcome-schema";
 import { cn } from "@/lib/utils";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 import { Dispatch, SetStateAction } from "react";
 
 interface props {
-  auth: AuthUserResult;
+  auth: AuthContext;
   mainSubject: MainSubject;
   learningOutcome: LearningOutcome; // The existing learning outcome to edit
   setLearningOutcome?: Dispatch<SetStateAction<LearningOutcome | undefined>>;

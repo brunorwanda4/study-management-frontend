@@ -30,10 +30,10 @@ import {
   CreateSubjectTopicSchema,
 } from "@/lib/schema/admin/subjects/subject-topic-schema/create-subject-topic-schema";
 import { SubjectTopic } from "@/lib/schema/admin/subjects/subject-topic-schema/subject-topic-schema";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 
 interface Props {
-  auth: AuthUserResult;
+  auth: AuthContext;
   learningOutcome?: LearningOutcome;
   subject?: MainSubject;
   topic?: SubjectTopic;

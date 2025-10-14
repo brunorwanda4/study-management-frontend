@@ -6,7 +6,7 @@ import SchoolImages from "@/components/page/school/school-images";
 import { Separator } from "@/components/ui/separator";
 import { Locale } from "@/i18n";
 import { getSchoolServer } from "@/lib/utils/auth";
-import { authUser } from "@/lib/utils/auth-user";
+import { authContext } from "@/lib/utils/auth-context";
 import { getSchoolByIdService } from "@/service/school/school.service";
 import { redirect } from "next/navigation";
 
@@ -18,7 +18,7 @@ const SchoolIdPage = async (props: props) => {
   const params = await props.params;
   const { lang, schoolId } = params;
   const [currentUser, currentSchool] = await Promise.all([
-    authUser(),
+    authContext(),
     getSchoolServer(),
   ]);
   if (!currentUser) {

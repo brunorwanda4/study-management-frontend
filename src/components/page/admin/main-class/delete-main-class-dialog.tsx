@@ -17,7 +17,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { useToast } from "@/lib/context/toast/ToastContext";
 import { MainClassModel } from "@/lib/schema/admin/main-classes-schema";
 import { cn } from "@/lib/utils";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { LoaderCircle } from "lucide-react";
 import { redirect } from "next/navigation";
@@ -25,7 +25,7 @@ import { useState, useTransition } from "react";
 
 interface Props {
   mainClass: MainClassModel;
-  auth: AuthUserResult;
+  auth: AuthContext;
 }
 
 const DeleteMainClassDialog = ({ mainClass, auth }: Props) => {

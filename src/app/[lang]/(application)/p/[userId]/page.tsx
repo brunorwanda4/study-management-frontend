@@ -5,17 +5,16 @@ import ProfileStudentClassesCard from "@/components/profile/student/profile-stud
 import StudentPerformanceCard from "@/components/profile/student/student-perfomance-card";
 import UserFavoriteSubjects from "@/components/profile/user-favorite-subjects";
 import { Locale } from "@/i18n";
-import { authUser } from "@/lib/utils/auth-user";;
+import { authContext } from "@/lib/utils/auth-context";
 import { getUserById } from "@/service/school/user-service";
 import { redirect } from "next/navigation";
-
 interface Props {
   params: Promise<{ lang: Locale; userId: string }>;
 }
 const ProfilePageById = async (props: Props) => {
   const params = await props.params;
   const { lang, userId } = params;
-  const [currentUser] = await Promise.all([authUser()]);
+  const [currentUser] = await Promise.all([authContext()]);
 
   if (!currentUser) {
     return redirect(`/${lang}/auth/login`);
@@ -29,10 +28,10 @@ const ProfilePageById = async (props: Props) => {
     return <NotFoundPage />;
   }
   return (
-    <div className=" px-4 py-2 space-x-4 md:space-y-4 flex">
+    <div className="flex space-x-4 px-4 py-2 md:space-y-4">
       <ProfileAside lang={lang} user={user.data} />
       {user.data.role === "STUDENT" ? (
-        <div className=" w-2/3 space-y-4">
+        <div className="w-2/3 space-y-4">
           <UserFavoriteSubjects />
           <StudentPerformanceCard />
           <ProfileStudentClassesCard lang="en" />

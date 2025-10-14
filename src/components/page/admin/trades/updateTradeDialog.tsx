@@ -9,11 +9,11 @@ import {
 } from "@/components/ui/dialog";
 import { TradeModule } from "@/lib/schema/admin/tradeSchema";
 import { cn } from "@/lib/utils";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 
 interface Props {
   trade: TradeModule;
-  auth: AuthUserResult;
+  auth: AuthContext;
   isIcon?: boolean;
 }
 

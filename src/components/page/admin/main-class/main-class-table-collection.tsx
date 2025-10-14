@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/card";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
 import { mainClassModelWithTrade } from "@/lib/schema/admin/main-classes-schema";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -30,7 +30,7 @@ import {
 import { useEffect, useState } from "react";
 
 interface Props {
-  auth: AuthUserResult;
+  auth: AuthContext;
   initialClasses?: mainClassModelWithTrade[];
   realtimeEnabled?: boolean;
 }

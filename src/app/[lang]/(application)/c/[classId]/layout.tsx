@@ -31,7 +31,7 @@ const ClassIdLayout = async (props: Props) => {
   const params = await props.params;
   const { lang, classId } = params;
   const [currentUser, currentCls, currentSchool] = await Promise.all([
-    authUser(),
+    authContext(),
     getClassById(classId),
     getSchoolServer(),
   ]);
@@ -45,7 +45,7 @@ const ClassIdLayout = async (props: Props) => {
   }
 
   return (
-    <section className="px-4 py-2 space-y-4">
+    <section className="space-y-4 px-4 py-2">
       <Suspense fallback={<LoadingClassHeader />}>
         <ClassHeader
           lang={lang}

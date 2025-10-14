@@ -7,7 +7,7 @@ import { getUsersTableCollectionColumns } from "@/components/page/admin/users/us
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
 import { UserModel } from "@/lib/schema/user/user-schema";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import {
   ColumnDef,
@@ -24,7 +24,7 @@ import { useEffect, useState } from "react";
 
 interface Props {
   users: UserModel[];
-  auth: AuthUserResult;
+  auth: AuthContext;
   serverMode?: boolean; // flag: true = server fetching, false = SSR
   realtimeEnabled?: boolean;
 }

@@ -2,17 +2,16 @@ import UpdateClassMembers from "@/components/page/class/setting/form/update-clas
 import UpdateClassPublicInfoForm from "@/components/page/class/setting/form/update-class-public-info-form";
 import NotFoundPage from "@/components/page/not-found";
 import { Locale } from "@/i18n";
-import { authUser } from "@/lib/utils/auth-user";;
+import { authContext } from "@/lib/utils/auth-context";
 import { getClassById } from "@/service/class/class.service";
 import { redirect } from "next/navigation";
-
 interface Props {
   params: Promise<{ lang: Locale; classId: string }>;
 }
 const ClassSettingPage = async (props: Props) => {
   const params = await props.params;
   const { lang, classId } = params;
-  const [currentUser] = await Promise.all([authUser()]);
+  const [currentUser] = await Promise.all([authContext()]);
 
   if (!currentUser) {
     return redirect(`/${lang}/auth/login`);
@@ -23,8 +22,8 @@ const ClassSettingPage = async (props: Props) => {
   const cls = await getClassById(classId);
   if (!cls.data) return <NotFoundPage />;
   return (
-    <div className=" space-y-4">
-      <h2 className=" title-page">Class Setting</h2>
+    <div className="space-y-4">
+      <h2 className="title-page">Class Setting</h2>
       {/* TODO: make school management where to add class subjects and class teacher management */}
       <UpdateClassPublicInfoForm classData={cls.data} />
       <UpdateClassMembers />

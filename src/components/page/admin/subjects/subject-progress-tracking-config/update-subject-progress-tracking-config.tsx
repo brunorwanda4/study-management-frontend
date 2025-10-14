@@ -25,11 +25,11 @@ import {
   UpdateSubjectProgressTrackingConfig,
   UpdateSubjectProgressTrackingConfigSchema,
 } from "@/lib/schema/admin/subjects/subject-progress-tracking-config-schema/update-subject-progress-tracking-config-schema";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 
 interface Props {
-  auth: AuthUserResult;
+  auth: AuthContext;
   config: SubjectProgressTrackingConfig;
   setStep?: (step: number, id?: string) => void;
   markStepCompleted?: (step: number, autoNext?: boolean, id?: string) => void;

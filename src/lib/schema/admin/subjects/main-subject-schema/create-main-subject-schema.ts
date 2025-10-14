@@ -3,6 +3,7 @@ import {
   SubjectCategorySchema,
   SubjectLevelSchema,
 } from "@/lib/schema/admin/subjects/subject-category";
+import { OptionSchema } from "@/lib/schema/common-details-schema";
 import { z } from "zod";
 
 export const CreateMainSubjectFormSchema = z
@@ -48,25 +49,9 @@ export const CreateMainSubjectFormSchema = z
 
     category: SubjectCategorySchema,
 
-    main_class_ids: z
-      .array(
-        z.object({
-          label: z.string(),
-          value: z.string(),
-          disable: z.boolean().optional(),
-        }),
-      )
-      .optional(),
+    main_class_ids: z.array(OptionSchema).optional(),
 
-    prerequisites: z
-      .array(
-        z.object({
-          label: z.string(),
-          value: z.string(),
-          disable: z.boolean().optional(),
-        }),
-      )
-      .optional(),
+    prerequisites: z.array(OptionSchema).optional(),
 
     contributors: z
       .array(

@@ -4,7 +4,7 @@ import ErrorPage from "@/components/page/error-page";
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
 import { UserModel } from "@/lib/schema/user/user-schema";
 import { UserStats } from "@/lib/types/User-stats";
-import { authUser } from "@/lib/utils/auth-user";
+import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 };
 
 const UserPageCollection = async () => {
-  const auth = await authUser();
+  const auth = await authContext();
   if (!auth) redirect("/auth/login");
 
   // Run requests in parallel

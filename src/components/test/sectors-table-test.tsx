@@ -2,7 +2,7 @@
 
 import { useRealtimeImproved } from "@/lib/hooks/useRealtimeImproved";
 import { SectorModel } from "@/lib/schema/admin/sectorSchema";
-import { authUser } from "@/lib/utils/auth-user";
+import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { useEffect, useState } from "react";
 
@@ -15,7 +15,7 @@ export default function SectorsTableTest() {
   // Fetch initial sectors
   useEffect(() => {
     const fetchSectors = async () => {
-      const auth = await authUser();
+      const auth = await authContext();
       try {
         setError(null);
         setDebugInfo("Starting to fetch sectors...");

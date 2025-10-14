@@ -38,11 +38,11 @@ import UpdateSubjectTopicDialog from "@/components/page/admin/subjects/subject-t
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
 import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
 import { LearningOutcomeWithOthers } from "@/lib/schema/admin/subjects/subject-learning-outcome-schema/learning-outcome-schema";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 
 interface Props {
   MainSubject: MainSubject;
-  auth: AuthUserResult;
+  auth: AuthContext;
   learningOutcome: LearningOutcomeWithOthers[];
 }
 
@@ -108,7 +108,7 @@ const NoLearningOutcomeState = ({
   auth,
 }: {
   subject: MainSubject;
-  auth: AuthUserResult;
+  auth: AuthContext;
 }) => (
   <div className="flex items-center justify-center">
     <div className="flex flex-col gap-3">
@@ -129,7 +129,7 @@ const LearningOutcomeItem = ({
   subject,
 }: {
   item: LearningOutcomeWithOthers;
-  auth: AuthUserResult;
+  auth: AuthContext;
   subject: MainSubject;
 }) => (
   <Item
@@ -275,7 +275,7 @@ const TopicsSection = ({
 }: {
   topics: any[];
   item: LearningOutcomeWithOthers;
-  auth: AuthUserResult;
+  auth: AuthContext;
 }) => (
   <SectionCard title="Topics" icon={<BookOpen className="h-4 w-4" />}>
     <div className="flex flex-col gap-3">

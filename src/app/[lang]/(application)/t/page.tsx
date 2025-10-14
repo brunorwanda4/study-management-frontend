@@ -3,7 +3,7 @@ import DevelopingPage from "@/components/page/developing-page";
 import JoinSchoolDialog from "@/components/page/school-staff/dialog/join-school-dialog";
 import { Locale } from "@/i18n";
 import { getSchoolServer } from "@/lib/utils/auth";
-import { authUser } from "@/lib/utils/auth-user";
+import { authContext } from "@/lib/utils/auth-context";
 import { GetAllJoinSchoolRequestByCurrentUserEmail } from "@/service/school/school-join-request.service";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
@@ -19,7 +19,7 @@ const TeacherPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
   const [currentUser, currentSchool] = await Promise.all([
-    await authUser(),
+    await authContext(),
     await getSchoolServer(),
   ]);
 

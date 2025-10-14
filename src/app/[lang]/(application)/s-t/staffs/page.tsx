@@ -25,7 +25,7 @@ const SchoolStaffStaffPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
   const [currentUser, currentSchool] = await Promise.all([
-    authUser(),
+    authContext(),
     getSchoolServer(),
   ]);
 
@@ -39,13 +39,13 @@ const SchoolStaffStaffPage = async (props: props) => {
   ]);
 
   return (
-    <div className="p-4 space-y-4 ">
+    <div className="space-y-4 p-4">
       <div>
-      <SchoolStaffTable
-         schoolId={currentSchool.schoolId}
-         lang={lang}
-         staffs={allStaffs.data ?? []}
-      />
+        <SchoolStaffTable
+          schoolId={currentSchool.schoolId}
+          lang={lang}
+          staffs={allStaffs.data ?? []}
+        />
       </div>
     </div>
   );

@@ -28,7 +28,7 @@ const ClassCard = async ({
   myClass,
   isNotes,
 }: props) => {
-  const getUser = await authUser();
+  const getUser = await authContext();
   return (
     <div className="basic-card relative h-auto p-0">
       <div className="relative">

@@ -11,10 +11,10 @@ import {
 import { MainClassModel } from "@/lib/schema/admin/main-classes-schema";
 import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
 import { cn } from "@/lib/utils";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 
 interface props {
-  auth: AuthUserResult;
+  auth: AuthContext;
   mainClass?: MainClassModel;
   subject: MainSubject;
   icon?: boolean;

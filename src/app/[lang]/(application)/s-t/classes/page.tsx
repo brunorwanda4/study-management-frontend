@@ -3,7 +3,7 @@ import PermissionPage from "@/components/page/permission-page";
 import ClassesSchoolTable from "@/components/page/school-staff/table/classes-table";
 import type { Locale } from "@/i18n";
 import { getSchoolServer } from "@/lib/utils/auth";
-import { authUser } from "@/lib/utils/auth-user";
+import { authContext } from "@/lib/utils/auth-context";
 import { getClassesBySchoolId } from "@/service/class/class.service";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
@@ -22,7 +22,7 @@ const SchoolStaffClassesPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
   const [currentUser, currentSchool] = await Promise.all([
-    await authUser(),
+    await authContext(),
     await getSchoolServer(),
   ]);
 

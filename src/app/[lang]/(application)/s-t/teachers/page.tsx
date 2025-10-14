@@ -27,7 +27,7 @@ const SchoolStaffTeacherPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
   const [currentUser, currentSchool] = await Promise.all([
-    authUser(),
+    authContext(),
     getSchoolServer(),
   ]);
 
@@ -40,9 +40,9 @@ const SchoolStaffTeacherPage = async (props: props) => {
     getAllTeacherBySchoolId(currentSchool.schoolId),
   ]);
   return (
-    <div className="p-4 space-y-4 ">
-      <h2 className=" title-page">Teachers</h2>
-      <div className=" flex space-x-4">
+    <div className="space-y-4 p-4">
+      <h2 className="title-page">Teachers</h2>
+      <div className="flex space-x-4">
         <StaffPeople
           icon="/icons/teacher.png"
           link=""
@@ -75,7 +75,7 @@ const SchoolStaffTeacherPage = async (props: props) => {
         <SchoolTeacherTable
           schoolId={currentSchool.schoolId}
           lang={lang}
-          teachers={ allTeachers.data ?? [] }
+          teachers={allTeachers.data ?? []}
         />
       </div>
     </div>

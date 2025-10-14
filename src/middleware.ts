@@ -1,11 +1,12 @@
 import { i18n, Locale } from "@/i18n";
 import {
-  authUser,
+  authContext,
   refreshAuthToken,
-  setAuthCookie,
+  setAuthCookies,
   willExpireSoon,
-} from "@/lib/utils/auth-user";
+} from "@/lib/utils/auth-context";
 import { match as matchLocale } from "@formatjs/intl-localematcher";
+import { jwtDecode } from "jwt-decode";
 import Negotiator from "negotiator";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
@@ -46,16 +47,21 @@ async function authMiddleware(req: NextRequest) {
   const { nextUrl } = req;
   const pathname = nextUrl.pathname;
 
-  const auth = await authUser();
+  const auth = await authContext();
   const isLoggedIn = !!auth;
 
-  if (auth) {
-    if (await willExpireSoon(auth.user.exp)) {
-      const newToken = await refreshAuthToken(auth.token);
-      if (newToken) {
-        await setAuthCookie(newToken, auth.user.id);
-      }
-    }
+  if (
+    auth?.user &&
+    auth.token &&
+    (await willExpireSoon(jwtDecode<{ exp: number }>(auth.token).exp))
+  ) {
+    const newToken = await refreshAuthToken(auth.token);
+    if (newToken)
+      await setAuthCookies(
+        newToken,
+        auth.user.id,
+        auth.schoolToken ?? undefined,
+      );
   }
 
   const detectedLocale = extractLocaleFromPath(pathname) || getLocale(req);

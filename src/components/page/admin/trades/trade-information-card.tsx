@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
 import { MainClassModel } from "@/lib/schema/admin/main-classes-schema";
 import { TradeModelWithOthers } from "@/lib/schema/admin/tradeSchema";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 import { formatReadableDate } from "@/lib/utils/format-date";
 import {
   ArrowUpRight,
@@ -24,7 +24,7 @@ import { useEffect, useState } from "react";
 
 interface PropsTrade {
   trade: TradeModelWithOthers;
-  auth: AuthUserResult;
+  auth: AuthContext;
   main_classes?: MainClassModel[];
 }
 

@@ -4,7 +4,7 @@ import JoinSchoolDialog from "@/components/page/school-staff/dialog/join-school-
 import JoinClassDialog from "@/components/page/student/dialogs/join-class-dialog";
 import { Locale } from "@/i18n";
 import { getSchoolServer } from "@/lib/utils/auth";
-import { authUser } from "@/lib/utils/auth-user";
+import { authContext } from "@/lib/utils/auth-context";
 import { GetAllJoinSchoolRequestByCurrentUserEmail } from "@/service/school/school-join-request.service";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
@@ -20,7 +20,7 @@ const StudentPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
   const [currentUser, currentSchool] = await Promise.all([
-    (await authUser())?.user,
+    (await authContext())?.user,
     await getSchoolServer(),
   ]);
 
@@ -32,14 +32,14 @@ const StudentPage = async (props: props) => {
   }
 
   const getSchoolJoinRequest = await GetAllJoinSchoolRequestByCurrentUserEmail(
-    currentUser.email
+    currentUser.email,
   );
   if (currentSchool) {
     return <DevelopingPage lang={lang} role={currentUser.role} />;
   }
   return (
-    <div className="w-full px-4 py-2 space-y-4 grid place-content-center h-full">
-      <div className=" flex space-x-4">
+    <div className="grid h-full w-full place-content-center space-y-4 px-4 py-2">
+      <div className="flex space-x-4">
         <JoinSchoolDialog />
         <JoinClassDialog />
       </div>

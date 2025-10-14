@@ -12,10 +12,10 @@ import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/mai
 import { LearningOutcome } from "@/lib/schema/admin/subjects/subject-learning-outcome-schema/learning-outcome-schema";
 import { SubjectTopic } from "@/lib/schema/admin/subjects/subject-topic-schema/subject-topic-schema";
 import { cn } from "@/lib/utils";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 
 interface props {
-  auth: AuthUserResult;
+  auth: AuthContext;
   learningOutCome: LearningOutcome;
   subject?: MainSubject;
   topic: SubjectTopic;

@@ -56,6 +56,10 @@ export interface ApiRequestOptions {
    * Automatically revalidate this path after success
    */
   revalidatePath?: string | string[];
+  /**
+   * School Token
+   */
+  schoolToken?: string | string[];
 }
 
 /**
@@ -80,6 +84,7 @@ async function apiRequest<TRequest = unknown, TResponse = unknown>(
       headers: {
         "Content-Type": "application/json",
         ...(options.token ? { Authorization: `Bearer ${options.token}` } : {}),
+        ...(options.schoolToken ? { "School-Token": options.schoolToken } : {}), // ✅ ADD THIS LINE
         ...(options.role ? { role: options.role } : {}),
       },
       ...(method !== "get" && data ? { data } : {}),

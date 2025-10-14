@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Locale } from "@/i18n";
-import { AuthUserDto } from "@/lib/schema/user/auth-user-schema";
+import { authContextDto } from "@/lib/schema/user/auth-user-schema";
 import { logout } from "@/lib/utils/auth";
 import { generateImageProfile } from "@/lib/utils/generate-profile-image";
 import { LogOut, User } from "lucide-react";
@@ -20,7 +20,7 @@ import Link from "next/link";
 
 interface props {
   lang: Locale;
-  user: AuthUserDto;
+  user: authContextDto;
 }
 
 const NavProfileDropDown = ({ lang, user }: props) => {

@@ -3,7 +3,7 @@ import SectorsTableCollection from "@/components/page/admin/sector/sectors-table
 import ErrorPage from "@/components/page/error-page";
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
 import { SectorModel } from "@/lib/schema/admin/sectorSchema";
-import { authUser } from "@/lib/utils/auth-user";
+import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 };
 
 const SectorsPage = async () => {
-  const auth = await authUser();
+  const auth = await authContext();
   if (!auth) redirect("/auth/login");
 
   const request = await apiRequest<void, SectorModel[]>(

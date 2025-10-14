@@ -4,7 +4,7 @@ import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
 import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
 import { LearningOutcomeWithOthers } from "@/lib/schema/admin/subjects/subject-learning-outcome-schema/learning-outcome-schema";
 import { SubjectProgressTrackingConfig } from "@/lib/schema/admin/subjects/subject-progress-tracking-config-schema/subject-progress-tracking-config-schema";
-import { authUser } from "@/lib/utils/auth-user";
+import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
@@ -19,7 +19,7 @@ export default async function CreateMainSubjectPage({
 }: {
   searchParams: Promise<{ step?: string; id?: string }>;
 }) {
-  const auth = await authUser();
+  const auth = await authContext();
   if (!auth) redirect("/auth/login");
 
   // ✅ Await search params

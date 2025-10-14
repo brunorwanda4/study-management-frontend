@@ -27,12 +27,12 @@ import {
   updateMainClassSchema,
 } from "@/lib/schema/admin/main-classes-schema";
 import { TradeModule } from "@/lib/schema/admin/tradeSchema";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 
 interface Props {
   mainClass: MainClassModel;
-  auth: AuthUserResult;
+  auth: AuthContext;
 }
 
 const UpdateMainClassForm = ({ mainClass, auth }: Props) => {

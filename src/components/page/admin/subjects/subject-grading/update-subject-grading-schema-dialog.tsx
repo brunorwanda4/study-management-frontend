@@ -13,11 +13,11 @@ import {
 import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
 import { SubjectGrading } from "@/lib/schema/admin/subjects/subject-grading-schema/subject-grading-schema";
 import { cn } from "@/lib/utils";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 import { formatReadableDate } from "@/lib/utils/format-date";
 
 interface Props {
-  auth: AuthUserResult;
+  auth: AuthContext;
   grading: SubjectGrading;
   subject?: MainSubject;
   icon?: boolean;

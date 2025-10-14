@@ -35,12 +35,12 @@ import {
   LearningOutcomeWithOthers,
 } from "@/lib/schema/admin/subjects/subject-learning-outcome-schema/learning-outcome-schema";
 import { SubjectProgressTrackingConfig } from "@/lib/schema/admin/subjects/subject-progress-tracking-config-schema/subject-progress-tracking-config-schema";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { ArrowRight } from "lucide-react";
 
 interface Props {
-  auth: AuthUserResult;
+  auth: AuthContext;
   subjectId?: string;
 }
 

@@ -1,11 +1,11 @@
 import PermissionPage from "@/components/page/permission-page";
 import CreateSchoolForm from "@/components/page/school/create/create-school-form";
 import { Locale } from "@/i18n";
-import { authUser } from "@/lib/utils/auth-user";
+import { authContext } from "@/lib/utils/auth-context";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 export const metadata: Metadata = {
-  title: "Create - school",
+  title: "Create school | space-together",
 };
 interface props {
   params: Promise<{ lang: Locale }>;
@@ -15,7 +15,7 @@ const SchoolStaffRegisterSchool = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
 
-  const auth = await authUser();
+  const auth = await authContext();
   if (!auth) return redirect(`/${lang}/auth/login`);
 
   const allowedRoles = ["ADMIN", "SCHOOLSTAFF"];

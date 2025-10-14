@@ -1,6 +1,6 @@
 import { Locale } from "@/i18n";
 import { SchoolAndOthers } from "@/lib/schema/school/school.dto";
-import { AuthUserDto } from "@/lib/utils/auth";
+import { authContextDto } from "@/lib/utils/auth";
 import SchoolContacts from "./school-contacts";
 import SchoolHomeAbout from "./school-home-about";
 import SchoolHomePosts from "./school-home-posts";
@@ -11,7 +11,7 @@ import SchoolTeachers from "./school-teachers";
 interface props {
   lang: Locale;
   school: SchoolAndOthers;
-  currentUser: AuthUserDto;
+  currentUser: authContextDto;
 }
 
 const SchoolHomeBody = ({ lang, school, currentUser }: props) => {

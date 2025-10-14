@@ -38,11 +38,11 @@ import {
   UpdateLearningOutcomeFormData,
   UpdateLearningOutcomeFormSchema,
 } from "@/lib/schema/admin/subjects/subject-learning-outcome-schema/update-learning-outcome-schema";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 
 interface Props {
-  auth: AuthUserResult;
+  auth: AuthContext;
   mainSubject: MainSubject;
   learningOutcome: LearningOutcome; // The existing learning outcome to edit
   setLearningOutcome?: Dispatch<SetStateAction<LearningOutcome | undefined>>;

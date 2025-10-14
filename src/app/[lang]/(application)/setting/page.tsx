@@ -3,7 +3,7 @@ import SettingLang from "@/components/page/settings/setting-lang";
 import SettingLinks from "@/components/page/settings/setting-links";
 import SettingTheme from "@/components/page/settings/setting-theme";
 import { Locale } from "@/i18n";
-import { authUser } from "@/lib/utils/auth-user";
+import { authContext } from "@/lib/utils/auth-context";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
@@ -17,7 +17,7 @@ interface props {
 const SettingPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
-  const auth = await authUser();
+  const auth = await authContext();
   if (!auth) {
     return redirect(`/${lang}/auth/login`);
   }

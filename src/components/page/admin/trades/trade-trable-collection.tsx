@@ -15,7 +15,7 @@ import {
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
 import { TradeModelWithOthers } from "@/lib/schema/admin/tradeSchema";
 import { TradeWithNonNullableId } from "@/lib/types/tradeModel";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -31,7 +31,7 @@ import {
 import { useEffect, useState } from "react";
 
 interface Props {
-  auth: AuthUserResult;
+  auth: AuthContext;
   initialTrades?: TradeModelWithOthers[];
   realtimeEnabled?: boolean;
 }

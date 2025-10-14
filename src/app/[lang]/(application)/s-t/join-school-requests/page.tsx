@@ -16,18 +16,22 @@ const JoinSchoolRequestPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
   const [currentUser, currentSchool] = await Promise.all([
-    authUser(),
+    authContext(),
     getSchoolServer(),
   ]);
   if (!currentUser?.role) return redirect(`/${lang}/auth/login`);
   if (!currentSchool) return <JoinSchoolPage />;
   const requests = await GetAllSchoolJoinRequestBySchoolId(
-    currentSchool.schoolId
+    currentSchool.schoolId,
   );
   return (
-    <div className="p-4 space-y-2 max-w-full">
-      <h2 className=" title-page">School Join Request</h2>
-      <SchoolJoinRequestsTable currentSchool={currentSchool} requests={requests.data || []} lang={lang} />
+    <div className="max-w-full space-y-2 p-4">
+      <h2 className="title-page">School Join Request</h2>
+      <SchoolJoinRequestsTable
+        currentSchool={currentSchool}
+        requests={requests.data || []}
+        lang={lang}
+      />
     </div>
   );
 };

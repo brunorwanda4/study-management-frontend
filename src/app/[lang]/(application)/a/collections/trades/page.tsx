@@ -4,7 +4,7 @@ import ErrorPage from "@/components/page/error-page";
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
 import { TradeModelWithOthers } from "@/lib/schema/admin/tradeSchema";
 import { TradeWithNonNullableId } from "@/lib/types/tradeModel";
-import { authUser } from "@/lib/utils/auth-user";
+import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 };
 
 const TradesPage = async () => {
-  const auth = await authUser();
+  const auth = await authContext();
   if (!auth) redirect("/auth/login");
   const request = await apiRequest<void, TradeModelWithOthers[]>(
     "get",

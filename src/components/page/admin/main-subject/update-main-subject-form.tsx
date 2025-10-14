@@ -41,12 +41,12 @@ import {
   UpdateMainSubjectFormData,
   UpdateMainSubjectFormSchema,
 } from "@/lib/schema/admin/subjects/main-subject-schema/update-main-subject-schema";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { redirect } from "next/navigation";
 
 interface Props {
-  auth: AuthUserResult;
+  auth: AuthContext;
   subject: MainSubject;
   setSubject?: Dispatch<SetStateAction<MainSubject | undefined>>;
   onCancel?: () => void;

@@ -1,6 +1,6 @@
 import PermissionPage from "@/components/page/permission-page";
 import { Locale } from "@/i18n";
-import { authUser } from "@/lib/utils/auth-user";
+import { authContext } from "@/lib/utils/auth-context";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
@@ -15,7 +15,7 @@ interface props {
 const SchoolStaffCreateSchoolPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
-  const currentUser = await authUser();
+  const currentUser = await authContext();
   if (!currentUser) return redirect(`/${lang}/auth/login`);
   if (!currentUser.user.role) return redirect(`/${lang}/auth/onboarding`);
   if (currentUser.user.role !== "SCHOOLSTAFF")

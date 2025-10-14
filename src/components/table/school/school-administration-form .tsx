@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CheckIcon, ChevronDownIcon, MinusCircle } from "lucide-react";
+import { CheckIcon, ChevronDownIcon } from "lucide-react";
 import { useState, useTransition } from "react";
 import {
   ControllerRenderProps,
@@ -38,11 +38,12 @@ import {
 import { Locale } from "@/i18n";
 import { SchoolStaffRoles } from "@/lib/context/school.context";
 import {
+  School,
   SchoolAdministrationDto,
   SchoolAdministrationSchema,
-} from "@/lib/schema/school/school.dto";
+} from "@/lib/schema/school/school-schema";
 import { cn } from "@/lib/utils";
-import { AuthUserDto } from "@/lib/utils/auth";
+import { AuthContext } from "@/lib/utils/auth-context";
 import { administrationSchoolRequestToJoinSchool } from "@/service/school/school.service";
 import { useRouter } from "next/navigation";
 
@@ -66,7 +67,6 @@ const RoleSelectCombobox = ({
         {/* REMOVED FormControl WRAPPER HERE */}
         <Button
           variant="outline"
-          role="combobox"
           aria-expanded={open}
           className="w-full justify-between px-3 font-normal"
         >
@@ -116,21 +116,21 @@ const RoleSelectCombobox = ({
 };
 
 interface props {
-  currentUser: AuthUserDto;
+  auth: AuthContext;
   lang: Locale;
-  schoolId: string;
+  school: School;
 }
 
-const SchoolAdministrationForm = ({ currentUser, schoolId, lang }: props) => {
+const SchoolAdministrationForm = ({ auth, school, lang }: props) => {
   const [error, setError] = useState<string | null | undefined>("");
   const [success, setSuccess] = useState<string | null | undefined>("");
   const router = useRouter();
   const form = useForm<SchoolAdministrationDto>({
     resolver: zodResolver(SchoolAdministrationSchema),
     defaultValues: {
-      schoolId: schoolId,
-      headmasterName: currentUser.name ? currentUser.name : "",
-      headmasterEmail: currentUser.email ? currentUser.email : "",
+      schoolId: school._id || school.id,
+      headmasterName: auth.user.name ? auth.user.name : "",
+      headmasterEmail: auth.user.email ? auth.user.email : "",
       headmasterPhone: "",
       DirectorOfStudies: "",
       principalEmail: "",
@@ -317,15 +317,13 @@ const SchoolAdministrationForm = ({ currentUser, schoolId, lang }: props) => {
           />
         </div>
 
-        {/* Additional Administration (Dynamic Fields) */}
         <div className="space-y-6">
-          <h3 className="text-lg font-semibold">Other Administrators</h3>
+          {/* <h3 className="text-lg font-semibold">Other Administrators</h3>
           <FormDescription>
             Add details for other key administrative staff members.
-          </FormDescription>
-          {fields.map((field, index) => (
+          </FormDescription> */}
+          {/* {fields.map((field, index) => (
             <div key={field.id} className="relative space-y-4">
-              {/* Remove Button */}
               <Button
                 type="button"
                 variant="destructive"
@@ -337,14 +335,12 @@ const SchoolAdministrationForm = ({ currentUser, schoolId, lang }: props) => {
                 <span className="sr-only">Remove Administrator</span>
               </Button>
               <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
-                {/* ROLE SELECT FIELD - USING CUSTOM COMBOBOX */}
                 <FormField
                   control={form.control}
                   name={`additionalAdministration.${index}.role`}
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
                       <FormLabel>Role*</FormLabel>
-                      {/* Use the wrapper component */}
                       <RoleSelectCombobox field={field} />
                       <FormDescription>
                         The specific role of this administrator.
@@ -407,10 +403,9 @@ const SchoolAdministrationForm = ({ currentUser, schoolId, lang }: props) => {
                 />
               </div>
             </div>
-          ))}
+          ))} */}
 
-          {/* Add Administrator Button */}
-          <Button
+          {/* <Button
             type="button"
             variant="outline"
             size="sm"
@@ -419,7 +414,7 @@ const SchoolAdministrationForm = ({ currentUser, schoolId, lang }: props) => {
             disabled={isPending}
           >
             Add New Administrator
-          </Button>
+          </Button> */}
         </div>
         <div>
           <FormError message={error} />

@@ -11,11 +11,11 @@ import {
 import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
 import { SubjectProgressTrackingConfig } from "@/lib/schema/admin/subjects/subject-progress-tracking-config-schema/subject-progress-tracking-config-schema";
 import { cn } from "@/lib/utils";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 import { formatReadableDate } from "@/lib/utils/format-date";
 
 interface props {
-  auth: AuthUserResult;
+  auth: AuthContext;
   config: SubjectProgressTrackingConfig;
   icon?: boolean;
   subject?: MainSubject;

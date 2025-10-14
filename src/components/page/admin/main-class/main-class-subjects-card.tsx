@@ -14,7 +14,7 @@ import {
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
 import { MainClassModel } from "@/lib/schema/admin/main-classes-schema";
 import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 import { formatReadableDate } from "@/lib/utils/format-date";
 import { BookOpen, Calendar, Clock, Layers, Users } from "lucide-react";
 import Link from "next/link";
@@ -22,7 +22,7 @@ import { useEffect, useState } from "react";
 
 interface Props {
   MainClass: MainClassModel;
-  auth: AuthUserResult;
+  auth: AuthContext;
   subjects: MainSubject[];
 }
 

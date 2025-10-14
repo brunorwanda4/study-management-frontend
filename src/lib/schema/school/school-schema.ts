@@ -17,106 +17,6 @@ export const AttendanceSystemSchema = z.enum(AttendanceSystems);
 
 export const AffiliationTypeSchema = z.enum(AffiliationTypes);
 
-export const SchoolAcademicSchema = z.object({
-  schoolId: z.string().min(1, { message: "School is required" }),
-  // assessmentTypes: z.array(z.string()).optional(),
-  // Primary Education
-  primarySubjectsOffered: z.array(z.string()).optional(), // Using array for multiple selections
-  primaryPassMark: z.number().optional(), // Could be a number input or a select with common values
-
-  // Ordinary Level
-  oLevelCoreSubjects: z.array(z.string()).optional(),
-  oLevelOptionSubjects: z.array(z.string()).optional(),
-  oLevelExaminationTypes: z.array(z.string()).optional(),
-  oLevelAssessment: z.array(z.string()).optional(),
-
-  // Advanced Level
-  aLevelSubjectCombination: z
-    .array(
-      z.object({
-        label: z.string(),
-        value: z.string(),
-        disable: z.boolean().optional(),
-      }),
-    )
-    .min(1, {
-      message: "Advance level is required",
-    })
-    .max(6, {
-      message: "Maximum Trading all 6",
-    })
-    .optional(), // Assuming one combination can be selected
-  aLevelOptionSubjects: z.array(z.string()).optional(),
-  aLevelPassMark: z.number().int().optional(),
-  // TVET
-  tvetSpecialization: z
-    .array(
-      z.object({
-        label: z.string(),
-        value: z.string(),
-        disable: z.boolean().optional(),
-      }),
-    )
-    .min(1, {
-      message: "TVET Trading is required,",
-    })
-    .max(6, {
-      message: "Maximum Trading all 6",
-    })
-    .optional(), // Assuming one specialization can be selected
-  tvetOptionSubjects: z.array(z.string()).optional(),
-});
-
-export type schoolAcademicDto = z.infer<typeof SchoolAcademicSchema>;
-
-export const SchoolAcademicSchemaBackend = z.object({
-  schoolId: z.string().min(1, { message: "School is required" }),
-  // assessmentTypes: z.array(z.string()).optional(),
-  // Primary Education
-  primarySubjectsOffered: z.array(z.string()).optional(),
-  primaryPassMark: z.number().optional(),
-
-  // Ordinary Level
-  oLevelCoreSubjects: z.array(z.string()).optional(),
-  oLevelOptionSubjects: z.array(z.string()).optional(),
-  oLevelExaminationTypes: z.array(z.string()).optional(),
-  oLevelAssessment: z.array(z.string()).optional(),
-
-  // Advanced Level
-  aLevelSubjectCombination: z
-    .array(z.string())
-    .min(1, {
-      message: "Advance level is required",
-    })
-    .max(6, {
-      message: "Maximum Trading all 6",
-    })
-    .optional(), // Make optional as not all schools have AL
-  aLevelOptionSubjects: z
-    .array(z.string())
-    .max(6, {
-      message: "Maximum Trading all 6",
-    })
-    .optional(),
-  aLevelPassMark: z.number().int().optional(),
-
-  // TVET
-  tvetSpecialization: z
-    .array(z.string())
-    .min(1, {
-      message: "TVET Trading is required,",
-    })
-    .max(6, {
-      message: "Maximum Trading all 6",
-    })
-    .optional(), // Make optional as not all schools have TVET
-  tvetOptionSubjects: z.array(z.string()).optional(),
-});
-
-export type SchoolAcademicDtoBackend = z.infer<
-  typeof SchoolAcademicSchemaBackend
->;
-
 export const SchoolAcademicCreation = z.object({
   totalClasses: z.number(),
   totalModule: z.number(),
@@ -243,3 +143,13 @@ export const SchoolStatsSchema = z.object({
 // 🧩 Inferred Types
 export type School = z.infer<typeof SchoolSchema>;
 export type SchoolStats = z.infer<typeof SchoolStatsSchema>;
+
+export const schoolAcademicResponseSchema = z.object({
+  created_classes: z.number(),
+  created_subjects: z.number(),
+  success: z.boolean(),
+});
+
+export type schoolAcademicResponse = z.infer<
+  typeof schoolAcademicResponseSchema
+>;

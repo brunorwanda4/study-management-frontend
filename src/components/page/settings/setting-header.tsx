@@ -1,12 +1,12 @@
 import MyImage from "@/components/common/myImage";
 import { Locale } from "@/i18n";
 import { toLowerCase } from "@/lib/functions/characters";
-import { AuthUserDto } from "@/lib/utils/auth";
+import { authContextDto } from "@/lib/utils/auth";
 import Link from "next/link";
 
 interface props {
   lang: Locale;
-  user: AuthUserDto;
+  user: authContextDto;
 }
 const SettingHeader = ({ user, lang }: props) => {
   return (

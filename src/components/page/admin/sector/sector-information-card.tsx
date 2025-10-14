@@ -7,13 +7,13 @@ import OpenImages from "@/components/page/admin/users/open-images";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
 import { SectorModel } from "@/lib/schema/admin/sectorSchema";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 import { formatReadableDate } from "@/lib/utils/format-date";
 import { useEffect, useState } from "react";
 
 interface PropsSector {
   sector: SectorModel;
-  auth: AuthUserResult;
+  auth: AuthContext;
 }
 
 const SectorInformationCard = ({ sector, auth }: PropsSector) => {

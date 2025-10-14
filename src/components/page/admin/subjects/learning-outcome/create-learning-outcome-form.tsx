@@ -38,11 +38,11 @@ import {
   CreateLearningOutcomeFormSchema,
 } from "@/lib/schema/admin/subjects/subject-learning-outcome-schema/create-subject-learning-outcome-schema";
 import { LearningOutcome } from "@/lib/schema/admin/subjects/subject-learning-outcome-schema/learning-outcome-schema";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 
 interface Props {
-  auth: AuthUserResult;
+  auth: AuthContext;
   mainSubject: MainSubject; // Pass main subjects as prop or fetch internally
   setLearningOutcome?: Dispatch<SetStateAction<LearningOutcome | undefined>>;
   isDialog?: boolean;

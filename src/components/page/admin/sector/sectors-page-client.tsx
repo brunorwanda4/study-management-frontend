@@ -4,12 +4,12 @@ import SectorCollectionDetails from "@/components/page/admin/sector/sector-colle
 import SectorsTableCollection from "@/components/page/admin/sector/sectors-table-collection";
 import { useRealtimeEntity } from "@/lib/hooks/useRealtime";
 import { SectorModel } from "@/lib/schema/admin/sectorSchema";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 import { useState } from "react";
 
 interface SectorsPageClientProps {
   initialData: SectorModel[];
-  auth: AuthUserResult;
+  auth: AuthContext;
 }
 
 const SectorsPageClient = ({ initialData, auth }: SectorsPageClientProps) => {

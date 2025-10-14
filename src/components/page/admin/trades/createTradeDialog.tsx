@@ -10,11 +10,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { SectorModel } from "@/lib/schema/admin/sectorSchema";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 import { BsPlus } from "react-icons/bs";
 
 interface props {
-  auth: AuthUserResult;
+  auth: AuthContext;
   sector?: SectorModel;
 }
 

@@ -1,12 +1,11 @@
 "use client";
 
+import UploadImage from "@/components/common/cards/form/upload-image";
 import { FormError, FormSuccess } from "@/components/common/form-message";
-import MyImage from "@/components/common/myImage";
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -34,7 +33,7 @@ import { onboardingService } from "@/service/auth/auth-service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 interface Props {
   lang: Locale;
@@ -62,39 +61,6 @@ const OnboardingForm = ({ lang }: Props) => {
       bio: "",
     },
   });
-  const handleImage = (
-    e: ChangeEvent<HTMLInputElement>,
-    fieldChange: (value: string) => void,
-  ) => {
-    setError("");
-    e.preventDefault();
-
-    const fileReader = new FileReader();
-
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-
-      // Check if the file is an image
-      if (!file.type.includes("image")) {
-        return setError("Please select an image file");
-      }
-
-      // Check if the file size is greater than 2MB (2MB = 2 * 1024 * 1024 bytes)
-      const maxSizeInBytes = 2 * 1024 * 1024;
-      if (file.size > maxSizeInBytes) {
-        return setError(
-          "Sorry your image it to high try other image which is not less than 2MB!.",
-        );
-      }
-
-      fileReader.onload = async (event) => {
-        const imageDataUrl = event.target?.result?.toString() || "";
-        fieldChange(imageDataUrl);
-      };
-
-      fileReader.readAsDataURL(file);
-    }
-  };
 
   const onSubmit = (value: onboardingDto) => {
     console.log(value);
@@ -121,46 +87,17 @@ const OnboardingForm = ({ lang }: Props) => {
           control={form.control}
           name="image"
           render={({ field }) => (
-            <FormItem className="mt-4 flex flex-col gap-2">
+            <FormItem className="row-span-3 flex flex-col space-y-2">
               <FormLabel>Profile Image</FormLabel>
-              <div className="flex items-center gap-4">
-                <Label htmlFor="logo-upload" className="cursor-pointer">
-                  <MyImage
-                    src={
-                      field.value ||
-                      "https://img.freepik.com/free-vector/illustration-gallery-icon_53876-27002.jpg"
-                    } // Default placeholder
-                    className="size-24 rounded border" // Adjust styling as needed
-                    classname=" card" // Adjust styling as needed
-                    alt="Profile image"
-                  />
-                </Label>
-                <FormControl>
-                  <Input
-                    id="logo-upload"
-                    disabled={isPending}
-                    type="file"
-                    accept="image/*"
-                    placeholder="Upload Image"
-                    className="hidden" // Hide default input, trigger via label/MyImage
-                    onChange={(e) => handleImage(e, field.onChange)}
-                  />
-                </FormControl>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() =>
-                    document.getElementById("logo-upload")?.click()
-                  }
+              <FormControl>
+                <UploadImage
+                  onChange={field.onChange}
                   disabled={isPending}
-                >
-                  {field.value ? "Change Image" : "Upload Image"}
-                </Button>
-              </div>
-              <FormDescription>
-                Recommended size: 200x200px, Max 2MB.
-              </FormDescription>
+                  className="size-40 w-full md:mb-4"
+                  Classname=" w-full min-h-44"
+                  value={field.value?.toString() ?? null}
+                />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
@@ -469,15 +406,9 @@ const OnboardingForm = ({ lang }: Props) => {
           type="submit"
           variant="info"
           className="w-full"
+          role={isPending ? "loading" : undefined}
         >
           Update account
-          {isPending && (
-            <div
-              role="status"
-              aria-label="Loading"
-              className={"loading loading-spinner"}
-            />
-          )}
         </Button>
         {/* {success && userRole && (
           <AskIfUserHaveSchoolOrClass

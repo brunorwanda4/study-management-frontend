@@ -35,11 +35,11 @@ import {
   UpdateTradeModule,
   updateTradeSchema,
 } from "@/lib/schema/admin/tradeSchema";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 
 interface Props {
-  auth: AuthUserResult;
+  auth: AuthContext;
   trade: TradeModule;
 }
 

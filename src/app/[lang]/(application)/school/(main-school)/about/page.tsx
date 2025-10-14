@@ -5,7 +5,7 @@ import SchoolHomeAbout from "@/components/page/school/school-home-about";
 import SchoolImages from "@/components/page/school/school-images";
 import { Locale } from "@/i18n";
 import { getSchoolServer } from "@/lib/utils/auth";
-import { authUser } from "@/lib/utils/auth-user";
+import { authContext } from "@/lib/utils/auth-context";
 import { getSchoolByIdService } from "@/service/school/school.service";
 import { redirect } from "next/navigation";
 interface props {
@@ -16,7 +16,7 @@ const SchoolAboutPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
   const [currentUser, currentSchool] = await Promise.all([
-    authUser(),
+    authContext(),
     getSchoolServer(),
   ]);
   if (!currentUser) {

@@ -10,7 +10,7 @@ import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/mai
 import { SubjectGrading } from "@/lib/schema/admin/subjects/subject-grading-schema/subject-grading-schema";
 import { LearningOutcome } from "@/lib/schema/admin/subjects/subject-learning-outcome-schema/learning-outcome-schema";
 import { SubjectProgressTrackingConfig } from "@/lib/schema/admin/subjects/subject-progress-tracking-config-schema/subject-progress-tracking-config-schema";
-import { authUser } from "@/lib/utils/auth-user";
+import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
@@ -33,7 +33,7 @@ interface MainSubjectCodePageProps {
 
 const MainSubjectCodePage = async ({ params }: MainSubjectCodePageProps) => {
   const { mainSubjectCode } = await params;
-  const auth = await authUser();
+  const auth = await authContext();
 
   if (!auth) redirect("/auth/login");
 

@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/card";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
 import { SectorModel } from "@/lib/schema/admin/sectorSchema";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -30,7 +30,7 @@ import {
 import { useState } from "react";
 
 interface Props {
-  auth: AuthUserResult;
+  auth: AuthContext;
   realtimeEnabled?: boolean;
 }
 

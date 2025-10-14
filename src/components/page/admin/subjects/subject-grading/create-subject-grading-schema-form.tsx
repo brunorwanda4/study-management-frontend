@@ -40,11 +40,11 @@ import {
   DefaultLetterGrade,
   SubjectGrading,
 } from "@/lib/schema/admin/subjects/subject-grading-schema/subject-grading-schema";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 import { redirect } from "next/navigation";
 
 interface Props {
-  auth: AuthUserResult;
+  auth: AuthContext;
   subject: MainSubject;
   action?: () => void;
 }

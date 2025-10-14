@@ -26,7 +26,7 @@ const ClassIdPage = async (props: Props) => {
   const { lang, classId } = params;
 
   const [currentUser, currentCls] = await Promise.all([
-    authUser(),
+    authContext(),
     getClassById(classId),
     getSchoolServer(),
   ]);

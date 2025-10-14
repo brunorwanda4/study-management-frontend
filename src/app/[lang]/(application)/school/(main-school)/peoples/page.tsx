@@ -15,7 +15,7 @@ const SchoolPeoplePage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
   const [currentUser, currentSchool] = await Promise.all([
-    await authUser(),
+    await authContext(),
     await getSchoolServer(),
   ]);
 
@@ -27,15 +27,25 @@ const SchoolPeoplePage = async (props: props) => {
   if (!school.data) return <NotFoundPage />;
 
   return (
-    <div className="  min-h-screen px-4 space-x-4 flex ">
-      <div className=" w-1/2 space-y-4">
+    <div className="flex min-h-screen space-x-4 px-4">
+      <div className="w-1/2 space-y-4">
         <SchoolStaff schoolStaff={school.data.SchoolStaff} lang={lang} />
-        <SchoolStudents currentUser={currentUser} students={school.data.Student} onThePage lang={lang} />
+        <SchoolStudents
+          currentUser={currentUser}
+          students={school.data.Student}
+          onThePage
+          lang={lang}
+        />
       </div>
-      <div className=" w-1/2 space-y-4">
-        <SchoolTeachers currentUser={currentUser} teachers={school.data.Teacher} onThePage lang={lang} />
+      <div className="w-1/2 space-y-4">
+        <SchoolTeachers
+          currentUser={currentUser}
+          teachers={school.data.Teacher}
+          onThePage
+          lang={lang}
+        />
       </div>
-      <div className=" h-screen"></div>
+      <div className="h-screen"></div>
     </div>
   );
 };

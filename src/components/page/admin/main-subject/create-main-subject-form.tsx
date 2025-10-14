@@ -41,11 +41,11 @@ import {
   CreateMainSubjectFormSchema,
 } from "@/lib/schema/admin/subjects/main-subject-schema/create-main-subject-schema";
 import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 
 interface Props {
-  auth: AuthUserResult;
+  auth: AuthContext;
   setSubject?: Dispatch<SetStateAction<MainSubject | undefined>>;
   mainClass?: MainClassModel;
   isDialog?: boolean;

@@ -1,8 +1,8 @@
 import MyImage from "@/components/common/myImage";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 
 interface props {
-  auth: AuthUserResult;
+  auth: AuthContext;
 }
 
 const AdminUserData = ({ auth }: props) => {

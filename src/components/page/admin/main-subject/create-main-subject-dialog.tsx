@@ -9,10 +9,10 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { MainClassModel } from "@/lib/schema/admin/main-classes-schema";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 
 interface props {
-  auth: AuthUserResult;
+  auth: AuthContext;
   mainClass?: MainClassModel;
 }
 

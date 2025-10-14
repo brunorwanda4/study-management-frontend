@@ -9,11 +9,11 @@ import {
 } from "@/components/ui/dialog";
 import { SectorModel } from "@/lib/schema/admin/sectorSchema";
 import { cn } from "@/lib/utils";
-import { AuthUserResult } from "@/lib/utils/auth-user";
+import { AuthContext } from "@/lib/utils/auth-context";
 
 interface Props {
   sector: SectorModel;
-  auth: AuthUserResult;
+  auth: AuthContext;
   isIcon?: boolean;
 }
 

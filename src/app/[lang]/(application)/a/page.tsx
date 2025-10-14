@@ -6,7 +6,7 @@ import ErrorPage from "@/components/page/error-page";
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
 import { UserModel } from "@/lib/schema/user/user-schema";
 import { DatabaseStats } from "@/lib/types/databaseStatus";
-import { authUser } from "@/lib/utils/auth-user";
+import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   description: "Admin dashboard management application space-together",
 };
 const AdminDashboardPage = async () => {
-  const auth = await authUser();
+  const auth = await authContext();
   if (!auth?.user) redirect("/auth/login");
   const [usersResponse, dbStatusRes] = await Promise.all([
     apiRequest<void, UserModel[]>("get", "/users?limit=5", undefined, {

@@ -2,7 +2,7 @@ import CollectionsTable from "@/components/page/admin/database/collections_table
 import DatabaseHeader from "@/components/page/admin/database/databaseHeader";
 import ErrorPage from "@/components/page/error-page";
 import { DatabaseStats } from "@/lib/types/databaseStatus";
-import { authUser } from "@/lib/utils/auth-user";
+import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 const CollectionsPage = async () => {
-  const auth = await authUser();
+  const auth = await authContext();
   if (!auth) redirect("/auth/login");
   const request = await apiRequest<void, DatabaseStats>(
     "get",
