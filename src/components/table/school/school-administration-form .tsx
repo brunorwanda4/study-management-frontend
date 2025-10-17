@@ -162,16 +162,15 @@ const SchoolAdministrationForm = ({ auth, school, lang }: props) => {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="basic-card space-y-4" // Added back basic styling classes
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         {/* Headmaster Details */}
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Headmaster</h3>
-          <FormDescription>
-            Enter the headmaster&apos;s information.
-          </FormDescription>
+          <div className="space-y-0">
+            <h3 className="text-lg font-semibold">Headmaster</h3>
+            <FormDescription>
+              Enter the headmaster&apos;s information.
+            </FormDescription>
+          </div>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <FormField
               control={form.control}
@@ -224,11 +223,13 @@ const SchoolAdministrationForm = ({ auth, school, lang }: props) => {
         </div>
 
         {/* Director of Studies Details */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Director of Studies</h3>
-          <FormDescription>
-            Enter the director of Studies information.
-          </FormDescription>
+        <div className="mt-4 space-y-4">
+          <div className="space-y-0">
+            <h3 className="text-lg font-semibold">Director of Studies</h3>
+            <FormDescription>
+              Enter the director of Studies information.
+            </FormDescription>
+          </div>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <FormField
               control={form.control}
@@ -282,10 +283,12 @@ const SchoolAdministrationForm = ({ auth, school, lang }: props) => {
 
         {/* Number of Teachers */}
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold">School Statistics</h3>
-          <FormDescription>
-            Provide some key statistics about the school.
-          </FormDescription>
+          <div className="space-y-0">
+            <h3 className="text-lg font-semibold">School Statistics</h3>
+            <FormDescription>
+              Provide some key statistics about the school.
+            </FormDescription>
+          </div>
           <FormField
             control={form.control}
             name="numberOfTeachers"

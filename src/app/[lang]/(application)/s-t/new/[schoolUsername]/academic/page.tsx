@@ -15,9 +15,32 @@ import apiRequest from "@/service/api-client";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "school - Academic",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ schoolUsername: string }>;
+}): Promise<Metadata> {
+  const { schoolUsername } = await params;
+  const auth = await authContext();
+  if (!auth) return { title: "user not found", description: "User not login" };
+  const school = await apiRequest<void, School>(
+    "get",
+    `/schools/username/${schoolUsername}`,
+    undefined,
+    { token: auth.token },
+  );
+
+  if (!school.data)
+    return {
+      title: `${schoolUsername} school | space-together`,
+      description: `Details for school ${schoolUsername}`,
+    };
+
+  return {
+    title: `${school.data.name} Administration | space-together`,
+    description: `${school.data.description}`,
+  };
+}
 interface props {
   params: Promise<{ lang: Locale; schoolUsername: string }>;
 }

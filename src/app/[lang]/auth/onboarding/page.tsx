@@ -26,7 +26,7 @@ const OnboardingPage = async (props: Props) => {
         <p>Help others understand you better. ☺️</p>
       </div>
       <div className="mt-4">
-        <OnboardingForm lang={lang} />
+        <OnboardingForm auth={auth} lang={lang} />
       </div>
     </div>
   );

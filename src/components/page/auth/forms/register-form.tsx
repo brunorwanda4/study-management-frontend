@@ -5,19 +5,19 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  //   FormDescription,
   FormField,
   FormItem,
-  // FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Locale } from "@/i18n";
 import {
+  AuthUserDto,
   RegisterUser,
   RegisterUserSchema,
 } from "@/lib/schema/user/auth-user-schema";
-import { registerUserService } from "@/service/auth/auth-service";
+import { setAuthCookies } from "@/lib/utils/auth-context";
+import apiRequest from "@/service/api-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckIcon, EyeIcon, EyeOffIcon, XIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -93,10 +93,17 @@ const RegisterForm = ({ lang }: props) => {
     setError(null);
     setSuccess(null);
     startTransition(async () => {
-      const create = await registerUserService(values);
+      const create = await apiRequest<RegisterUser, AuthUserDto>(
+        "post",
+        "/register",
+        values,
+      );
       if (create.data) {
-        setSuccess("Account created successful! ☺️");
-        router.push(`/${lang}/auth/onboarding`);
+        if (create.data.accessToken) {
+          await setAuthCookies(create.data.accessToken, create.data.id);
+          setSuccess("Account created successful! ☺️");
+          router.push(`/${lang}/auth/onboarding`);
+        }
       } else if (create.error) {
         setError(create.error);
       }

@@ -13,10 +13,12 @@ import { Input } from "@/components/ui/input";
 import { Locale } from "@/i18n";
 import { redirectContents } from "@/lib/hooks/redirect";
 import {
+  AuthUserDto,
   LoginUserDto,
   LoginUserSchema,
 } from "@/lib/schema/user/auth-user-schema";
-import { loginService } from "@/service/auth/auth-service";
+import { setAuthCookies } from "@/lib/utils/auth-context";
+import apiRequest from "@/service/api-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -47,11 +49,22 @@ const LoginForm = ({ lang }: props) => {
     setError(null);
     setSuccess(null);
     startTransition(async () => {
-      const login = await loginService(values);
+      const login = await apiRequest<LoginUserDto, AuthUserDto>(
+        "post",
+        "/login",
+        values,
+      );
       if (login.data) {
-        setSuccess(`Welcome back ${login.data.name} ☺️`);
-        if (login.data.role) {
-          router.push(redirectContents({ lang, role: login.data.role }));
+        if (login.data.accessToken) {
+          await setAuthCookies(
+            login.data.accessToken,
+            login.data.id,
+            login.data.schoolAccessToken,
+          );
+          setSuccess(`Welcome back ${login.data.name} ☺️`);
+          if (login.data.role) {
+            router.push(redirectContents({ lang, role: login.data.role }));
+          }
         }
       } else if (login.error) {
         setError(login.error);

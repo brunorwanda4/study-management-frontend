@@ -13,11 +13,11 @@ const SchoolSettingEducationSettingsPage = async (props: Props) => {
   if (!currentUser) {
     return redirect(`/${lang}/auth/login`);
   }
-  if (!currentUser.role) {
+  if (!currentUser.user.role) {
     return redirect(`/${lang}/auth/onboarding`);
   }
 
-  return <DevelopingPage lang={lang} role={currentUser.role} />;
+  return <DevelopingPage lang={lang} role={currentUser.user.role} />;
 };
 
 export default SchoolSettingEducationSettingsPage;

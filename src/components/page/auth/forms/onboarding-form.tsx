@@ -25,11 +25,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Locale } from "@/i18n";
 import { CountriesContext } from "@/lib/data/locations";
 import { redirectContents } from "@/lib/hooks/redirect";
+import { AuthUserDto } from "@/lib/schema/user/auth-user-schema";
 import {
   onboardingDto,
   OnboardingSchema,
 } from "@/lib/schema/user/update-user-schema";
-import { onboardingService } from "@/service/auth/auth-service";
+import { AuthContext, setAuthCookies } from "@/lib/utils/auth-context";
+import apiRequest from "@/service/api-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
@@ -37,9 +39,10 @@ import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 interface Props {
   lang: Locale;
+  auth: AuthContext;
 }
 
-const OnboardingForm = ({ lang }: Props) => {
+const OnboardingForm = ({ lang, auth }: Props) => {
   const [error, setError] = useState<undefined | null | string>("");
   const [success, setSuccess] = useState<undefined | null | string>("");
   const [isPending, startTransition] = useTransition();
@@ -63,15 +66,26 @@ const OnboardingForm = ({ lang }: Props) => {
   });
 
   const onSubmit = (value: onboardingDto) => {
-    console.log(value);
     setSuccess(null);
     setError(null);
     startTransition(async () => {
-      const update = await onboardingService(value);
+      const update = await apiRequest<onboardingDto, AuthUserDto>(
+        "patch",
+        "/auth/onboarding",
+        value,
+        { token: auth.token },
+      );
       if (update.data) {
-        setSuccess("Thanks to help us to know you better! ☺️");
-        if (update.data.role) {
-          router.push(redirectContents({ lang, role: update.data.role }));
+        if (update.data.accessToken) {
+          await setAuthCookies(
+            update.data.accessToken,
+            update.data.id,
+            update.data.schoolAccessToken,
+          );
+          setSuccess("Thanks to help us to know you better! ☺️");
+          if (update.data.role) {
+            router.push(redirectContents({ lang, role: update.data.role }));
+          }
         }
       } else if (update.error) {
         setError(`${update.error}`);

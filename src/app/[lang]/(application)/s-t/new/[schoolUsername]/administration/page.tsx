@@ -1,15 +1,47 @@
 import NotFoundPage from "@/components/page/not-found";
 import PermissionPage from "@/components/page/permission-page";
 import SchoolAdministrationForm from "@/components/table/school/school-administration-form ";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Locale } from "@/i18n";
 import { School } from "@/lib/schema/school/school-schema";
 import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
-export const metadata: Metadata = {
-  title: "school new Administration",
-};
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ schoolUsername: string }>;
+}): Promise<Metadata> {
+  const { schoolUsername } = await params;
+  const auth = await authContext();
+  if (!auth) return { title: "user not found", description: "User not login" };
+  const school = await apiRequest<void, School>(
+    "get",
+    `/schools/username/${schoolUsername}`,
+    undefined,
+    { token: auth.token },
+  );
+
+  if (!school.data)
+    return {
+      title: `${schoolUsername} school | space-together`,
+      description: `Details for school ${schoolUsername}`,
+    };
+
+  return {
+    title: `${school.data.name} Administration | space-together`,
+    description: `${school.data.description}`,
+  };
+}
+
 interface props {
   params: Promise<{ lang: Locale; schoolUsername: string }>;
 }
@@ -35,14 +67,22 @@ const AdministrationPage = async (props: props) => {
 
   return (
     <div className="mt-4 space-y-2 px-4">
-      <div>
-        <h1 className="title-page">School Administration Details</h1>
-        <p>
-          Fill out the form below to provide details about the school&apos;s
-          administration and staff.
-        </p>
-      </div>
-      <SchoolAdministrationForm school={school.data} lang={lang} auth={auth} />
+      <Card>
+        <CardHeader>
+          <CardTitle>School Administration Details</CardTitle>
+          <CardDescription>
+            Fill out the form below to provide details about the school&apos;s
+            administration and staff.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <SchoolAdministrationForm
+            school={school.data}
+            lang={lang}
+            auth={auth}
+          />
+        </CardContent>
+      </Card>
     </div>
   );
 };
