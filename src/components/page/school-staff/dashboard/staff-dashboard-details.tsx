@@ -1,28 +1,43 @@
 import { Locale } from "@/i18n";
-import React from "react";
-import StaffPeople from "./staff-people";
-import { StudentDto } from "@/lib/schema/school/student.dto";
-import { TeacherDto } from "@/lib/schema/school/teacher.dto";
-import { SchoolStaffDto } from "@/lib/schema/school/school-staff.schema";
+import { AuthContext } from "@/lib/utils/auth-context";
+import apiRequest from "@/service/api-client";
 
 interface Props {
   lang: Locale;
-  students: StudentDto[];
-  teachers: TeacherDto[];
-  schoolStaffs: SchoolStaffDto[];
+  auth: AuthContext;
 }
 
-const StaffDashboardDetails = ({
-  lang,
-  students,
-  teachers,
-  schoolStaffs,
-}: Props) => {
+const StaffDashboardDetails = async ({ lang, auth }: Props) => {
+  const [total_student, total_female_student, total_male_student] =
+    await Promise.all([
+      apiRequest<void, any>("get", "/school/students/stats/count", undefined, {
+        token: auth.token,
+        schoolToken: auth.schoolToken,
+      }),
+      apiRequest<void, any>(
+        "get",
+        "/school/students/stats/count?gender=FEMALE",
+        undefined,
+        {
+          token: auth.token,
+          schoolToken: auth.schoolToken,
+        },
+      ),
+      apiRequest<void, any>(
+        "get",
+        "/school/students/stats/count?gender=MALE",
+        undefined,
+        {
+          token: auth.token,
+          schoolToken: auth.schoolToken,
+        },
+      ),
+    ]);
   return (
-    <div className="flex space-x-4 w-full">
-      <StaffPeople
+    <div className="flex w-full space-x-4">
+      {/* <StaffPeople
         icon="/icons/student.png"
-        total={students.length}
+        total={total_student.data.count}
         title="Students"
         link={`/${lang}/s-t/students`}
         Ftotal={
@@ -31,28 +46,8 @@ const StaffDashboardDetails = ({
         Mtotal={students.filter((student) => student.gender === "MALE").length}
         role="Total students"
       />
-      <StaffPeople
-       link={`/${lang}/s-t/teachers`}
-        icon="/icons/teacher.png"
-        total={teachers.length}
-        title="Teachers"
-        Ftotal={
-          teachers.filter((teacher) => teacher.gender === "FEMALE").length
-        }
-        Mtotal={teachers.filter((teacher) => teacher.gender === "MALE").length}
-        role="Total teachers"
-      />
-      <StaffPeople
-       link={`/${lang}/s-t/staffs`}
-        icon="/icons/staff.png"
-        total={schoolStaffs.length}
-        title="School Staffs"
-        Ftotal={
-          schoolStaffs.filter((staff) => staff.gender === "FEMALE").length
-        }
-        Mtotal={schoolStaffs.filter((staff) => staff.gender === "MALE").length}
-        role="Total school staffs"
-      />
+       */}
+      staff dashboard details
     </div>
   );
 };

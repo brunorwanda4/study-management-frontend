@@ -1,0 +1,71 @@
+import { TeacherTypeSchema } from "@/lib/schema/common-details-schema";
+import { z } from "zod";
+
+// Core Schema
+export const TeacherSchema = z.object({
+  id: z.string().optional(),
+  _id: z.string().optional(),
+  user_id: z.string(),
+  school_id: z.string(),
+  creator_id: z.string(),
+
+  name: z.string().min(1, { message: "Name is required" }),
+  email: z.string().email({ message: "Invalid email address" }),
+  phone: z.string().optional().nullable(),
+  gender: z.string().optional().nullable(),
+
+  type: TeacherTypeSchema.default("Regular"),
+
+  class_ids: z.array(z.string()).optional().nullable(),
+  subject_ids: z.array(z.string()).optional().nullable(),
+
+  is_active: z.boolean().default(false),
+  tags: z.array(z.string()).default([]),
+
+  created_at: z.date().default(() => new Date()),
+  updated_at: z.date().default(() => new Date()),
+});
+
+// Update Schema
+export const UpdateTeacherSchema = z.object({
+  name: z.string().optional(),
+  email: z.string().email().optional(),
+  phone: z.string().optional(),
+  gender: z.string().optional(),
+  type: TeacherTypeSchema.optional(),
+  class_ids: z.array(z.string()).optional(),
+  subject_ids: z.array(z.string()).optional(),
+  is_active: z.boolean().optional(),
+  tags: z.array(z.string()).optional(),
+});
+
+// With Relations
+export const TeacherWithRelationsSchema = z.object({
+  teacher: TeacherSchema,
+  user: z.any().optional(), // Replace with actual UserSchema when available
+  school: z.any().optional(), // Replace with SchoolSchema
+  classes: z.array(z.any()).optional(), // Replace with ClassSchema
+  subjects: z.array(z.any()).optional(), // Replace with SubjectSchema
+});
+
+// Bulk operations
+export const BulkTeacherIdsSchema = z.object({
+  ids: z.array(z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid ObjectId")),
+});
+
+export const BulkUpdateTeacherActiveSchema = z.object({
+  ids: z.array(z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid ObjectId")),
+  is_active: z.boolean(),
+});
+
+export const BulkTeacherTagsSchema = z.object({
+  ids: z.array(z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid ObjectId")),
+  tags: z.array(z.string()),
+});
+
+// Prepare Teacher Request
+export const PrepareTeacherRequestSchema = z.object({
+  teachers: z.array(TeacherSchema),
+  school_id: z.string().optional().nullable(),
+  creator_id: z.string().optional().nullable(),
+});

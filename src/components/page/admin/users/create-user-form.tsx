@@ -110,6 +110,7 @@ const CreateUserForm = ({ auth }: props) => {
       },
       age: { year: undefined, month: undefined, day: undefined },
     },
+    mode: "onChange",
   });
 
   const handlePasswordChange = (

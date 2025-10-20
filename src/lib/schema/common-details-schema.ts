@@ -1,4 +1,12 @@
-import { genders, userRoles } from "@/lib/const/common-details-const";
+import {
+  genders,
+  JoinRoleEnums,
+  JoinStatusEnums,
+  SchoolStaffTypes,
+  StudentStatuses,
+  TeacherTypes,
+  userRoles,
+} from "@/lib/const/common-details-const";
 import z from "zod";
 
 const googleMapsUrlRegex =
@@ -64,6 +72,9 @@ export type Age = z.infer<typeof AgeSchema>;
 export const GenderSchema = z.enum(genders);
 export type Gender = z.infer<typeof GenderSchema>;
 
+export const StudentStatusSchema = z.enum(StudentStatuses);
+export type StudentStatus = z.infer<typeof GenderSchema>;
+
 export const userRoleSchema = z.enum(userRoles);
 export type userRole = z.infer<typeof userRoleSchema>;
 
@@ -92,3 +103,19 @@ export const OptionSchema = z.object({
 });
 
 export type Option = z.infer<typeof OptionSchema>;
+
+// school
+export const SchoolStaffTypeSchema = z.enum(SchoolStaffTypes);
+
+export type SchoolStaffType = z.infer<typeof SchoolStaffTypeSchema>;
+
+// teacher
+export const TeacherTypeSchema = z.enum(TeacherTypes);
+
+export type TeacherType = z.infer<typeof TeacherTypeSchema>;
+
+export const JoinRoleEnumSchema = z.enum(JoinRoleEnums);
+export type JoinRole = z.infer<typeof JoinRoleEnumSchema>;
+
+export const JoinStatusEnumSchema = z.enum(JoinStatusEnums);
+export type JoinStatus = z.infer<typeof JoinStatusEnumSchema>;

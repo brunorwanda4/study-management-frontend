@@ -7,26 +7,19 @@ import {
   schoolImage,
   schoolLogoImage,
 } from "@/lib/context/images";
-import { SchoolAndOthers } from "@/lib/schema/school/school.dto";
-import { authContextDto, UserSchool } from "@/lib/utils/auth";
+import { School } from "@/lib/schema/school/school-schema";
+import { AuthContext } from "@/lib/utils/auth-context";
 import Link from "next/link";
 import { TfiWorld } from "react-icons/tfi";
 
 interface props {
   lang: Locale;
   onThePage?: boolean;
-  school?: SchoolAndOthers;
-  currentSchool?: UserSchool;
-  currentUser: authContextDto;
+  school?: School;
+  auth: AuthContext;
 }
 
-const SchoolHeader = ({
-  school,
-  currentSchool,
-  currentUser,
-  lang,
-  onThePage,
-}: props) => {
+const SchoolHeader = ({ school, auth, lang, onThePage }: props) => {
   return (
     <div className="space-y-2">
       {!onThePage && (
@@ -61,7 +54,7 @@ const SchoolHeader = ({
               <div className="text-myGray flex items-center space-x-2 text-sm font-semibold">
                 <TfiWorld />
                 <span>
-                  {school?.schoolType ? school.schoolType : "Public school"}
+                  {school?.school_type ? school.school_type : "Public school"}
                 </span>
               </div>
             </div>
@@ -79,16 +72,16 @@ const SchoolHeader = ({
             </div> */}
           </div>
         </div>
-        {school?.id === currentSchool?.schoolId && (
+        {school?.id === auth.school?.id && (
           <div className="flex items-center space-x-2">
             <MyImage
               className="size-20"
               classname="mask mask-squircle"
-              src={currentUser?.image ? currentUser.image : schoolImage}
+              src={auth.user?.image ? auth.user.image : schoolImage}
             />
             <div>
-              <h4 className="basic-title">{currentUser.name}</h4>
-              <span>{currentSchool?.role}</span>
+              <h4 className="basic-title">{auth.user.name}</h4>
+              <span>{auth.user?.role}</span>
             </div>
           </div>
         )}

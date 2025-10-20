@@ -3,7 +3,7 @@ import MyLink from "@/components/common/myLink";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Locale } from "@/i18n";
 import { studentImage } from "@/lib/context/images";
-import { SchoolStaffDto } from "@/lib/schema/school/school-staff.schema";
+import { SchoolStaffDto } from "@/lib/schema/school/school-staff-schema";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns"; // Make sure date-fns is installed
 

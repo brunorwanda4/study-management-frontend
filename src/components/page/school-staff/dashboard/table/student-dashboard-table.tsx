@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/table";
 import { Locale } from "@/i18n";
 import { studentImage } from "@/lib/context/images";
-import { studentsAndOther } from "@/lib/schema/school/student.dto";
+import { studentsAndOther } from "@/lib/schema/school/student0schema";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 
 interface props {

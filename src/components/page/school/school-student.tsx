@@ -2,7 +2,7 @@ import UserCardSmall from "@/components/cards/user-card-small";
 import MyLink from "@/components/common/myLink";
 import { Button } from "@/components/ui/button";
 import { Locale } from "@/i18n";
-import { StudentDto } from "@/lib/schema/school/student.dto";
+import { StudentDto } from "@/lib/schema/school/student0schema";
 import { authContextDto } from "@/lib/utils/auth";
 import Link from "next/link";
 import { BsPlusCircle } from "react-icons/bs";

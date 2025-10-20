@@ -1,6 +1,6 @@
 import NotFoundPage from "@/components/page/not-found";
 import PermissionPage from "@/components/page/permission-page";
-import SchoolAdministrationForm from "@/components/table/school/school-administration-form ";
+import SchoolAdministrationForm from "@/components/table/school/create-school-administration-form ";
 import {
   Card,
   CardContent,
@@ -69,18 +69,16 @@ const AdministrationPage = async (props: props) => {
     <div className="mt-4 space-y-2 px-4">
       <Card>
         <CardHeader>
-          <CardTitle>School Administration Details</CardTitle>
+          <CardTitle>
+            Add school staff <strong>{school.data.name}</strong>
+          </CardTitle>
           <CardDescription>
             Fill out the form below to provide details about the school&apos;s
             administration and staff.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <SchoolAdministrationForm
-            school={school.data}
-            lang={lang}
-            auth={auth}
-          />
+          <SchoolAdministrationForm school={school.data} auth={auth} />
         </CardContent>
       </Card>
     </div>

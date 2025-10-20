@@ -19,7 +19,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Locale } from "@/i18n";
-import { SchoolStaffDto } from "@/lib/schema/school/school-staff.schema";
+import { SchoolStaffDto } from "@/lib/schema/school/school-staff-schema";
 import { cn } from "@/lib/utils";
 import {
   Column,

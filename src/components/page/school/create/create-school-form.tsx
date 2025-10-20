@@ -150,6 +150,7 @@ const CreateSchoolForm = ({ lang, auth }: Props) => {
       sports_extracurricular: [],
       online_classes: true,
     },
+    mode: "onChange",
   });
 
   const onSubmit = (values: CreateSchool) => {

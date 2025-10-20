@@ -1,6 +1,6 @@
-import { IoIosWarning } from 'react-icons/io';
-import { CiCircleCheck } from 'react-icons/ci';
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
+import { CiCircleCheck } from "react-icons/ci";
+import { IoIosWarning } from "react-icons/io";
 
 interface Props {
   message?: string | null;
@@ -10,8 +10,10 @@ interface Props {
 export const FormError = ({ message, className }: Props) => {
   if (!message) return null;
   return (
-    <div className={cn('bg-error/10 border-l-2 px-1 py-2 border-error', className)}>
-      <div className="flex text-rose-600  text-sm gap-3">
+    <div
+      className={cn("bg-error/10 border-error border-l-2 px-1 py-2", className)}
+    >
+      <div className="text-error flex gap-3 text-sm">
         <IoIosWarning size={20} />
         <span>{message}</span>
       </div>
@@ -24,7 +26,7 @@ export const FormSuccess = ({ message, className }: Props) => {
   return (
     <div
       className={cn(
-        'flex text-success bg-success/10 text-sm gap-3 border-l-2 px-1 py-2 border-success',
+        "text-success bg-success/10 border-success flex gap-3 border-l-2 px-1 py-2 text-sm",
         className,
       )}
     >

@@ -1,20 +1,27 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { BarChart3, ClipboardList, UserCog, Users } from "lucide-react"
+import { BarChart3, ClipboardList, UserCog, Users } from "lucide-react";
+import { useState } from "react";
 
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { AssignRoleDialog } from "./assign-role-dialog"
-import { SchoolStaffDto } from "@/lib/schema/school/school-staff.schema"
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { SchoolStaffDto } from "@/lib/schema/school/school-staff-schema";
+import { AssignRoleDialog } from "./assign-role-dialog";
 
 interface StaffOverviewProps {
-  staffMembers: SchoolStaffDto[]
+  staffMembers: SchoolStaffDto[];
 }
 
 export function StaffOverview({ staffMembers }: StaffOverviewProps) {
-  const [openRoleDialog, setOpenRoleDialog] = useState(false)
+  const [openRoleDialog, setOpenRoleDialog] = useState(false);
 
   // Mock data for posts
   const recentPosts = [
@@ -42,7 +49,7 @@ export function StaffOverview({ staffMembers }: StaffOverviewProps) {
       type: "Information",
       likes: 12,
     },
-  ]
+  ];
 
   // Mock data for role requests
   const roleRequests = [
@@ -62,7 +69,7 @@ export function StaffOverview({ staffMembers }: StaffOverviewProps) {
       date: "2023-12-07",
       status: "Pending",
     },
-  ]
+  ];
 
   return (
     <div className="space-y-4">
@@ -70,41 +77,43 @@ export function StaffOverview({ staffMembers }: StaffOverviewProps) {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Staff</CardTitle>
-            <Users className="h-4 w-4  " />
+            <Users className="h-4 w-4" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">42</div>
-            <p className="text-xs  ">+4 from last month</p>
+            <p className="text-xs">+4 from last month</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Active Staff</CardTitle>
-            <UserCog className="h-4 w-4  " />
+            <UserCog className="h-4 w-4" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">38</div>
-            <p className="text-xs  ">90.5% of total staff</p>
+            <p className="text-xs">90.5% of total staff</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Departments</CardTitle>
-            <ClipboardList className="h-4 w-4  " />
+            <ClipboardList className="h-4 w-4" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">8</div>
-            <p className="text-xs  ">All departments staffed</p>
+            <p className="text-xs">All departments staffed</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Posts This Month</CardTitle>
-            <BarChart3 className="h-4 w-4  " />
+            <CardTitle className="text-sm font-medium">
+              Posts This Month
+            </CardTitle>
+            <BarChart3 className="h-4 w-4" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">24</div>
-            <p className="text-xs  ">+8 from last month</p>
+            <p className="text-xs">+8 from last month</p>
           </CardContent>
         </Card>
       </div>
@@ -113,15 +122,20 @@ export function StaffOverview({ staffMembers }: StaffOverviewProps) {
         <Card className="col-span-1">
           <CardHeader>
             <CardTitle>Recent Staff Activity</CardTitle>
-            <CardDescription>Latest posts and updates from staff members</CardDescription>
+            <CardDescription>
+              Latest posts and updates from staff members
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {recentPosts.map((post) => (
-                <div key={post.id} className="flex items-start gap-4 rounded-lg border p-3">
+                <div
+                  key={post.id}
+                  className="flex items-start gap-4 rounded-lg border p-3"
+                >
                   <div className="flex-1 space-y-1">
                     <p className="font-medium">{post.title}</p>
-                    <div className="flex items-center text-sm  ">
+                    <div className="flex items-center text-sm">
                       <span>{post.author}</span>
                       <span className="mx-1">•</span>
                       <span>{post.date}</span>
@@ -142,15 +156,20 @@ export function StaffOverview({ staffMembers }: StaffOverviewProps) {
         <Card className="col-span-1">
           <CardHeader>
             <CardTitle>Role Change Requests</CardTitle>
-            <CardDescription>Staff members requesting role changes</CardDescription>
+            <CardDescription>
+              Staff members requesting role changes
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {roleRequests.map((request) => (
-                <div key={request.id} className="flex items-start gap-4 rounded-lg border p-3">
+                <div
+                  key={request.id}
+                  className="flex items-start gap-4 rounded-lg border p-3"
+                >
                   <div className="flex-1 space-y-1">
                     <p className="font-medium">{request.name}</p>
-                    <div className="flex items-center text-sm  ">
+                    <div className="flex items-center text-sm">
                       <span>
                         {request.currentRole} → {request.requestedRole}
                       </span>
@@ -183,5 +202,5 @@ export function StaffOverview({ staffMembers }: StaffOverviewProps) {
         </Card>
       </div>
     </div>
-  )
+  );
 }

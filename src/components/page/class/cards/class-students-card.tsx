@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Locale } from "@/i18n";
 import { studentImage } from "@/lib/context/images";
-import { studentsAndOther } from "@/lib/schema/school/student.dto";
+import { studentsAndOther } from "@/lib/schema/school/student0schema";
 import { BsGear, BsPlusCircle } from "react-icons/bs";
 
 interface props {

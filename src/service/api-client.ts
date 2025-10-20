@@ -59,7 +59,7 @@ export interface ApiRequestOptions {
   /**
    * School Token
    */
-  schoolToken?: string | string[];
+  schoolToken?: string | string[] | null;
 }
 
 /**

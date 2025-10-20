@@ -19,7 +19,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Locale } from "@/i18n";
-import { TeacherDto } from "@/lib/schema/school/teacher.dto";
+import { TeacherDto } from "@/lib/schema/school/teacher-schema";
 import { cn } from "@/lib/utils";
 import {
   Column,
@@ -184,30 +184,31 @@ export default function SchoolTeacherTable({
                           header.getContext(),
                         )}
                         {/* Sorting Indicator */}
-                        {{
-                          asc: (
-                            <ChevronUpIcon
-                              className="shrink-0 opacity-60"
-                              size={16}
-                              aria-hidden="true"
-                            />
-                          ),
-                          desc: (
-                            <ChevronDownIcon
-                              className="shrink-0 opacity-60"
-                              size={16}
-                              aria-hidden="true"
-                            />
-                          ),
-                        }[header.column.getIsSorted() as string] ??
-                          (header.column.getCanSort() ? (
-                            <span
-                              className="size-4 opacity-30"
-                              aria-hidden="true"
-                            >
-                              ↕
-                            </span>
-                          ) : null) // Placeholder sort icon
+                        {
+                          {
+                            asc: (
+                              <ChevronUpIcon
+                                className="shrink-0 opacity-60"
+                                size={16}
+                                aria-hidden="true"
+                              />
+                            ),
+                            desc: (
+                              <ChevronDownIcon
+                                className="shrink-0 opacity-60"
+                                size={16}
+                                aria-hidden="true"
+                              />
+                            ),
+                          }[header.column.getIsSorted() as string] ??
+                            (header.column.getCanSort() ? (
+                              <span
+                                className="size-4 opacity-30"
+                                aria-hidden="true"
+                              >
+                                ↕
+                              </span>
+                            ) : null) // Placeholder sort icon
                         }
                       </div>
                     ) : (

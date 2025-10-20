@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/table";
 import { Locale } from "@/i18n";
 import { ViewDataClassDto } from "@/lib/schema/class/view-data-class.dto";
-import { studentsAndOther } from "@/lib/schema/school/student.dto";
+import { studentsAndOther } from "@/lib/schema/school/student0schema";
 import { cn } from "@/lib/utils";
 import {
   Column,
@@ -187,30 +187,31 @@ export default function SchoolStudentTable({
                           header.getContext(),
                         )}
                         {/* Sorting Indicator */}
-                        {{
-                          asc: (
-                            <ChevronUpIcon
-                              className="shrink-0 opacity-60"
-                              size={16}
-                              aria-hidden="true"
-                            />
-                          ),
-                          desc: (
-                            <ChevronDownIcon
-                              className="shrink-0 opacity-60"
-                              size={16}
-                              aria-hidden="true"
-                            />
-                          ),
-                        }[header.column.getIsSorted() as string] ??
-                          (header.column.getCanSort() ? (
-                            <span
-                              className="size-4 opacity-30"
-                              aria-hidden="true"
-                            >
-                              ↕
-                            </span>
-                          ) : null) // Placeholder sort icon
+                        {
+                          {
+                            asc: (
+                              <ChevronUpIcon
+                                className="shrink-0 opacity-60"
+                                size={16}
+                                aria-hidden="true"
+                              />
+                            ),
+                            desc: (
+                              <ChevronDownIcon
+                                className="shrink-0 opacity-60"
+                                size={16}
+                                aria-hidden="true"
+                              />
+                            ),
+                          }[header.column.getIsSorted() as string] ??
+                            (header.column.getCanSort() ? (
+                              <span
+                                className="size-4 opacity-30"
+                                aria-hidden="true"
+                              >
+                                ↕
+                              </span>
+                            ) : null) // Placeholder sort icon
                         }
                       </div>
                     ) : (

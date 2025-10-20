@@ -24,3 +24,30 @@ export const AffiliationTypes = [
   "NGO",
   "Independent",
 ] as const;
+
+// school data
+export const StudentStatuses = [
+  "Active",
+  "Suspended",
+  "Graduated",
+  "Left",
+] as const;
+
+export const SchoolStaffTypes = ["Director", "HeadOfStudies"] as const;
+
+export const TeacherTypes = [
+  "Regular",
+  "HeadTeacher",
+  "SubjectTeacher",
+  "Deputy",
+] as const;
+
+export const JoinStatusEnums = [
+  "Pending",
+  "Accepted",
+  "Rejected",
+  "Expired",
+  "Cancelled",
+] as const;
+
+export const JoinRoleEnums = ["Teacher", "Student", "Staff"] as const;

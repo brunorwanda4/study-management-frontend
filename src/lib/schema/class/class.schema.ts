@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { SchoolDto } from "../school/school.dto";
-import { StudentDto } from "../school/student.dto";
-import { TeacherDto } from "../school/teacher.dto";
+import { StudentDto } from "../school/student0schema";
+import { TeacherDto } from "../school/teacher-schema";
 
 export const ClassType = z.enum(["Private", "Public", "SchoolClass"]);
 export type ClassEnum = z.infer<typeof ClassType>;
