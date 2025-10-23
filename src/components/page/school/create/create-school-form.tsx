@@ -207,7 +207,6 @@ const CreateSchoolForm = ({ lang, auth }: Props) => {
           ),
         });
         setAuthCookies(auth.token, auth.user.id, create.data.token);
-        console.log("🌻✨😭", create.data.token);
         router.push(`/${lang}/s-t/new/${create.data.username}/academic`);
       }
     });

@@ -24,7 +24,6 @@ import {
   JoinSchoolDto,
   JoinSchoolSchema,
 } from "@/lib/schema/school/join-school-schema";
-import { JoinSchoolByUsernameAndCode } from "@/service/school/school-join-request.service";
 import { useState, useTransition } from "react";
 // OTPInput_ is no longer needed if using shadcn/ui InputOTP
 // import OTPInput_ from "@/components/origin/otp-input";
@@ -44,14 +43,14 @@ export default function InputJoinSchoolFormForm() {
   function onSubmit(data: JoinSchoolDto) {
     setError(null);
     setSuccess(null);
-    startTransition(async () => {
-      const join = await JoinSchoolByUsernameAndCode(data);
-      if (join.data) {
-        setSuccess(`To join school successfully! ☺️`);
-      } else {
-        setError(join.message);
-      }
-    });
+    // startTransition(async () => {
+    //   const join = ;
+    //   if (join.data) {
+    //     setSuccess(`To join school successfully! ☺️`);
+    //   } else {
+    //     setError(join.message);
+    //   }
+    // });
   }
 
   // Determine the expected length of the school code.

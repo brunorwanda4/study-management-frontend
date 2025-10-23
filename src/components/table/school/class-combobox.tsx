@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { ChevronDownIcon, LucideIcon } from "lucide-react"; // Using UsersIcon as a placeholder
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -24,7 +24,7 @@ export interface ComboboxItem {
   value: string;
   label: string;
   icon: LucideIcon;
-  number: number;
+  number?: number;
 }
 
 interface ClassComboboxProps {
@@ -61,13 +61,12 @@ export function ClassCombobox({
         <Button
           id={id}
           variant="outline"
-          role="combobox"
           aria-expanded={open}
           aria-label={placeholder} // Improved accessibility
           disabled={disabled}
           className={cn(
-            " hover:bg-base-300 border-base-300 w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]",
-            className // Allow external styling
+            "hover:bg-base-300 border-base-300 w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]",
+            className, // Allow external styling
           )}
         >
           {selectedItem ? (
@@ -80,7 +79,7 @@ export function ClassCombobox({
           )}
           <ChevronDownIcon
             size={16}
-            className=" /80 shrink-0"
+            className="/80 shrink-0"
             aria-hidden="true"
           />
         </Button>
@@ -104,7 +103,8 @@ export function ClassCombobox({
                     // Find the item's actual value case-insensitively if needed,
                     // but Command uses the `value` prop directly.
                     const selectedValue = items.find(
-                      (i) => i.value.toLowerCase() === currentValue.toLowerCase()
+                      (i) =>
+                        i.value.toLowerCase() === currentValue.toLowerCase(),
                     )?.value;
 
                     if (selectedValue) {
@@ -118,12 +118,14 @@ export function ClassCombobox({
                   className="flex items-center justify-between"
                 >
                   <div className="flex items-center gap-2">
-                    <item.icon className="  size-4 shrink-0" />
+                    <item.icon className="size-4 shrink-0" />
                     {item.label}
                   </div>
-                  <span className="  text-xs">
-                    {item.number.toLocaleString()}
-                  </span>
+                  {item.number && (
+                    <span className="text-xs">
+                      {item.number.toLocaleString()}
+                    </span>
+                  )}
                 </CommandItem>
               ))}
             </CommandGroup>

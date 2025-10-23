@@ -6,7 +6,7 @@ import {
   schoolLogoImage,
   teacherImage,
 } from "@/lib/context/images";
-import { ClassAndOthers } from "@/lib/schema/class/class.schema";
+import { ClassAndOthers } from "@/lib/schema/class/class-schema";
 import { authContextDto } from "@/lib/schema/user/auth-user-schema";
 import { UserSchool } from "@/lib/utils/auth";
 

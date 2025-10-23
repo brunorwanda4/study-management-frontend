@@ -3,64 +3,13 @@ import MyLink from "@/components/common/myLink";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Locale } from "@/i18n";
 import { studentImage } from "@/lib/context/images";
-import { studentsAndOther } from "@/lib/schema/school/student0schema";
+import { StudentWithRelations } from "@/lib/schema/school/student-schema";
+import { calculateAge, formatReadableDate } from "@/lib/utils/format-date";
 import { ColumnDef } from "@tanstack/react-table";
-import { format } from "date-fns"; // Make sure date-fns is installed
 
-const calculateAge = (
-  dob: { year: number; month: number; day: number } | undefined,
-): number | null => {
-  if (
-    !dob ||
-    typeof dob.year !== "number" ||
-    typeof dob.month !== "number" ||
-    typeof dob.day !== "number"
-  ) {
-    return null;
-  }
-  try {
-    // Create date in UTC to avoid timezone issues affecting the date part
-    const birthDate = new Date(Date.UTC(dob.year, dob.month - 1, dob.day)); // month is 0-indexed
-    // Check if the date components resulted in a valid date
-    if (
-      isNaN(birthDate.getTime()) ||
-      birthDate.getUTCFullYear() !== dob.year ||
-      birthDate.getUTCMonth() !== dob.month - 1 ||
-      birthDate.getUTCDate() !== dob.day
-    ) {
-      console.warn("Invalid date components for age calculation:", dob);
-      return null;
-    }
-
-    const today = new Date();
-    // Use UTC dates for comparison to avoid timezone shifts affecting age calculation
-    const todayUTC = new Date(
-      Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()),
-    );
-
-    let age = todayUTC.getUTCFullYear() - birthDate.getUTCFullYear();
-    const m = todayUTC.getUTCMonth() - birthDate.getUTCMonth();
-
-    if (m < 0 || (m === 0 && todayUTC.getUTCDate() < birthDate.getUTCDate())) {
-      age--;
-    }
-    return age < 0 ? 0 : age; // Ensure age isn't negative due to future date
-  } catch (e) {
-    console.error("Error calculating age:", e, "Input:", dob);
-    return null; // Handle potential errors during date creation/calculation
-  }
-};
-
-// Extend ColumnMeta - This should be done outside the function, typically in a declaration file (.d.ts)
-// or at the top level of your module if not using a separate declaration file.
-// Make sure you only declare this once in your project for the module.
-
-// ========================================================================
-// The complete columns() function
-// ========================================================================
 export const StudentTableColumns = (
   lang: Locale,
-): ColumnDef<studentsAndOther>[] => {
+): ColumnDef<StudentWithRelations>[] => {
   return [
     // --- 1. Selection Column ---
     {
@@ -99,13 +48,13 @@ export const StudentTableColumns = (
           {/* Increased space */}
           <MyLink
             loading
-            href={`/${lang}/p/${row.original.userId}?studentId=${row.original.id}`}
+            href={`/${lang}/p/${row.original.user?.username}?studentId=${row.original.id}`}
             className="flex-shrink-0" // Prevent avatar shrinking
           >
             <MyImage
               role="AVATAR"
               className="size-10 rounded-full" // Explicitly rounded
-              src={row.original.image || studentImage} // Use default student image if missing
+              src={row.original.user?.image || studentImage} // Use default student image if missing
               alt={row.original.name || "Student Avatar"} // Add alt text
             />
           </MyLink>
@@ -115,8 +64,7 @@ export const StudentTableColumns = (
             <MyLink
               loading
               className="truncate font-medium hover:underline" // Truncate long names
-              href={`/${lang}/p/${row.original.userId}?studentId=${row.original.id}`}
-              //   title={row.original.name || 'View Profile'} // Add title attribute
+              href={`/${lang}/p/${row.original.user?.username}?studentId=${row.original.id || row.original._id}`}
             >
               {row.original.name || "N/A"} {/* Fallback for name */}
             </MyLink>
@@ -195,7 +143,7 @@ export const StudentTableColumns = (
         return ageA < ageB ? -1 : ageA > ageB ? 1 : 0;
       },
       cell: ({ row }) => {
-        const age = calculateAge(row.original.age);
+        const age = calculateAge(row.original.date_of_birth);
         return (
           <div className="text-sm">{age !== null ? `${age} yrs` : "N/A"}</div>
         ); // Display calculated age or fallback
@@ -236,7 +184,7 @@ export const StudentTableColumns = (
       cell: ({ row }) => {
         return (
           <MyLink
-            href={`/${lang}/c/${row.original.classId}`}
+            href={`/${lang}/c/${row.original.class_id}`}
             loading
             className="text-sm"
           >
@@ -280,15 +228,10 @@ export const StudentTableColumns = (
     // --- 8. Enrollment Date Column ---
     {
       header: "Enrolled On",
-      accessorKey: "createAt",
+      accessorKey: "created_at",
       cell: ({ row }) => (
         <div className="text-sm">
-          {row.original.createAt ? (
-            // Ensure createAt is treated as a Date object or valid date string
-            format(new Date(row.original.createAt), "yyyy-MM-dd")
-          ) : (
-            <span className="text-muted-foreground">-</span>
-          )}
+          {formatReadableDate(row.original.created_at)}
         </div>
       ),
       enableSorting: true, // Allow sorting by date

@@ -2,26 +2,26 @@ import UserCardSmall from "@/components/cards/user-card-small";
 import MyLink from "@/components/common/myLink";
 import { Button } from "@/components/ui/button";
 import { Locale } from "@/i18n";
-import { TeacherDto } from "@/lib/schema/school/teacher-schema";
-import { authContextDto } from "@/lib/utils/auth";
+import { Teacher } from "@/lib/schema/school/teacher-schema";
+import { AuthContext } from "@/lib/utils/auth-context";
 import Link from "next/link";
 import { BsPlusCircle } from "react-icons/bs";
 
 interface props {
   lang: Locale;
   onThePage?: boolean;
-  teachers: TeacherDto[];
-  currentUser: authContextDto;
+  teachers: Teacher[];
+  auth: AuthContext;
 }
 
-const SchoolTeachers = ({ lang, onThePage, currentUser, teachers }: props) => {
+const SchoolTeachers = ({ lang, onThePage, auth, teachers }: props) => {
   if (teachers.length === 0) {
     return (
       <div className="basic-card space-y-2">
         <h3 className="basic-title text-center text-gray-500">
           This school have not have teaches! 😔
         </h3>
-        {currentUser.role === "SCHOOLSTAFF" && (
+        {auth.user.role === "SCHOOLSTAFF" && (
           <div>
             <MyLink
               button={{ variant: "primary", library: "daisy" }}
@@ -53,7 +53,7 @@ const SchoolTeachers = ({ lang, onThePage, currentUser, teachers }: props) => {
             userRole="TEACHER"
             name={item.name}
             image={item.image}
-            userId={item.userId}
+            userId={item.user_id}
           />
         );
       })}

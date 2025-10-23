@@ -1,40 +1,40 @@
+import { Locale } from "@/i18n";
+import { Class } from "@/lib/schema/class/class-schema";
+import { AuthContext } from "@/lib/utils/auth-context";
+import { Plus } from "lucide-react";
+import SendJoinSchoolRequestForm from "../../../table/school/send-join-school-request-form";
+import { Button } from "../../../ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "../../../ui/dialog";
-import { Button } from "../../../ui/button";
-import { Locale } from "@/i18n";
-import { UserSchool } from "@/lib/utils/auth";
-import SendJoinSchoolRequestForm from "../../../table/school/send-join-school-request-form";
-import { getClassesBySchoolIdViewData } from "@/service/class/class.service";
-import { Plus } from "lucide-react";
 
 interface Props {
   lang: Locale;
-  currentSchool: UserSchool;
+  auth: AuthContext;
+  classes: Class[];
 }
 
-const SendJoinSchoolRequest = async ({ currentSchool }: Props) => {
-  const response = await getClassesBySchoolIdViewData(currentSchool.schoolId);
-  const classes = response.data;
+const SendJoinSchoolRequest = async ({ auth, classes }: Props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button size={"sm"} library="daisy" variant="info">
-       <Plus />   New People
+          <Plus /> New People
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="h-[85vh] max-h-[85vh] overflow-y-auto sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle>
-            Send request to Join{" "}
-            <span className=" font-medium">{currentSchool.name}</span>
-          </DialogTitle>
+          <DialogTitle>Send request to Join {auth.school?.name}</DialogTitle>
+          <DialogDescription>
+            Join school request will expires in 7 days
+          </DialogDescription>
         </DialogHeader>
-        <SendJoinSchoolRequestForm classes={classes || []} currentSchool={currentSchool} />
+        <SendJoinSchoolRequestForm classes={classes || []} auth={auth} />
       </DialogContent>
     </Dialog>
   );

@@ -3,6 +3,8 @@ import DatabaseData from "@/components/page/admin/dashboard/database-data";
 import MainCollectionsCard from "@/components/page/admin/dashboard/main-collections-card";
 import UsersCollectionTableDashboard from "@/components/page/admin/users/users-collection-table-dashboard";
 import ErrorPage from "@/components/page/error-page";
+import PermissionPage from "@/components/page/permission-page";
+import { Locale } from "@/i18n";
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
 import { UserModel } from "@/lib/schema/user/user-schema";
 import { DatabaseStats } from "@/lib/types/databaseStatus";
@@ -15,9 +17,18 @@ export const metadata: Metadata = {
   title: "Admin dashboard | space-together",
   description: "Admin dashboard management application space-together",
 };
-const AdminDashboardPage = async () => {
+interface props {
+  params: Promise<{ lang: Locale }>;
+}
+
+const AdminDashboardPage = async (props: props) => {
+  const params = await props.params;
+  const { lang } = params;
   const auth = await authContext();
   if (!auth?.user) redirect("/auth/login");
+  if (auth.user.role !== "ADMIN") {
+    return <PermissionPage lang={lang} role={auth.user.role} />;
+  }
   const [usersResponse, dbStatusRes] = await Promise.all([
     apiRequest<void, UserModel[]>("get", "/users?limit=5", undefined, {
       token: auth.token,

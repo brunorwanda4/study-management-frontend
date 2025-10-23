@@ -4,9 +4,27 @@ import SchoolStaff from "@/components/page/school/school-staff";
 import SchoolStudents from "@/components/page/school/school-student";
 import SchoolTeachers from "@/components/page/school/school-teachers";
 import { Locale } from "@/i18n";
-import { getSchoolServer } from "@/lib/utils/auth";
-import { getSchoolByIdService } from "@/service/school/school.service";
+import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
+import { School } from "@/lib/schema/school/school-schema";
+import { Student } from "@/lib/schema/school/student-schema";
+import { Teacher } from "@/lib/schema/school/teacher-schema";
+import { authContext } from "@/lib/utils/auth-context";
+import apiRequest from "@/service/api-client";
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
+
+export const generateMetadata = async (): Promise<Metadata> => {
+  const auth = await authContext();
+  if (!auth?.school)
+    return {
+      title: "School not found",
+      description: "It school not login",
+    };
+  return {
+    title: `Member of ${auth.school?.name}` || "School not found",
+  };
+};
+
 interface props {
   params: Promise<{ lang: Locale }>;
 }
@@ -14,39 +32,91 @@ interface props {
 const SchoolPeoplePage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
-  const [currentUser, currentSchool] = await Promise.all([
-    await authContext(),
-    await getSchoolServer(),
-  ]);
+  const auth = await authContext();
 
-  if (!currentUser) {
+  if (!auth) {
     redirect(`/${lang}/auth/login`);
   }
-  if (!currentSchool) return <JoinSchoolPage />;
-  const school = await getSchoolByIdService(currentSchool.schoolId);
-  if (!school.data) return <NotFoundPage />;
+  if (!auth.school) return <JoinSchoolPage />;
+
+  const [schoolRes, school_staff_res, teachers_res, students_res] =
+    await Promise.all([
+      apiRequest<void, School>("get", `/schools/${auth.school.id}`, undefined, {
+        token: auth.token,
+        schoolToken: auth.schoolToken,
+      }),
+      apiRequest<void, SchoolStaff[]>(
+        "get",
+        "/school/staff?limit=5",
+        undefined,
+        {
+          token: auth.token,
+          schoolToken: auth.schoolToken,
+        },
+      ),
+      apiRequest<void, Teacher[]>(
+        "get",
+        "/school/teachers?limit=5",
+        undefined,
+        {
+          token: auth.token,
+          schoolToken: auth.schoolToken,
+        },
+      ),
+      apiRequest<void, Student[]>(
+        "get",
+        "/school/students?limit=5",
+        undefined,
+        {
+          token: auth.token,
+          schoolToken: auth.schoolToken,
+        },
+      ),
+    ]);
+
+  if (!schoolRes.data) {
+    return <NotFoundPage />;
+  }
 
   return (
-    <div className="flex min-h-screen space-x-4 px-4">
-      <div className="w-1/2 space-y-4">
-        <SchoolStaff schoolStaff={school.data.SchoolStaff} lang={lang} />
-        <SchoolStudents
-          currentUser={currentUser}
-          students={school.data.Student}
-          onThePage
-          lang={lang}
-        />
+    <RealtimeProvider<School | Student | Teacher | SchoolStaff>
+      channels={[
+        { name: "school", initialData: [schoolRes.data] },
+        {
+          name: "student",
+          initialData: students_res.data ? students_res.data : [],
+        },
+        {
+          name: "teacher",
+          initialData: teachers_res.data ? teachers_res.data : [],
+        },
+        {
+          name: "school_staff",
+          initialData: school_staff_res.data ? school_staff_res.data : [],
+        },
+      ]}
+    >
+      <div className="flex min-h-screen space-x-4 px-4">
+        <div className="w-1/2 space-y-4">
+          <SchoolStaff schoolStaff={school_staff_res.data ?? []} lang={lang} />
+          <SchoolStudents
+            auth={auth}
+            students={students_res.data ?? []}
+            onThePage
+            lang={lang}
+          />
+        </div>
+        <div className="w-1/2 space-y-4">
+          <SchoolTeachers
+            teachers={teachers_res.data ?? []}
+            auth={auth}
+            onThePage
+            lang={lang}
+          />
+        </div>
+        <div className="h-screen"></div>
       </div>
-      <div className="w-1/2 space-y-4">
-        <SchoolTeachers
-          currentUser={currentUser}
-          teachers={school.data.Teacher}
-          onThePage
-          lang={lang}
-        />
-      </div>
-      <div className="h-screen"></div>
-    </div>
+    </RealtimeProvider>
   );
 };
 

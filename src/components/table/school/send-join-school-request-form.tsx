@@ -1,9 +1,9 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UsersIcon } from "lucide-react"; // Import the icon for classes
+import { UsersIcon } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
-import { useForm } from "react-hook-form"; // useWatch is implicitly used via form.watch
+import { useForm } from "react-hook-form";
 
 import { FormError, FormSuccess } from "@/components/common/form-message";
 import { Button } from "@/components/ui/button";
@@ -23,103 +23,138 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SchoolStaffRoles } from "@/lib/context/school.context";
-import { ViewDataClassDto } from "@/lib/schema/class/view-data-class.dto";
+import { Textarea } from "@/components/ui/textarea";
+
 import {
-  SendJoinSchoolRequestDto,
-  sendJoinSchoolRequestSchema,
-} from "@/lib/schema/school/school-join-school/send-join-school-request.schema";
-import { UserSchool } from "@/lib/utils/auth";
-import { CreateSchoolJoinRequest } from "@/service/school/school-join-request.service";
+  SchoolStaffTypes,
+  StudentStatuses,
+  TeacherTypes,
+} from "@/lib/const/common-details-const";
+import { useToast } from "@/lib/context/toast/ToastContext";
+import { Class } from "@/lib/schema/class/class-schema";
+import {
+  CreateJoinSchoolRequest,
+  CreateJoinSchoolRequestSchema,
+} from "@/lib/schema/school/school-join-school/create-join-school-request-schema";
+import { AuthContext } from "@/lib/utils/auth-context";
+import apiRequest from "@/service/api-client";
 import { ClassCombobox, ComboboxItem } from "./class-combobox";
 
-// Import the new Combobox component
+/* -------------------------------------------------------------------------- */
+/*                                COMPONENT                                   */
+/* -------------------------------------------------------------------------- */
 
-interface props {
-  currentSchool: UserSchool;
-  classes: ViewDataClassDto[];
+interface Props {
+  auth: AuthContext;
+  classes: Class[];
 }
 
-export default function SendJoinSchoolRequestForm({
-  currentSchool,
-  classes,
-}: props) {
-  const [error, setError] = useState<undefined | null | string>("");
-  const [success, setSuccess] = useState<undefined | null | string>("");
+export default function SendJoinSchoolRequestForm({ auth, classes }: Props) {
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const { showToast } = useToast();
 
-  const form = useForm<SendJoinSchoolRequestDto>({
-    resolver: zodResolver(sendJoinSchoolRequestSchema),
+  /* ----------------------------- Form Setup ----------------------------- */
+  const form = useForm<CreateJoinSchoolRequest>({
+    resolver: zodResolver(CreateJoinSchoolRequestSchema),
     defaultValues: {
+      sent_by: auth.user.id,
       email: "",
-      schoolId: currentSchool.schoolId,
+      school_id: auth.school?.id,
       role: undefined,
-      staffRole: undefined,
-      classId: undefined,
+      message: undefined,
+      class_id: undefined,
+      type: undefined,
     },
     mode: "onChange",
   });
 
   const selectedRole = form.watch("role");
 
+  /* ----------------------- Reset conditional fields ---------------------- */
   useEffect(() => {
-    if (selectedRole !== "SCHOOLSTAFF") {
-      form.resetField("staffRole", { defaultValue: undefined });
+    if (selectedRole !== "Staff") {
+      form.resetField("type", { defaultValue: undefined });
     }
-    if (selectedRole !== "STUDENT") {
-      // Reset classId ONLY if the role changes AWAY from STUDENT
-      form.resetField("classId", { defaultValue: undefined });
+    if (selectedRole !== "Student") {
+      form.resetField("class_id", { defaultValue: undefined });
     }
-    if (selectedRole) {
-      form.trigger(["staffRole", "classId"]); // Trigger validation for dependent fields
-    }
+
+    form.trigger(["type", "class_id"]);
   }, [selectedRole, form]);
 
-  function onSubmit(data: SendJoinSchoolRequestDto) {
+  /* ----------------------------- Submit Logic ----------------------------- */
+  function onSubmit(data: CreateJoinSchoolRequest) {
     setError(null);
     setSuccess(null);
 
     startTransition(async () => {
-      const sendRequest = await CreateSchoolJoinRequest(data);
-      if (sendRequest.data) {
-        setSuccess(
-          `Request sent successfully for ${sendRequest.data.name}! ☺️`,
-        );
+      const sendRequest = await apiRequest<CreateJoinSchoolRequest>(
+        "post",
+        "/join-school-requests",
+        data,
+        {
+          token: auth.token,
+          schoolToken: auth.schoolToken,
+        },
+      );
+
+      if (sendRequest?.data) {
+        showToast({
+          title: "Request sent successfully",
+          type: "success",
+        });
+        setSuccess("Request sent successfully ☺️");
         form.reset();
       } else {
+        showToast({
+          title: "Some thing went wrong",
+          description: sendRequest.message,
+          type: "error",
+        });
         setError(
-          sendRequest.message || "An error occurred while sending the request.",
+          sendRequest?.message ||
+            "An error occurred while sending the join request.",
         );
       }
     });
   }
 
-  // --- Prepare data for the ClassCombobox ---
+  /* ----------------------------- Class Combobox ---------------------------- */
   const classItems: ComboboxItem[] = classes.map((classItem) => ({
-    value: classItem.id, // The value to store in the form
-    label: classItem.name, // The display label
-    icon: UsersIcon, // Use the imported icon
-    number: classItem._count.students, // Display student count
+    value: classItem.id || classItem._id || "",
+    label: classItem.name,
+    icon: UsersIcon,
   }));
 
+  /* --------------------------- Role-based options -------------------------- */
+  const joinSchoolTypes =
+    selectedRole === "Staff"
+      ? SchoolStaffTypes
+      : selectedRole === "Student"
+        ? StudentStatuses
+        : TeacherTypes;
+
+  /* ------------------------------- JSX Form ------------------------------- */
   return (
     <Form {...form}>
       <form
         className="flex w-full flex-col space-y-4"
         onSubmit={form.handleSubmit(onSubmit)}
       >
-        {/* Email Field (no changes) */}
+        {/* Email Field */}
         <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
             <FormItem className="flex flex-col space-y-2">
-              <FormLabel className=" ">Email Address *</FormLabel>
+              <FormLabel>Email Address *</FormLabel>
               <FormControl>
                 <Input
                   type="email"
-                  disabled={isPending}
                   placeholder="example@email.com"
+                  disabled={isPending}
                   {...field}
                 />
               </FormControl>
@@ -128,17 +163,16 @@ export default function SendJoinSchoolRequestForm({
           )}
         />
 
-        {/* Role Field (no changes) */}
+        {/* Role Field */}
         <FormField
           control={form.control}
           name="role"
           render={({ field }) => (
             <FormItem className="flex flex-col space-y-2">
-              <FormLabel className=" ">Select Role *</FormLabel>
+              <FormLabel>Select Role *</FormLabel>
               <Select
-                // Use field.onChange directly for simpler state update
                 onValueChange={field.onChange}
-                value={field.value || ""} // Ensure value is controlled
+                value={field.value || ""}
                 disabled={isPending}
               >
                 <FormControl>
@@ -147,9 +181,9 @@ export default function SendJoinSchoolRequestForm({
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="STUDENT">Student</SelectItem>
-                  <SelectItem value="TEACHER">Teacher</SelectItem>
-                  <SelectItem value="SCHOOLSTAFF">School Staff</SelectItem>{" "}
+                  <SelectItem value="Student">Student</SelectItem>
+                  <SelectItem value="Teacher">Teacher</SelectItem>
+                  <SelectItem value="Staff">School Staff</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -157,14 +191,21 @@ export default function SendJoinSchoolRequestForm({
           )}
         />
 
-        {/* Staff Role Field (no changes) */}
-        {selectedRole === "SCHOOLSTAFF" && (
+        {/* Conditional Type Field (based on role) */}
+        {selectedRole && (
           <FormField
             control={form.control}
-            name="staffRole"
+            name="type"
             render={({ field }) => (
               <FormItem className="flex flex-col space-y-2">
-                <FormLabel className=" ">Specific Staff Role *</FormLabel>
+                <FormLabel>
+                  {selectedRole === "Staff"
+                    ? "Staff Type"
+                    : selectedRole === "Student"
+                      ? "Student Status"
+                      : "Teacher Type"}{" "}
+                  *
+                </FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   value={field.value || ""}
@@ -172,13 +213,15 @@ export default function SendJoinSchoolRequestForm({
                 >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select staff role" />
+                      <SelectValue
+                        placeholder={`Select ${selectedRole.toLowerCase()} type`}
+                      />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {SchoolStaffRoles.map((staffRole) => (
-                      <SelectItem key={staffRole.value} value={staffRole.value}>
-                        {staffRole.label}
+                    {joinSchoolTypes.map((type) => (
+                      <SelectItem key={type} value={type}>
+                        {type}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -189,21 +232,19 @@ export default function SendJoinSchoolRequestForm({
           />
         )}
 
-        {/* --- Class Field (Using ClassCombobox) --- */}
-        {selectedRole === "STUDENT" && (
+        {/* Class Field (only for Students) */}
+        {selectedRole === "Student" && (
           <FormField
             control={form.control}
-            name="classId" // Correct field name
+            name="class_id"
             render={({ field }) => (
               <FormItem className="flex flex-col space-y-2">
-                <FormLabel className=" ">Select Class *</FormLabel>
-                {/* Use FormControl to wrap the custom component for label association etc. */}
+                <FormLabel>Select Class *</FormLabel>
                 <FormControl>
                   <ClassCombobox
-                    // id={field.id} // RHF usually handles id via FormItem/Label
                     items={classItems}
-                    value={field.value} // Pass the field's current value
-                    onChange={field.onChange} // Pass the field's change handler
+                    value={field.value}
+                    onChange={field.onChange}
                     placeholder="Select student's class"
                     searchPlaceholder="Search classes..."
                     emptyMessage={
@@ -214,24 +255,45 @@ export default function SendJoinSchoolRequestForm({
                     disabled={isPending || classes.length === 0}
                   />
                 </FormControl>
-                <FormMessage /> {/* Shows validation errors for classId */}
+                <FormMessage />
               </FormItem>
             )}
           />
         )}
 
-        {/* Error/Success Messages */}
-        <div className=" ">
+        {/* Message Field */}
+        <FormField
+          control={form.control}
+          name="message"
+          render={({ field }) => (
+            <FormItem className="flex flex-col space-y-2">
+              <FormLabel>Message (optional)</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Write a short message for your request..."
+                  disabled={isPending}
+                  rows={3}
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Error / Success messages */}
+        <div>
           <FormError message={error} />
           <FormSuccess message={success} />
         </div>
 
         <Button
-          library="daisy" // Removed if not standard Shadcn/Radix prop
           disabled={isPending}
           className="w-full"
-          variant={"info"} // Use standard Shadcn variants or configure custom ones
+          library="daisy"
+          variant="info"
           type="submit"
+          role={isPending ? "loading" : undefined}
         >
           {isPending ? "Sending..." : "Send Request"}
         </Button>

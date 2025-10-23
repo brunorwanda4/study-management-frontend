@@ -21,7 +21,6 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { JoinSchoolDto } from "@/lib/schema/school/join-school-schema";
-import { JoinSchoolByUsernameAndCode } from "@/service/school/school-join-request.service";
 import { useState, useTransition } from "react";
 import { JoinClassDto, JoinClassSchema } from "./schema/join-class-schema";
 
@@ -40,14 +39,14 @@ export default function JoinClassCodeForm() {
   function onSubmit(data: JoinSchoolDto) {
     setError(null);
     setSuccess(null);
-    startTransition(async () => {
-      const join = await JoinSchoolByUsernameAndCode(data);
-      if (join.data) {
-        setSuccess(`To join school successfully! ☺️`);
-      } else {
-        setError(join.message);
-      }
-    });
+    // startTransition(async () => {
+    //   const join = await JoinSchoolByUsernameAndCode(data);
+    //   if (join.data) {
+    //     setSuccess(`To join school successfully! ☺️`);
+    //   } else {
+    //     setError(join.message);
+    //   }
+    // });
   }
 
   // Determine the expected length of the school code.

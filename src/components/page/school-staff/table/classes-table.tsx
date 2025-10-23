@@ -31,7 +31,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Locale } from "@/i18n";
-import { ClassDto, ClassEnum } from "@/lib/schema/class/class.schema";
+import { ClassDto, ClassEnum } from "@/lib/schema/class/class-schema";
 import { cn } from "@/lib/utils"; // Assuming you have this utility
 import {
   Column,

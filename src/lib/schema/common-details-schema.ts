@@ -1,4 +1,5 @@
 import {
+  ClassTypes,
   genders,
   JoinRoleEnums,
   JoinStatusEnums,
@@ -119,3 +120,7 @@ export type JoinRole = z.infer<typeof JoinRoleEnumSchema>;
 
 export const JoinStatusEnumSchema = z.enum(JoinStatusEnums);
 export type JoinStatus = z.infer<typeof JoinStatusEnumSchema>;
+
+// class
+export const ClassTypeSchema = z.enum(ClassTypes);
+export type ClassType = z.infer<typeof ClassTypeSchema>;

@@ -18,7 +18,6 @@ const AppNav = async ({ lang }: props) => {
   if (!auth) {
     redirect(`/${lang}/auth/login`);
   }
-  const currentUser = auth.user;
 
   return (
     <nav className="border-base-300 bg-base-100 fixed z-50 flex h-14 max-h-14 w-full justify-between border-b p-2 shadow-sm">
@@ -36,7 +35,7 @@ const AppNav = async ({ lang }: props) => {
         </div>
         <NavMessageDropDown lang={lang} />
         <Suspense fallback={<div className="skeleton size-8" />}>
-          <NavProfileDropDown user={currentUser} lang={lang} />
+          <NavProfileDropDown auth={auth} lang={lang} />
         </Suspense>
       </div>
     </nav>

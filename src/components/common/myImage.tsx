@@ -4,9 +4,6 @@ import { cn } from "@/lib/utils";
 import NextImage from "next/image";
 import { RefObject, SyntheticEvent, useEffect, useState } from "react";
 
-const TINY_TRANSPARENT_GIF =
-  "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
-
 interface MyImageProps {
   src: string;
   alt?: string;
@@ -27,49 +24,20 @@ interface MyImageProps {
   ref?: RefObject<HTMLImageElement | null>;
 }
 
-/**
- * Generates a small blurry version of an image for placeholder.
- * Uses an offscreen <canvas> to downscale it.
- */
-async function generateLowQualityPreview(src: string): Promise<string> {
-  try {
-    const img = document.createElement("img");
-    img.crossOrigin = "anonymous";
-    img.src = src;
-    await new Promise((res, rej) => {
-      img.onload = res;
-      img.onerror = rej;
-    });
-
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-    if (!ctx) throw new Error("Canvas not supported");
-
-    const scale = 0.03; // 3% of original size
-    const w = Math.max(8, img.width * scale);
-    const h = Math.max(8, img.height * scale);
-
-    canvas.width = w;
-    canvas.height = h;
-
-    ctx.drawImage(img, 0, 0, w, h);
-    return canvas.toDataURL("image/jpeg", 0.3); // Very low quality
-  } catch {
-    return TINY_TRANSPARENT_GIF;
-  }
-}
+// 🧠 In-memory cache for instant reuse (real image URLs)
+const loadedImages = new Set<string>();
 
 const MyImage = ({
   src: initialSrc,
-  alt = "Default alt text",
+  alt = "Image",
   className,
   classname,
   role,
   draggable,
-  useSkeleton = false,
+  useSkeleton = true,
   fallbackSrc = "/icons/photo.svg",
   priority = false,
-  quality = 75,
+  quality = 85,
   onClick,
   sizes = "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
   width,
@@ -79,31 +47,42 @@ const MyImage = ({
   ref,
 }: MyImageProps) => {
   const [currentSrc, setCurrentSrc] = useState(initialSrc);
-  const [previewSrc, setPreviewSrc] = useState<string>(TINY_TRANSPARENT_GIF);
   const [imageStatus, setImageStatus] = useState<
     "loading" | "loaded" | "failedInitial" | "failedFallback"
-  >("loading");
+  >(loadedImages.has(initialSrc) ? "loaded" : "loading");
 
-  // Whenever the source changes, regenerate preview
+  // Prefetch image manually (real image)
   useEffect(() => {
     let active = true;
+    if (loadedImages.has(initialSrc)) {
+      setImageStatus("loaded");
+      return;
+    }
 
-    setImageStatus("loading");
-    setCurrentSrc(initialSrc);
-
-    // Generate auto low-quality preview
-    generateLowQualityPreview(initialSrc)
-      .then((blurred) => {
-        if (active) setPreviewSrc(blurred);
-      })
-      .catch(() => setPreviewSrc(TINY_TRANSPARENT_GIF));
+    const img = new Image();
+    img.src = initialSrc;
+    img.decoding = "async";
+    img.loading = "eager";
+    img.onload = () => {
+      if (active) {
+        loadedImages.add(initialSrc);
+        setImageStatus("loaded");
+      }
+    };
+    img.onerror = () => {
+      if (active) {
+        setCurrentSrc(fallbackSrc);
+        setImageStatus("failedInitial");
+      }
+    };
 
     return () => {
       active = false;
     };
-  }, [initialSrc]);
+  }, [initialSrc, fallbackSrc]);
 
-  const handleLoadingComplete = () => setImageStatus("loaded");
+  const showSkeleton = imageStatus === "loading";
+  const showPermanentFailurePlaceholder = imageStatus === "failedFallback";
 
   const handleError = (_e: SyntheticEvent<HTMLImageElement, Event>) => {
     if (currentSrc === fallbackSrc) {
@@ -114,40 +93,6 @@ const MyImage = ({
     }
   };
 
-  const showSkeleton =
-    imageStatus === "loading" || imageStatus === "failedInitial";
-  const showImage = imageStatus === "loaded";
-  const showPermanentFailurePlaceholder = imageStatus === "failedFallback";
-
-  const imageElement = !showPermanentFailurePlaceholder ? (
-    <NextImage
-      key={currentSrc}
-      src={currentSrc}
-      draggable={draggable}
-      onClick={onClick}
-      ref={ref}
-      alt={alt}
-      className={cn(
-        "object-cover transition-all duration-700 ease-in-out",
-        showImage ? "blur-0 opacity-100" : "opacity-60 blur-md",
-        role === "AVATAR" && "mask mask-squircle size-8",
-        classname,
-      )}
-      {...(width && height
-        ? { width: Number(width), height: Number(height) }
-        : { fill: true })}
-      sizes={original ? undefined : sizes}
-      placeholder="blur"
-      blurDataURL={previewSrc} // ✅ Auto-generated low-quality preview
-      quality={original ? undefined : quality}
-      priority={priority}
-      loading={priority ? undefined : loading}
-      onLoad={handleLoadingComplete}
-      onError={handleError}
-      unoptimized={original}
-    />
-  ) : null;
-
   return (
     <div
       ref={ref}
@@ -157,23 +102,51 @@ const MyImage = ({
         className,
       )}
     >
+      {/* Skeleton only while loading */}
       {showSkeleton && (
         <div
           className={cn(
-            "absolute inset-0",
+            "bg-muted/40 dark:bg-muted/20 absolute inset-0 animate-pulse",
             role === "AVATAR" && "mask mask-squircle",
-            useSkeleton ? "skeleton" : "bg-muted",
+            useSkeleton && "backdrop-blur-sm",
           )}
           aria-hidden="true"
         />
       )}
 
-      {imageElement}
+      {!showPermanentFailurePlaceholder && (
+        <NextImage
+          key={currentSrc}
+          src={currentSrc}
+          draggable={draggable}
+          onClick={onClick}
+          ref={ref}
+          alt={alt}
+          className={cn(
+            "object-cover transition-all duration-300 ease-in-out",
+            imageStatus === "loaded"
+              ? "blur-0 opacity-100"
+              : "scale-105 opacity-0 blur-sm",
+            role === "AVATAR" && "mask mask-squircle size-8",
+            classname,
+          )}
+          {...(width && height
+            ? { width: Number(width), height: Number(height) }
+            : { fill: true })}
+          sizes={original ? undefined : sizes}
+          quality={quality}
+          priority={priority}
+          loading={priority ? undefined : loading}
+          onError={handleError}
+          unoptimized={original ? true : false}
+        />
+      )}
 
+      {/* Fallback placeholder if all fails */}
       {showPermanentFailurePlaceholder && (
         <div
           className={cn(
-            "absolute inset-0 flex flex-col items-center justify-center p-2 text-gray-500 dark:text-gray-400",
+            "absolute inset-0 flex items-center justify-center text-gray-500 dark:text-gray-400",
             role === "AVATAR" && "mask mask-squircle",
           )}
           role="img"

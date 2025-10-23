@@ -1,7 +1,7 @@
 "use client";
 
 import { useToast } from "@/lib/context/toast/ToastContext";
-import { ClassDto } from "@/lib/schema/class/class.schema";
+import { ClassDto } from "@/lib/schema/class/class-schema";
 import { ClassType } from "@/lib/schema/class/create-class.dto";
 import { updateClassPublicInfo } from "@/service/class/class.service";
 import { zodResolver } from "@hookform/resolvers/zod";

@@ -25,7 +25,7 @@ import {
   BulkCreateJoinSchoolRequest,
   BulkCreateJoinSchoolRequestSchema,
   JoinSchoolRequest,
-} from "@/lib/schema/school/join-school-request-schema";
+} from "@/lib/schema/school/school-join-school/join-school-request-schema";
 import { School } from "@/lib/schema/school/school-schema";
 import { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";

@@ -11,7 +11,7 @@ import { Button } from "../ui/button";
 interface props {
   description?: string;
   lang: Locale;
-  role: userRole;
+  role?: userRole;
 }
 
 const PermissionPage = ({ description, lang, role }: props) => {

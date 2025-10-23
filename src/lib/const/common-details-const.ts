@@ -51,3 +51,6 @@ export const JoinStatusEnums = [
 ] as const;
 
 export const JoinRoleEnums = ["Teacher", "Student", "Staff"] as const;
+
+// class
+export const ClassTypes = ["Private", "School", "Public"] as const;

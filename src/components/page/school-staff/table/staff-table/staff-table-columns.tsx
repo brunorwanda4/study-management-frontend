@@ -3,16 +3,16 @@ import MyLink from "@/components/common/myLink";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Locale } from "@/i18n";
 import { studentImage } from "@/lib/context/images";
-import { SchoolStaffDto } from "@/lib/schema/school/school-staff-schema";
+import { SchoolStaffWithRelations } from "@/lib/schema/school/school-staff-schema";
+import { formatReadableDate } from "@/lib/utils/format-date";
 import { ColumnDef } from "@tanstack/react-table";
-import { format } from "date-fns"; // Make sure date-fns is installed
 
 // ========================================================================
 // The complete columns() function
 // ========================================================================
 export const StaffTableColumns = (
   lang: Locale,
-): ColumnDef<SchoolStaffDto>[] => {
+): ColumnDef<SchoolStaffWithRelations>[] => {
   return [
     // --- 1. Selection Column ---
     {
@@ -51,13 +51,13 @@ export const StaffTableColumns = (
           {/* Increased space */}
           <MyLink
             loading
-            href={`/${lang}/p/${row.original.userId}?studentId=${row.original.id}`}
+            href={`/${lang}/p/${row.original.user?.username}?schoolStaff=${row.original.id}`}
             className="flex-shrink-0" // Prevent avatar shrinking
           >
             <MyImage
               role="AVATAR"
               className="size-10 rounded-full" // Explicitly rounded
-              src={row.original.image || studentImage} // Use default student image if missing
+              src={row.original.image || row.original.image || studentImage} // Use default student image if missing
               alt={row.original.name || "Student Avatar"} // Add alt text
             />
           </MyLink>
@@ -67,7 +67,7 @@ export const StaffTableColumns = (
             <MyLink
               loading
               className="truncate font-medium hover:underline" // Truncate long names
-              href={`/${lang}/p/${row.original.userId}?studentId=${row.original.id}`}
+              href={`/${lang}/p/${row.original.user?.username}?schoolStaff=${row.original.id}`}
               //   title={row.original.name || 'View Profile'} // Add title attribute
             >
               {row.original.name || "N/A"} {/* Fallback for name */}
@@ -113,7 +113,7 @@ export const StaffTableColumns = (
       accessorKey: "gender",
       cell: ({ row }) => {
         // Provide user-friendly display
-        const gender = row.original.gender;
+        const gender = row.original.user?.gender;
         if (gender === "MALE") return <div className="text-sm">Male</div>;
         if (gender === "FEMALE") return <div className="text-sm">Female</div>;
         return <div className="text-muted-foreground text-sm">N/A</div>; // Fallback
@@ -138,7 +138,7 @@ export const StaffTableColumns = (
       accessorKey: "phone",
       cell: ({ row }) => (
         <div className="text-sm">
-          {row.original.phone || (
+          {row.original.user?.phone || (
             <span className="text-muted-foreground">-</span>
           )}
         </div>
@@ -156,9 +156,8 @@ export const StaffTableColumns = (
       accessorKey: "createAt",
       cell: ({ row }) => (
         <div className="text-sm">
-          {row.original.createAt ? (
-            // Ensure createAt is treated as a Date object or valid date string
-            format(new Date(row.original.createAt), "yyyy-MM-dd")
+          {row.original.created_at ? (
+            formatReadableDate(row.original.created_at)
           ) : (
             <span className="text-muted-foreground">-</span>
           )}

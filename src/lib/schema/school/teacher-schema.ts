@@ -12,6 +12,7 @@ export const TeacherSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
   email: z.string().email({ message: "Invalid email address" }),
   phone: z.string().optional().nullable(),
+  image: z.string().optional(),
   gender: z.string().optional().nullable(),
 
   type: TeacherTypeSchema.default("Regular"),
@@ -26,11 +27,14 @@ export const TeacherSchema = z.object({
   updated_at: z.date().default(() => new Date()),
 });
 
+export type Teacher = z.infer<typeof TeacherSchema>;
+
 // Update Schema
 export const UpdateTeacherSchema = z.object({
   name: z.string().optional(),
   email: z.string().email().optional(),
   phone: z.string().optional(),
+  image: z.string().optional(),
   gender: z.string().optional(),
   type: TeacherTypeSchema.optional(),
   class_ids: z.array(z.string()).optional(),
@@ -39,6 +43,7 @@ export const UpdateTeacherSchema = z.object({
   tags: z.array(z.string()).optional(),
 });
 
+export type UpdateTeacher = z.infer<typeof UpdateTeacherSchema>;
 // With Relations
 export const TeacherWithRelationsSchema = z.object({
   teacher: TeacherSchema,
@@ -48,10 +53,12 @@ export const TeacherWithRelationsSchema = z.object({
   subjects: z.array(z.any()).optional(), // Replace with SubjectSchema
 });
 
+export type TeacherWithRelations = z.infer<typeof TeacherWithRelationsSchema>;
 // Bulk operations
 export const BulkTeacherIdsSchema = z.object({
   ids: z.array(z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid ObjectId")),
 });
+export type BulkTeacherIds = z.infer<typeof BulkTeacherIdsSchema>;
 
 export const BulkUpdateTeacherActiveSchema = z.object({
   ids: z.array(z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid ObjectId")),
@@ -63,9 +70,13 @@ export const BulkTeacherTagsSchema = z.object({
   tags: z.array(z.string()),
 });
 
+export type BulkTeacherTags = z.infer<typeof BulkTeacherTagsSchema>;
+
 // Prepare Teacher Request
 export const PrepareTeacherRequestSchema = z.object({
   teachers: z.array(TeacherSchema),
   school_id: z.string().optional().nullable(),
   creator_id: z.string().optional().nullable(),
 });
+
+export type PrepareTeacherRequest = z.infer<typeof PrepareTeacherRequestSchema>;

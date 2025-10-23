@@ -1,6 +1,6 @@
 import MyImage from "@/components/common/myImage";
 import { Locale } from "@/i18n";
-import { ClassDto } from "@/lib/schema/class/class.schema";
+import { ClassDto } from "@/lib/schema/class/class-schema";
 import { cn } from "@/lib/utils";
 import { Dot } from "lucide-react";
 import Link from "next/link";

@@ -34,7 +34,7 @@ const SchoolHeader = ({ school, auth, lang, onThePage }: props) => {
           <MyLink loading href={`/${lang}/school`}>
             <Avatar className="size-32">
               <AvatarImage src={school?.logo ? school.logo : schoolLogoImage} />
-              <AvatarFallback>LOGO</AvatarFallback>
+              <AvatarFallback>{school?.name}</AvatarFallback>
             </Avatar>
           </MyLink>
           <div className="space-y-1">

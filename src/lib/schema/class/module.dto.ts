@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { TeacherDto } from "../school/teacher-schema";
-import { ClassAndOthers } from "./class.schema";
+import { ClassAndOthers } from "./class-schema";
 
 export enum ModuleType {
   General = "General",

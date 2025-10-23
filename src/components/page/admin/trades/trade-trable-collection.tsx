@@ -48,7 +48,7 @@ const TradesTableCollection = ({
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([
-    { id: "name", desc: false },
+    { id: "updated_at", desc: false },
   ]);
 
   // Sync with realtime data when available

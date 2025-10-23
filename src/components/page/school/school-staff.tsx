@@ -1,11 +1,11 @@
 import UserCardSmall from "@/components/cards/user-card-small";
 import { Locale } from "@/i18n";
-import { SchoolStaffDto } from "@/lib/schema/school/school-staff-schema";
+import type { SchoolStaff } from "@/lib/schema/school/school-staff-schema";
 
 interface props {
   lang: Locale;
   onThePage?: boolean;
-  schoolStaff: SchoolStaffDto[];
+  schoolStaff: SchoolStaff[];
 }
 
 const SchoolStaff = ({ lang, schoolStaff }: props) => {
@@ -18,13 +18,13 @@ const SchoolStaff = ({ lang, schoolStaff }: props) => {
         {schoolStaff.map((item) => {
           return (
             <UserCardSmall
-              id={item.id}
-              key={item.id}
+              id={item.id || item._id}
+              key={item.id || item._id}
               role="s-t"
               lang={lang}
-              userRole={item.role}
+              userRole={item.type}
               name={item.name}
-              userId={item.userId}
+              userId={item.user_id || ""}
               image={item.image}
             />
           );

@@ -2,26 +2,26 @@ import UserCardSmall from "@/components/cards/user-card-small";
 import MyLink from "@/components/common/myLink";
 import { Button } from "@/components/ui/button";
 import { Locale } from "@/i18n";
-import { StudentDto } from "@/lib/schema/school/student0schema";
-import { authContextDto } from "@/lib/utils/auth";
+import { Student } from "@/lib/schema/school/student-schema";
+import { AuthContext } from "@/lib/utils/auth-context";
 import Link from "next/link";
 import { BsPlusCircle } from "react-icons/bs";
 
 interface props {
   lang: Locale;
   onThePage?: boolean;
-  students: StudentDto[];
-  currentUser: authContextDto;
+  students: Student[];
+  auth: AuthContext;
 }
 
-const SchoolStudents = ({ lang, currentUser, students, onThePage }: props) => {
+const SchoolStudents = ({ lang, auth, students, onThePage }: props) => {
   if (students.length === 0) {
     return (
       <div className="basic-card space-y-2">
         <h3 className="basic-title text-center text-gray-500">
           This school have no students! 😔
         </h3>
-        {currentUser.role === "SCHOOLSTAFF" && (
+        {auth.user.role === "SCHOOLSTAFF" && (
           <div>
             <MyLink
               button={{ variant: "primary", library: "daisy" }}
@@ -53,7 +53,7 @@ const SchoolStudents = ({ lang, currentUser, students, onThePage }: props) => {
               role="s"
               lang={lang}
               userRole="STUDENT"
-              userId={item.userId}
+              userId={item.user_id}
             />
           );
         })}
