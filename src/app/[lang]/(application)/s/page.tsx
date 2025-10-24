@@ -50,7 +50,7 @@ const StudentPage = async (props: props) => {
         },
       ]}
     >
-      <div className="grid h-full w-full place-content-center space-y-4 px-4 py-2">
+      <div className="grid h-full min-h-screen w-full place-content-center space-y-4 px-4 py-2">
         <div className="flex space-x-4">
           <JoinSchoolDialog />
           <JoinClassDialog />
@@ -60,6 +60,7 @@ const StudentPage = async (props: props) => {
             lang={lang}
             auth={auth}
             requests={join_school_requestsRes.data}
+            realtimeEnabled={true}
           />
         )}
       </div>

@@ -10,13 +10,10 @@ interface Props {
 const ClassSubjectPage = async (props: Props) => {
   const params = await props.params;
   const { lang, classId } = params;
-  const [currentUser] = await Promise.all([authContext()]);
+  const [auth] = await Promise.all([authContext()]);
 
-  if (!currentUser) {
+  if (!auth) {
     return redirect(`/${lang}/auth/login`);
-  }
-  if (!currentUser.role) {
-    return redirect(`/${lang}/auth/onboarding`);
   }
 
   const classModules = await getModuleByClassId(classId);

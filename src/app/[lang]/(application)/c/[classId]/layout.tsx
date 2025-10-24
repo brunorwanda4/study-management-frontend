@@ -1,10 +1,8 @@
 import LoadingClassHeader from "@/components/loadings/class/loading-class-header";
-import ClassHeader from "@/components/page/class/class-header";
 import ClassNavbar from "@/components/page/class/class-navbar";
-import NotFoundPage from "@/components/page/not-found";
 import { Separator } from "@/components/ui/separator";
 import { Locale } from "@/i18n";
-import { getSchoolServer } from "@/lib/utils/auth";
+import { authContext } from "@/lib/utils/auth-context";
 import { getClassById } from "@/service/class/class.service";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
@@ -30,29 +28,21 @@ const ClassIdLayout = async (props: Props) => {
   const { children } = props;
   const params = await props.params;
   const { lang, classId } = params;
-  const [currentUser, currentCls, currentSchool] = await Promise.all([
-    authContext(),
-    getClassById(classId),
-    getSchoolServer(),
-  ]);
+  const auth = await authContext();
 
-  if (!currentUser) {
+  if (!auth) {
     return redirect(`/${lang}/auth/login`);
-  }
-
-  if (!currentCls.data) {
-    return <NotFoundPage />;
   }
 
   return (
     <section className="space-y-4 px-4 py-2">
       <Suspense fallback={<LoadingClassHeader />}>
-        <ClassHeader
+        {/* <ClassHeader
           lang={lang}
           currentSchool={currentSchool ?? undefined}
           currentUser={currentUser}
           currentCls={currentCls.data}
-        />
+        /> */}
       </Suspense>
 
       <Separator />

@@ -5,28 +5,38 @@ import ProfileStudentClassesCard from "@/components/profile/student/profile-stud
 import StudentPerformanceCard from "@/components/profile/student/student-perfomance-card";
 import UserFavoriteSubjects from "@/components/profile/user-favorite-subjects";
 import { Locale } from "@/i18n";
+import { UserModel } from "@/lib/schema/user/user-schema";
 import { authContext } from "@/lib/utils/auth-context";
-import { getUserById } from "@/service/school/user-service";
+import apiRequest from "@/service/api-client";
 import { redirect } from "next/navigation";
 interface Props {
-  params: Promise<{ lang: Locale; userId: string }>;
+  params: Promise<{ lang: Locale; userUsername: string }>;
 }
 const ProfilePageById = async (props: Props) => {
   const params = await props.params;
-  const { lang, userId } = params;
-  const [currentUser] = await Promise.all([authContext()]);
+  const { lang, userUsername } = params;
+  const auth = await authContext();
 
-  if (!currentUser) {
+  if (!auth) {
     return redirect(`/${lang}/auth/login`);
   }
-  if (!currentUser.role) {
-    return redirect(`/${lang}/auth/onboarding`);
-  }
 
-  const [user] = await Promise.all([getUserById(userId)]);
+  const [user] = await Promise.all([
+    apiRequest<void, UserModel>(
+      "get",
+      `/users/username/${userUsername}`,
+      undefined,
+      {
+        token: auth.token,
+        schoolToken: auth.schoolToken,
+      },
+    ),
+  ]);
+
   if (!user.data) {
     return <NotFoundPage />;
   }
+
   return (
     <div className="flex space-x-4 px-4 py-2 md:space-y-4">
       <ProfileAside lang={lang} user={user.data} />
@@ -37,7 +47,7 @@ const ProfilePageById = async (props: Props) => {
           <ProfileStudentClassesCard lang="en" />
         </div>
       ) : (
-        <DevelopingPage role={currentUser.role} lang={lang} />
+        <DevelopingPage role={auth.user.role} lang={lang} />
       )}
     </div>
   );

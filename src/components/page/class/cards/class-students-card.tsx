@@ -4,12 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Locale } from "@/i18n";
 import { studentImage } from "@/lib/context/images";
-import { studentsAndOther } from "@/lib/schema/school/student0schema";
+import { StudentWithRelations } from "@/lib/schema/school/student-schema";
 import { BsGear, BsPlusCircle } from "react-icons/bs";
 
 interface props {
   lang: Locale;
-  student: studentsAndOther[];
+  student: StudentWithRelations[];
 }
 
 const ClassStudentCard = ({ lang, student }: props) => {
@@ -31,11 +31,11 @@ const ClassStudentCard = ({ lang, student }: props) => {
               <div className="flex space-x-2">
                 <MyLink
                   loading
-                  href={`/${lang}/p/${item.userId}?studentId=${item.id}`}
+                  href={`/${lang}/p/${item.user?.username}?studentId=${item.id}`}
                 >
                   <MyImage
                     role="AVATAR"
-                    src={item.image || studentImage}
+                    src={item.user?.image || studentImage}
                     className="size-12"
                     classname=" mask mask-squircle"
                   />
@@ -43,7 +43,7 @@ const ClassStudentCard = ({ lang, student }: props) => {
                 <div>
                   <MyLink
                     loading
-                    href={`/${lang}/p/${item.userId}?studentId=${item.id}`}
+                    href={`/${lang}/p/${item.user?.username}?studentId=${item.id}`}
                     className="small-title underline-offset-0"
                   >
                     {item.name}

@@ -46,20 +46,34 @@ export const ClassTableColumn = (lang: Locale) => {
       header: "Name",
       accessorKey: "name",
       cell: ({ row }) => (
-        <MyLink
-          loading
-          href={`/${lang}/c/${row.original.id}`}
-          className="flex items-center gap-2 font-medium"
-        >
+        <div className="flex gap-2">
           {row.original.image && (
-            <MyImage
-              src={row.original.image}
-              alt={row.getValue("name")}
-              className="h-8 w-8 rounded-full object-cover"
-            />
+            <MyLink
+              href={`/${lang}/c/${row.original.username}`}
+              className="flex items-center gap-2 font-medium"
+            >
+              <MyImage
+                src={row.original.image}
+                alt={row.original.name}
+                className="h-8 w-8 rounded-full object-cover"
+              />
+            </MyLink>
           )}
-          <span>{row.getValue("name")}</span>
-        </MyLink>
+          <div className="flex flex-col">
+            <MyLink
+              href={`/${lang}/c/${row.original.username}`}
+              className="flex items-center gap-2 font-medium"
+            >
+              <span>{row.original.name}</span>
+            </MyLink>
+            <MyLink
+              href={`/${lang}/c/${row.original.username}`}
+              className="flex items-center gap-2 font-medium"
+            >
+              <span>{row.original.username}</span>
+            </MyLink>
+          </div>
+        </div>
       ),
       meta: {
         filterVariant: "text",
