@@ -28,23 +28,25 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { schoolMembers, schoolTypes } from "@/lib/const/common-details-const";
 import { schoolLogoImage } from "@/lib/context/images";
 import { useToast } from "@/lib/context/toast/ToastContext";
-import { SchoolMembers, SchoolTypeEnum } from "@/lib/schema/school/school.dto";
-import { updateSchoolSchoolService } from "@/service/school/school.service";
+import { School } from "@/lib/schema/school/school-schema";
+import { AuthContext } from "@/lib/utils/auth-context";
+import apiRequest from "@/service/api-client";
 import {
   BasicInformationDto,
   BasicInformationSchema,
 } from "./schema/basic-information";
 
 interface BasicInformationFormProps {
-  initialData: BasicInformationDto;
-  schoolId: string;
+  initialData: School;
+  auth: AuthContext;
 }
 
 export const BasicInformationForm = ({
   initialData,
-  schoolId,
+  auth,
 }: BasicInformationFormProps) => {
   const [error, setError] = useState<string | null>("");
   const [isPending, startTransition] = useTransition();
@@ -54,12 +56,12 @@ export const BasicInformationForm = ({
   const form = useForm<BasicInformationDto>({
     resolver: zodResolver(BasicInformationSchema),
     defaultValues: {
-      logo: initialData?.logo ?? undefined,
-      name: initialData?.name ?? undefined,
-      username: initialData?.username ?? undefined,
-      description: initialData?.description ?? undefined,
-      schoolType: initialData?.schoolType ?? undefined,
-      schoolMembers: initialData?.schoolMembers ?? undefined,
+      logo: initialData?.logo || undefined,
+      name: initialData?.name || undefined,
+      username: initialData?.username || undefined,
+      description: initialData?.description || undefined,
+      school_type: initialData?.school_type || undefined,
+      school_members: initialData?.school_members || undefined,
     },
   });
 
@@ -91,7 +93,15 @@ export const BasicInformationForm = ({
   const handleSubmit = (values: BasicInformationDto) => {
     setError(null);
     startTransition(async () => {
-      const res = await updateSchoolSchoolService(schoolId, values);
+      const res = await apiRequest<BasicInformationDto, School>(
+        "put",
+        `/school/${initialData.id || initialData._id}`,
+        values,
+        {
+          token: auth.token,
+          schoolToken: auth.schoolToken,
+        },
+      );
       if (res.data) {
         showToast({
           type: "success",
@@ -161,7 +171,7 @@ export const BasicInformationForm = ({
 
               <FormField
                 control={form.control}
-                name="schoolType"
+                name="school_type"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>School Type</FormLabel>
@@ -175,7 +185,7 @@ export const BasicInformationForm = ({
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent data-theme={theme}>
-                        {SchoolTypeEnum.options.map((type) => (
+                        {schoolTypes.map((type) => (
                           <SelectItem key={type} value={type}>
                             {type}
                           </SelectItem>
@@ -193,7 +203,7 @@ export const BasicInformationForm = ({
 
               <FormField
                 control={form.control}
-                name="schoolMembers"
+                name="school_members"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Student Body</FormLabel>
@@ -207,7 +217,7 @@ export const BasicInformationForm = ({
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent data-theme={theme}>
-                        {SchoolMembers.options.map((type) => (
+                        {schoolMembers.map((type) => (
                           <SelectItem key={type} value={type}>
                             {type}
                           </SelectItem>

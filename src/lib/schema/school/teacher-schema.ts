@@ -1,4 +1,8 @@
+import { ClassSchema } from "@/lib/schema/class/class-schema";
 import { TeacherTypeSchema } from "@/lib/schema/common-details-schema";
+import { SchoolSchema } from "@/lib/schema/school/school-schema";
+import { SubjectSchema } from "@/lib/schema/subject/subject-schema";
+import { UserModelSchema } from "@/lib/schema/user/user-schema";
 import { z } from "zod";
 
 // Core Schema
@@ -23,8 +27,8 @@ export const TeacherSchema = z.object({
   is_active: z.boolean().default(false),
   tags: z.array(z.string()).default([]),
 
-  created_at: z.date().default(() => new Date()),
-  updated_at: z.date().default(() => new Date()),
+  created_at: z.coerce.date().optional(),
+  updated_at: z.coerce.date().optional(),
 });
 
 export type Teacher = z.infer<typeof TeacherSchema>;
@@ -46,11 +50,11 @@ export const UpdateTeacherSchema = z.object({
 export type UpdateTeacher = z.infer<typeof UpdateTeacherSchema>;
 // With Relations
 export const TeacherWithRelationsSchema = z.object({
-  teacher: TeacherSchema,
-  user: z.any().optional(), // Replace with actual UserSchema when available
-  school: z.any().optional(), // Replace with SchoolSchema
-  classes: z.array(z.any()).optional(), // Replace with ClassSchema
-  subjects: z.array(z.any()).optional(), // Replace with SubjectSchema
+  ...TeacherSchema.shape,
+  user: UserModelSchema.optional(), // Replace with actual UserSchema when available
+  school: SchoolSchema.optional(), // Replace with SchoolSchema
+  classes: z.array(ClassSchema).optional(), // Replace with ClassSchema
+  subjects: z.array(SubjectSchema).optional(), // Replace with SubjectSchema
 });
 
 export type TeacherWithRelations = z.infer<typeof TeacherWithRelationsSchema>;

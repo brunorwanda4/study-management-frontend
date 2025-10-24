@@ -1,6 +1,9 @@
 // Ensure this is at the top of your .tsx file for Next.js App Router client components
 "use client";
 
+import AddSocialMedia, {
+  detectSocialMediaPlatform,
+} from "@/components/common/form/add-social-media";
 import MyImage from "@/components/common/myImage";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -14,417 +17,29 @@ import {
   FormMessage,
 } from "@/components/ui/form"; // Assume these are shadcn/ui components
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { DefaultPlatform } from "@/lib/const/social-media-const";
 import { useToast } from "@/lib/context/toast/ToastContext";
-import { updateSchoolSchoolService } from "@/service/school/school.service";
+import { School } from "@/lib/schema/school/school-schema";
+import { AuthContext } from "@/lib/utils/auth-context";
+import apiRequest from "@/service/api-client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PlusCircle, Trash2 } from "lucide-react";
-import React, {
-  useCallback,
-  useId,
-  useMemo,
-  useState,
-  useTransition,
-} from "react";
-import {
-  Control,
-  useFieldArray,
-  useForm,
-  UseFormGetValues,
-  UseFormSetValue,
-  UseFormWatch,
-} from "react-hook-form";
+import { PlusCircle } from "lucide-react";
+import React, { useState, useTransition } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
 import {
   ContactLocationDto,
   ContactLocationSchema,
-} from "./schema/contact-location"; // Make sure SocialMediaLink type is available
-
-// Define a type for social media platform configuration
-interface SocialMediaPlatform {
-  name: string;
-  urlRegex: RegExp;
-  urlTemplate: string;
-  icon: string;
-}
-
-// Moved outside components as it's static configuration
-const SOCIAL_MEDIA_PLATFORMS_LIST: SocialMediaPlatform[] = [
-  {
-    name: "Facebook",
-    urlRegex: /facebook\.com/i,
-    urlTemplate: "https://www.facebook.com/{username}",
-    icon: "/icons/facebook.png",
-  },
-  {
-    name: "Twitter",
-    urlRegex: /twitter\.com|x\.com/i,
-    urlTemplate: "https://www.twitter.com/{username}",
-    icon: "/icons/twitter.png",
-  },
-  {
-    name: "Instagram",
-    urlRegex: /instagram\.com/i,
-    urlTemplate: "https://www.instagram.com/{username}",
-    icon: "/icons/instagram.png",
-  },
-  {
-    name: "LinkedIn",
-    urlRegex: /linkedin\.com/i,
-    urlTemplate: "https://www.linkedin.com/in/{username}",
-    icon: "/icons/linkedin.png",
-  },
-  {
-    name: "YouTube",
-    urlRegex: /youtube\.com|youtu\.be/i,
-    urlTemplate: "https://www.youtube.com/@{username}", // Corrected YouTube template
-    icon: "/icons/youtube.png",
-  },
-  {
-    name: "Threads",
-    urlRegex: /threads\.com|threads\.be/i,
-    urlTemplate: "https://www.youtube.com/@{username}", // Corrected YouTube template
-    icon: "/icons/threads.png",
-  },
-  {
-    name: "Other",
-    urlRegex: /.*/i, // Catch-all, should be last
-    urlTemplate: "{username}", // Or just the direct link
-    icon: "/icons/chain.png",
-  },
-];
-
-const DEFAULT_PLATFORM = "Other";
-const OTHER_PLATFORM_ICON =
-  SOCIAL_MEDIA_PLATFORMS_LIST.find((p) => p.name === DEFAULT_PLATFORM)?.icon ||
-  "/icons/linkedin.png";
-
-const detectSocialMediaPlatform = (url: string): string => {
-  if (!url || typeof url !== "string") return DEFAULT_PLATFORM;
-  for (const platform of SOCIAL_MEDIA_PLATFORMS_LIST) {
-    // Ensure 'Other' regex doesn't prematurely match if it's not the last one checked
-    if (platform.name !== DEFAULT_PLATFORM && platform.urlRegex.test(url)) {
-      return platform.name;
-    }
-  }
-  return DEFAULT_PLATFORM; // Default if no specific platform matches
-};
-
-const getSocialMediaIconComponent = (platformName?: string): string => {
-  if (!platformName) return OTHER_PLATFORM_ICON;
-  const platform = SOCIAL_MEDIA_PLATFORMS_LIST.find(
-    (p) => p.name.toLowerCase() === platformName.toLowerCase(),
-  );
-  return platform ? platform.icon : OTHER_PLATFORM_ICON;
-};
-
-interface SocialMediaItemProps {
-  index: number;
-  control: Control<ContactLocationDto>; // Strongly typed control
-  remove: (index: number) => void;
-  setValue: UseFormSetValue<ContactLocationDto>; // Strongly typed setValue
-  getValues: UseFormGetValues<ContactLocationDto>; // Strongly typed getValues
-  watch: UseFormWatch<ContactLocationDto>; // Strongly typed watch
-}
-
-const SocialMediaItem: React.FC<SocialMediaItemProps> = ({
-  index,
-  control,
-  remove,
-  setValue,
-  getValues,
-  watch,
-}) => {
-  // Watch the specific platform value for this item
-  const platformValue =
-    watch(`socialMedia.${index}.platform` as const) || DEFAULT_PLATFORM;
-
-  const currentIcon = useMemo(
-    () => getSocialMediaIconComponent(platformValue),
-    [platformValue],
-  );
-
-  const [inputMode, setInputMode] = useState<"url" | "username">("url");
-
-  const currentPlatformConfig = useMemo(
-    () =>
-      SOCIAL_MEDIA_PLATFORMS_LIST.find((p) => p.name === platformValue) ||
-      SOCIAL_MEDIA_PLATFORMS_LIST.find((p) => p.name === DEFAULT_PLATFORM)!,
-    [platformValue],
-  );
-  const urlTemplate = currentPlatformConfig.urlTemplate;
-
-  const handleUsernameChange = useCallback(
-    (username: string) => {
-      if (username.trim() === "") {
-        setValue(`socialMedia.${index}.link`, "", { shouldValidate: true });
-        return;
-      }
-      if (urlTemplate.includes("{username}")) {
-        const constructedUrl = urlTemplate.replace("{username}", username);
-        setValue(`socialMedia.${index}.link`, constructedUrl, {
-          shouldValidate: true,
-        });
-      } else {
-        // If no {username} in template (e.g. for 'Other' if it's just a direct link)
-        // This case might need refinement based on how 'Other' should behave with username input
-        setValue(`socialMedia.${index}.link`, username, {
-          shouldValidate: true,
-        });
-      }
-    },
-    [setValue, index, urlTemplate],
-  );
-
-  const extractUsername = useCallback(
-    (url: string): string => {
-      if (
-        !url ||
-        platformValue === DEFAULT_PLATFORM ||
-        !urlTemplate.includes("{username}")
-      )
-        return "";
-
-      const platform = SOCIAL_MEDIA_PLATFORMS_LIST.find(
-        (p) => p.name === platformValue,
-      );
-      if (!platform) return "";
-
-      // Attempt to extract username based on the template structure
-      // This is a simplified extraction; more robust parsing might be needed for complex templates
-      const prefix = platform.urlTemplate.substring(
-        0,
-        platform.urlTemplate.indexOf("{username}"),
-      );
-      const suffix = platform.urlTemplate.substring(
-        platform.urlTemplate.indexOf("{username}") + "{username}".length,
-      );
-
-      if (url.startsWith(prefix) && url.endsWith(suffix)) {
-        return url.substring(prefix.length, url.length - suffix.length);
-      }
-
-      // Fallback for simple path-based usernames if direct template match fails
-      // (e.g. https://twitter.com/username)
-      try {
-        const urlObj = new URL(url.startsWith("http") ? url : `https://${url}`);
-        const pathParts = urlObj.pathname.split("/").filter((part) => part);
-        // This logic might need to be platform-specific if paths are not consistent
-        if (
-          platform.name === "LinkedIn" &&
-          pathParts[0] === "in" &&
-          pathParts.length > 1
-        )
-          return pathParts[1];
-        return pathParts[0] || "";
-      } catch {
-        return ""; // Invalid URL
-      }
-    },
-    [platformValue, urlTemplate],
-  );
-
-  const handleUrlInputChange = useCallback(
-    (newUrl: string) => {
-      setValue(`socialMedia.${index}.link`, newUrl, {
-        shouldValidate: true,
-        shouldDirty: true,
-      });
-      const detectedPlatform = detectSocialMediaPlatform(newUrl);
-      const currentPlatform = getValues(
-        `socialMedia.${index}.platform` as const,
-      );
-      if (currentPlatform !== detectedPlatform) {
-        setValue(`socialMedia.${index}.platform`, detectedPlatform, {
-          shouldValidate: true,
-          shouldDirty: true,
-        });
-      }
-    },
-    [setValue, getValues, index],
-  );
-
-  return (
-    <div className="flex flex-col items-start gap-3 p-3 sm:flex-row sm:items-center">
-      <div className="flex-none">
-        <MyImage src={currentIcon} className="size-10" role="ICON" />
-      </div>
-
-      <div className="flex-grow space-y-3">
-        {platformValue !== DEFAULT_PLATFORM && ( // Only show toggle if not "Other" or if "Other" supports username
-          <div className="flex space-x-2">
-            <Button
-              type="button"
-              library={"daisy"}
-              variant={inputMode === "url" ? "info" : "outline"}
-              size="sm"
-              onClick={() => setInputMode("url")}
-            >
-              Enter URL
-            </Button>
-            <Button
-              type="button"
-              library={"daisy"}
-              variant={inputMode === "username" ? "info" : "outline"}
-              size="sm"
-              onClick={() => setInputMode("username")}
-              disabled={!urlTemplate.includes("{username}")} // Disable if platform template doesn't use username
-            >
-              Enter Username
-            </Button>
-          </div>
-        )}
-
-        {inputMode === "url" ||
-        !urlTemplate.includes("{username}") ||
-        platformValue === DEFAULT_PLATFORM ? (
-          <FormField
-            control={control}
-            name={`socialMedia.${index}.link` as const}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="sr-only">Social Media Link</FormLabel>
-                <FormControl>
-                  <Input
-                    type="url"
-                    placeholder="https://www.example.com/username"
-                    {...field}
-                    onChange={(e) => handleUrlInputChange(e.target.value)}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        ) : (
-          <FormField
-            control={control}
-            // Still bind to link, but display/interact with username
-            name={`socialMedia.${index}.link` as const}
-            render={(
-              { field }, // field.value here is the full link
-            ) => (
-              <FormItem>
-                <FormLabel className="sr-only">Username</FormLabel>
-                <FormControl>
-                  <div className="flex items-center">
-                    <span className="mr-1 text-sm text-nowrap">
-                      {urlTemplate.split("{username}")[0]}
-                    </span>
-                    <Input
-                      type="text"
-                      placeholder="username"
-                      value={extractUsername(field.value)}
-                      onChange={(e) => handleUsernameChange(e.target.value)}
-                      className="flex-1"
-                    />
-                    {urlTemplate.split("{username}")[1] && (
-                      <span className="ml-1 text-sm text-nowrap">
-                        {urlTemplate.split("{username}")[1]}
-                      </span>
-                    )}
-                  </div>
-                </FormControl>
-                <FormMessage />{" "}
-                {/* Will show validation messages for the 'link' field */}
-              </FormItem>
-            )}
-          />
-        )}
-      </div>
-
-      <FormField
-        control={control}
-        name={`socialMedia.${index}.platform` as const}
-        render={({ field: platformField }) => (
-          <FormItem className="mt-2 w-full sm:mt-0 sm:w-48">
-            <FormLabel className="sr-only">Platform</FormLabel>
-            <Select
-              onValueChange={(value) => {
-                platformField.onChange(value);
-                // If in username mode and we have a username, reconstruct URL
-                if (inputMode === "username" && value !== DEFAULT_PLATFORM) {
-                  const currentLink = getValues(
-                    `socialMedia.${index}.link` as const,
-                  );
-                  const username = extractUsername(currentLink);
-                  if (username) {
-                    const newPlatformConfig = SOCIAL_MEDIA_PLATFORMS_LIST.find(
-                      (p) => p.name === value,
-                    );
-                    if (newPlatformConfig?.urlTemplate.includes("{username}")) {
-                      const newUrl = newPlatformConfig.urlTemplate.replace(
-                        "{username}",
-                        username,
-                      );
-                      setValue(`socialMedia.${index}.link`, newUrl, {
-                        shouldValidate: true,
-                      });
-                    } else if (newPlatformConfig) {
-                      // If new platform doesn't use username, set link to username itself or clear?
-                      // This depends on desired behavior. For now, let's assume it keeps username as the link.
-                      setValue(`socialMedia.${index}.link`, username, {
-                        shouldValidate: true,
-                      });
-                    }
-                  }
-                } else if (
-                  value === DEFAULT_PLATFORM &&
-                  inputMode === "username"
-                ) {
-                  // If switching to 'Other' in username mode, clear the link or set to username?
-                  // Let's clear it to force URL input for 'Other'
-                  //setValue(`socialMedia.${index}.link`, '', { shouldValidate: true });
-                }
-              }}
-              value={platformField.value || DEFAULT_PLATFORM}
-            >
-              <FormControl>
-                <SelectTrigger className=" ">
-                  <SelectValue placeholder="Select Platform" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                {SOCIAL_MEDIA_PLATFORMS_LIST.map((p) => (
-                  <SelectItem key={p.name} value={p.name}>
-                    {p.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      <Button
-        type="button"
-        variant="ghost"
-        size="icon"
-        onClick={() => remove(index)}
-        className="mt-2 self-center sm:mt-0 sm:self-start"
-        aria-label="Remove social media link"
-      >
-        <Trash2 className="h-5 w-5" />
-      </Button>
-    </div>
-  );
-};
+} from "./schema/contact-location";
 
 interface ContactLocationFormProps {
-  schoolId: string;
-  initialData?: ContactLocationDto | null;
+  auth: AuthContext;
+  initialData?: School;
   onSuccess?: (data: ContactLocationDto) => void; // Optional: Callback for successful submission
   onError?: (error: Error) => void; // Optional: Callback for error
 }
 
 export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
-  schoolId,
+  auth,
   initialData,
 }) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -438,23 +53,22 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
         street: "",
         city: "",
         state: "",
-        postalCode: "",
-        country: "Rwanda", // Default country
-        googleMapUrl: "",
+        postal_code: "",
+        country: "Rwanda",
+        google_map_url: "",
       },
       contact: initialData?.contact ?? { phone: "", email: "" },
       website: initialData?.website ?? "",
-      socialMedia:
-        initialData?.socialMedia?.map((sm) => ({
-          id: useId, // Assuming `id` is part of SocialMediaLink for key prop if it's from DB
-          link: sm.link || "",
-          platform: sm.platform || detectSocialMediaPlatform(sm.link || ""),
+      social_media:
+        initialData?.social_media?.map((sm) => ({
+          platform: sm.platform || detectSocialMediaPlatform(sm.url || ""),
+          url: sm.url || "",
         })) ?? [],
     },
   });
 
   const { fields, append, remove } = useFieldArray({
-    name: "socialMedia",
+    name: "social_media",
     control: form.control,
   });
 
@@ -463,7 +77,15 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
     setSuccessMessage(null);
 
     startTransition(async () => {
-      const res = await updateSchoolSchoolService(schoolId, values);
+          const res = await apiRequest<ContactLocationDto, School>(
+            "put",
+            `/school/${initialData?.id || initialData?._id}`,
+            values,
+            {
+              token: auth.token,
+              schoolToken: auth.schoolToken,
+            },
+          );;
       if (res.data) {
         showToast({
           type: "success",
@@ -551,7 +173,7 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
               />
               <FormField
                 control={form.control}
-                name="address.postalCode"
+                name="address.postal_code"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
@@ -583,7 +205,7 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
               />
               <FormField
                 control={form.control}
-                name="address.googleMapUrl"
+                name="address.google_map_url"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
@@ -646,7 +268,7 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
               />
               <FormField
                 control={form.control}
-                name="contact.whatsappNumber"
+                name="contact.whatsapp"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="flex space-x-2">
@@ -704,8 +326,8 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
             </FormDescription>
             <div className="mt-3 space-y-4">
               {fields.map((item, index) => (
-                <SocialMediaItem
-                  key={item.id} // item.id is provided by useFieldArray
+                <AddSocialMedia<ContactLocationDto>
+                  key={item.id ?? index}
                   index={index}
                   control={form.control}
                   remove={remove}
@@ -721,8 +343,8 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
               onClick={
                 () =>
                   append({
-                    platform: DEFAULT_PLATFORM,
-                    link: "",
+                    platform: DefaultPlatform,
+                    url: "",
                     // id: crypto.randomUUID(),
                   }) // Ensure new item matches SocialMediaLink type
               }

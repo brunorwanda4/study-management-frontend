@@ -1,3 +1,4 @@
+"use client";
 import { Locale } from "@/i18n";
 import { Class } from "@/lib/schema/class/class-schema";
 import { AuthContext } from "@/lib/utils/auth-context";
@@ -19,7 +20,7 @@ interface Props {
   classes: Class[];
 }
 
-const SendJoinSchoolRequest = async ({ auth, classes }: Props) => {
+const SendJoinSchoolRequest = ({ auth, classes }: Props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>

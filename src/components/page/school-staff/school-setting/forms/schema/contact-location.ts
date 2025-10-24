@@ -1,16 +1,15 @@
-// schemas/contact-location.ts
 import {
+  AddressSchema,
   ContactSchema,
-  SchoolAddress,
   SocialMediaSchema,
-} from "@/lib/schema/school/school.dto";
+} from "@/lib/schema/common-details-schema";
 import { z } from "zod";
 
 export const ContactLocationSchema = z.object({
-  address: SchoolAddress.optional(),
+  address: AddressSchema.optional(),
   contact: ContactSchema.optional(),
   website: z.string().url({ message: "Invalid website URL" }).optional(),
-  socialMedia: z.array(SocialMediaSchema).optional(),
+  social_media: z.array(SocialMediaSchema).optional(),
 });
 
 export type ContactLocationDto = z.infer<typeof ContactLocationSchema>;

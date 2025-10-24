@@ -22,7 +22,7 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import SendJoinSchoolRequest from "../../dialog/send-join-school-request-dialog";
 
 // --- Prisma Schema related types ---
@@ -30,9 +30,6 @@ import SendJoinSchoolRequest from "../../dialog/send-join-school-request-dialog"
 interface SchoolJoinRequestsTableProps {
   requests: JoinSchoolRequestWithRelations[];
   lang: Locale;
-  // Add handlers for actions
-  onApproveRequest?: (id: string) => void;
-  onRejectRequest?: (id: string) => void;
   isLoading?: boolean;
   auth: AuthContext;
   classes: Class[];
@@ -43,11 +40,9 @@ interface SchoolJoinRequestsTableProps {
 export default function SchoolJoinRequestsTable({
   requests,
   lang,
-  onApproveRequest,
-  onRejectRequest,
   classes,
   auth,
-  realtimeEnabled = false,
+  realtimeEnabled = true,
 }: SchoolJoinRequestsTableProps) {
   const { data: initialRequests, isConnected } =
     useRealtimeData<JoinSchoolRequestWithRelations>("join_school_request");
@@ -65,17 +60,13 @@ export default function SchoolJoinRequestsTable({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([
     {
-      id: "updated_at", // Default sort by request date
-      desc: true, // Show newest first
+      id: "updated_at",
+      desc: true,
     },
   ]);
   const [rowSelection, setRowSelection] = useState({});
 
-  // Memoize columns to prevent re-creation on every render unless handlers change
-  const tableColumns = useMemo(
-    () => JoinSchoolRequestColumns(lang, auth),
-    [lang, onApproveRequest, onRejectRequest],
-  );
+  const tableColumns = JoinSchoolRequestColumns(lang, auth);
 
   const table = useReactTable({
     data: displayRequests,
@@ -96,11 +87,6 @@ export default function SchoolJoinRequestsTable({
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
     onSortingChange: setSorting,
     enableSortingRemoval: false,
-    // Add meta for passing handlers or other info if needed via context
-    // meta: {
-    //   approveRequest: onApproveRequest,
-    //   rejectRequest: onRejectRequest,
-    // },
   });
 
   return (

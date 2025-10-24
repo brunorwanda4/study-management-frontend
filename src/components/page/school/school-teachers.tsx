@@ -46,7 +46,7 @@ const SchoolTeachers = ({ lang, onThePage, auth, teachers }: props) => {
       {teachers.map((item) => {
         return (
           <UserCardSmall
-            key={item.id}
+            key={item._id || item.id}
             id={item.id}
             role="t"
             lang={lang}

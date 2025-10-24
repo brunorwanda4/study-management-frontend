@@ -59,7 +59,7 @@ const SchoolStaffStaffPage = async (props: props) => {
       <div className="space-y-4 p-4">
         <div>
           <SchoolStaffTable
-          realtimeEnabled
+            realtimeEnabled
             auth={auth}
             lang={lang}
             staffs={school_staffs_res.data ?? []}

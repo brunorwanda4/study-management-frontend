@@ -13,7 +13,8 @@ export const ClassSchema = z.object({
   _id: z.string().optional(), // ObjectId → string
   name: z.string(),
   username: z.string(),
-  code: z.string().nullable().optional(),
+  code: z.string().optional(),
+  image: z.string().optional(),
 
   school_id: z.string().optional(),
   creator_id: z.string().optional(),

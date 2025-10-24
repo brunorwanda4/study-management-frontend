@@ -3,18 +3,13 @@ import MyLink from "@/components/common/myLink";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Locale } from "@/i18n";
 import { studentImage } from "@/lib/context/images";
-import { TeacherDto } from "@/lib/schema/school/teacher-schema";
+import { TeacherWithRelations } from "@/lib/schema/school/teacher-schema";
+import { formatReadableDate } from "@/lib/utils/format-date";
 import { ColumnDef } from "@tanstack/react-table";
-import { format } from "date-fns"; // Make sure date-fns is installed
 
-// Extend ColumnMeta - This should be done outside the function, typically in a declaration file (.d.ts)
-// or at the top level of your module if not using a separate declaration file.
-// Make sure you only declare this once in your project for the module.
-
-// ========================================================================
-// The complete columns() function
-// ========================================================================
-export const TeacherTableColumns = (lang: Locale): ColumnDef<TeacherDto>[] => {
+export const TeacherTableColumns = (
+  lang: Locale,
+): ColumnDef<TeacherWithRelations>[] => {
   return [
     // --- 1. Selection Column ---
     {
@@ -51,14 +46,16 @@ export const TeacherTableColumns = (lang: Locale): ColumnDef<TeacherDto>[] => {
         <div className="flex items-center space-x-3">
           <MyLink
             loading
-            href={`/${lang}/p/${row.original.userId}teacherId=${row.original.id}`}
-            className="flex-shrink-0" // Prevent avatar shrinking
+            href={`/${lang}/p/${row.original.user?.username}teacherId=${row.original.id}`}
+            className="flex-shrink-0"
           >
             <MyImage
               role="AVATAR"
               className="size-10 rounded-full" // Explicitly rounded
-              src={row.original.image || studentImage} // Use default student image if missing
-              alt={row.original.name || "Student Avatar"} // Add alt text
+              src={
+                row.original.image || row.original.user?.image || studentImage
+              }
+              alt={row.original.name || "Student Avatar"}
             />
           </MyLink>
           <div className="flex flex-col overflow-hidden">
@@ -67,12 +64,10 @@ export const TeacherTableColumns = (lang: Locale): ColumnDef<TeacherDto>[] => {
             <MyLink
               loading
               className="truncate font-medium hover:underline" // Truncate long names
-              href={`/${lang}/p/${row.original.userId}teacherId=${row.original.id}`}
-              //   title={row.original.name || 'View Profile'} // Add title attribute
+              href={`/${lang}/p/${row.original.user?.username}teacherId=${row.original.id}`}
             >
-              {row.original.name || "N/A"} {/* Fallback for name */}
+              {row.original.name || "N/A"}
             </MyLink>
-            {/* Conditionally render email if present */}
             {row.original.email && (
               <span
                 className="text-muted-foreground truncate text-sm"
@@ -90,23 +85,6 @@ export const TeacherTableColumns = (lang: Locale): ColumnDef<TeacherDto>[] => {
       enableSorting: true, // Allow sorting by name
       size: 250, // Suggest a size
     },
-
-    // --- 3. Student ID Column ---
-    // {
-    //     header: "Student ID",
-    //     accessorKey: "id",
-    //     cell: ({ row }) => (
-    //         <div className="font-mono text-xs text-muted-foreground"> {/* Smaller mono font */}
-    //             {row.original.id}
-    //         </div>
-    //     ),
-    //     meta: {
-    //       filterVariant: "text",
-    //     },
-    //     enableSorting: true, // Allow sorting by ID
-    //     size: 150, // Suggest a size
-    // },
-
     // --- 4. Gender Column ---
     {
       header: "Gender",
@@ -132,8 +110,6 @@ export const TeacherTableColumns = (lang: Locale): ColumnDef<TeacherDto>[] => {
       size: 100, // Suggest a size
     },
 
-    // --- 5. Age Column ---
-
     // --- 7. Phone Column ---
     {
       header: "Phone",
@@ -155,12 +131,11 @@ export const TeacherTableColumns = (lang: Locale): ColumnDef<TeacherDto>[] => {
     // --- 8. Enrollment Date Column ---
     {
       header: "Enrolled On",
-      accessorKey: "createAt",
+      accessorKey: "create_at",
       cell: ({ row }) => (
         <div className="text-sm">
-          {row.original.createAt ? (
-            // Ensure createAt is treated as a Date object or valid date string
-            format(new Date(row.original.createAt), "yyyy-MM-dd")
+          {row.original.created_at ? (
+            formatReadableDate(row.original.created_at)
           ) : (
             <span className="text-muted-foreground">-</span>
           )}

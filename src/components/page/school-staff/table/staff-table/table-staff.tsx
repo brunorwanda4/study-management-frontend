@@ -93,17 +93,8 @@ export default function SchoolStaffTable({
         <div className="w-44">
           <TableFilter column={table.getColumn("name")!} />
         </div>
-        <div className="w-36">
-          <TableFilter column={table.getColumn("id")!} />
-        </div>
         <div className="w-32">
           <TableFilter column={table.getColumn("gender")!} />
-        </div>
-        <div className="w-40">
-          <TableFilter column={table.getColumn("class.name")!} />
-        </div>
-        <div className="w-36">
-          <TableFilter column={table.getColumn("age")!} />
         </div>
         <div className="w-40">
           <TableFilter column={table.getColumn("phone")!} />

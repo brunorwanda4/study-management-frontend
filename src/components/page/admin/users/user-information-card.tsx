@@ -15,8 +15,7 @@ import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
 import { UserModel } from "@/lib/schema/user/user-schema";
 import { cn } from "@/lib/utils";
 import { AuthContext } from "@/lib/utils/auth-context";
-import { calculateAge } from "@/lib/utils/calculate-age";
-import { formatReadableDate } from "@/lib/utils/format-date";
+import { calculateAge, formatReadableDate } from "@/lib/utils/format-date";
 import { generateImageProfile } from "@/lib/utils/generate-profile-image";
 import { useEffect, useState } from "react";
 
@@ -130,7 +129,7 @@ const UserInformation = ({ auth, initialUser }: PropsUser) => {
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <p className="cursor-pointer font-medium">
-                        {calculateAge(birthDate)} years old
+                        {calculateAge(currentUser.age)} years old
                       </p>
                     </TooltipTrigger>
                     <TooltipContent>
