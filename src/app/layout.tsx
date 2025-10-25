@@ -1,7 +1,7 @@
 import { ThemeProvider } from "@/components/theme-provider";
-import { Locale } from "@/i18n"; // ✅ import your Locale type
 import { ToastManager } from "@/lib/context/toast/ToastContext";
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -34,14 +34,12 @@ export const metadata: Metadata = {
   },
 };
 
-// ✅ FIX: include params
-export default async function RootLayout({
-  children,
-  params,
-}: {
-  children: React.ReactNode;
-  params: { lang: Locale }; // or { lang: string } if Locale is not strict
-}) {
+interface LayoutProps {
+  children: ReactNode;
+  params: { lang: string };
+}
+
+export default function RootLayout({ children, params }: LayoutProps) {
   const { lang } = params;
 
   return (

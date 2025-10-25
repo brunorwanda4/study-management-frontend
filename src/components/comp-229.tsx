@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { useId, useState } from "react"
-import { CheckIcon, ChevronDownIcon } from "lucide-react"
+import { useId, useState } from "react";
+import { CheckIcon, ChevronDownIcon } from "lucide-react";
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -12,13 +12,13 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command"
-import { Label } from "@/components/ui/label"
+} from "@/components/ui/command";
+import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
 
 const frameworks = [
   {
@@ -85,12 +85,12 @@ const frameworks = [
     value: "lit",
     label: "Lit",
   },
-]
+];
 
 export default function Component() {
-  const id = useId()
-  const [open, setOpen] = useState<boolean>(false)
-  const [value, setValue] = useState<string>("")
+  const id = useId();
+  const [open, setOpen] = useState<boolean>(false);
+  const [value, setValue] = useState<string>("");
 
   return (
     <div className="*:not-first:mt-2">
@@ -131,8 +131,8 @@ export default function Component() {
                     key={framework.value}
                     value={framework.value}
                     onSelect={(currentValue) => {
-                      setValue(currentValue === value ? "" : currentValue)
-                      setOpen(false)
+                      setValue(currentValue === value ? "" : currentValue);
+                      setOpen(false);
                     }}
                   >
                     {framework.label}
@@ -147,5 +147,5 @@ export default function Component() {
         </PopoverContent>
       </Popover>
     </div>
-  )
+  );
 }

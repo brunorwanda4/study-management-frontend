@@ -2,10 +2,10 @@ import SubjectCollectionDetails from "@/components/page/admin/main-subject/main-
 import MainSubjectsTableCollection from "@/components/page/admin/main-subject/main-subjects-table-collection";
 import ErrorPage from "@/components/page/error-page";
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
-import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
+import type { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
 import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {

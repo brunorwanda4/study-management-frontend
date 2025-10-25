@@ -22,7 +22,7 @@ const StaffEvents = ({ request }: props) => {
     <div
       className={cn(
         " card p-2 duration-200",
-        theme === "dark" ? "hover:bg-white/10" : "hover:bg-black/10"
+        theme === "dark" ? "hover:bg-white/10" : "hover:bg-black/10",
       )}
     >
       <div className="space-y-4">
@@ -32,7 +32,9 @@ const StaffEvents = ({ request }: props) => {
             <AvatarFallback>PR</AvatarFallback>
           </Avatar>
           <div className=" flex flex-col">
-            {request.name && <h4 className="basic-title text-base">{request.name}</h4>}
+            {request.name && (
+              <h4 className="basic-title text-base">{request.name}</h4>
+            )}
             {request.email && <span>{request.email}</span>}
           </div>
         </div>
@@ -56,7 +58,7 @@ const StaffEvents = ({ request }: props) => {
             <p
               className={cn(
                 "text-sm text-gray-300",
-                isExpanded ? "" : "line-clamp-1"
+                isExpanded ? "" : "line-clamp-1",
               )}
             >
               Voting school prifects Lorem ipsum dolor sit, amet consectetur

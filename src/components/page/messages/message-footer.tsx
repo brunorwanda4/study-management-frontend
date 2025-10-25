@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { ChangeEvent, useId, useRef } from "react";
+import { type ChangeEvent, useId, useRef } from "react";
 import { BsEmojiSmile } from "react-icons/bs";
 import { GrAttachment } from "react-icons/gr";
 import { VscSend } from "react-icons/vsc";
@@ -36,10 +36,10 @@ const MessageFooter = () => {
   return (
     <footer className=" bottom-0 absolute w-full border-t border-t-base-300 bg-base-200">
       <div className=" flex w-full py-4 space-x-2 px-4 items-end">
-        <Button variant="ghost" size="md" shape="circle">
+        <Button variant="ghost" size="md" library="daisy" shape="circle">
           <BsEmojiSmile size={20} />
         </Button>
-        <Button variant="ghost" size="md" shape="circle">
+        <Button variant="ghost" size="md" library="daisy" shape="circle">
           <GrAttachment size={20} />
         </Button>
         <div className=" w-full">
@@ -52,10 +52,10 @@ const MessageFooter = () => {
             ref={textareaRef}
             onChange={handleInput}
             rows={defaultRows}
-            className="resize-none min-h-0 max-h-[160px] overflow-y-auto scrollbar-hide w-full"
+            className="resize-none min-h-0 max-h-40 overflow-y-auto scrollbar-hide w-full"
           />
         </div>
-        <Button variant="ghost" size="md" shape="circle">
+        <Button variant="ghost" size="md" library="daisy" shape="circle">
           <VscSend size={20} />
         </Button>
       </div>

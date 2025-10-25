@@ -1,12 +1,9 @@
-
 /**
  * An Array of routes that are accessible  to the public
  * @type {string[]}
  */
 
-export const publicRoutes = [
-    "/",
-];
+export const publicRoutes = ["/"];
 
 /**
  * An Array of routes that are accessible for authentication
@@ -14,10 +11,7 @@ export const publicRoutes = [
  * @type {string[]}
  */
 
-export const authRoutes = [
-    "/auth/login",
-    "/auth/register",
-]
+export const authRoutes = ["/auth/login", "/auth/register"];
 
 /**
  * An Array of routes that are accessible for routes
@@ -26,7 +20,6 @@ export const authRoutes = [
  */
 
 export const apiAuthPrefix: string = "/api/oauth";
-
 
 /**
  * the default redirect path after login

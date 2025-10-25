@@ -11,7 +11,7 @@ export function isValidName(name: string): Promise<string> {
       return Promise.resolve(name);
     } else {
       return Promise.reject(
-        "Name is valid but not a full name. Please provide both first and last names."
+        "Name is valid but not a full name. Please provide both first and last names.",
       );
     }
   } else {
@@ -22,14 +22,14 @@ export function isValidName(name: string): Promise<string> {
     if (correctedName) {
       return Promise.reject(
         `Name contains disallowed characters [${invalidChars.join(
-          ""
-        )}]. Suggested name: '${correctedName}'.`
+          "",
+        )}]. Suggested name: '${correctedName}'.`,
       );
     } else {
       return Promise.reject(
         `Name contains disallowed characters [${invalidChars.join(
-          ""
-        )}]. Please try another name.`
+          "",
+        )}]. Please try another name.`,
       );
     }
   }
@@ -60,7 +60,7 @@ export function isValidUsername(username: string): Promise<string> {
     return Promise.resolve(username);
   } else {
     const invalidChars = [...username].filter(
-      (char) => !usernameRegex.test(char)
+      (char) => !usernameRegex.test(char),
     );
     const correctedUsername = [...username]
       .filter((char) => usernameRegex.test(char))
@@ -68,14 +68,14 @@ export function isValidUsername(username: string): Promise<string> {
     if (correctedUsername) {
       return Promise.reject(
         `Invalid username: contains disallowed characters [${invalidChars.join(
-          ""
-        )}]. Suggested username: '${correctedUsername}'.`
+          "",
+        )}]. Suggested username: '${correctedUsername}'.`,
       );
     } else {
       return Promise.reject(
         `Invalid username: contains disallowed characters [${invalidChars.join(
-          ""
-        )}]. Please try another name.`
+          "",
+        )}]. Please try another name.`,
       );
     }
   }
@@ -117,7 +117,7 @@ export function isValidEmail(email: string): Promise<string> {
     return Promise.resolve(email);
   } else {
     return Promise.reject(
-      "Invalid email address. Please provide a valid email."
+      "Invalid email address. Please provide a valid email.",
     );
   }
 }
@@ -127,7 +127,7 @@ export function generateCode(): string {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   return Array.from(
     { length: 5 },
-    () => chars[Math.floor(Math.random() * chars.length)]
+    () => chars[Math.floor(Math.random() * chars.length)],
   ).join("");
 }
 
@@ -137,6 +137,6 @@ export function isDateString(date: string): boolean {
   return datetimeRegex.test(date);
 }
 
-export function toLowerCase(str : string) {
+export function toLowerCase(str: string) {
   return str.toLowerCase();
 }

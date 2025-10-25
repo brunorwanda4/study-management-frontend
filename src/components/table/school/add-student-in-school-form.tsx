@@ -57,8 +57,6 @@ const AddStudentInSchoolForm = () => {
           />
         </div>
 
-
-
         <AlertDialogFooter>
           <Button type="submit" library="daisy" variant={"info"}>
             Add Student

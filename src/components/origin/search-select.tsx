@@ -1,6 +1,6 @@
 "use client";
 
-import {  useState } from "react";
+import { useState } from "react";
 import { CheckIcon, ChevronDownIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -82,7 +82,7 @@ export default function Component() {
 
   return (
     <div className="*:not-first:mt-2">
-      <Label >Select with search</Label>
+      <Label>Select with search</Label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -93,8 +93,9 @@ export default function Component() {
           >
             <span className={cn("truncate", !value && " ")}>
               {value
-                ? SchoolStaffRoles.find((framework) => framework.value === value)
-                    ?.label
+                ? SchoolStaffRoles.find(
+                    (framework) => framework.value === value,
+                  )?.label
                 : "Select framework"}
             </span>
             <ChevronDownIcon

@@ -1,7 +1,6 @@
- import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 const UserCardSmallSmall = () => {
-  
   return (
     <div className=" flex space-x-1">
       <Avatar className=" size-8">

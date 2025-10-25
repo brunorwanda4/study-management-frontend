@@ -11,7 +11,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { Option } from "@/lib/schema/common-details-schema";
+import type { Option } from "@/lib/schema/common-details-schema";
 import { cn } from "@/lib/utils";
 
 interface GroupOption {

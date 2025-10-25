@@ -140,7 +140,7 @@ const SidebarGroupComponent = ({
                                 href={subItem.url}
                                 className={cn(
                                   "ml-8 flex items-center gap-2 btn-xs btn-ghost  rounded-md",
-                                  path === subItem.url && "btn-info"
+                                  path === subItem.url && "btn-info",
                                 )}
                               >
                                 {subItem.icon && (
@@ -171,7 +171,7 @@ const SidebarGroupComponent = ({
                       href={item.url}
                       className={cn(
                         "flex items-center gap-2 font-normal",
-                        path === item.url && "text-info"
+                        path === item.url && "text-info",
                       )}
                     >
                       {item.icon && <item.icon className="w-5 h-5" />}
@@ -185,7 +185,7 @@ const SidebarGroupComponent = ({
                   )}
                 </SidebarMenuButton>
               </SidebarMenuItem>
-            )
+            ),
           )}
         </SidebarMenu>
       </SidebarGroupContent>

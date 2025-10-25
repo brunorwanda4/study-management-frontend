@@ -24,7 +24,9 @@ export const ClientThemeWrapper = ({ children }: Props) => {
       enableSystem
       disableTransitionOnChange
     >
-      <main data-theme={theme} className="">{children}</main>
+      <main data-theme={theme} className="">
+        {children}
+      </main>
     </NextThemeProvider>
   );
 };

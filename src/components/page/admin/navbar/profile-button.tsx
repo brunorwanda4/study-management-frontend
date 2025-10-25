@@ -9,19 +9,19 @@ import {
 import UseTheme from "@/context/theme/use-theme";
 
 const ProfileButton = () => {
-  const theme = UseTheme()
+  const theme = UseTheme();
   return (
     <DropdownMenu>
-    <DropdownMenuTrigger asChild className="">
-      <Button variant="ghost" className="  " size="sm">
-        <LucideChevronsUpDown  />
-      </Button>
-    </DropdownMenuTrigger>
-    <DropdownMenuContent ata-theme={theme} className="w-56 bg-base-300 p-4">
-      hello world
-    </DropdownMenuContent>
-  </DropdownMenu>
-  )
-}
+      <DropdownMenuTrigger asChild className="">
+        <Button variant="ghost" className="  " size="sm">
+          <LucideChevronsUpDown />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent ata-theme={theme} className="w-56 bg-base-300 p-4">
+        hello world
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
 
-export default ProfileButton
+export default ProfileButton;

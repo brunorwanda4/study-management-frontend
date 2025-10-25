@@ -9,13 +9,13 @@ import {
   Percent,
   Star,
 } from "lucide-react";
-import * as React from "react";
+import type * as React from "react";
 import {
   Input as AriaInput,
   Button,
   Group,
   NumberField,
-  NumberFieldProps,
+  type NumberFieldProps,
 } from "react-aria-components";
 
 type NumberInputMode = "currency" | "hours" | "percent" | "default" | "level";

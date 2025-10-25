@@ -1,5 +1,5 @@
-import { Locale } from "@/i18n";
-import { ClassDto } from "@/lib/schema/class/class-schema";
+import type { Locale } from "@/i18n";
+import type { MainClassModel } from "@/lib/schema/admin/main-classes-schema";
 import { Dot } from "lucide-react";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
@@ -8,7 +8,7 @@ import { Separator } from "../ui/separator";
 
 interface props {
   lang: Locale;
-  mainClass?: ClassDto | null;
+  mainClass?: MainClassModel | null;
 }
 
 const MainClassCard = ({ lang, mainClass }: props) => {
@@ -17,9 +17,7 @@ const MainClassCard = ({ lang, mainClass }: props) => {
       <div className="relative">
         <div className="flex items-center gap-2 p-4">
           <Avatar className="size-20">
-            <AvatarImage
-              src={mainClass?.image ? mainClass.image : "/images/19.jpg"}
-            />
+            <AvatarImage src={"/images/19.jpg"} />
             <AvatarFallback>LOGO</AvatarFallback>
           </Avatar>
           <div className="space-x-1">

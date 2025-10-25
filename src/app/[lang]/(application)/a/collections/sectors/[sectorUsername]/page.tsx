@@ -3,11 +3,11 @@ import SectorTradesCard from "@/components/page/admin/sector/sector-trades-card"
 import ErrorPage from "@/components/page/error-page";
 import NotFoundPage from "@/components/page/not-found";
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
-import { SectorModel } from "@/lib/schema/admin/sectorSchema";
-import { TradeModule } from "@/lib/schema/admin/tradeSchema";
+import type { SectorModel } from "@/lib/schema/admin/sectorSchema";
+import type { TradeModule } from "@/lib/schema/admin/tradeSchema";
 import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 export async function generateMetadata({

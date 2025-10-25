@@ -1,7 +1,8 @@
 import MyImage from "@/components/common/myImage";
-import { Locale } from "@/i18n";
-import { ClassDto } from "@/lib/schema/class/class-schema";
+import type { Locale } from "@/i18n";
+import type { Class } from "@/lib/schema/class/class-schema";
 import { cn } from "@/lib/utils";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import { Dot } from "lucide-react";
 import Link from "next/link";
 import { TextTooltip } from "../common/text-tooltip";
@@ -16,7 +17,8 @@ interface props {
   isOther?: boolean; // others users which are not in class
   isStudent?: boolean;
   isNotes?: boolean;
-  myClass?: ClassDto | null;
+  myClass?: Class | null;
+  auth: AuthContext;
 }
 
 const ClassCard = async ({
@@ -27,8 +29,8 @@ const ClassCard = async ({
   isStudent,
   myClass,
   isNotes,
+  auth,
 }: props) => {
-  const getUser = await authContext();
   return (
     <div className="basic-card relative h-auto p-0">
       <div className="relative">
@@ -93,7 +95,7 @@ const ClassCard = async ({
               <div className="flex items-center space-x-2 text-sm">
                 <Avatar className="size-4">
                   <AvatarImage
-                    src={getUser?.image ? getUser.image : "/images/17.jpg"}
+                    src={auth.user?.image ? auth.user.image : "/images/17.jpg"}
                   />
                   <AvatarFallback className="text-sm">LOGO</AvatarFallback>
                 </Avatar>
@@ -103,15 +105,17 @@ const ClassCard = async ({
                     "link-hover line-clamp-1",
                     isClassTeacher ? "text-myGray" : "",
                   )}
-                  href={`/${lang}/profile/${
-                    myClass?.creatorId ? myClass.creatorId : 1232
+                  href={`/${lang}/p/${
+                    myClass?.username ? myClass.username : 1232
                   }`}
                 >
                   <TextTooltip
                     content={"Class Teacher"}
                     trigger={
                       <span>
-                        {getUser?.username ? getUser.username : getUser?.name}
+                        {auth.user?.username
+                          ? auth.user.username
+                          : auth.user?.name}
                       </span>
                     }
                   />

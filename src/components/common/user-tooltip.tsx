@@ -14,8 +14,7 @@ interface props {
   lang: Locale;
 }
 
-export default function UserTooltip({ trigger , lang}: props) {
-  
+export default function UserTooltip({ trigger, lang }: props) {
   return (
     <HoverCard>
       <HoverCardTrigger asChild>{trigger}</HoverCardTrigger>
@@ -45,7 +44,14 @@ export default function UserTooltip({ trigger , lang}: props) {
             </div>
           </div>
           <Link href={`/${lang}/messages/student`}>
-          <Button library="daisy" variant="info" size="sm" className=" w-full">Message</Button>
+            <Button
+              library="daisy"
+              variant="info"
+              size="sm"
+              className=" w-full"
+            >
+              Message
+            </Button>
           </Link>
         </div>
       </HoverCardContent>

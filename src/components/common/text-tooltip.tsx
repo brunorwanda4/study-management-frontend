@@ -7,11 +7,11 @@ import {
 } from "@/components/ui/tooltip";
 
 interface props {
-    content : string | React.ReactNode,
-    trigger : string | React.ReactNode;
+  content: string | React.ReactNode;
+  trigger: string | React.ReactNode;
 }
 
-export const TextTooltip = ({content , trigger} : props) => {
+export const TextTooltip = ({ content, trigger }: props) => {
   return (
     <TooltipProvider delayDuration={0}>
       <Tooltip>

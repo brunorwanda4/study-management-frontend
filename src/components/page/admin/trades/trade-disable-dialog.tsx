@@ -15,9 +15,9 @@ import {
 } from "@/components/ui/alert-dialog";
 import { buttonVariants } from "@/components/ui/button";
 import { useToast } from "@/lib/context/toast/ToastContext";
-import { TradeModule } from "@/lib/schema/admin/tradeSchema";
+import type { TradeModule } from "@/lib/schema/admin/tradeSchema";
 import { cn } from "@/lib/utils";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { LoaderCircle } from "lucide-react";
 import { useState, useTransition } from "react";

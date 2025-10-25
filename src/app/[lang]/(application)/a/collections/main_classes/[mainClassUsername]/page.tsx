@@ -3,14 +3,14 @@ import MainClassSubjectsCard from "@/components/page/admin/main-class/main-class
 import ErrorPage from "@/components/page/error-page";
 import NotFoundPage from "@/components/page/not-found";
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
-import {
+import type {
   MainClassModel,
   MainClassModelWithOthers,
 } from "@/lib/schema/admin/main-classes-schema";
-import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
+import type { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
 import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 /**

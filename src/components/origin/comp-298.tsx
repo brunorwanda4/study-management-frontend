@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import { useCallback, useEffect, useRef, useState } from "react"
-import { CircleCheckIcon, XIcon } from "lucide-react"
+import { useCallback, useEffect, useRef, useState } from "react";
+import { CircleCheckIcon, XIcon } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Toast,
   ToastAction,
@@ -12,12 +12,12 @@ import {
   ToastProvider,
   ToastTitle,
   ToastViewport,
-} from "@/components/ui/toast"
+} from "@/components/ui/toast";
 
 interface UseProgressTimerProps {
-  duration: number
-  interval?: number
-  onComplete?: () => void
+  duration: number;
+  interval?: number;
+  onComplete?: () => void;
 }
 
 function useProgressTimer({
@@ -25,68 +25,68 @@ function useProgressTimer({
   interval = 100,
   onComplete,
 }: UseProgressTimerProps) {
-  const [progress, setProgress] = useState(duration)
-  const timerRef = useRef(0)
+  const [progress, setProgress] = useState(duration);
+  const timerRef = useRef(0);
   const timerState = useRef({
     startTime: 0,
     remaining: duration,
     isPaused: false,
-  })
+  });
 
   const cleanup = useCallback(() => {
-    window.clearInterval(timerRef.current)
-  }, [])
+    window.clearInterval(timerRef.current);
+  }, []);
 
   const reset = useCallback(() => {
-    cleanup()
-    setProgress(duration)
+    cleanup();
+    setProgress(duration);
     timerState.current = {
       startTime: 0,
       remaining: duration,
       isPaused: false,
-    }
-  }, [duration, cleanup])
+    };
+  }, [duration, cleanup]);
 
   const start = useCallback(() => {
-    const state = timerState.current
-    state.startTime = Date.now()
-    state.isPaused = false
+    const state = timerState.current;
+    state.startTime = Date.now();
+    state.isPaused = false;
 
     timerRef.current = window.setInterval(() => {
-      const elapsedTime = Date.now() - state.startTime
-      const remaining = Math.max(0, state.remaining - elapsedTime)
+      const elapsedTime = Date.now() - state.startTime;
+      const remaining = Math.max(0, state.remaining - elapsedTime);
 
-      setProgress(remaining)
+      setProgress(remaining);
 
       if (remaining <= 0) {
-        cleanup()
-        onComplete?.()
+        cleanup();
+        onComplete?.();
       }
-    }, interval)
-  }, [interval, cleanup, onComplete])
+    }, interval);
+  }, [interval, cleanup, onComplete]);
 
   const pause = useCallback(() => {
-    const state = timerState.current
+    const state = timerState.current;
     if (!state.isPaused) {
-      cleanup()
+      cleanup();
       state.remaining = Math.max(
         0,
-        state.remaining - (Date.now() - state.startTime)
-      )
-      state.isPaused = true
+        state.remaining - (Date.now() - state.startTime),
+      );
+      state.isPaused = true;
     }
-  }, [cleanup])
+  }, [cleanup]);
 
   const resume = useCallback(() => {
-    const state = timerState.current
+    const state = timerState.current;
     if (state.isPaused && state.remaining > 0) {
-      start()
+      start();
     }
-  }, [start])
+  }, [start]);
 
   useEffect(() => {
-    return cleanup
-  }, [cleanup])
+    return cleanup;
+  }, [cleanup]);
 
   return {
     progress,
@@ -94,39 +94,39 @@ function useProgressTimer({
     pause,
     resume,
     reset,
-  }
+  };
 }
 
 export default function Component() {
-  const [open, setOpen] = useState(false)
-  const toastDuration = 5000
+  const [open, setOpen] = useState(false);
+  const toastDuration = 5000;
   const { progress, start, pause, resume, reset } = useProgressTimer({
     duration: toastDuration,
     onComplete: () => setOpen(false),
-  })
+  });
 
   const handleOpenChange = useCallback(
     (isOpen: boolean) => {
-      setOpen(isOpen)
+      setOpen(isOpen);
       if (isOpen) {
-        reset()
-        start()
+        reset();
+        start();
       }
     },
-    [reset, start]
-  )
+    [reset, start],
+  );
 
   const handleButtonClick = useCallback(() => {
     if (open) {
-      setOpen(false)
+      setOpen(false);
       // Wait for the close animation to finish
       window.setTimeout(() => {
-        handleOpenChange(true)
-      }, 150)
+        handleOpenChange(true);
+      }, 150);
     } else {
-      handleOpenChange(true)
+      handleOpenChange(true);
     }
-  }, [open, handleOpenChange])
+  }, [open, handleOpenChange]);
 
   return (
     <ToastProvider swipeDirection="left">
@@ -184,5 +184,5 @@ export default function Component() {
       </Toast>
       <ToastViewport className="sm:right-auto sm:left-0" />
     </ToastProvider>
-  )
+  );
 }

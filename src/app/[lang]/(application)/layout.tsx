@@ -8,17 +8,18 @@ import {
 import { AppSidebar } from "@/components/page/application/aside/app-sidebar";
 import AppNav from "@/components/page/application/navbard/app-nav";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { authContext } from "@/lib/utils/auth-context";
 import { redirect } from "next/navigation";
+import type React from "react";
 
 interface Props {
-  params: { lang: Locale };
+  params: { lang: Locale }; // ✅ remove Promise here
   children: React.ReactNode;
 }
 
-const ApplicationLayout = async ({ params, children }: Props) => {
-  const { lang } = params;
+export default async function ApplicationLayout({ params, children }: Props) {
+  const { lang } = params; // ✅ no await
   const auth = await authContext();
 
   if (!auth) {
@@ -48,6 +49,4 @@ const ApplicationLayout = async ({ params, children }: Props) => {
       </div>
     </SidebarProvider>
   );
-};
-
-export default ApplicationLayout;
+}

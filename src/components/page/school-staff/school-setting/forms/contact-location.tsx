@@ -77,15 +77,15 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
     setSuccessMessage(null);
 
     startTransition(async () => {
-          const res = await apiRequest<ContactLocationDto, School>(
-            "put",
-            `/school/${initialData?.id || initialData?._id}`,
-            values,
-            {
-              token: auth.token,
-              schoolToken: auth.schoolToken,
-            },
-          );;
+      const res = await apiRequest<ContactLocationDto, School>(
+        "put",
+        `/school/${initialData?.id || initialData?._id}`,
+        values,
+        {
+          token: auth.token,
+          schoolToken: auth.schoolToken,
+        },
+      );
       if (res.data) {
         showToast({
           type: "success",

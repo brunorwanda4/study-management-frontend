@@ -1,10 +1,10 @@
 import CollectionsTable from "@/components/page/admin/database/collections_table";
 import DatabaseHeader from "@/components/page/admin/database/databaseHeader";
 import ErrorPage from "@/components/page/error-page";
-import { DatabaseStats } from "@/lib/types/databaseStatus";
+import type { DatabaseStats } from "@/lib/types/databaseStatus";
 import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {

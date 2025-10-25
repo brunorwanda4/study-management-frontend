@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
-import { DayPicker } from "react-day-picker"
+import * as React from "react";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { DayPicker } from "react-day-picker";
 
-import { cn } from "@/lib/utils"
-import { shadcnVariants } from "@/components/ui/button"
+import { cn } from "@/lib/utils";
+import { shadcnVariants } from "@/components/ui/button";
 
 function Calendar({
   className,
@@ -23,11 +23,11 @@ function Calendar({
     nav: "absolute top-0 flex w-full justify-between z-10",
     button_previous: cn(
       shadcnVariants({ variant: "ghost" }),
-      "size-9 text-muted-foreground/80 hover:text-foreground p-0"
+      "size-9 text-muted-foreground/80 hover:text-foreground p-0",
     ),
     button_next: cn(
       shadcnVariants({ variant: "ghost" }),
-      "size-9 text-muted-foreground/80 hover:text-foreground p-0"
+      "size-9 text-muted-foreground/80 hover:text-foreground p-0",
     ),
     weekday: "size-9 p-0 text-xs font-medium text-muted-foreground/80",
     day_button:
@@ -42,41 +42,41 @@ function Calendar({
       "text-muted-foreground data-selected:bg-accent/50 data-selected:text-muted-foreground",
     hidden: "invisible",
     week_number: "size-9 p-0 text-xs font-medium text-muted-foreground/80",
-  }
+  };
 
   const mergedClassNames: typeof defaultClassNames = Object.keys(
-    defaultClassNames
+    defaultClassNames,
   ).reduce(
     (acc, key) => ({
       ...acc,
       [key]: classNames?.[key as keyof typeof classNames]
         ? cn(
             defaultClassNames[key as keyof typeof defaultClassNames],
-            classNames[key as keyof typeof classNames]
+            classNames[key as keyof typeof classNames],
           )
         : defaultClassNames[key as keyof typeof defaultClassNames],
     }),
-    {} as typeof defaultClassNames
-  )
+    {} as typeof defaultClassNames,
+  );
 
   const defaultComponents = {
     Chevron: (props: {
-      className?: string
-      size?: number
-      disabled?: boolean
-      orientation?: "left" | "right" | "up" | "down"
+      className?: string;
+      size?: number;
+      disabled?: boolean;
+      orientation?: "left" | "right" | "up" | "down";
     }) => {
       if (props.orientation === "left") {
-        return <ChevronLeftIcon size={16} {...props} aria-hidden="true" />
+        return <ChevronLeftIcon size={16} {...props} aria-hidden="true" />;
       }
-      return <ChevronRightIcon size={16} {...props} aria-hidden="true" />
+      return <ChevronRightIcon size={16} {...props} aria-hidden="true" />;
     },
-  }
+  };
 
   const mergedComponents = {
     ...defaultComponents,
     ...userComponents,
-  }
+  };
 
   return (
     <DayPicker
@@ -86,7 +86,7 @@ function Calendar({
       components={mergedComponents}
       {...props}
     />
-  )
+  );
 }
 
-export { Calendar }
+export { Calendar };

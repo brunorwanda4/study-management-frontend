@@ -85,7 +85,7 @@ export function CustomToast({
   action,
   progress,
   toastDuration,
-  variant
+  variant,
 }: // variant, // Example if you added variant prop
 CustomToastProps) {
   const { Icon, iconClass, progressClass } = getToastStyle(type);
@@ -97,7 +97,7 @@ CustomToastProps) {
       onOpenChange={onOpenChange}
       onPause={onPause}
       onResume={onResume}
-      variant={variant || (type === 'error' ? 'destructive' : 'default')} // Example: map type to variant if needed
+      variant={variant || (type === "error" ? "destructive" : "default")} // Example: map type to variant if needed
       // duration={toastDuration} // Pass duration if shadcn/ui <Toast> uses it directly (check its API)
       // Usually, we handle duration externally with the timer,
       // but passing it might be useful for accessibility/screen readers.

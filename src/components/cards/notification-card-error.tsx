@@ -1,9 +1,5 @@
 const NotificationCardError = () => {
-  return (
-    <div>
-      notification error
-    </div>
-  )
-}
+  return <div>notification error</div>;
+};
 
-export default NotificationCardError
+export default NotificationCardError;

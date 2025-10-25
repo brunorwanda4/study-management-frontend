@@ -1,11 +1,17 @@
-"use client"
+"use client";
 
-import { Plus } from "lucide-react"
+import { Plus } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
 export function RoleManagement() {
   return (
@@ -18,7 +24,9 @@ export function RoleManagement() {
             Create Role
           </Button>
         </div>
-        <CardDescription>Define roles and assign permissions to staff members</CardDescription>
+        <CardDescription>
+          Define roles and assign permissions to staff members
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-6">
@@ -65,7 +73,9 @@ export function RoleManagement() {
             <div className="flex items-center justify-between p-4">
               <div>
                 <h3 className="font-semibold">Teacher</h3>
-                <p className="text-sm  ">Teaching staff with content creation access</p>
+                <p className="text-sm  ">
+                  Teaching staff with content creation access
+                </p>
               </div>
               <div className="flex items-center gap-2">
                 <Badge>24 Users</Badge>
@@ -126,5 +136,5 @@ export function RoleManagement() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

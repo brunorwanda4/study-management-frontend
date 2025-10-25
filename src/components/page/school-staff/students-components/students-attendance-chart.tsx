@@ -1,7 +1,11 @@
-"use client"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+"use client";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
 
 export default function StudentAttendanceChart() {
   // Sample student attendance data for the past week
@@ -11,7 +15,7 @@ export default function StudentAttendanceChart() {
     { day: "Wednesday", attendance: 45 },
     { day: "Thursday", attendance: 40 },
     { day: "Friday", attendance: 35 },
-  ]
+  ];
 
   return (
     <Card className="w-full max-w-3xl mx-auto">
@@ -39,7 +43,12 @@ export default function StudentAttendanceChart() {
             }}
           >
             <CartesianGrid vertical={false} strokeDasharray="3 3" />
-            <XAxis dataKey="day" tickLine={false} axisLine={false} tickMargin={10} />
+            <XAxis
+              dataKey="day"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={10}
+            />
             <YAxis
               tickLine={false}
               axisLine={false}
@@ -54,7 +63,12 @@ export default function StudentAttendanceChart() {
               }}
             />
             <ChartTooltip content={<ChartTooltipContent />} />
-            <Bar dataKey="attendance" fill="var(--color-attendance)" radius={[4, 4, 0, 0]} barSize={40} />
+            <Bar
+              dataKey="attendance"
+              fill="var(--color-attendance)"
+              radius={[4, 4, 0, 0]}
+              barSize={40}
+            />
           </BarChart>
         </ChartContainer>
         <div className="mt-4 flex justify-between text-sm  ">
@@ -66,6 +80,5 @@ export default function StudentAttendanceChart() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
-

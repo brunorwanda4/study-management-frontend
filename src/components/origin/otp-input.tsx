@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import { useId } from "react"
-import { OTPInput, SlotProps } from "input-otp"
+import { useId } from "react";
+import { OTPInput, SlotProps } from "input-otp";
 
-import { cn } from "@/lib/utils"
-import { Label } from "@/components/ui/label"
+import { cn } from "@/lib/utils";
+import { Label } from "@/components/ui/label";
 
 export default function OTPInput_() {
-  const id = useId()
+  const id = useId();
   return (
     <div className="*:not-first:mt-2">
       <Label htmlFor={id}>OTP input (spaced)</Label>
@@ -39,7 +39,7 @@ export default function OTPInput_() {
         </a>
       </p>
     </div>
-  )
+  );
 }
 
 function Slot(props: SlotProps) {
@@ -47,10 +47,10 @@ function Slot(props: SlotProps) {
     <div
       className={cn(
         "border-base-300 bg-background text-foreground flex size-9 items-center justify-center rounded-md border font-medium shadow-xs transition-[color,box-shadow]",
-        { "border-ring ring-ring/50 z-10 ring-[3px]": props.isActive }
+        { "border-ring ring-ring/50 z-10 ring-[3px]": props.isActive },
       )}
     >
       {props.char !== null && <div>{props.char}</div>}
     </div>
-  )
+  );
 }

@@ -8,7 +8,6 @@ interface props {
 type MessageTypes = "friends" | "requests";
 
 const MessagesAsideNavbar = ({}: props) => {
-  
   const [choose, setChoose] = useState<MessageTypes>(() => {
     const storedChoice = localStorage.getItem("chooseMessages") as MessageTypes;
     if (!!storedChoice) return storedChoice;
@@ -22,7 +21,7 @@ const MessagesAsideNavbar = ({}: props) => {
     window.history.replaceState(
       {},
       "",
-      `${window.location.pathname}?${params}`
+      `${window.location.pathname}?${params}`,
     );
 
     localStorage.setItem("typeMessages", choose);
@@ -36,7 +35,7 @@ const MessagesAsideNavbar = ({}: props) => {
       <div
         className={cn(
           "h-8 pt-1 ",
-          messageType === "requests" && "border-b-2 border-b-info"
+          messageType === "requests" && "border-b-2 border-b-info",
         )}
       >
         <button onClick={() => handleChangeMessages("friends")}>Friends</button>
@@ -44,7 +43,7 @@ const MessagesAsideNavbar = ({}: props) => {
       <div
         className={cn(
           "h-8 pt-1 ",
-          messageType === "friends" && "border-b-2 border-b-info"
+          messageType === "friends" && "border-b-2 border-b-info",
         )}
       >
         <button onClick={() => handleChangeMessages("requests")}>

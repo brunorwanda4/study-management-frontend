@@ -1,7 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
- 
+
 const CreateNewPostInSchool = () => {
-  
   return (
     <div>
       <div className=" items-center space-x-2 basic-card flex flex-row">
@@ -13,9 +12,7 @@ const CreateNewPostInSchool = () => {
           <div className=" bg-base-200 w-full p-2 rounded-full px-4">
             <p>Announce something in school...</p>
           </div>
-          <div>
-            {/* TODO: add announcement in school dialog */}
-          </div>
+          <div>{/* TODO: add announcement in school dialog */}</div>
         </div>
       </div>
     </div>

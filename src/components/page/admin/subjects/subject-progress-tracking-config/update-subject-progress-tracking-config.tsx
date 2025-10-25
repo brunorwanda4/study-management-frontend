@@ -1,11 +1,9 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useTransition } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-
+import { FormError, FormSuccess } from "@/components/common/form-message";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -16,17 +14,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
-import { FormError, FormSuccess } from "@/components/common/form-message";
-import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import { useToast } from "@/lib/context/toast/ToastContext";
-import { SubjectProgressTrackingConfig } from "@/lib/schema/admin/subjects/subject-progress-tracking-config-schema/subject-progress-tracking-config-schema";
+import type { SubjectProgressTrackingConfig } from "@/lib/schema/admin/subjects/subject-progress-tracking-config-schema/subject-progress-tracking-config-schema";
 import {
-  UpdateSubjectProgressTrackingConfig,
+  type UpdateSubjectProgressTrackingConfig,
   UpdateSubjectProgressTrackingConfigSchema,
 } from "@/lib/schema/admin/subjects/subject-progress-tracking-config-schema/update-subject-progress-tracking-config-schema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState, useTransition } from "react";
+import { type SubmitHandler, useForm } from "react-hook-form";
 
 interface Props {
   auth: AuthContext;
@@ -120,8 +118,8 @@ const UpdateSubjectProgressTrackingConfigForm = ({
             type: "success",
           });
 
-          if (!!setStep) setStep(4, config?.id || config?._id);
-          if (!!markStepCompleted)
+          if (setStep) setStep(4, config?.id || config?._id);
+          if (markStepCompleted)
             markStepCompleted(2, undefined, config?.id || config?._id);
         }
       } catch (err) {

@@ -1,4 +1,4 @@
- import CreateNewPostInSchool from "./create-new-post-in-school";
+import CreateNewPostInSchool from "./create-new-post-in-school";
 import { FaSignsPost } from "react-icons/fa6";
 import PostCard from "@/components/cards/post-card";
 import { Locale } from "@/i18n";
