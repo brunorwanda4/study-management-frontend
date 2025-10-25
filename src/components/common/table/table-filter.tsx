@@ -1,6 +1,4 @@
 "use client";
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -68,7 +66,7 @@ export default function TableFilter({
           column.setFilterValue(value);
       }
     }
-  }, [searchParams, key]);
+  }, [searchParams, key, column, filterVariant]);
 
   // Update URL on filter change
   useEffect(() => {
@@ -99,20 +97,22 @@ export default function TableFilter({
     }
 
     router.replace(`?${params.toString()}`, { scroll: false });
-  }, [columnFilterValue]);
+  }, [columnFilterValue, filterVariant, key, router, searchParams]);
+
+  const facetedValues = column.getFacetedUniqueValues();
 
   const sortedUniqueValues = useMemo(() => {
     if (["range", "number", "dateRange"].includes(filterVariant ?? ""))
       return [];
 
-    const values = Array.from(column.getFacetedUniqueValues().keys());
+    const values = Array.from(facetedValues.keys());
     const flattenedValues = values.reduce((acc: string[], curr) => {
       if (Array.isArray(curr)) return [...acc, ...curr];
       return [...acc, String(curr)];
     }, []);
 
     return Array.from(new Set(flattenedValues)).sort();
-  }, [column.getFacetedUniqueValues(), filterVariant]);
+  }, [facetedValues, filterVariant]);
 
   // --- Filter Renderers ---
 

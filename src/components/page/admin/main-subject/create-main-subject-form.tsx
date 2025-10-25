@@ -103,7 +103,7 @@ const CreateMainSubjectForm = ({
     };
 
     fetchMainClasses();
-  }, [auth.token]);
+  }, [auth.token, showToast, mainClass]);
 
   // Define proper default values that match the schema exactly
   const defaultValues: CreateMainSubjectFormData = {

@@ -90,7 +90,7 @@ const UpdateSubjectTopicForm = ({
     };
 
     fetchOptions();
-  }, [auth.token]);
+  }, [auth.token, subject, learningOutcome]);
 
   // Setup form with defaults from existing topic
   const form = useForm<UpdateSubjectTopic>({

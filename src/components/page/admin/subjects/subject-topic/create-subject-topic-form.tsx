@@ -91,7 +91,7 @@ const CreateSubjectTopicForm = ({
     };
 
     fetchOptions();
-  }, [auth.token]);
+  }, [auth.token, learningOutcome, subject]);
 
   // React Hook Form + Zod setup
   const form = useForm<CreateSubjectTopic>({

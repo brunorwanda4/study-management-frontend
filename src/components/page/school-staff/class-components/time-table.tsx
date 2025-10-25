@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 // Define the days of the week
@@ -118,10 +117,10 @@ function TimeSlot({
   return (
     <div
       // Apply the passed color class directly
-      className={`rounded-md p-2 text-center text-sm border ${colorClass}`}
+      className={`rounded-md border p-2 text-center text-sm ${colorClass}`}
     >
       {subject}
-      {isDouble && <span className="block text-xs mt-1">(Double)</span>}
+      {isDouble && <span className="mt-1 block text-xs">(Double)</span>}
     </div>
   );
 }
@@ -131,7 +130,7 @@ export default function ClassTimetable() {
     <div className="container mx-auto">
       <Card className="w-full">
         <CardHeader className=" ">
-          <CardTitle className=" flex justify-between items-center">
+          <CardTitle className="flex items-center justify-between">
             <h3>Class Timetable</h3>{" "}
             <Button size={"sm"} library="daisy" variant={"primary"}>
               Change time table
@@ -141,10 +140,10 @@ export default function ClassTimetable() {
         <CardContent>
           <div className="overflow-x-auto">
             {/* Header Row */}
-            <div className="grid grid-cols-6 gap-2 mb-4">
+            <div className="mb-4 grid grid-cols-6 gap-2">
               <div className="font-medium">Time</div>
               {daysOfWeek.map((day) => (
-                <div key={day} className="font-medium text-center">
+                <div key={day} className="text-center font-medium">
                   {day}
                 </div>
               ))}
@@ -154,11 +153,11 @@ export default function ClassTimetable() {
             {timetableData.map((slotData) => (
               <div
                 key={slotData.time}
-                className="grid grid-cols-6 gap-2 mb-2 items-stretch"
+                className="mb-2 grid grid-cols-6 items-stretch gap-2"
               >
                 {/* Use items-stretch */}
                 {/* Time Column */}
-                <div className="text-sm py-2 flex items-center">
+                <div className="flex items-center py-2 text-sm">
                   {slotData.time}
                 </div>{" "}
                 {/* Added flex items-center */}
@@ -167,7 +166,7 @@ export default function ClassTimetable() {
                   <div
                     className={`col-span-${
                       daysOfWeek.length
-                    } basic-title w-full flex items-center justify-center card p-2 text-center text-sm rounded-md  bg-base-200`}
+                    } basic-title card bg-base-200 flex w-full items-center justify-center rounded-md p-2 text-center text-sm`}
                   >
                     {slotData.name}
                   </div>
@@ -191,7 +190,7 @@ export default function ClassTimetable() {
                       return (
                         <div
                           key={key}
-                          className="rounded-md p-2 border border-transparent"
+                          className="rounded-md border border-transparent p-2"
                         ></div>
                       );
                     }

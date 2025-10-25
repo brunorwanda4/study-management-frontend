@@ -102,7 +102,7 @@ const UpdateLearningOutcomeForm = ({
     };
 
     fetchExistingOutcomes();
-  }, [auth.token, mainSubject]);
+  }, [auth.token, mainSubject, showToast]);
 
   // Transform prerequisites from string array to MultipleSelector format
   const transformPrerequisites = (prereqIds: string[] = []) => {

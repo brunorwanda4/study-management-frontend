@@ -68,7 +68,7 @@ const CreateSchoolAcademicForm = ({ auth, school, isDialog }: Props) => {
       }
     };
     fetchOptions();
-  }, []);
+  }, [auth.token]);
 
   const form = useForm<createSchoolAcademic>({
     resolver: zodResolver(createSchoolAcademicSchema),

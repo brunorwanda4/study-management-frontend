@@ -98,7 +98,7 @@ const CreateLearningOutcomeForm = ({
     };
 
     fetchExistingOutcomes();
-  }, [auth.token]);
+  }, [auth.token, mainSubject, showToast]);
 
   // Default values matching the create schema
   const defaultValues: CreateLearningOutcomeFormData = {

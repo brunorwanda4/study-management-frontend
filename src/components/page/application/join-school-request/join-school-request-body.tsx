@@ -30,7 +30,7 @@ const JoinSchoolRequestBody = ({
     } else if (!realtimeEnabled) {
       setDisplayRequests(initialRequests);
     }
-  }, [initialRequests, realtimeEnabled, initialRequests]);
+  }, [initialRequests, realtimeEnabled]);
 
   return (
     <div className="flex flex-row items-center justify-center gap-4">

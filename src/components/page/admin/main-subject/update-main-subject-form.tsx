@@ -108,7 +108,7 @@ const UpdateMainSubjectForm = ({
     };
 
     fetchMainClasses();
-  }, [auth.token]);
+  }, [auth.token, showToast, auth.user.id]);
 
   // Transform subject data for form default values
   const getDefaultValues = (): UpdateMainSubjectFormData => {

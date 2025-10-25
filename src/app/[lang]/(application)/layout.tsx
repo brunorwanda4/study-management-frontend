@@ -12,20 +12,21 @@ import { Locale } from "@/i18n";
 import { authContext } from "@/lib/utils/auth-context";
 import { redirect } from "next/navigation";
 
-interface props {
-  params: Promise<{ lang: Locale }>;
+interface Props {
+  params: { lang: Locale };
   children: React.ReactNode;
 }
 
-const ApplicationLayout = async (props: props) => {
-  const { children } = props;
-  const params = await props.params;
+const ApplicationLayout = async ({ params, children }: Props) => {
   const { lang } = params;
-  const currentUser = (await authContext())?.user;
-  if (!currentUser) {
+  const auth = await authContext();
+
+  if (!auth) {
     redirect(`/${lang}/auth/login`);
   }
-  const role = currentUser.role;
+
+  const role = auth.user.role;
+
   return (
     <SidebarProvider>
       <AppNav lang={lang} />

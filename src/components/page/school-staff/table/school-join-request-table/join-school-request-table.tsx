@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { CommonDataTable } from "@/components/common/table/common-data-table";
@@ -55,7 +54,7 @@ export default function SchoolJoinRequestsTable({
     } else if (!realtimeEnabled) {
       setDisplayRequests(initialRequests);
     }
-  }, [initialRequests, realtimeEnabled, initialRequests]);
+  }, [initialRequests, realtimeEnabled]);
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([

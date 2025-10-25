@@ -66,7 +66,7 @@ const CreateMainClassForm = ({ auth, trade }: Props) => {
     };
 
     fetchOptions();
-  }, [auth.token]);
+  }, [auth.token, trade]);
 
   const form = useForm<MainClassModel>({
     resolver: zodResolver(mainClassSchema),
@@ -195,11 +195,7 @@ const CreateMainClassForm = ({ auth, trade }: Props) => {
                         .filter((t) => t.id || t._id)
                         .map((t) => ({
                           value: String(t.id ?? t._id),
-                          label: (
-                            <div className="flex w-full justify-between">
-                              <span>{t.name}</span>
-                            </div>
-                          ),
+                          label: t.name,
                         }))}
                       value={field.value ?? ""}
                       onChange={field.onChange}

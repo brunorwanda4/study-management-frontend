@@ -87,7 +87,7 @@ const CreateSubjectProgressTrackingConfigForm = ({
     };
 
     fetchMainClasses();
-  }, [auth.token]);
+  }, [auth.token, showToast]);
 
   const form = useForm<CreateSubjectProgressTrackingConfig>({
     resolver: zodResolver(CreateSubjectProgressTrackingConfigSchema),

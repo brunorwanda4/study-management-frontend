@@ -79,7 +79,7 @@ const CreateTradeForm = ({ auth, sector }: Props) => {
     };
 
     fetchOptions();
-  }, [auth.token]);
+  }, [auth.token, sector]);
 
   const form = useForm<TradeModule>({
     resolver: zodResolver(tradeSchema),

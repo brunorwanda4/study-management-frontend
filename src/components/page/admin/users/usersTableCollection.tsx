@@ -106,7 +106,7 @@ const UsersTableCollection = ({
     };
 
     fetchUsers();
-  }, [pageIndex, pageSize, token]);
+  }, [pageIndex, pageSize, token, serverMode, auth]);
 
   return (
     <Card>

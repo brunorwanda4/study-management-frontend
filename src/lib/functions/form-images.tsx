@@ -1,8 +1,7 @@
 export const formImageOnDrop = (
   acceptedFiles: File[],
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   form: any,
-  setError: (error: string) => void
+  setError: (error: string) => void,
 ) => {
   setError("");
   const file = acceptedFiles[0];

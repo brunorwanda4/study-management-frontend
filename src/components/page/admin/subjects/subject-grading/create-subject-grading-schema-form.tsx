@@ -141,7 +141,7 @@ const CreateSubjectGradingSchemeForm = ({ auth, subject, action }: Props) => {
       grade_boundaries: boundariesText,
       assessment_weights: weightsText,
     });
-  }, [schemeType]);
+  }, [schemeType, subject, auth.user.id, form]);
 
   // --- Handle Submit ---
   const handleSubmit = (values: CreateSubjectGradingScheme) => {

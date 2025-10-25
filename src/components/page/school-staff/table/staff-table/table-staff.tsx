@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { CommonDataTable } from "@/components/common/table/common-data-table";

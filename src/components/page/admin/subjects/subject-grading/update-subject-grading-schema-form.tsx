@@ -144,7 +144,7 @@ const UpdateSubjectGradingSchemeForm = ({
       grade_boundaries: boundariesText,
       assessment_weights: weightsText,
     });
-  }, [schemeType]);
+  }, [schemeType, auth.user.id, gradingScheme.reference_id, form]);
 
   // --- Submit handler ---
   const handleSubmit = (values: UpdateSubjectGradingScheme) => {

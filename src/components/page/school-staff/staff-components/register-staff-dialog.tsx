@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -12,36 +11,53 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { UserPlus } from "lucide-react"
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { UserPlus } from "lucide-react";
 
 interface RegisterStaffDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  selectedStaff?: any
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  selectedStaff?: any;
 }
 
-export function RegisterStaffDialog({ open, onOpenChange, selectedStaff }: RegisterStaffDialogProps) {
+export function RegisterStaffDialog({
+  open,
+  onOpenChange,
+  selectedStaff,
+}: RegisterStaffDialogProps) {
   const handleRegisterStaff = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     // Logic to register staff would go here
-    onOpenChange(false)
-  }
+    onOpenChange(false);
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
-        <Button library="daisy" size="sm" variant="primary" className="h-8 gap-1 ">
+        <Button
+          library="daisy"
+          size="sm"
+          variant="primary"
+          className="h-8 gap-1"
+        >
           <UserPlus className="h-4 w-4" />
           Register Staff
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>{selectedStaff ? "Edit Staff Member" : "Register New Staff"}</DialogTitle>
+          <DialogTitle>
+            {selectedStaff ? "Edit Staff Member" : "Register New Staff"}
+          </DialogTitle>
           <DialogDescription>
             {selectedStaff
               ? "Update the staff member's information below."
@@ -54,7 +70,12 @@ export function RegisterStaffDialog({ open, onOpenChange, selectedStaff }: Regis
               <Label htmlFor="name" className="text-right">
                 Full Name
               </Label>
-              <Input id="name" className="col-span-3" defaultValue={selectedStaff?.name || ""} required />
+              <Input
+                id="name"
+                className="col-span-3"
+                defaultValue={selectedStaff?.name || ""}
+                required
+              />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="email" className="text-right">
@@ -98,7 +119,9 @@ export function RegisterStaffDialog({ open, onOpenChange, selectedStaff }: Regis
                   <SelectItem value="Science">Science</SelectItem>
                   <SelectItem value="Mathematics">Mathematics</SelectItem>
                   <SelectItem value="Library">Library</SelectItem>
-                  <SelectItem value="Student Affairs">Student Affairs</SelectItem>
+                  <SelectItem value="Student Affairs">
+                    Student Affairs
+                  </SelectItem>
                   <SelectItem value="Administration">Administration</SelectItem>
                 </SelectContent>
               </Select>
@@ -120,10 +143,12 @@ export function RegisterStaffDialog({ open, onOpenChange, selectedStaff }: Regis
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">{selectedStaff ? "Save Changes" : "Register"}</Button>
+            <Button type="submit">
+              {selectedStaff ? "Save Changes" : "Register"}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
