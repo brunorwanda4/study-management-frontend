@@ -1,20 +1,5 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Plus, Search, MoreHorizontal, Pencil, Trash2 } from "lucide-react"
-import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,21 +9,49 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
-import { Label } from "@/components/ui/label"
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { MoreHorizontal, Pencil, Plus, Search, Trash2 } from "lucide-react";
+import { useState } from "react";
 
-interface props{
+interface props {
   title: string;
 }
 
 type Person = {
-  id: string
-  name: string
-  email: string
-  class: string
-  gender: string
-  Status: string
-}
+  id: string;
+  name: string;
+  email: string;
+  class: string;
+  gender: string;
+  Status: string;
+};
 
 const initialItems = [
   {
@@ -104,67 +117,69 @@ const initialItems = [
     class: "S6PCB",
     gender: "Female",
     Status: "Dayscholar",
-  }
-]
+  },
+];
 
-export default function StudentsList( {title}: props) {
-  const [items, setItems] = useState<Person[]>(initialItems)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
-  const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false)
-  const [currentPerson, setCurrentPerson] = useState<Person | null>(null)
+export default function StudentsList({ title }: props) {
+  const [items, setItems] = useState<Person[]>(initialItems);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
+  const [currentPerson, setCurrentPerson] = useState<Person | null>(null);
   const [newPerson, setNewPerson] = useState<Partial<Person>>({
     name: "",
     email: "",
     class: "",
     gender: "",
     Status: "",
-  })
-
-  
+  });
 
   // Filter items based on search query
   const filteredItems = items.filter((item) => {
-    const searchLower = searchQuery.toLowerCase()
+    const searchLower = searchQuery.toLowerCase();
     return (
       item.name.toLowerCase().includes(searchLower) ||
       item.email.toLowerCase().includes(searchLower) ||
       item.class.toLowerCase().includes(searchLower) ||
       item.gender.toLowerCase().includes(searchLower) ||
       item.gender.toLowerCase().includes(searchLower)
-    )
-  })
+    );
+  });
 
   // Handle adding a new person
   const handleAddPerson = () => {
-    const newId = (Number.parseInt(items[items.length - 1].id) + 1).toString()
-    setItems([...items, { id: newId, ...(newPerson as Omit<Person, "id">) }])
+    const newId = (Number.parseInt(items[items.length - 1].id) + 1).toString();
+    setItems([...items, { id: newId, ...(newPerson as Omit<Person, "id">) }]);
     setNewPerson({
       name: "",
       email: "",
       class: "",
       gender: "",
-      Status: ""
-    })
-    setIsAddDialogOpen(false)
-  }
+      Status: "",
+    });
+    setIsAddDialogOpen(false);
+  };
 
   // Handle editing a person
   const handleEditPerson = () => {
-    if (!currentPerson) return
+    if (!currentPerson) return;
 
-    setItems(items.map((item) => (item.id === currentPerson.id ? { ...currentPerson } : item)))
-    setIsEditDialogOpen(false)
-  }
+    setItems(
+      items.map((item) =>
+        item.id === currentPerson.id ? { ...currentPerson } : item,
+      ),
+    );
+    setIsEditDialogOpen(false);
+  };
 
   // Handle deleting a person
   const handleDeletePerson = () => {
-    if (!currentPerson) return
+    if (!currentPerson) return;
 
-    setItems(items.filter((item) => item.id !== currentPerson.id))
-    setIsDeleteAlertOpen(false)
-  }
+    setItems(items.filter((item) => item.id !== currentPerson.id));
+    setIsDeleteAlertOpen(false);
+  };
 
   return (
     <div className="basic-card ">
@@ -190,7 +205,9 @@ export default function StudentsList( {title}: props) {
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Add New Person</DialogTitle>
-              <DialogDescription>Fill in the details to add a new student to the list.</DialogDescription>
+              <DialogDescription>
+                Fill in the details to add a new student to the list.
+              </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
@@ -200,7 +217,9 @@ export default function StudentsList( {title}: props) {
                 <Input
                   id="name"
                   value={newPerson.name}
-                  onChange={(e) => setNewPerson({ ...newPerson, name: e.target.value })}
+                  onChange={(e) =>
+                    setNewPerson({ ...newPerson, name: e.target.value })
+                  }
                   className="col-span-3"
                 />
               </div>
@@ -211,7 +230,9 @@ export default function StudentsList( {title}: props) {
                 <Input
                   id="email"
                   value={newPerson.email}
-                  onChange={(e) => setNewPerson({ ...newPerson, email: e.target.value })}
+                  onChange={(e) =>
+                    setNewPerson({ ...newPerson, email: e.target.value })
+                  }
                   className="col-span-3"
                 />
               </div>
@@ -222,7 +243,9 @@ export default function StudentsList( {title}: props) {
                 <Input
                   id="class"
                   value={newPerson.class}
-                  onChange={(e) => setNewPerson({ ...newPerson, class: e.target.value })}
+                  onChange={(e) =>
+                    setNewPerson({ ...newPerson, class: e.target.value })
+                  }
                   className="col-span-3"
                 />
               </div>
@@ -233,7 +256,9 @@ export default function StudentsList( {title}: props) {
                 <Input
                   id="gender"
                   value={newPerson.gender}
-                  onChange={(e) => setNewPerson({ ...newPerson, gender: e.target.value })}
+                  onChange={(e) =>
+                    setNewPerson({ ...newPerson, gender: e.target.value })
+                  }
                   className="col-span-3"
                 />
               </div>
@@ -244,7 +269,9 @@ export default function StudentsList( {title}: props) {
                 <Input
                   id="Status"
                   value={newPerson.gender}
-                  onChange={(e) => setNewPerson({ ...newPerson, gender: e.target.value })}
+                  onChange={(e) =>
+                    setNewPerson({ ...newPerson, gender: e.target.value })
+                  }
                   className="col-span-3"
                 />
               </div>
@@ -287,8 +314,8 @@ export default function StudentsList( {title}: props) {
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem
                         onClick={() => {
-                          setCurrentPerson(item)
-                          setIsEditDialogOpen(true)
+                          setCurrentPerson(item);
+                          setIsEditDialogOpen(true);
                         }}
                       >
                         <Pencil className="mr-2 h-4 w-4" />
@@ -296,8 +323,8 @@ export default function StudentsList( {title}: props) {
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => {
-                          setCurrentPerson(item)
-                          setIsDeleteAlertOpen(true)
+                          setCurrentPerson(item);
+                          setIsDeleteAlertOpen(true);
                         }}
                         className="text-destructive"
                       >
@@ -325,7 +352,9 @@ export default function StudentsList( {title}: props) {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Edit Person</DialogTitle>
-            <DialogDescription>Update the details for this person.</DialogDescription>
+            <DialogDescription>
+              Update the details for this person.
+            </DialogDescription>
           </DialogHeader>
           {currentPerson && (
             <div className="grid gap-4 py-4">
@@ -336,7 +365,9 @@ export default function StudentsList( {title}: props) {
                 <Input
                   id="edit-name"
                   value={currentPerson.name}
-                  onChange={(e) => setCurrentPerson({ ...currentPerson, name: e.target.value })}
+                  onChange={(e) =>
+                    setCurrentPerson({ ...currentPerson, name: e.target.value })
+                  }
                   className="col-span-3"
                 />
               </div>
@@ -347,7 +378,12 @@ export default function StudentsList( {title}: props) {
                 <Input
                   id="edit-email"
                   value={currentPerson.email}
-                  onChange={(e) => setCurrentPerson({ ...currentPerson, email: e.target.value })}
+                  onChange={(e) =>
+                    setCurrentPerson({
+                      ...currentPerson,
+                      email: e.target.value,
+                    })
+                  }
                   className="col-span-3"
                 />
               </div>
@@ -358,7 +394,12 @@ export default function StudentsList( {title}: props) {
                 <Input
                   id="edit-class"
                   value={currentPerson.class}
-                  onChange={(e) => setCurrentPerson({ ...currentPerson, class: e.target.value })}
+                  onChange={(e) =>
+                    setCurrentPerson({
+                      ...currentPerson,
+                      class: e.target.value,
+                    })
+                  }
                   className="col-span-3"
                 />
               </div>
@@ -369,7 +410,12 @@ export default function StudentsList( {title}: props) {
                 <Input
                   id="edit-gender"
                   value={currentPerson.gender}
-                  onChange={(e) => setCurrentPerson({ ...currentPerson, gender: e.target.value })}
+                  onChange={(e) =>
+                    setCurrentPerson({
+                      ...currentPerson,
+                      gender: e.target.value,
+                    })
+                  }
                   className="col-span-3"
                 />
               </div>
@@ -380,7 +426,12 @@ export default function StudentsList( {title}: props) {
                 <Input
                   id="edit-Status"
                   value={currentPerson.Status}
-                  onChange={(e) => setCurrentPerson({ ...currentPerson, Status: e.target.value })}
+                  onChange={(e) =>
+                    setCurrentPerson({
+                      ...currentPerson,
+                      Status: e.target.value,
+                    })
+                  }
                   className="col-span-3"
                 />
               </div>
@@ -398,22 +449,23 @@ export default function StudentsList( {title}: props) {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the person from the list.
+              This action cannot be undone. This will permanently delete the
+              person from the list.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDeletePerson} className="bg-destructive text-destructive-foreground">
+            <AlertDialogAction
+              onClick={handleDeletePerson}
+              className="bg-destructive text-destructive-foreground"
+            >
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 
-      <span className="  mt-8 text-center text-sm">
-        Students list
-      </span>
+      <span className="  mt-8 text-center text-sm">Students list</span>
     </div>
-  )
+  );
 }
-

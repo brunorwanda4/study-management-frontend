@@ -1,12 +1,7 @@
 "use client";
 
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
@@ -30,16 +25,21 @@ interface SchoolStudentAndClassChartProps {
 // 🛠️ Function to extract clean class name (removes school name and year)
 function extractClassName(fullName: string) {
   const parts = fullName.split(" ");
-  if (parts.length >= 2 && (parts[0].startsWith("S") || parts[0].startsWith("P"))) {
+  if (
+    parts.length >= 2 &&
+    (parts[0].startsWith("S") || parts[0].startsWith("P"))
+  ) {
     return parts[0] + (parts[1] ? ` ${parts[1]}` : "");
   }
   return parts[0];
 }
 
-export default function SchoolStudentAndClassChart({ classes }: SchoolStudentAndClassChartProps) {
+export default function SchoolStudentAndClassChart({
+  classes,
+}: SchoolStudentAndClassChartProps) {
   const { theme } = useTheme();
 
-  const chartData = classes.map(cls => ({
+  const chartData = classes.map((cls) => ({
     class: extractClassName(cls.name),
     students: cls._count.students,
   }));
@@ -53,7 +53,11 @@ export default function SchoolStudentAndClassChart({ classes }: SchoolStudentAnd
         </Button> */}
       </CardHeader>
       <CardContent>
-        <ChartContainer data-theme={theme} config={chartConfig} className="min-h-[200px] w-full">
+        <ChartContainer
+          data-theme={theme}
+          config={chartConfig}
+          className="min-h-[200px] w-full"
+        >
           <BarChart
             accessibilityLayer
             data={chartData}

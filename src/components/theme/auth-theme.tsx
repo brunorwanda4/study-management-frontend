@@ -1,8 +1,8 @@
 "use client";
 
-import { MoonIcon, SunIcon } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 
 export default function AuthTheme() {

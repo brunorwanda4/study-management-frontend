@@ -1,8 +1,7 @@
-import MyImage from "@/components/myComponents/myImage";
-import MyLink from "@/components/myComponents/myLink";
-import { Button, } from "@/components/ui/button";
-import { Locale } from "@/i18n";
-import React from "react";
+import MyImage from "@/components/common/myImage";
+import MyLink from "@/components/common/myLink";
+import { Button } from "@/components/ui/button";
+import type { Locale } from "@/i18n";
 
 interface props {
   lang: Locale;
@@ -10,22 +9,18 @@ interface props {
 
 const AuthButton = ({ lang }: props) => {
   return (
-    <div className=" flex flex-col space-y-4 w-96">
+    <div className="flex w-96 flex-col space-y-4">
       <Button library="daisy" size={"lg"} variant={"default"}>
-        <MyImage
-          src="/icons/google.png"
-          role="ICON"
-          className=" size-6"
-        />
+        <MyImage src="/icons/google.png" role="ICON" className="size-6" />
         Continue with Google
       </Button>
-      <p className=" flex text-center justify-center">Or user your email</p>
+      <p className="flex justify-center text-center">Or user your email</p>
       <MyLink
         loading
-        button={{library : "daisy",variant: "info" , size: "lg"}}
+        button={{ library: "daisy", variant: "info", size: "lg" }}
         href={`/${lang}/auth/login`}
         type="button"
-        className=" w-full"
+        className="w-full"
         classname=" w-full"
       >
         Sign in
@@ -33,12 +28,12 @@ const AuthButton = ({ lang }: props) => {
 
       <MyLink
         loading
-        button={{library : "daisy",variant: "default" , size: "lg"}}
+        button={{ library: "daisy", variant: "default", size: "lg" }}
         href={`/${lang}/auth/register`}
         type="button"
-        className=" w-full"
+        className="w-full"
         classname=" w-full"
-        >
+      >
         Create account
       </MyLink>
     </div>

@@ -1,11 +1,11 @@
 "use client";
-import { RxActivityLog } from "react-icons/rx";
+import MyLink from "@/components/common/myLink";
+import type { Locale } from "@/i18n";
+import { usePathname } from "next/navigation";
+import { BsGear } from "react-icons/bs";
 import { FaPeopleGroup } from "react-icons/fa6";
 import { MdClass } from "react-icons/md";
-import { Locale } from "@/i18n";
-import { usePathname } from "next/navigation";
-import MyLink from "@/components/myComponents/myLink";
-import { BsGear } from "react-icons/bs";
+import { RxActivityLog } from "react-icons/rx";
 
 interface props {
   lang: Locale;
@@ -15,8 +15,8 @@ interface props {
 const ClassNavbar = ({ lang, classId }: props) => {
   const pathname = usePathname();
   return (
-    <nav className=" basic-card w-full">
-      <div className=" flex space-x-2">
+    <nav className="basic-card w-full">
+      <div className="flex space-x-2">
         <MyLink
           loading
           type="button"
@@ -50,7 +50,9 @@ const ClassNavbar = ({ lang, classId }: props) => {
           button={{
             size: "sm",
             variant:
-              pathname === `/${lang}/c/${classId}/subjects` ? "info" : "default",
+              pathname === `/${lang}/c/${classId}/subjects`
+                ? "info"
+                : "default",
             library: "daisy",
           }}
           href={`/${lang}/c/${classId}/subjects`}
@@ -64,7 +66,9 @@ const ClassNavbar = ({ lang, classId }: props) => {
           button={{
             size: "sm",
             variant:
-              pathname === `/${lang}/c/${classId}/settings` ? "info" : "default",
+              pathname === `/${lang}/c/${classId}/settings`
+                ? "info"
+                : "default",
             library: "daisy",
           }}
           href={`/${lang}/c/${classId}/settings`}

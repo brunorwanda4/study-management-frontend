@@ -1,8 +1,7 @@
-import React from 'react'
-import ApplicationLayout from '../loading/application/page'
+import ApplicationLayout from "../loading/application/page";
 
 const ApplicationLoading = () => {
-  return  <ApplicationLayout />
-}
+  return <ApplicationLayout />;
+};
 
-export default ApplicationLoading
+export default ApplicationLoading;

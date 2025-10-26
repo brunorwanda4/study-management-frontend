@@ -1,8 +1,8 @@
-import { Locale } from "@/i18n";
-import Link from "next/link";
-import { AuthUserDto } from "@/lib/utils/auth";
-import MyImage from "@/components/myComponents/myImage";
+import MyImage from "@/components/common/myImage";
+import type { Locale } from "@/i18n";
 import { toLowerCase } from "@/lib/functions/characters";
+import type { AuthUserDto } from "@/lib/schema/user/auth-user-schema";
+import Link from "next/link";
 
 interface props {
   lang: Locale;
@@ -10,37 +10,37 @@ interface props {
 }
 const SettingHeader = ({ user, lang }: props) => {
   return (
-    <div className=" m-4 flex justify-between">
-      <div className=" flex gap-2 items-center">
+    <div className="m-4 flex justify-between">
+      <div className="flex items-center gap-2">
         <MyImage
           role="AVATAR"
-          className=" size-40"
+          className="size-40"
           src={user?.image || "/images/p.jpg"}
         />
-        <div className=" flex flex-col space-y-1">
+        <div className="flex flex-col space-y-1">
           <div>
-            <h4 className=" text-lg font-semibold">{user.name}</h4>
+            <h4 className="text-lg font-semibold">{user.name}</h4>
           </div>
           <div>
             <span>username:</span>
-            <span className=" text-sm to-myGray">
+            <span className="to-myGray text-sm">
               @{" "}
-              {!!user?.username ? (
+              {user?.username ? (
                 user.username
               ) : (
-                <span className=" text-warning">No username</span>
+                <span className="text-warning">No username</span>
               )}
             </span>
           </div>
           <div>
             <span>Role :</span>{" "}
-            <span className=" text-sm font-semibold capitalize">
+            <span className="text-sm font-semibold capitalize">
               {user.role && toLowerCase(user.role)}
             </span>
           </div>
           <div>
             <span>Email :</span>{" "}
-            <span className=" text-sm font-semibold ">{user.email}</span>
+            <span className="text-sm font-semibold">{user.email}</span>
           </div>
           <Link href={`/${lang}/settings/profile`}></Link>
         </div>

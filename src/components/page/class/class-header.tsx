@@ -1,19 +1,20 @@
-import MyImage from "@/components/myComponents/myImage";
-import MyLink from "@/components/myComponents/myLink";
-import { Locale } from "@/i18n";
+import MyImage from "@/components/common/myImage";
+import MyLink from "@/components/common/myLink";
+import type { Locale } from "@/i18n";
 import {
   classImage,
   schoolLogoImage,
   teacherImage,
 } from "@/lib/context/images";
-import { ClassAndOthers } from "@/lib/schema/class/class.schema";
-import { AuthUserDto, UserSchool } from "@/lib/utils/auth";
+import type { ClassWithOthers } from "@/lib/schema/class/class-schema";
+import type { School } from "@/lib/schema/school/school-schema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 
 interface props {
-  currentCls: ClassAndOthers;
+  currentCls: ClassWithOthers;
   lang: Locale;
-  currentSchool?: UserSchool;
-  currentUser: AuthUserDto;
+  currentSchool?: School;
+  currentUser: AuthContext;
 }
 
 const ClassHeader = ({
@@ -23,32 +24,32 @@ const ClassHeader = ({
   lang,
 }: props) => {
   return (
-    <div className=" flex justify-between items-center">
-      <div className=" flex space-x-2 items-center">
+    <div className="flex items-center justify-between">
+      <div className="flex items-center space-x-2">
         <MyImage
           src={currentCls.image ? currentCls.image : classImage}
           classname="mask mask-squircle"
-          className=" size-20"
+          className="size-20"
         />
         <div className=" ">
-          <h4 className=" basic-title">{currentCls.name}</h4>
+          <h4 className="basic-title">{currentCls.name}</h4>
           <span>@ {currentCls.username}</span>
-          {currentCls.teacher && (
+          {currentCls.class_teacher && (
             <MyLink
               loading
-              href={`/${lang}/p/${currentCls.teacher.userId}?teacherId=${currentCls.classTeacherId}`}
-              className=" flex gap-2"
+              href={`/${lang}/p/${currentCls.class_teacher.user_id}?teacherId=${currentCls.class_teacher_id}`}
+              className="flex gap-2"
             >
               <MyImage
                 src={
-                  currentCls.teacher?.image
-                    ? currentCls.teacher.image
+                  currentCls.class_teacher?.image
+                    ? currentCls.class_teacher.image
                     : teacherImage
                 }
                 classname="mask mask-squircle"
-                className=" size-6"
+                className="size-6"
               />
-              {currentCls.teacher.name}
+              {currentCls.class_teacher.name}
             </MyLink>
           )}
         </div>
@@ -56,12 +57,12 @@ const ClassHeader = ({
       {/* school data */}
       {currentCls.school && (
         <div>
-          <div className=" flex items-center space-x-2">
+          <div className="flex items-center space-x-2">
             <MyLink
               href={
-                currentSchool?.schoolId === currentCls.school.id
+                currentSchool?.id === currentCls.school.id
                   ? `/${lang}/school`
-                  : `/${lang}/school/${currentCls.school.id}`
+                  : `/${lang}/school/${currentCls.school.username}`
               }
               loading
               type="link"
@@ -74,20 +75,20 @@ const ClassHeader = ({
                 }
                 alt={currentCls.school.name}
                 classname=" object-contain"
-                className=" size-16"
+                className="size-16"
               />
             </MyLink>
             <div className="">
               <MyLink
                 href={
-                  currentSchool?.schoolId === currentCls.school.id
+                  currentSchool?.id === currentCls.school.id
                     ? `/${lang}/school`
                     : `/${lang}/school/${currentCls.school.id}`
                 }
                 type="link"
-                className=" underline-offset-0"
+                className="underline-offset-0"
               >
-                <h4 className=" basic-title">{currentCls.school.name}</h4>
+                <h4 className="basic-title">{currentCls.school.name}</h4>
               </MyLink>
             </div>
           </div>

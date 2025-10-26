@@ -1,10 +1,10 @@
 "use client";
-import { useState } from "react";
-import { Button } from "../ui/button";
 import { RefreshCcw } from "lucide-react";
-import { BsArrowLeft } from "react-icons/bs";
 import { useRouter } from "next/navigation";
-import MyImage from "../myComponents/myImage";
+import { useState } from "react";
+import { BsArrowLeft } from "react-icons/bs";
+import MyImage from "../common/myImage";
+import { Button } from "../ui/button";
 
 interface props {
   message?: string;
@@ -25,18 +25,18 @@ const NotFoundPage = ({ message }: props) => {
 
   return (
     <div className="flex w-full justify-center">
-      <div className=" flex flex-col">
+      <div className="flex flex-col items-center">
         <MyImage className="size-96" src="/notFound.svg" />
         <div>
           <div className="text-center">
             <h4 className="font-medium"> Not found item</h4>
-            <p className=" text-myGray">
+            <p className="text-myGray">
               {message
                 ? message
                 : "Check your internet connection or your params for this page."}
             </p>
           </div>
-          <div className="flex space-x-2 mt-2 justify-center items-center">
+          <div className="mt-2 flex items-center justify-center space-x-2">
             <Button library="daisy" variant="outline" onClick={handleGoBack}>
               <BsArrowLeft /> Go back
             </Button>
@@ -48,7 +48,7 @@ const NotFoundPage = ({ message }: props) => {
             >
               {isLoading ? (
                 <>
-                  <RefreshCcw size={12} className="animate-spin mr-2" />{" "}
+                  <RefreshCcw size={12} className="mr-2 animate-spin" />{" "}
                   Refresh...
                 </>
               ) : (

@@ -1,20 +1,21 @@
 "use client";
 
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useCallback,
-  ReactNode,
-  useRef,
-  useEffect,
-} from "react";
+import { CustomToast } from "@/components/common/custom-toast";
 import {
   ToastProvider as ShadcnToastProvider,
   ToastViewport,
 } from "@/components/ui/toast";
-import { useProgressTimer } from "@/hooks/useProgressTimer";
-import { CustomToast } from "@/components/myComponents/custom-toast";
+import { useProgressTimer } from "@/lib/hooks/useProgressTimer";
+import { Next13ProgressBar } from "next13-progressbar";
+import React, {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { v4 as uuidv4 } from "uuid"; // npm i uuid
 
 export type ToastType = "success" | "error" | "warning" | "info" | "default";
@@ -86,7 +87,7 @@ export const ToastManager: React.FC<{ children: ReactNode }> = ({
         handleDismiss();
       }
     },
-    [handleDismiss]
+    [handleDismiss],
   );
 
   return (
@@ -107,7 +108,12 @@ export const ToastManager: React.FC<{ children: ReactNode }> = ({
             action={toastProps.action}
           />
         )}
-        <ToastViewport className=" sm:top-11 sm:right-0" />
+        <ToastViewport className="sm:top-11 sm:right-0" />
+        <Next13ProgressBar
+          height={"2px"}
+          color="#29D"
+          options={{ showSpinner: false }}
+        />
         {children}
       </ShadcnToastProvider>
     </ToastContext.Provider>

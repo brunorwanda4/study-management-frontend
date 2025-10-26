@@ -1,6 +1,6 @@
 import PermissionPage from "@/components/page/permission-page";
 import { Locale } from "@/i18n";
-import { getAuthUserServer } from "@/lib/utils/auth";
+import { authContext } from "@/lib/utils/auth-context";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
@@ -15,16 +15,16 @@ interface props {
 const SchoolStaffCreateSchoolPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
-  const currentUser = await getAuthUserServer();
+  const currentUser = await authContext();
   if (!currentUser) return redirect(`/${lang}/auth/login`);
-  if (!currentUser.role) return redirect(`/${lang}/auth/onboarding`);
-  if (currentUser.role !== "SCHOOLSTAFF")
-    return <PermissionPage lang={lang} role={currentUser.role} />;
+  if (!currentUser.user.role) return redirect(`/${lang}/auth/onboarding`);
+  if (currentUser.user.role !== "SCHOOLSTAFF")
+    return <PermissionPage lang={lang} role={currentUser.user.role} />;
 
   return (
-    <div className=" px-4 mt-4">
+    <div className="mt-4 px-4">
       <div>
-        <h1 className=" basic-title">Create School</h1>
+        <h1 className="basic-title">Create School</h1>
         <p>
           To create school they are some information we ask you to create school
           which help us to know your school please use real information

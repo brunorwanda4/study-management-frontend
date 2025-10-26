@@ -1,12 +1,24 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { TrendingUp } from "lucide-react"
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts"
+import { TrendingUp } from "lucide-react";
+import * as React from "react";
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  type ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 // Data for both exam types
 const examData = {
@@ -14,17 +26,25 @@ const examData = {
     { performance: "excellent", percentage: 22, color: "hsl(var(--chart-1))" },
     { performance: "good", percentage: 38, color: "hsl(var(--chart-2))" },
     { performance: "average", percentage: 25, color: "hsl(var(--chart-3))" },
-    { performance: "belowAverage", percentage: 10, color: "hsl(var(--chart-4))" },
+    {
+      performance: "belowAverage",
+      percentage: 10,
+      color: "hsl(var(--chart-4))",
+    },
     { performance: "poor", percentage: 5, color: "hsl(var(--chart-5))" },
   ],
   mainExams: [
     { performance: "excellent", percentage: 18, color: "hsl(var(--chart-1))" },
     { performance: "good", percentage: 32, color: "hsl(var(--chart-2))" },
     { performance: "average", percentage: 28, color: "hsl(var(--chart-3))" },
-    { performance: "belowAverage", percentage: 15, color: "hsl(var(--chart-4))" },
+    {
+      performance: "belowAverage",
+      percentage: 15,
+      color: "hsl(var(--chart-4))",
+    },
     { performance: "poor", percentage: 7, color: "hsl(var(--chart-5))" },
   ],
-}
+};
 
 const chartConfig = {
   percentage: {
@@ -50,7 +70,7 @@ const chartConfig = {
     label: "Poor (F)",
     color: "hsl(var(--chart-5))",
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
 // Performance labels with descriptions
 const performanceLabels = {
@@ -59,16 +79,18 @@ const performanceLabels = {
   average: "Average (C)",
   belowAverage: "Below Average (D)",
   poor: "Poor (F)",
+};
+
+interface props {
+  title: string;
 }
 
-interface props{
-  title: string
-}
+export function StudentProgressChart({ title }: props) {
+  const [examType, setExamType] = React.useState<"periodExams" | "mainExams">(
+    "periodExams",
+  );
 
-export function StudentProgressChart({title}: props) {
-  const [examType, setExamType] = React.useState<"periodExams" | "mainExams">("periodExams")
-
-  const chartData = examData[examType]
+  const chartData = examData[examType];
 
   // const totalPercentage = React.useMemo(() => {
   //   return chartData.reduce((acc, curr) => acc + curr.percentage, 0)
@@ -84,7 +106,9 @@ export function StudentProgressChart({title}: props) {
         <Tabs
           defaultValue="periodExams"
           className="mb-4"
-          onValueChange={(value) => setExamType(value as "periodExams" | "mainExams")}
+          onValueChange={(value) =>
+            setExamType(value as "periodExams" | "mainExams")
+          }
         >
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="periodExams">Period Exams</TabsTrigger>
@@ -115,8 +139,8 @@ export function StudentProgressChart({title}: props) {
                     average: "C",
                     belowAverage: "D",
                     poor: "F",
-                  }
-                  return shortLabels[value as keyof typeof shortLabels]
+                  };
+                  return shortLabels[value as keyof typeof shortLabels];
                 }}
               />
               <YAxis
@@ -129,7 +153,9 @@ export function StudentProgressChart({title}: props) {
                 cursor={{ fill: "rgba(0, 0, 0, 0.05)" }}
                 content={
                   <ChartTooltipContent
-                    labelFormatter={(label) => performanceLabels[label as keyof typeof performanceLabels]}
+                    labelFormatter={(label) =>
+                      performanceLabels[label as keyof typeof performanceLabels]
+                    }
                     formatter={(value) => `${value}%`}
                   />
                 }
@@ -157,9 +183,17 @@ export function StudentProgressChart({title}: props) {
         <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-5">
           {chartData.map((item) => (
             <div key={item.performance} className="flex items-center gap-2">
-              <div className="h-3 w-3 rounded-full" style={{ backgroundColor: item.color }} />
+              <div
+                className="h-3 w-3 rounded-full"
+                style={{ backgroundColor: item.color }}
+              />
               <div className="text-xs">
-                {performanceLabels[item.performance as keyof typeof performanceLabels]}: {item.percentage}%
+                {
+                  performanceLabels[
+                    item.performance as keyof typeof performanceLabels
+                  ]
+                }
+                : {item.percentage}%
               </div>
             </div>
           ))}
@@ -173,10 +207,10 @@ export function StudentProgressChart({title}: props) {
           <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none  ">
-          Based on {examType === "periodExams" ? "mid-term" : "final"} examination results across all subjects
+          Based on {examType === "periodExams" ? "mid-term" : "final"}{" "}
+          examination results across all subjects
         </div>
       </CardFooter>
     </Card>
-  )
+  );
 }
-

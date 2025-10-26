@@ -1,8 +1,6 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-
+import { FormError, FormSuccess } from "@/components/common/form-message";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -18,15 +16,14 @@ import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-  //   InputOTPSeparator, // Optional: Add separator if needed
 } from "@/components/ui/input-otp"; // Import InputOTP components
 import {
-  JoinSchoolDto,
+  type JoinSchoolDto,
   JoinSchoolSchema,
 } from "@/lib/schema/school/join-school-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useTransition } from "react";
-import { FormError, FormSuccess } from "@/components/myComponents/form-message";
-import { JoinSchoolByUsernameAndCode } from "@/service/school/school-join-request.service";
+import { useForm } from "react-hook-form";
 // OTPInput_ is no longer needed if using shadcn/ui InputOTP
 // import OTPInput_ from "@/components/origin/otp-input";
 
@@ -45,14 +42,14 @@ export default function InputJoinSchoolFormForm() {
   function onSubmit(data: JoinSchoolDto) {
     setError(null);
     setSuccess(null);
-    startTransition(async () => {
-      const join = await JoinSchoolByUsernameAndCode(data);
-      if (join.data) {
-        setSuccess(`To join school successfully! ☺️`);
-      } else {
-        setError(join.message);
-      }
-    });
+    // startTransition(async () => {
+    //   const join = ;
+    //   if (join.data) {
+    //     setSuccess(`To join school successfully! ☺️`);
+    //   } else {
+    //     setError(join.message);
+    //   }
+    // });
   }
 
   // Determine the expected length of the school code.
@@ -75,15 +72,19 @@ export default function InputJoinSchoolFormForm() {
 
   return (
     <Form {...form}>
-      <form className=" space-y-2" onSubmit={form.handleSubmit(onSubmit)}>
+      <form className="space-y-2" onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
           name="username"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className=" bg-base-200">Username</FormLabel>
+              <FormLabel className="bg-base-200">Username</FormLabel>
               <FormControl>
-                <Input disabled={isPending} placeholder="school username" {...field} />
+                <Input
+                  disabled={isPending}
+                  placeholder="school username"
+                  {...field}
+                />
               </FormControl>
               <FormDescription>
                 Enter school user name you want to join
@@ -101,7 +102,7 @@ export default function InputJoinSchoolFormForm() {
               <FormLabel className="bg-base-200">School code</FormLabel>
               <FormControl>
                 <InputOTP
-                disabled={isPending}
+                  disabled={isPending}
                   maxLength={codeLength}
                   {...field}
                   onChange={(value) => field.onChange(value)}
@@ -118,13 +119,13 @@ export default function InputJoinSchoolFormForm() {
             </FormItem>
           )}
         />
-        <div className=" mt-2">
+        <div className="mt-2">
           <FormError message={error} />
           <FormSuccess message={success} />
         </div>
         <Button
-        disabled={isPending}
-          className=" w-full"
+          disabled={isPending}
+          className="w-full"
           variant={"info"}
           library="daisy"
           type="submit"

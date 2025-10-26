@@ -1,8 +1,6 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-
+import { FormError, FormSuccess } from "@/components/common/form-message";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -18,12 +16,12 @@ import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-} from "@/components/ui/input-otp"; 
-import { JoinSchoolDto } from "@/lib/schema/school/join-school-schema";
+} from "@/components/ui/input-otp";
+import type { JoinSchoolDto } from "@/lib/schema/school/join-school-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useTransition } from "react";
-import { FormError, FormSuccess } from "@/components/myComponents/form-message";
-import { JoinSchoolByUsernameAndCode } from "@/service/school/school-join-request.service";
-import { JoinClassDto, JoinClassSchema } from "./schema/join-class-schema";
+import { useForm } from "react-hook-form";
+import { type JoinClassDto, JoinClassSchema } from "./schema/join-class-schema";
 
 export default function JoinClassCodeForm() {
   const [error, setError] = useState<undefined | null | string>("");
@@ -40,14 +38,14 @@ export default function JoinClassCodeForm() {
   function onSubmit(data: JoinSchoolDto) {
     setError(null);
     setSuccess(null);
-    startTransition(async () => {
-      const join = await JoinSchoolByUsernameAndCode(data);
-      if (join.data) {
-        setSuccess(`To join school successfully! ☺️`);
-      } else {
-        setError(join.message);
-      }
-    });
+    // startTransition(async () => {
+    //   const join = await JoinSchoolByUsernameAndCode(data);
+    //   if (join.data) {
+    //     setSuccess(`To join school successfully! ☺️`);
+    //   } else {
+    //     setError(join.message);
+    //   }
+    // });
   }
 
   // Determine the expected length of the school code.
@@ -70,13 +68,13 @@ export default function JoinClassCodeForm() {
 
   return (
     <Form {...form}>
-      <form className=" space-y-2" onSubmit={form.handleSubmit(onSubmit)}>
+      <form className="space-y-2" onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
           name="username"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className=" bg-base-200">Username</FormLabel>
+              <FormLabel className="bg-base-200">Username</FormLabel>
               <FormControl>
                 <Input
                   disabled={isPending}
@@ -117,13 +115,13 @@ export default function JoinClassCodeForm() {
             </FormItem>
           )}
         />
-        <div className=" mt-2">
+        <div className="mt-2">
           <FormError message={error} />
           <FormSuccess message={success} />
         </div>
         <Button
           disabled={isPending}
-          className=" w-full"
+          className="w-full"
           variant={"info"}
           library="daisy"
           type="submit"

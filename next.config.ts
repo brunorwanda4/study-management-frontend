@@ -1,9 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  experimental: {
-    useCache: true,
-    // dynamicIO: true
+  experimental : {
+    turbopackFileSystemCacheForDev: true,
   },
   images: {
     remotePatterns: [
@@ -34,6 +33,10 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "i.pinimg.com",
+      },
+      {
+        protocol: "https",
+        hostname: "example.com",
       },
     ],
   },

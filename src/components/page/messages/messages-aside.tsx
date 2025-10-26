@@ -1,6 +1,7 @@
- import MessagesAsideNavbar from "./message-aside-navbar";
+import type { Locale } from "@/i18n";
 import MessageAsideBody from "./message-aside-body";
-import { Locale } from "@/i18n";
+import MessagesAsideNavbar from "./message-aside-navbar";
+
 // import AsideSearch from "@/components/cards/aside-search";
 
 interface props {
@@ -12,7 +13,7 @@ const MessagesAside = ({ lang }: props) => {
     <aside className=" fixed w-80 h-screen bg-base-100 flex right-0 z-40">
       <div className="w-full border-l border-l-base-content/20">
         {/* <AsideSearch /> */}
-        <MessagesAsideNavbar lang={lang} />
+        <MessagesAsideNavbar  />
         <div className=" max-h-[75vh] overflow-y-auto">
           <MessageAsideBody lang={lang} />
         </div>

@@ -2,6 +2,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 
+import { FormError, FormSuccess } from "@/components/common/form-message";
+import MyImage from "@/components/common/myImage";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -11,8 +14,18 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  UpdateUser,
+  UpdateUserSchema,
+} from "@/lib/schema/user/update-user-schema";
+import { UserModel } from "@/lib/schema/user/user-schema";
+import { cn } from "@/lib/utils";
+import { getLocalTimeZone, today, toZoned } from "@internationalized/date";
+import { CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
+import { useTheme } from "next-themes";
 import { useState, useTransition } from "react";
-import { useDropzone } from "react-dropzone";
 import {
   Button as ButtonDate,
   Calendar,
@@ -29,29 +42,16 @@ import {
   Heading,
   Popover,
 } from "react-aria-components";
-import { CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
-import { getLocalTimeZone, today, toZoned } from "@internationalized/date";
-import { cn } from "@/lib/utils";
+import { useDropzone } from "react-dropzone";
 import * as RPNInput from "react-phone-number-input";
 import {
   CountrySelect,
   FlagComponent,
   PhoneInput,
 } from "../component-form-need";
-import { Input } from "@/components/ui/input";
-import {
-  UpdateUserDto,
-  UpdateUserSchema,
-  UserDto,
-} from "@/lib/schema/user/user.dto";
-import { useTheme } from "next-themes";
-import { Textarea } from "@/components/ui/textarea";
-import MyImage from "@/components/myComponents/myImage";
-import { FormError, FormSuccess } from "@/components/myComponents/form-message";
-import { Button } from "@/components/ui/button";
 
 interface props {
-  currentUser: UserDto;
+  currentUser: UserModel;
 }
 
 const UserUserDataForm = ({ currentUser }: props) => {
@@ -62,7 +62,7 @@ const UserUserDataForm = ({ currentUser }: props) => {
     //  startTransition
   ] = useTransition();
   const { theme } = useTheme();
-  const form = useForm<UpdateUserDto>({
+  const form = useForm<UpdateUser>({
     resolver: zodResolver(UpdateUserSchema),
     defaultValues: {
       name: currentUser.name ? currentUser.name : "",
@@ -106,7 +106,7 @@ const UserUserDataForm = ({ currentUser }: props) => {
     maxFiles: 1,
   });
   const now = today(getLocalTimeZone());
-  const handleSubmit = (values: UpdateUserDto) => {
+  const handleSubmit = (values: UpdateUser) => {
     setError("");
     setSuccess("");
 
@@ -116,10 +116,10 @@ const UserUserDataForm = ({ currentUser }: props) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
-        className=" flex flex-col space-y-4"
+        className="flex flex-col space-y-4"
       >
-        <div className=" w-full flex justify-between">
-          <div className=" w-1/2 flex flex-col space-y-4">
+        <div className="flex w-full justify-between">
+          <div className="flex w-1/2 flex-col space-y-4">
             <FormField
               name="name"
               control={form.control}
@@ -130,7 +130,7 @@ const UserUserDataForm = ({ currentUser }: props) => {
                     <Input
                       id="role"
                       {...field}
-                      className="w-full bg-base-100"
+                      className="bg-base-100 w-full"
                       placeholder="User full name"
                       type="text"
                       disabled={isPending}
@@ -154,7 +154,7 @@ const UserUserDataForm = ({ currentUser }: props) => {
                     <Input
                       id="role"
                       {...field}
-                      className="w-full bg-base-100"
+                      className="bg-base-100 w-full"
                       placeholder="Username"
                       type="text"
                       disabled={isPending}
@@ -172,7 +172,7 @@ const UserUserDataForm = ({ currentUser }: props) => {
               control={form.control}
               name="age"
               render={({ field }) => (
-                <FormItem className=" w-full">
+                <FormItem className="w-full">
                   <FormControl>
                     <Controller
                       name="age"
@@ -187,12 +187,12 @@ const UserUserDataForm = ({ currentUser }: props) => {
                                 currentDate.getHours(),
                                 currentDate.getMinutes(),
                                 currentDate.getSeconds(),
-                                currentDate.getMilliseconds()
+                                currentDate.getMilliseconds(),
                               );
                               onChange(date);
                             }
                             onChange(
-                              selectedDate ? selectedDate.toDate() : null
+                              selectedDate ? selectedDate.toDate() : null,
                             );
                           }}
                           value={
@@ -203,14 +203,14 @@ const UserUserDataForm = ({ currentUser }: props) => {
                                     month: new Date(value).getMonth() + 1,
                                     day: new Date(value).getDate(),
                                   }),
-                                  getLocalTimeZone()
+                                  getLocalTimeZone(),
                                 )
                               : null
                           }
                         >
                           <FormLabel>Age</FormLabel>
                           <div className="flex">
-                            <Group className="inline-flex h-10 w-full rounded-md bg-base-100 px-3 py-2 text-base ring-offset-background   items-center overflow-hidden whitespace-nowrap  pe-9 shadow-sm shadow-black/5 transition-shadow data-[focus-within]:border-ring data-[disabled]:opacity-50 data-[focus-within]:outline-none ">
+                            <Group className="bg-base-100 ring-offset-background data-[focus-within]:border-ring inline-flex h-10 w-full items-center overflow-hidden rounded-md px-3 py-2 pe-9 text-base whitespace-nowrap shadow-sm shadow-black/5 transition-shadow data-[disabled]:opacity-50 data-[focus-within]:outline-none">
                               <DateInput {...field}>
                                 {(segment) =>
                                   segment &&
@@ -220,7 +220,7 @@ const UserUserDataForm = ({ currentUser }: props) => {
                                     <>
                                       <DateSegment
                                         segment={segment}
-                                        className="inline rounded p-0.5 caret-transparent outline outline-0 data-[disabled]:cursor-not-allowed data-[focused]:bg-accent data-[invalid]:data-[focused]:bg-destructive data-[type=literal]:px-0 data-[focused]:data-[placeholder]:  data-[focused]:  data-[invalid]:data-[focused]:data-[placeholder]:text-destructive-foreground data-[invalid]:data-[focused]:text-destructive-foreground data-[invalid]:data-[placeholder]:text-destructive data-[invalid]:text-destructive data-[placeholder]: /70 data-[type=literal]: /70 data-[disabled]:opacity-50"
+                                        className="data-[focused]:bg-accent data-[invalid]:data-[focused]:bg-destructive data-[focused]:data-[placeholder]: data-[focused]: data-[invalid]:data-[focused]:data-[placeholder]:text-destructive-foreground data-[invalid]:data-[focused]:text-destructive-foreground data-[invalid]:data-[placeholder]:text-destructive data-[invalid]:text-destructive data-[placeholder]: /70 data-[type=literal]: /70 inline rounded p-0.5 caret-transparent outline data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50 data-[type=literal]:px-0"
                                       />
                                       {segment.type !== "year" && (
                                         <span>/</span>
@@ -232,12 +232,12 @@ const UserUserDataForm = ({ currentUser }: props) => {
                                 }
                               </DateInput>
                             </Group>
-                            <ButtonDate className="z-10 -me-px -ms-9 flex w-9 items-center justify-center rounded-e-lg outline-offset-2 transition-colors hover:text-info focus-visible:outline-none data-[focus-visible]:outline data-[focus-visible]:outline-2 data-[focus-visible]:outline-ring/70">
+                            <ButtonDate className="hover:text-info data-[focus-visible]:outline-ring/70 z-10 -ms-9 -me-px flex w-9 items-center justify-center rounded-e-lg outline-offset-2 transition-colors focus-visible:outline-none data-[focus-visible]:outline">
                               <CalendarIcon size={16} strokeWidth={2} />
                             </ButtonDate>
                           </div>
                           <Popover
-                            className="z-50 rounded-lg border border-base-300 bg-base-200 shadow-lg shadow-black/5 outline-none data-[entering]:animate-in data-[exiting]:animate-out data-[entering]:fade-in-0 data-[exiting]:fade-out-0 data-[entering]:zoom-in-95 data-[exiting]:zoom-out-95 data-[placement=bottom]:slide-in-from-top-2 data-[placement=left]:slide-in-from-right-2 data-[placement=right]:slide-in-from-left-2 data-[placement=top]:slide-in-from-bottom-2"
+                            className="border-base-300 bg-base-200 data-[entering]:animate-in data-[exiting]:animate-out data-[entering]:fade-in-0 data-[exiting]:fade-out-0 data-[entering]:zoom-in-95 data-[exiting]:zoom-out-95 data-[placement=bottom]:slide-in-from-top-2 data-[placement=left]:slide-in-from-right-2 data-[placement=right]:slide-in-from-left-2 data-[placement=top]:slide-in-from-bottom-2 z-50 rounded-lg border shadow-lg shadow-black/5 outline-none"
                             offset={4}
                             data-theme={theme}
                           >
@@ -246,14 +246,14 @@ const UserUserDataForm = ({ currentUser }: props) => {
                                 <header className="flex w-full items-center gap-1 pb-1">
                                   <ButtonDate
                                     slot="previous"
-                                    className="flex size-9 items-center justify-center rounded-lg outline-offset-2 transition-colors hover:bg-accent hover:  data-[focus-visible]:outline data-[focus-visible]:outline-2 data-[focus-visible]:outline-ring/70"
+                                    className="hover:bg-accent hover: data-[focus-visible]:outline-ring/70 flex size-9 items-center justify-center rounded-lg outline-offset-2 transition-colors data-[focus-visible]:outline"
                                   >
                                     <ChevronLeft size={16} strokeWidth={2} />
                                   </ButtonDate>
                                   <Heading className="grow text-center text-sm font-medium" />
                                   <ButtonDate
                                     slot="next"
-                                    className="flex size-9 items-center justify-center rounded-lg outline-offset-2 transition-colors hover:bg-accent hover:  data-[focus-visible]:outline data-[focus-visible]:outline-2 data-[focus-visible]:outline-ring/70"
+                                    className="hover:bg-accent hover: data-[focus-visible]:outline-ring/70 flex size-9 items-center justify-center rounded-lg outline-offset-2 transition-colors data-[focus-visible]:outline"
                                   >
                                     <ChevronRight size={16} strokeWidth={2} />
                                   </ButtonDate>
@@ -261,19 +261,19 @@ const UserUserDataForm = ({ currentUser }: props) => {
                                 <CalendarGrid>
                                   <CalendarGridHeader>
                                     {(day) => (
-                                      <CalendarHeaderCell className="size-9 rounded-lg p-0 text-xs font-medium  /80">
+                                      <CalendarHeaderCell className="/80 size-9 rounded-lg p-0 text-xs font-medium">
                                         {day}
                                       </CalendarHeaderCell>
                                     )}
                                   </CalendarGridHeader>
-                                  <CalendarGridBody className="[&_td]:px-0 border-0">
+                                  <CalendarGridBody className="border-0 [&_td]:px-0">
                                     {(date) => (
                                       <CalendarCell
                                         date={date}
                                         className={cn(
-                                          "relative flex size-9 items-center justify-center whitespace-nowrap rounded-lg border border-transparent p-0 text-sm font-normal outline-offset-2 transition-colors data-[disabled]:pointer-events-none data-[unavailable]:pointer-events-none data-[focus-visible]:z-10 data-[hovered]:bg-accent data-[selected]:bg-info data-[hovered]:  data-[selected]:text-primary-foreground data-[unavailable]:line-through data-[disabled]:opacity-30 data-[unavailable]:opacity-30 data-[focus-visible]:outline data-[focus-visible]:outline-2 data-[focus-visible]:outline-ring/70 data-[invalid]:data-[selected]:[&:not([data-hover])]:bg-destructive data-[invalid]:data-[selected]:[&:not([data-hover])]:text-destructive-foreground",
+                                          "data-[hovered]:bg-accent data-[selected]:bg-info data-[hovered]: data-[selected]:text-primary-foreground data-[focus-visible]:outline-ring/70 data-[invalid]:data-[selected]:[&:not([data-hover])]:bg-destructive data-[invalid]:data-[selected]:[&:not([data-hover])]:text-destructive-foreground relative flex size-9 items-center justify-center rounded-lg border border-transparent p-0 text-sm font-normal whitespace-nowrap outline-offset-2 transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-30 data-[focus-visible]:z-10 data-[focus-visible]:outline data-[unavailable]:pointer-events-none data-[unavailable]:line-through data-[unavailable]:opacity-30",
                                           date.compare(now) === 0 &&
-                                            "after:pointer-events-none after:absolute after:bottom-1 after:start-1/2 after:z-10 after:size-[3px] after:-translate-x-1/2 after:rounded-full after:bg-info data-[selected]:after:bg-info"
+                                            "after:bg-info data-[selected]:after:bg-info after:pointer-events-none after:absolute after:start-1/2 after:bottom-1 after:z-10 after:size-[3px] after:-translate-x-1/2 after:rounded-full",
                                         )}
                                       />
                                     )}
@@ -307,7 +307,7 @@ const UserUserDataForm = ({ currentUser }: props) => {
                       render={({ field }) => (
                         <RPNInput.default
                           {...field}
-                          className="flex rounded-lg w-96 border-l-0"
+                          className="flex w-96 rounded-lg border-l-0"
                           international
                           flagComponent={FlagComponent}
                           countrySelectComponent={CountrySelect}
@@ -336,7 +336,7 @@ const UserUserDataForm = ({ currentUser }: props) => {
                     <Textarea
                       id="bio"
                       {...field}
-                      className="w-full bg-base-100"
+                      className="bg-base-100 w-full"
                       placeholder="type about your self..."
                       disabled={isPending}
                     />
@@ -350,7 +350,7 @@ const UserUserDataForm = ({ currentUser }: props) => {
               )}
             />
           </div>
-          <div className=" p-10 w-1/2 justify-start flex flex-col">
+          <div className="flex w-1/2 flex-col justify-start p-10">
             <FormField
               control={form.control}
               name="image"
@@ -358,15 +358,15 @@ const UserUserDataForm = ({ currentUser }: props) => {
                 <FormItem className="items-center">
                   <FormLabel
                     htmlFor="image"
-                    className="flex gap-3 items-center"
+                    className="flex items-center gap-3"
                   >
-                    <div className=" flex flex-col space-y-2 items-center">
-                      <div className=" space-y-4 flex flex-col">
+                    <div className="flex flex-col items-center space-y-2">
+                      <div className="flex flex-col space-y-4">
                         <FormLabel className="">Profile image</FormLabel>
                         <MyImage
                           role="AVATAR"
                           src={field.value || "/images/p.jpg"}
-                          className="size-54 min-h-36 min-w-36 "
+                          className="size-54 min-h-36 min-w-36"
                           alt="Profile"
                         />
                       </div>
@@ -379,7 +379,7 @@ const UserUserDataForm = ({ currentUser }: props) => {
                       </FormControl>
                     </div>
                   </FormLabel>
-                  {error && <p className="text-sm text-error">{error}</p>}
+                  {error && <p className="text-error text-sm">{error}</p>}
                   <FormDescription>
                     Your image for you please you image for you because it help
                     other to know you.
@@ -390,7 +390,7 @@ const UserUserDataForm = ({ currentUser }: props) => {
             />
           </div>
         </div>
-        <div className=" mt-2">
+        <div className="mt-2">
           <FormError message={error} />
           <FormSuccess message={success} />
         </div>
@@ -398,7 +398,7 @@ const UserUserDataForm = ({ currentUser }: props) => {
           library={"daisy"}
           disabled={isPending}
           variant="info"
-          className=" w-32"
+          className="w-32"
         >
           Update profile{" "}
           {isPending && (

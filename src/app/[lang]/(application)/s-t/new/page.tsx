@@ -1,12 +1,11 @@
-import CreateSchoolForm from "@/components/table/school/create-school-form";
 import PermissionPage from "@/components/page/permission-page";
-import { Locale } from "@/i18n";
-import { getAuthUserServer } from "@/lib/utils/auth";
-import { Metadata } from "next";
+import CreateSchoolForm from "@/components/page/school/create/create-school-form";
+import type { Locale } from "@/i18n";
+import { authContext } from "@/lib/utils/auth-context";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-
 export const metadata: Metadata = {
-  title: "Create - school",
+  title: "Create school | space-together",
 };
 interface props {
   params: Promise<{ lang: Locale }>;
@@ -15,13 +14,16 @@ interface props {
 const SchoolStaffRegisterSchool = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
-  const currentUser = await getAuthUserServer();
-  if (!currentUser) return redirect(`/${lang}/auth/login`);
-  if (currentUser.role !== "SCHOOLSTAFF")
-    return <PermissionPage lang={lang} role={currentUser.role ?? "STUDENT"} />;
+
+  const auth = await authContext();
+  if (!auth) return redirect(`/${lang}/auth/login`);
+
+  const allowedRoles = ["ADMIN", "SCHOOLSTAFF"];
+  if (!auth.user.role || !allowedRoles.includes(auth.user.role))
+    return <PermissionPage lang={lang} role={auth.user.role ?? "STUDENT"} />;
 
   return (
-    <div className=" px-4 mt-4 space-y-2">
+    <div className="mt-4 space-y-2 px-4">
       <div>
         <h1 className="title-page">Register a New School</h1>
         <p>
@@ -31,7 +33,7 @@ const SchoolStaffRegisterSchool = async (props: props) => {
           school.
         </p>
       </div>
-      <CreateSchoolForm userId={currentUser.id} lang={lang} />
+      <CreateSchoolForm auth={auth} lang={lang} />
     </div>
   );
 };

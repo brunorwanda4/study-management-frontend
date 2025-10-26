@@ -1,9 +1,5 @@
 const LoadingProfilePage = () => {
-  return (
-    <div>
-      loading
-    </div>
-  )
-}
+  return <div>loading</div>;
+};
 
-export default LoadingProfilePage
+export default LoadingProfilePage;

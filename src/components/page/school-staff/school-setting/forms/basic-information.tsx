@@ -1,10 +1,14 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { ChangeEvent, useState, useTransition } from "react";
 import { useTheme } from "next-themes";
+import { type ChangeEvent, useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
 
+import { FormError } from "@/components/common/form-message";
+import MyImage from "@/components/common/myImage";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -15,7 +19,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -23,28 +27,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import MyImage from "@/components/myComponents/myImage";
+import { Textarea } from "@/components/ui/textarea";
+import { schoolMembers, schoolTypes } from "@/lib/const/common-details-const";
 import { schoolLogoImage } from "@/lib/context/images";
-import { SchoolMembers, SchoolTypeEnum } from "@/lib/schema/school.dto";
+import { useToast } from "@/lib/context/toast/ToastContext";
+import type { School } from "@/lib/schema/school/school-schema";
+import type { AuthContext } from "@/lib/utils/auth-context";
+import apiRequest from "@/service/api-client";
 import {
-  BasicInformationDto,
+  type BasicInformationDto,
   BasicInformationSchema,
 } from "./schema/basic-information";
-import { Card } from "@/components/ui/card";
-import { updateSchoolSchoolService } from "@/service/school/school.service";
-import { useToast } from "@/lib/context/toast/ToastContext";
-import { FormError } from "@/components/myComponents/form-message";
 
 interface BasicInformationFormProps {
-  initialData: BasicInformationDto;
-  schoolId: string;
+  initialData: School;
+  auth: AuthContext;
 }
 
 export const BasicInformationForm = ({
   initialData,
-  schoolId,
+  auth,
 }: BasicInformationFormProps) => {
   const [error, setError] = useState<string | null>("");
   const [isPending, startTransition] = useTransition();
@@ -54,18 +56,18 @@ export const BasicInformationForm = ({
   const form = useForm<BasicInformationDto>({
     resolver: zodResolver(BasicInformationSchema),
     defaultValues: {
-      logo: initialData?.logo ?? undefined,
-      name: initialData?.name ?? undefined,
-      username: initialData?.username ?? undefined,
-      description: initialData?.description ?? undefined,
-      schoolType: initialData?.schoolType ?? undefined,
-      schoolMembers: initialData?.schoolMembers ?? undefined,
+      logo: initialData?.logo || undefined,
+      name: initialData?.name || undefined,
+      username: initialData?.username || undefined,
+      description: initialData?.description || undefined,
+      school_type: initialData?.school_type || undefined,
+      school_members: initialData?.school_members || undefined,
     },
   });
 
   const handleLogoChange = (
     e: ChangeEvent<HTMLInputElement>,
-    fieldChange: (value: string) => void
+    fieldChange: (value: string) => void,
   ) => {
     setError("");
     e.preventDefault();
@@ -91,7 +93,15 @@ export const BasicInformationForm = ({
   const handleSubmit = (values: BasicInformationDto) => {
     setError(null);
     startTransition(async () => {
-      const res = await updateSchoolSchoolService(schoolId, values);
+      const res = await apiRequest<BasicInformationDto, School>(
+        "put",
+        `/school/${initialData.id || initialData._id}`,
+        values,
+        {
+          token: auth.token,
+          schoolToken: auth.schoolToken,
+        },
+      );
       if (res.data) {
         showToast({
           type: "success",
@@ -111,11 +121,11 @@ export const BasicInformationForm = ({
   };
 
   return (
-    <Card className=" p-6">
+    <Card className="p-6">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className=" space-y-4">
-          <h3 className="text-xl font-semibold mb-4 pb-2">Basic Information</h3>
-          <div className="space-x-6 flex w-full">
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <h3 className="mb-4 pb-2 text-xl font-semibold">Basic Information</h3>
+          <div className="flex w-full space-x-6">
             <div className="flex flex-col space-y-4">
               <FormField
                 control={form.control}
@@ -125,7 +135,7 @@ export const BasicInformationForm = ({
                     <FormLabel>School Name</FormLabel>
                     <FormControl>
                       <Input
-                        className=" w-[30rem]"
+                        className="w-120"
                         placeholder="e.g., Green Hills Academy"
                         {...field}
                       />
@@ -145,7 +155,7 @@ export const BasicInformationForm = ({
                     <FormLabel>School Username</FormLabel>
                     <FormControl>
                       <Input
-                        className=" w-[30rem]"
+                        className="w-120"
                         placeholder="e.g., greenhills"
                         {...field}
                       />
@@ -161,7 +171,7 @@ export const BasicInformationForm = ({
 
               <FormField
                 control={form.control}
-                name="schoolType"
+                name="school_type"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>School Type</FormLabel>
@@ -170,12 +180,12 @@ export const BasicInformationForm = ({
                       value={field.value ?? ""}
                     >
                       <FormControl>
-                        <SelectTrigger className=" w-40">
+                        <SelectTrigger className="w-40">
                           <SelectValue placeholder="Select school type" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent data-theme={theme}>
-                        {SchoolTypeEnum.options.map((type) => (
+                        {schoolTypes.map((type) => (
                           <SelectItem key={type} value={type}>
                             {type}
                           </SelectItem>
@@ -193,7 +203,7 @@ export const BasicInformationForm = ({
 
               <FormField
                 control={form.control}
-                name="schoolMembers"
+                name="school_members"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Student Body</FormLabel>
@@ -202,12 +212,12 @@ export const BasicInformationForm = ({
                       value={field.value ?? ""}
                     >
                       <FormControl>
-                        <SelectTrigger className=" w-40">
+                        <SelectTrigger className="w-40">
                           <SelectValue placeholder="Select student body type" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent data-theme={theme}>
-                        {SchoolMembers.options.map((type) => (
+                        {schoolMembers.map((type) => (
                           <SelectItem key={type} value={type}>
                             {type}
                           </SelectItem>
@@ -231,7 +241,7 @@ export const BasicInformationForm = ({
                     <FormControl>
                       <Textarea
                         placeholder="Tell us a little bit about the school"
-                        className="resize-y min-h-[100px] w-[30rem]"
+                        className="min-h-[100px] w-120 resize-y"
                         {...field}
                       />
                     </FormControl>
@@ -248,13 +258,13 @@ export const BasicInformationForm = ({
               control={form.control}
               name="logo"
               render={({ field }) => (
-                <FormItem className="mt-4 flex flex-col gap-2 items-center">
+                <FormItem className="mt-4 flex flex-col items-center gap-2">
                   <FormLabel>School Logo</FormLabel>
-                  <div className="flex items-center gap-4 flex-col">
+                  <div className="flex flex-col items-center gap-4">
                     <Label htmlFor="logo-upload" className="cursor-pointer">
                       <MyImage
                         src={field.value || schoolLogoImage}
-                        className="size-48 border border-base-300 shadow-sm"
+                        className="border-base-300 size-48 border shadow-sm"
                         classname="object-contain"
                         alt="School Logo Preview"
                       />

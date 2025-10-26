@@ -1,5 +1,3 @@
-import z from "zod"
+import z from "zod";
 
-export const UpdateClassMembersSchema = z.object({
-
-})
+export const UpdateClassMembersSchema = z.object({});

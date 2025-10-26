@@ -1,8 +1,6 @@
-"use client"
+"use client";
 
-import type React from "react"
-
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -11,26 +9,37 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import type { ReactNode } from "react"
-import { SchoolStaffDto } from "@/lib/schema/school/school-staff.schema"
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import type { SchoolStaff } from "@/lib/schema/school/school-staff-schema";
+import type React from "react";
 
 interface AssignRoleDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  staffMembers: SchoolStaffDto[]
-  trigger?: ReactNode
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  staffMembers: SchoolStaff[];
+  trigger?: React.ReactNode;
 }
 
-export function AssignRoleDialog({ open, onOpenChange, staffMembers, trigger }: AssignRoleDialogProps) {
+export function AssignRoleDialog({
+  open,
+  onOpenChange,
+  staffMembers,
+  trigger,
+}: AssignRoleDialogProps) {
   const handleAssignRole = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     // Logic to assign role would go here
-    onOpenChange(false)
-  }
+    onOpenChange(false);
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -38,7 +47,9 @@ export function AssignRoleDialog({ open, onOpenChange, staffMembers, trigger }: 
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Assign Role to Staff Member</DialogTitle>
-          <DialogDescription>Select a staff member and assign them a new role.</DialogDescription>
+          <DialogDescription>
+            Select a staff member and assign them a new role.
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleAssignRole}>
           <div className="grid gap-4 py-4">
@@ -52,7 +63,10 @@ export function AssignRoleDialog({ open, onOpenChange, staffMembers, trigger }: 
                 </SelectTrigger>
                 <SelectContent>
                   {staffMembers.map((staff) => (
-                    <SelectItem key={staff.id} value={staff.id.toString()}>
+                    <SelectItem
+                      key={staff.id}
+                      value={staff.id || staff._id || ""}
+                    >
                       {staff.name}
                     </SelectItem>
                   ))}
@@ -63,7 +77,12 @@ export function AssignRoleDialog({ open, onOpenChange, staffMembers, trigger }: 
               <Label htmlFor="current-role" className="text-right">
                 Current Role
               </Label>
-              <Input id="current-role" className="col-span-3" disabled value="Teacher" />
+              <Input
+                id="current-role"
+                className="col-span-3"
+                disabled
+                value="Teacher"
+              />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="new-role" className="text-right">
@@ -78,7 +97,9 @@ export function AssignRoleDialog({ open, onOpenChange, staffMembers, trigger }: 
                   <SelectItem value="Teacher">Teacher</SelectItem>
                   <SelectItem value="Librarian">Librarian</SelectItem>
                   <SelectItem value="Counselor">Counselor</SelectItem>
-                  <SelectItem value="Department Head">Department Head</SelectItem>
+                  <SelectItem value="Department Head">
+                    Department Head
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -86,7 +107,11 @@ export function AssignRoleDialog({ open, onOpenChange, staffMembers, trigger }: 
               <Label htmlFor="reason" className="text-right">
                 Reason
               </Label>
-              <Input id="reason" className="col-span-3" placeholder="Reason for role change" />
+              <Input
+                id="reason"
+                className="col-span-3"
+                placeholder="Reason for role change"
+              />
             </div>
           </div>
           <DialogFooter>
@@ -95,5 +120,5 @@ export function AssignRoleDialog({ open, onOpenChange, staffMembers, trigger }: 
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

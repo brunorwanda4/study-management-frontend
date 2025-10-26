@@ -1,28 +1,18 @@
-import { format } from "date-fns"; // Make sure date-fns is installed
-import { ColumnDef, RowData } from "@tanstack/react-table";
+import MyImage from "@/components/common/myImage";
+import MyLink from "@/components/common/myLink";
 import { Checkbox } from "@/components/ui/checkbox";
-import MyLink from "@/components/myComponents/myLink";
-import MyImage from "@/components/myComponents/myImage";
+import type { Locale } from "@/i18n";
 import { studentImage } from "@/lib/context/images";
-import { Locale } from "@/i18n";
-import { SchoolStaffDto } from "@/lib/schema/school/school-staff.schema";
-
-
-
-declare module "@tanstack/react-table" {
-  //allows us to define custom properties for our columns
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface ColumnMeta<TData extends RowData, TValue> {
-    filterVariant?: "text" | "range" | "select";
-  }
-}
+import type { SchoolStaffWithRelations } from "@/lib/schema/school/school-staff-schema";
+import { formatReadableDate } from "@/lib/utils/format-date";
+import type { ColumnDef } from "@tanstack/react-table";
 
 // ========================================================================
 // The complete columns() function
 // ========================================================================
 export const StaffTableColumns = (
-  lang: Locale
-): ColumnDef<SchoolStaffDto>[] => {
+  lang: Locale,
+): ColumnDef<SchoolStaffWithRelations>[] => {
   return [
     // --- 1. Selection Column ---
     {
@@ -35,7 +25,7 @@ export const StaffTableColumns = (
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
           aria-label="Select all"
-          className="ms-[-4px]" // Adjust alignment if needed
+          className="-ms-1" // Adjust alignment if needed
         />
       ),
       cell: ({ row }) => (
@@ -43,7 +33,7 @@ export const StaffTableColumns = (
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
           aria-label="Select row"
-          className="ms-[-4px]" // Adjust alignment if needed
+          className="-ms-1" // Adjust alignment if needed
         />
       ),
       enableSorting: false,
@@ -56,18 +46,18 @@ export const StaffTableColumns = (
       header: "Staff",
       accessorKey: "name", // Used for sorting/filtering by name
       cell: ({ row }) => (
-        <div className="flex space-x-3 items-center">
+        <div className="flex items-center space-x-3">
           {" "}
           {/* Increased space */}
           <MyLink
             loading
-            href={`/${lang}/p/${row.original.userId}?studentId=${row.original.id}`}
-            className="flex-shrink-0" // Prevent avatar shrinking
+            href={`/${lang}/p/${row.original.user?.username}?schoolStaff=${row.original.id}`}
+            className="shrink-0" // Prevent avatar shrinking
           >
             <MyImage
               role="AVATAR"
               className="size-10 rounded-full" // Explicitly rounded
-              src={row.original.image || studentImage} // Use default student image if missing
+              src={row.original.image || row.original.image || studentImage} // Use default student image if missing
               alt={row.original.name || "Student Avatar"} // Add alt text
             />
           </MyLink>
@@ -76,8 +66,8 @@ export const StaffTableColumns = (
             {/* Prevent text overflow issues */}
             <MyLink
               loading
-              className="font-medium truncate hover:underline" // Truncate long names
-              href={`/${lang}/p/${row.original.userId}?studentId=${row.original.id}`}
+              className="truncate font-medium hover:underline" // Truncate long names
+              href={`/${lang}/p/${row.original.user?.username}?schoolStaff=${row.original.id}`}
               //   title={row.original.name || 'View Profile'} // Add title attribute
             >
               {row.original.name || "N/A"} {/* Fallback for name */}
@@ -85,7 +75,7 @@ export const StaffTableColumns = (
             {/* Conditionally render email if present */}
             {row.original.email && (
               <span
-                className="text-sm text-muted-foreground truncate"
+                className="text-muted-foreground truncate text-sm"
                 title={row.original.email} // Add title attribute
               >
                 {row.original.email}
@@ -123,10 +113,10 @@ export const StaffTableColumns = (
       accessorKey: "gender",
       cell: ({ row }) => {
         // Provide user-friendly display
-        const gender = row.original.gender;
+        const gender = row.original.user?.gender;
         if (gender === "MALE") return <div className="text-sm">Male</div>;
         if (gender === "FEMALE") return <div className="text-sm">Female</div>;
-        return <div className="text-sm text-muted-foreground">N/A</div>; // Fallback
+        return <div className="text-muted-foreground text-sm">N/A</div>; // Fallback
       },
       enableSorting: false, // Sorting by gender might not be common
       meta: {
@@ -142,17 +132,13 @@ export const StaffTableColumns = (
       size: 100, // Suggest a size
     },
 
-    
-
-    
-
     // --- 7. Phone Column ---
     {
       header: "Phone",
       accessorKey: "phone",
       cell: ({ row }) => (
         <div className="text-sm">
-          {row.original.phone || (
+          {row.original.user?.phone || (
             <span className="text-muted-foreground">-</span>
           )}
         </div>
@@ -170,9 +156,8 @@ export const StaffTableColumns = (
       accessorKey: "createAt",
       cell: ({ row }) => (
         <div className="text-sm">
-          {row.original.createAt ? (
-            // Ensure createAt is treated as a Date object or valid date string
-            format(new Date(row.original.createAt), "yyyy-MM-dd")
+          {row.original.created_at ? (
+            formatReadableDate(row.original.created_at)
           ) : (
             <span className="text-muted-foreground">-</span>
           )}

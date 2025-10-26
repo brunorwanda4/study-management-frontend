@@ -1,9 +1,18 @@
-export const DefaultChildImage = "https://i.pinimg.com/1200x/40/fd/f6/40fdf6a05d14d671d8d16190b8a3a15a.jpg"
-export const classImage = "https://i.pinimg.com/1200x/25/26/8c/25268cd7e7e7d7bd67f71cb37406a568.jpg"
-export const teacherImage = "https://img.freepik.com/free-photo/medium-shot-smiley-woman-teaching_23-2149272223.jpg"
-export const studentImage = "https://i.pinimg.com/1200x/b2/cb/d4/b2cbd44e4efaa0a7972950b4cf52c175.jpg"
-export const schoolLogoImage = "https://img.freepik.com/free-vector/gradient-school-logo-design-template_23-2149664347.jpg?t=st=1745211049~exp=1745214649~hmac=678f349c9bd7752892a1fe4e786b2071c68c9c58a033d1066eab7663a99d4f4c&w=826"
-export const studentsImage = "https://i.pinimg.com/1200x/53/58/41/5358412892040d5d10ba7262c3efa1b0.jpg"
-export const userImage = "https://i.pinimg.com/1200x/5d/0c/d8/5d0cd81e76339b484605c2b2a5bb681f.jpg"
-export const schoolImage = "https://i.pinimg.com/1200x/5d/0c/d8/5d0cd81e76339b484605c2b2a5bb681f.jpg"
-export const schoolBackground = "https://img.freepik.com/free-photo/red-buildings-households_1127-2024.jpg?t=st=1745209220~exp=1745212820~hmac=bfe15881f9ddcdf60c6b18bf704e12723017253ffb865653e6f4d12b9bfb1d37&w=1380"
+export const DefaultChildImage =
+  "https://i.pinimg.com/1200x/40/fd/f6/40fdf6a05d14d671d8d16190b8a3a15a.jpg";
+export const classImage =
+  "https://i.pinimg.com/1200x/25/26/8c/25268cd7e7e7d7bd67f71cb37406a568.jpg";
+export const teacherImage =
+  "https://img.freepik.com/free-photo/medium-shot-smiley-woman-teaching_23-2149272223.jpg";
+export const studentImage =
+  "https://i.pinimg.com/1200x/b2/cb/d4/b2cbd44e4efaa0a7972950b4cf52c175.jpg";
+export const schoolLogoImage =
+  "https://img.freepik.com/free-vector/gradient-school-logo-design-template_23-2149664347.jpg?t=st=1745211049~exp=1745214649~hmac=678f349c9bd7752892a1fe4e786b2071c68c9c58a033d1066eab7663a99d4f4c&w=826";
+export const studentsImage =
+  "https://i.pinimg.com/1200x/53/58/41/5358412892040d5d10ba7262c3efa1b0.jpg";
+export const userImage =
+  "https://i.pinimg.com/1200x/5d/0c/d8/5d0cd81e76339b484605c2b2a5bb681f.jpg";
+export const schoolImage =
+  "https://i.pinimg.com/1200x/5d/0c/d8/5d0cd81e76339b484605c2b2a5bb681f.jpg";
+export const schoolBackground =
+  "https://img.freepik.com/free-photo/red-buildings-households_1127-2024.jpg?t=st=1745209220~exp=1745212820~hmac=bfe15881f9ddcdf60c6b18bf704e12723017253ffb865653e6f4d12b9bfb1d37&w=1380";

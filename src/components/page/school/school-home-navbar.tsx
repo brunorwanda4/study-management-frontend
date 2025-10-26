@@ -1,11 +1,10 @@
 "use client";
-import { RxActivityLog } from "react-icons/rx";
-import { FaPeopleGroup, FaSignsPost } from "react-icons/fa6";
-import { FaSchool } from "react-icons/fa6";
-import { MdClass } from "react-icons/md";
-import { Locale } from "@/i18n";
+import MyLink from "@/components/common/myLink";
+import type { Locale } from "@/i18n";
 import { usePathname } from "next/navigation";
-import MyLink from "@/components/myComponents/myLink";
+import { FaPeopleGroup, FaSchool, FaSignsPost } from "react-icons/fa6";
+import { MdClass } from "react-icons/md";
+import { RxActivityLog } from "react-icons/rx";
 
 interface props {
   lang: Locale;
@@ -14,8 +13,8 @@ interface props {
 const SchoolHomeNav = ({ lang }: props) => {
   const pathname = usePathname();
   return (
-    <nav className=" basic-card w-full">
-      <div className=" flex space-x-2">
+    <nav className="basic-card w-full">
+      <div className="flex space-x-2">
         <MyLink
           loading
           type="button"
@@ -74,7 +73,8 @@ const SchoolHomeNav = ({ lang }: props) => {
           type="button"
           button={{
             size: "sm",
-            variant: pathname === `/${lang}/school/classes` ? "info" : "default",
+            variant:
+              pathname === `/${lang}/school/classes` ? "info" : "default",
             library: "daisy",
           }}
           href={`/${lang}/school/classes`}

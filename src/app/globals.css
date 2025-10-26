@@ -1,8 +1,20 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @plugin "daisyui" {
-  themes: light --default, dark --prefersdark, cupcake, cmyk, acid, winter,
-    valentine, synthwave, business, night, forest, black;
+  themes:
+    light --default,
+    dark --prefersdark,
+    cupcake,
+    cmyk,
+    acid,
+    winter,
+    valentine,
+    synthwave,
+    business,
+    night,
+    forest,
+    dim,
+    black;
 }
 
 @custom-variant dark (&:is(.dark *));
@@ -48,72 +60,100 @@
 }
 
 :root {
+  --p: #0ca5e9;
+  --pf: #ffffff;
+
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+
+  /* Backgrounds */
+  --background: var(--b1);
+  --foreground: var(--bc);
+  --card: var(--b1);
+  --card-foreground: var(--bc);
+  --popover: var(--b1);
+  --popover-foreground: var(--bc);
+
+  /* Brand */
+  --primary: var(--p);
+  --primary-foreground: var(--pf);
+
+  /* Secondary */
+  --secondary: var(--s);
+  --secondary-foreground: var(--sf);
+
+  /* Accent */
+  --accent: var(--a);
+  --accent-foreground: var(--af);
+
+  /* Muted = base-200 */
+  --muted: var(--b2);
+  --muted-foreground: var(--bc);
+
+  /* Destructive (custom, since Daisy doesn’t define it) */
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: #fff;
+
+  /* Borders / Inputs */
+  --border: var(--b3);
+  --input: var(--b2);
+  --ring: var(--p);
+
+  /* Charts (leave custom or map to Daisy’s colors if you want) */
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+
+  /* Sidebar */
+  --sidebar: var(--b1);
+  --sidebar-foreground: var(--bc);
+  --sidebar-primary: var(--p);
+  --sidebar-primary-foreground: var(--pf);
+  --sidebar-accent: var(--b3);
+  --sidebar-accent-foreground: var(--af);
+  --sidebar-border: var(--b3);
+  --sidebar-ring: var(--p);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --p: #0ca5e9;
+  --pf: #ffffff;
+  /* DaisyUI dark theme already flips vars, so we just remap */
+  --background: var(--b1);
+  --foreground: var(--bc);
+  --card: var(--b1);
+  --card-foreground: var(--bc);
+  --popover: var(--b1);
+  --popover-foreground: var(--bc);
+
+  --primary: var(--p);
+  --primary-foreground: var(--pf);
+
+  --secondary: var(--s);
+  --secondary-foreground: var(--sf);
+
+  --accent: var(--a);
+  --accent-foreground: var(--af);
+
+  --muted: var(--b2);
+  --muted-foreground: var(--bc);
+
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: #fff;
+
+  --border: var(--b3);
+  --input: var(--b2);
+  --ring: var(--p);
+
+  --sidebar: var(--b1);
+  --sidebar-foreground: var(--bc);
+  --sidebar-primary: var(--p);
+  --sidebar-primary-foreground: var(--pf);
+  --sidebar-accent: var(--a);
+  --sidebar-accent-foreground: var(--af);
+  --sidebar-border: var(--b3);
+  --sidebar-ring: var(--p);
 }
 
 @theme {
@@ -134,21 +174,40 @@
 }
 
 .title-page {
-  @apply font-bold text-2xl;
+  @apply text-2xl font-bold;
 }
 .basic-title {
-  @apply font-medium text-lg;
+  @apply text-lg font-medium;
 }
 
-.small-title{
-  @apply font-medium text-base
+.small-title {
+  @apply text-base font-medium;
 }
 
 .basic-card {
-  @apply bg-base-100 p-4 card border border-base-300 shadow-sm shadow-base-300;
+  @apply bg-base-100 card border-base-300 shadow-base-300 border p-4 shadow-sm;
 }
 
 .basic-card-no-p {
-  @apply bg-base-100 card border border-base-300;
+  @apply bg-base-100 card border-base-300 border;
 }
 
+.happy-card {
+  @apply bg-base-300 card border-base-200 border-2 p-4;
+}
+
+.happy-line {
+  @apply flex flex-col gap-4;
+}
+
+.happy-title-base {
+  @apply text-lg font-semibold;
+}
+
+.happy-title-head {
+  @apply text-2xl font-bold;
+}
+
+happy-page {
+  @apply flex min-h-screen flex-col space-y-2 p-2;
+}

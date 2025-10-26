@@ -1,48 +1,33 @@
 import DevelopingPage from "@/components/page/developing-page";
-import NotFoundPage from "@/components/page/not-found";
-import { Locale } from "@/i18n";
-import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";
-import { getClassById } from "@/service/class/class.service";
-import { Metadata } from "next";
+import type { Locale } from "@/i18n";
+import { authContext } from "@/lib/utils/auth-context";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 interface Props {
-  params: Promise<{ lang: Locale; classId: string }>;
+  params: Promise<{ lang: Locale; classUsername: string }>;
 }
 
 export const generateMetadata = async (props: Props): Promise<Metadata> => {
   const params = await props.params;
-  const { classId } = params;
-  const classResponse = await getClassById(classId);
 
   return {
-    title: classResponse.data?.name || "Class not found",
-    description: `${classResponse.data?.name}`,
+    title: "Class not found",
+    description: `classUsername`,
   };
 };
 
-const ClassIdPage = async (props: Props) => {
+const ClassUsernamePage = async (props: Props) => {
   const params = await props.params;
-  const { lang, classId } = params;
+  const { lang, classUsername } = params;
 
-  const [currentUser, currentCls] = await Promise.all([
-    getAuthUserServer(),
-    getClassById(classId),
-    getSchoolServer(),
-  ]);
+  const auth = await authContext();
 
-  if (!currentUser) {
+  if (!auth) {
     return redirect(`/${lang}/auth/login`);
   }
-  if (!currentUser.role) {
-    return redirect(`/${lang}/auth/onboarding`);
-  }
 
-  if (!currentCls.data) {
-    return <NotFoundPage />;
-  }
-
-  return <DevelopingPage lang={lang} role={currentUser.role} />;
+  return <DevelopingPage lang={lang} role={auth.user.role} />;
 
   // return (
   //   <div className="space-y-4">
@@ -66,4 +51,4 @@ const ClassIdPage = async (props: Props) => {
   // );
 };
 
-export default ClassIdPage;
+export default ClassUsernamePage;

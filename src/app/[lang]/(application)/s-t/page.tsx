@@ -1,119 +1,150 @@
-import SchoolEducationChart from "@/components/charts/school-education-chart";
-import SchoolStudentAndClassChart from "@/components/charts/school-student-and-classes-chart";
-import JoinSchoolDialog from "@/components/page/school-staff/dialog/join-school-dialog";
-import MyImage from "@/components/myComponents/myImage";
-import MyLink from "@/components/myComponents/myLink";
+import MyImage from "@/components/common/myImage";
+import MyLink from "@/components/common/myLink";
 import JoinSchoolRequestBody from "@/components/page/application/join-school-request/join-school-request-body";
 import NotFoundPage from "@/components/page/not-found";
-import StaffDashboardDetails from "@/components/page/school-staff/dashboard/staff-dashboard-details";
+import PermissionPage from "@/components/page/permission-page";
+import JoinSchoolDialog from "@/components/page/school-staff/dialog/join-school-dialog";
 import SchoolHeader from "@/components/page/school/school-header";
 import { Locale } from "@/i18n";
-import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";
-import { GetAllJoinSchoolRequestByCurrentUserEmail } from "@/service/school/school-join-request.service";
-import { getSchoolByIdService } from "@/service/school/school.service";
+import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
+import { JoinSchoolRequestWithRelations } from "@/lib/schema/school/school-join-school/join-school-request-schema";
+import { School } from "@/lib/schema/school/school-schema";
+import { Student } from "@/lib/schema/school/student-schema";
+import { TeacherWithRelations } from "@/lib/schema/school/teacher-schema";
+import { authContext } from "@/lib/utils/auth-context";
+import apiRequest from "@/service/api-client";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
-import ClassActivitiesTable from "@/components/page/school-staff/dashboard/table/classes-activities-table";
-import StudentDashboardTable from "@/components/page/school-staff/dashboard/table/student-dashboard-table";
-import TeachersDashboardTable from "@/components/page/school-staff/dashboard/table/teacher-dashboard-table";
-import { getClassesBySchoolIdViewData } from "@/service/class/class.service";
-import { getAllStudentBySchoolId } from "@/service/school/student-service";
-import JoinSchoolTableWrapper from "@/components/page/school-staff/dashboard/table/join-school-table/join-school-table-wrapper";
-import { getAllTeacherBySchoolId } from "@/service/school/teacher-service";
 
 interface props {
   params: Promise<{ lang: Locale }>;
 }
 
 export const generateMetadata = async (): Promise<Metadata> => {
-  const school = await getSchoolServer();
+  const auth = await authContext();
+  if (!auth?.school)
+    return {
+      title: "User not found",
+      description: "It user not login",
+    };
   return {
-    title: school?.schoolName || "School not found",
-    description: school?.schoolDescription || "school description",
+    title: auth.school?.name || "School not found",
   };
 };
 
 const SchoolStaffPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
-  const [currentUser, currentSchool] = await Promise.all([
-    getAuthUserServer(),
-    getSchoolServer(),
-  ]);
+  const auth = await authContext();
 
-  if (!currentUser) {
+  if (!auth) {
     redirect(`/${lang}/auth/login`);
   }
 
+  if (auth.user.role !== "SCHOOLSTAFF") {
+    return <PermissionPage lang={lang} role={auth.user.role} />;
+  }
+
+  const join_school_requestsRes = await apiRequest<
+    void,
+    JoinSchoolRequestWithRelations[]
+  >("get", `/join-school-requests/my/pending`, undefined, {
+    token: auth.token,
+    schoolToken: auth.schoolToken,
+  });
+
+  if (!auth.school) {
+    return (
+      <RealtimeProvider<JoinSchoolRequestWithRelations>
+        channels={[
+          {
+            name: "join_school_request",
+            initialData: join_school_requestsRes.data ?? [],
+          },
+        ]}
+      >
+        <div className="grid h-full min-h-screen w-full place-content-center space-y-4 px-4 py-2">
+          <div className="flex flex-col items-center justify-center space-y-2">
+            <div className="flex h-full w-full flex-row-reverse items-center justify-center gap-2">
+              <MyLink
+                loading
+                href={`/${lang}/s-t/new`}
+                button={{ library: "daisy", variant: "info" }}
+                type="button"
+              >
+                <MyImage src="/icons/memo.png" role="ICON" />
+                Register your school
+              </MyLink>
+              <JoinSchoolDialog />
+            </div>
+          </div>
+          {join_school_requestsRes.data && (
+            <JoinSchoolRequestBody
+              lang={lang}
+              auth={auth}
+              requests={join_school_requestsRes.data}
+            />
+          )}
+        </div>
+      </RealtimeProvider>
+    );
+  }
+
   // page which shown base on user
-  if (currentSchool) {
+  if (auth.school) {
     const [school, classes, students, teachers] = await Promise.all([
-      getSchoolByIdService(currentSchool.schoolId),
-      getClassesBySchoolIdViewData(currentSchool.schoolId),
-      getAllStudentBySchoolId(currentSchool.schoolId),
-      getAllTeacherBySchoolId(currentSchool.schoolId)
+      apiRequest<void, School>("get", `/schools/${auth.school.id}`, undefined, {
+        token: auth.token,
+        schoolToken: auth.schoolToken,
+      }),
+      apiRequest<void, TeacherWithRelations[]>(
+        "get",
+        `/school/teachers/with-details`,
+        undefined,
+        { token: auth.token, schoolToken: auth.schoolToken },
+      ),
+      apiRequest<void, Student>(
+        "get",
+        `/school/students/with-details`,
+        undefined,
+        { token: auth.token, schoolToken: auth.schoolToken },
+      ),
+      apiRequest<void, Student>(
+        "get",
+        `/school/students/with-details`,
+        undefined,
+        {
+          token: auth.token,
+          schoolToken: auth.schoolToken,
+          realtime: "students",
+        },
+      ),
     ]);
     if (!school.data) return <NotFoundPage />;
     return (
-      <div className=" p-4 space-y-4 w-full">
-        <SchoolHeader
-          currentUser={currentUser}
-          currentSchool={currentSchool}
-          school={school.data}
-          onThePage
-          lang={lang}
-        />
-        <StaffDashboardDetails
+      <div className="w-full space-y-4 p-4">
+        <SchoolHeader auth={auth} school={school.data} onThePage lang={lang} />
+        {/* <StaffDashboardDetails
           schoolStaffs={school.data.SchoolStaff}
           teachers={school.data.Teacher}
           students={school.data.Student}
           lang={lang}
         />
-        {/* school basic info */}
-        <div className=" flex space-x-4 w-full">
+        <div className="flex w-full space-x-4">
           <SchoolEducationChart />
           <SchoolStudentAndClassChart classes={classes.data || []} />
         </div>
-        <div className=" flex space-x-4 w-full">
+        <div className="flex w-full space-x-4">
           <JoinSchoolTableWrapper currentSchool={currentSchool} lang={lang} />
           <ClassActivitiesTable lang={lang} />
         </div>
-        <div className=" flex space-x-4 w-full">
+        <div className="flex w-full space-x-4">
           <StudentDashboardTable students={students.data || []} lang={lang} />
           <TeachersDashboardTable teachers={teachers.data || []} lang={lang} />
-        </div>
+        </div> */}
       </div>
     );
   }
-
-  const getSchoolJoinRequest = await GetAllJoinSchoolRequestByCurrentUserEmail(
-    currentUser.email
-  );
-  return (
-    <div className=" w-full px-4 py-2 space-y-4 grid place-content-center h-full">
-      <div className=" flex flex-col justify-center items-center space-y-2">
-        <div className=" flex justify-center items-center w-full h-full gap-2 flex-row-reverse">
-          <MyLink
-            loading
-            href={`/${lang}/s-t/new`}
-            button={{ library: "daisy", variant: "info" }}
-            type="button"
-          >
-            <MyImage src="/icons/memo.png" role="ICON" />
-            Register your school
-          </MyLink>
-          <JoinSchoolDialog />
-        </div>
-      </div>
-      {getSchoolJoinRequest.data && (
-        <JoinSchoolRequestBody
-          lang={lang}
-          currentUser={currentUser}
-          requests={getSchoolJoinRequest.data}
-        />
-      )}
-    </div>
-  );
 };
 
 export default SchoolStaffPage;

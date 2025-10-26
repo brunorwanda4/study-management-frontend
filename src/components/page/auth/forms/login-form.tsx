@@ -1,26 +1,29 @@
 "use client";
 
-import { LoginUserDto, LoginUserSchema } from "@/lib/schema/user/user.dto";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { FormError, FormSuccess } from "@/components/common/form-message";
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  //   FormDescription,
   FormField,
   FormItem,
-  // FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useState, useTransition } from "react";
-import { EyeIcon, EyeOffIcon } from "lucide-react";
-import { loginService } from "@/service/auth/auth-service";
-import { redirectContents } from "@/lib/hooks/redirect";
 import { Locale } from "@/i18n";
+import { redirectContents } from "@/lib/hooks/redirect";
+import {
+  AuthUserDto,
+  LoginUserDto,
+  LoginUserSchema,
+} from "@/lib/schema/user/auth-user-schema";
+import { setAuthCookies } from "@/lib/utils/auth-context";
+import apiRequest from "@/service/api-client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { FormError, FormSuccess } from "@/components/myComponents/form-message";
+import { useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
 
 interface props {
   lang: Locale;
@@ -46,11 +49,22 @@ const LoginForm = ({ lang }: props) => {
     setError(null);
     setSuccess(null);
     startTransition(async () => {
-      const login = await loginService(values);
+      const login = await apiRequest<LoginUserDto, AuthUserDto>(
+        "post",
+        "/login",
+        values,
+      );
       if (login.data) {
-        setSuccess(`Welcome back ${login.data.name} ☺️`);
-        if (login.data.role) {
-          router.push(redirectContents({ lang, role: login.data.role }));
+        if (login.data.accessToken) {
+          await setAuthCookies(
+            login.data.accessToken,
+            login.data.id,
+            login.data.schoolAccessToken,
+          );
+          setSuccess(`Welcome back ${login.data.name} ☺️`);
+          if (login.data.role) {
+            router.push(redirectContents({ lang, role: login.data.role }));
+          }
         }
       } else if (login.error) {
         setError(login.error);
@@ -59,7 +73,7 @@ const LoginForm = ({ lang }: props) => {
   }
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 w-96">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-96 space-y-8">
         <FormField
           control={form.control}
           name="email"
@@ -69,7 +83,7 @@ const LoginForm = ({ lang }: props) => {
                 <div className="group relative">
                   <label
                     htmlFor={"email"}
-                    className="origin-start  group-focus-within:  has-[+input:not(:placeholder-shown)]:  absolute top-1/2 block -translate-y-1/2 cursor-text px-1 text-sm transition-all group-focus-within:pointer-events-none group-focus-within:top-0 group-focus-within:cursor-default group-focus-within:text-base group-focus-within:font-medium has-[+input:not(:placeholder-shown)]:pointer-events-none has-[+input:not(:placeholder-shown)]:top-0 has-[+input:not(:placeholder-shown)]:cursor-default has-[+input:not(:placeholder-shown)]:text-base has-[+input:not(:placeholder-shown)]:font-medium "
+                    className="origin-start group-focus-within: has-[+input:not(:placeholder-shown)]: absolute top-1/2 block -translate-y-1/2 cursor-text px-1 text-sm transition-all group-focus-within:pointer-events-none group-focus-within:top-0 group-focus-within:cursor-default group-focus-within:text-base group-focus-within:font-medium has-[+input:not(:placeholder-shown)]:pointer-events-none has-[+input:not(:placeholder-shown)]:top-0 has-[+input:not(:placeholder-shown)]:cursor-default has-[+input:not(:placeholder-shown)]:text-base has-[+input:not(:placeholder-shown)]:font-medium"
                   >
                     <span className="bg-base-100 inline-flex px-2">
                       Email Address*
@@ -78,7 +92,7 @@ const LoginForm = ({ lang }: props) => {
                   <Input
                     autoFocus
                     disabled={isPending}
-                    className=" h-12 base   "
+                    className="base h-12"
                     {...field}
                     id="email"
                     placeholder=" "
@@ -96,24 +110,24 @@ const LoginForm = ({ lang }: props) => {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <div className=" relative group">
+                <div className="group relative">
                   <label
                     htmlFor={"password"}
-                    className="group-focus-within:  has-[+input:not(:placeholder-shown)]:  absolute top-1/2 block -translate-y-1/2 cursor-text px-1 text-sm transition-all group-focus-within:pointer-events-none group-focus-within:top-0  group-focus-within:cursor-default group-focus-within:text-base group-focus-within:font-medium has-[+input:not(:placeholder-shown)]:pointer-events-none has-[+input:not(:placeholder-shown)]:top-0 has-[+input:not(:placeholder-shown)]:cursor-default has-[+input:not(:placeholder-shown)]:text-base has-[+input:not(:placeholder-shown)]:font-medium "
+                    className="group-focus-within: has-[+input:not(:placeholder-shown)]: absolute top-1/2 block -translate-y-1/2 cursor-text px-1 text-sm transition-all group-focus-within:pointer-events-none group-focus-within:top-0 group-focus-within:cursor-default group-focus-within:text-base group-focus-within:font-medium has-[+input:not(:placeholder-shown)]:pointer-events-none has-[+input:not(:placeholder-shown)]:top-0 has-[+input:not(:placeholder-shown)]:cursor-default has-[+input:not(:placeholder-shown)]:text-base has-[+input:not(:placeholder-shown)]:font-medium"
                   >
                     <span className="bg-base-100 inline-flex px-2">
                       Password*
                     </span>
                   </label>
                   <Input
-                    className=" h-12 base   "
+                    className="base h-12"
                     type={isVisible ? "text" : "password"}
                     disabled={isPending}
                     placeholder=" "
                     {...field}
                   />
                   <button
-                    className=" /80 hover:  focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+                    className="/80 hover: focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
                     type="button"
                     onClick={toggleVisibility}
                     aria-label={isVisible ? "Hide password" : "Show password"}
@@ -143,9 +157,10 @@ const LoginForm = ({ lang }: props) => {
           variant={"info"}
           disabled={isPending}
           size={"lg"}
-          className=" w-full"
+          className="w-full"
         >
-          Login  {isPending && (
+          Login{" "}
+          {isPending && (
             <div
               role="status"
               aria-label="Loading"

@@ -1,9 +1,9 @@
 "use client";
-import React from "react";
+import type { JoinSchoolRequest } from "@/lib/schema/school/school-join-school/join-school-request-schema";
 import StaffEvents from "../staff-events";
-import { SchoolJoinRequestDto } from "@/lib/schema/school/school-join-school/school-join-request.schema";
+
 interface props {
-  requests: SchoolJoinRequestDto[];
+  requests: JoinSchoolRequest[];
 }
 const StaffSchoolDashboardRequest = ({ requests }: props) => {
   return (

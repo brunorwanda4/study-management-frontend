@@ -1,11 +1,17 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-"use client"
+"use client";
 
-import { MoreHorizontal, Plus } from "lucide-react"
+import { MoreHorizontal, Plus } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,12 +19,25 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+} from "@/components/ui/dropdown-menu";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 interface PostsManagementProps {
-  staffMembers: any[]
+  staffMembers: any[];
 }
 
 export function PostsManagement({ staffMembers }: PostsManagementProps) {
@@ -72,7 +91,7 @@ export function PostsManagement({ staffMembers }: PostsManagementProps) {
       type: "Announcement",
       likes: 45,
     },
-  ]
+  ];
 
   return (
     <Card>
@@ -84,7 +103,9 @@ export function PostsManagement({ staffMembers }: PostsManagementProps) {
             Create Post
           </Button>
         </div>
-        <CardDescription>View and manage posts created by staff members</CardDescription>
+        <CardDescription>
+          View and manage posts created by staff members
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
@@ -149,7 +170,9 @@ export function PostsManagement({ staffMembers }: PostsManagementProps) {
                         <DropdownMenuItem>View Post</DropdownMenuItem>
                         <DropdownMenuItem>Edit Post</DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem className="text-destructive">Delete Post</DropdownMenuItem>
+                        <DropdownMenuItem className="text-destructive">
+                          Delete Post
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
@@ -160,7 +183,7 @@ export function PostsManagement({ staffMembers }: PostsManagementProps) {
         </div>
       </CardContent>
       <CardFooter className="flex items-center justify-between">
-        <div className="text-sm  ">
+        <div className="text-sm">
           Showing <strong>6</strong> of <strong>24</strong> posts
         </div>
         <div className="flex items-center gap-2">
@@ -173,5 +196,5 @@ export function PostsManagement({ staffMembers }: PostsManagementProps) {
         </div>
       </CardFooter>
     </Card>
-  )
+  );
 }

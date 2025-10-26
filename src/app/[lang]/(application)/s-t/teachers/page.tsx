@@ -1,24 +1,26 @@
-import StaffPeople from "@/components/page/school-staff/dashboard/staff-people";
-import { Metadata } from "next";
-import type { Locale } from "@/i18n";
-import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";
-import { redirect } from "next/navigation";
 import NotFoundPage from "@/components/page/not-found";
-import { getAllTeacherBySchoolId } from "@/service/school/teacher-service";
+import StaffPeople from "@/components/page/school-staff/dashboard/staff-people";
 import SchoolTeacherTable from "@/components/page/school-staff/table/teacher-table/table-teacher";
+import type { Locale } from "@/i18n";
+import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
+import { TeacherWithRelations } from "@/lib/schema/school/teacher-schema";
+import { authContext } from "@/lib/utils/auth-context";
+import apiRequest from "@/service/api-client";
+import { Metadata } from "next";
+import { redirect } from "next/navigation";
 
 interface props {
   params: Promise<{ lang: Locale }>;
 }
 
 export const generateMetadata = async (): Promise<Metadata> => {
-  const school = await getSchoolServer();
+  const auth = await authContext();
   return {
-    title: school?.name
-      ? `All Teacher in ${school?.schoolName}`
+    title: auth?.school?.name
+      ? `Teachers in ${auth?.school?.name}`
       : "School not found",
-    description: school?.name
-      ? `All Teacher in ${school?.schoolName}`
+    description: auth?.school?.name
+      ? `Teachers in ${auth?.school?.name}`
       : "school not found",
   };
 };
@@ -26,59 +28,73 @@ export const generateMetadata = async (): Promise<Metadata> => {
 const SchoolStaffTeacherPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
-  const [currentUser, currentSchool] = await Promise.all([
-    getAuthUserServer(),
-    getSchoolServer(),
-  ]);
+  const auth = await authContext();
 
-  if (!currentUser) {
+  if (!auth) {
     redirect(`/${lang}/auth/login`);
   }
-  if (!currentSchool)
+  if (!auth.school)
     return <NotFoundPage message="You need to have school to view this page" />;
-  const [allTeachers] = await Promise.all([
-    getAllTeacherBySchoolId(currentSchool.schoolId),
+
+  const [teachers] = await Promise.all([
+    apiRequest<void, TeacherWithRelations[]>(
+      "get",
+      `/school/teachers/with-details?limit=10`,
+      undefined,
+      { token: auth.token, schoolToken: auth.schoolToken, realtime: "teacher" },
+    ),
   ]);
+
   return (
-    <div className="p-4 space-y-4 ">
-      <h2 className=" title-page">Teachers</h2>
-      <div className=" flex space-x-4">
-        <StaffPeople
-          icon="/icons/teacher.png"
-          link=""
-          total={762}
-          title="Teacher"
-          Ftotal={60}
-          Mtotal={37}
-          role="Total Teacher"
-        />
-        <StaffPeople
-          icon="/icons/primary.png"
-          link=""
-          total={345}
-          title="Primary"
-          Ftotal={100}
-          Mtotal={233}
-          role="Total Primary Teacher"
-        />
-        <StaffPeople
-          icon="/icons/OLevel.png"
-          link=""
-          total={345}
-          title="Ordinary_level"
-          Ftotal={100}
-          Mtotal={233}
-          role="Total Ordinary_level Teacher"
-        />
+    <RealtimeProvider<TeacherWithRelations>
+      channels={[
+        {
+          name: "teacher",
+          initialData: teachers.data ?? [],
+        },
+      ]}
+    >
+      <div className="space-y-4 p-4">
+        <h2 className="title-page">Teachers</h2>
+        <div className="flex space-x-4">
+          <StaffPeople
+            icon="/icons/teacher.png"
+            link=""
+            total={762}
+            title="Teacher"
+            Ftotal={60}
+            Mtotal={37}
+            role="Total Teacher"
+          />
+          <StaffPeople
+            icon="/icons/primary.png"
+            link=""
+            total={345}
+            title="Primary"
+            Ftotal={100}
+            Mtotal={233}
+            role="Total Primary Teacher"
+          />
+          <StaffPeople
+            icon="/icons/OLevel.png"
+            link=""
+            total={345}
+            title="Ordinary_level"
+            Ftotal={100}
+            Mtotal={233}
+            role="Total Ordinary_level Teacher"
+          />
+        </div>
+        <div>
+          <SchoolTeacherTable
+            auth={auth}
+            lang={lang}
+            teachers={teachers.data ?? []}
+            realtimeEnabled
+          />
+        </div>
       </div>
-      <div>
-        <SchoolTeacherTable
-          schoolId={currentSchool.schoolId}
-          lang={lang}
-          teachers={ allTeachers.data ?? [] }
-        />
-      </div>
-    </div>
+    </RealtimeProvider>
   );
 };
 export default SchoolStaffTeacherPage;

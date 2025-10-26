@@ -1,50 +1,71 @@
 "use client";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Separator } from "../ui/separator";
-import { Button } from "../ui/button";
-import { Locale } from "@/i18n";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
-import { SchoolJoinRequestAndSchool } from "@/lib/schema/school/school-join-school/school-join-request.schema";
-import {
-  approvedSchoolJoinRequestByCurrentUser,
-  RejectSchoolJoinRequestByCurrentUser,
-} from "@/service/school/school-join-request.service";
-import { FormError, FormSuccess } from "../myComponents/form-message";
-import { useState, useTransition } from "react";
-import { formatTimeAgo } from "@/lib/functions/change-time";
 
-interface props {
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Locale } from "@/i18n";
+import { useToast } from "@/lib/context/toast/ToastContext";
+import { formatTimeAgo } from "@/lib/functions/change-time";
+import {
+  JoinSchoolRequest,
+  JoinSchoolRequestWithRelations,
+} from "@/lib/schema/school/school-join-school/join-school-request-schema";
+import { cn } from "@/lib/utils";
+import { AuthContext, setAuthCookies } from "@/lib/utils/auth-context";
+import apiRequest from "@/service/api-client";
+import Link from "next/link";
+import { useState, useTransition } from "react";
+import { FormError, FormSuccess } from "../common/form-message";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Button } from "../ui/button";
+import { Separator } from "../ui/separator";
+
+interface Props {
   lang: Locale;
-  request: SchoolJoinRequestAndSchool;
+  request: JoinSchoolRequestWithRelations;
   className?: string;
-  currentUserImage?: string;
+  auth: AuthContext;
 }
 
-const SchoolJoinRequestCard = ({
-  lang,
-  request,
-  className,
-  currentUserImage,
-}: props) => {
-  const [error, setError] = useState<undefined | null | string>("");
-  const [success, setSuccess] = useState<undefined | null | string>("");
+const SchoolJoinRequestCard = ({ lang, request, className, auth }: Props) => {
+  const [error, setError] = useState<string | null | undefined>("");
+  const [success, setSuccess] = useState<string | null | undefined>("");
   const [isPending, startTransition] = useTransition();
-  const { name, email, role, school } = request;
-  const { id: schoolId, name: schoolName, logo: schoolLogo } = school;
-
-  const displayName = name || email || "Unknown Applicant";
-  const displayRole = role || "Member";
+  const { showToast } = useToast();
 
   const onApprove = async () => {
     setError(null);
     setSuccess(null);
+
     startTransition(async () => {
-      const approve = await approvedSchoolJoinRequestByCurrentUser(request.id);
-      if (approve.data) {
-        setSuccess(`You have been join ${school.name}`);
+      const res = await apiRequest<void, { school_token: string }>(
+        "put",
+        `/join-school-requests/${request._id || request.id}/accept`,
+        undefined,
+        { token: auth.token, schoolToken: auth.token },
+      );
+
+      if (res.data) {
+        const msg = `You have been accepted to join ${request.school?.name}`;
+        setAuthCookies(auth.token, auth.user.id, res.data.school_token);
+        setSuccess(msg);
+        showToast({
+          title: "Request accepted 🫡",
+          description: msg,
+          type: "default",
+        });
       } else {
-        setError(`message :${approve.message} , error:${approve.error}`);
+        showToast({
+          title: "Something went wrong",
+          description: res.message,
+          type: "error",
+        });
+        setError(res.message);
       }
     });
   };
@@ -52,95 +73,124 @@ const SchoolJoinRequestCard = ({
   const onReject = async () => {
     setError(null);
     setSuccess(null);
+
     startTransition(async () => {
-      const approve = await RejectSchoolJoinRequestByCurrentUser(request.id);
-      if (approve.data) {
-        setSuccess(`You have been rejected to join ${school.name}`);
+      const res = await apiRequest<void, JoinSchoolRequest>(
+        "put",
+        `/join-school-requests/${request._id || request.id}/reject`,
+        undefined,
+        { token: auth.token, schoolToken: auth.token },
+      );
+
+      if (res.data) {
+        const msg = `You have rejected the request to join ${request.school?.name}`;
+        setSuccess(msg);
+        showToast({
+          title: "Request rejected 😥",
+          description: msg,
+          type: "default",
+        });
       } else {
-        setError(approve.message);
+        showToast({
+          title: "Something went wrong",
+          description: res.message,
+          type: "error",
+        });
+        setError(res.message);
       }
     });
   };
 
   return (
-    <div className={cn("basic-card p-4 w-72", className)}>
-      <div className="flex items-start gap-3">
-        <Avatar className="size-12">
-          <AvatarImage
-            src={
-              currentUserImage ? currentUserImage : "/images/default-avatar.jpg"
-            }
-            alt={displayName}
-          />
-          {/* Generic placeholder */}
-          <AvatarFallback>{displayName.charAt(0).toUpperCase()}</AvatarFallback>
-        </Avatar>
-        <div className="flex-1 overflow-hidden">
-          <h3 className="font-medium text-base truncate">{displayName}</h3>
-          {email && <p className="text-sm text-gray-500 truncate">{email}</p>}
+    <Card
+      className={cn("w-80 shadow-md transition-all hover:shadow-lg", className)}
+    >
+      <CardHeader>
+        <div className="flex items-center gap-3">
+          <Avatar className="size-10">
+            <AvatarImage
+              src={request.invited_user?.image || "/images/default-avatar.jpg"}
+              alt={request.invited_user?.name || "User Avatar"}
+            />
+            <AvatarFallback>
+              {request.invited_user?.name?.charAt(0) || "U"}
+            </AvatarFallback>
+          </Avatar>
+          <div className="truncate">
+            <CardTitle className="text-base font-semibold">
+              {request.invited_user?.name}
+            </CardTitle>
+            {request.invited_user?.email && (
+              <CardDescription className="text-muted-foreground truncate text-sm">
+                {request.invited_user.email}
+              </CardDescription>
+            )}
+          </div>
         </div>
-      </div>
-      <div className="mt-4 text-sm">
-        Requests to join as{" "}
-        <span className="font-semibold capitalize">{displayRole}</span> at:
-      </div>
-      <div>
-        <div className="flex items-center gap-2 mt-2">
+      </CardHeader>
+
+      <CardContent className="space-y-3">
+        <p className="text-sm">
+          Request to join as{" "}
+          <span className="font-semibold capitalize">{request.role}</span> at:
+        </p>
+
+        <div className="flex items-center gap-2">
           <Avatar className="size-8">
             <AvatarImage
-              src={schoolLogo || "/images/default-school-logo.jpg"}
-              alt={`${schoolName} logo`}
+              src={request.school?.logo || "/images/default-school-logo.jpg"}
+              alt={`${request.school?.name} logo`}
             />
-            <AvatarFallback>SCH</AvatarFallback>
+            <AvatarFallback>SC</AvatarFallback>
           </Avatar>
+
           <Link
-            href={`/${lang}/school/${schoolId}`}
-            className="font-medium text-sm hover:underline truncate"
+            href={`/${lang}/school/${request.school?.username}`}
+            className="truncate text-sm font-medium hover:underline"
           >
-            {schoolName}
+            {request.school?.name}
           </Link>
         </div>
-        <div className=" flex justify-end">
-          <span className=" text-sm text-gray-500">
-            {formatTimeAgo(request.updateAt)}
+        {request.message && <div>{request.message}</div>}
+        <div className="flex justify-end">
+          <span className="text-muted-foreground text-xs">
+            {formatTimeAgo(request.updated_at)}
           </span>
         </div>
-      </div>
-      <div className=" mt-2">
+
         <FormError message={error} />
         <FormSuccess message={success} />
-      </div>
-      <Separator className="my-2" />
-      <div className="flex gap-3">
+      </CardContent>
+
+      <Separator />
+
+      <CardFooter className="flex gap-3">
         <Button
-          library="daisy"
           type="button"
-          variant="primary"
+          variant="secondary"
           className="flex-1"
           disabled={isPending}
-          onClick={() => onApprove()}
+          library="daisy"
+          onClick={onApprove}
         >
-          Approve{" "}
+          Approve
           {isPending && (
-            <div
-              role="status"
-              aria-label="Loading"
-              className={"loading loading-spinner"}
-            />
+            <div role="status" className="loading loading-spinner ms-2" />
           )}
         </Button>
+
         <Button
           type="button"
-          library="daisy"
           variant="outline"
+          library="daisy"
           className="flex-1"
           disabled={isPending}
-          onClick={() => onReject()}
+          onClick={onReject}
         >
-          Reject{" "}
+          Reject
         </Button>
-      </div>
-    </div>
+      </CardFooter>
+    </Card>
   );
 };
 

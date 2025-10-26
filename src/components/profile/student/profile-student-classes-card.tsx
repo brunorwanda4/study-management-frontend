@@ -1,5 +1,5 @@
-import MyImage from "@/components/myComponents/myImage";
-import MyLink from "@/components/myComponents/myLink";
+import MyImage from "@/components/common/myImage";
+import MyLink from "@/components/common/myLink";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Timeline,
@@ -11,7 +11,7 @@ import {
   TimelineSeparator,
   TimelineTitle,
 } from "@/components/ui/timeline";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { schoolImage } from "@/lib/context/images";
 
 const items = [
@@ -68,14 +68,14 @@ const ProfileStudentClassesCard = ({ lang }: props) => {
                 <TimelineDate className="group-data-[orientation=vertical]/timeline:sm:absolute group-data-[orientation=vertical]/timeline:sm:-left-32 group-data-[orientation=vertical]/timeline:sm:w-20 group-data-[orientation=vertical]/timeline:sm:text-right">
                   {item.date}
                 </TimelineDate>
-                <TimelineTitle className="sm:-mt-0.5 flex space-x-2 items-center">
+                <TimelineTitle className="flex items-center space-x-2 sm:-mt-0.5">
                   <MyLink
                     loading
-                    className="sm:-mt-0.5 flex space-x-2 items-center"
+                    className="flex items-center space-x-2 sm:-mt-0.5"
                     href={`/${lang}/school`}
                   >
                     <MyImage
-                      className=" size-10"
+                      className="size-10"
                       alt="school name"
                       src={schoolImage}
                     />
@@ -85,15 +85,15 @@ const ProfileStudentClassesCard = ({ lang }: props) => {
                 <TimelineIndicator />
               </TimelineHeader>
               <TimelineContent>
-                <div className=" space-x-2">
+                <div className="space-x-2">
                   <span>Team 1:</span>
                   <span>Class name</span>
                 </div>
-                <div className=" space-x-2">
+                <div className="space-x-2">
                   <span>Team 2:</span>
                   <span>Class name</span>
                 </div>
-                <div className=" space-x-2">
+                <div className="space-x-2">
                   <span>Team 3:</span>
                   <span>Class name</span>
                 </div>

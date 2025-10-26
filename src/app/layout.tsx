@@ -1,12 +1,13 @@
-import type { Metadata } from "next";
-import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ToastManager } from "@/lib/context/toast/ToastContext";
+import type { Metadata } from "next";
+import type { ReactNode } from "react";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Student-management",
   description:
-    "system which help student to study every ware they are and communication, collaboration and help teacher to manage them and school to manage the class and student how they study",
+    "System which helps students to study anywhere, communicate, collaborate, and helps teachers and schools manage learning.",
   icons: "/logo.png",
   keywords: [
     "School Management",
@@ -33,11 +34,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+interface LayoutProps {
+  children: ReactNode;
+}
+
+export default async function RootLayout({ children }: LayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning data-theme="cupcake">
       <body>
@@ -46,7 +47,7 @@ export default async function RootLayout({
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
-          >
+        >
           <ToastManager>{children}</ToastManager>
         </ThemeProvider>
       </body>

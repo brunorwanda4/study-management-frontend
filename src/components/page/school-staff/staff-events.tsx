@@ -1,14 +1,16 @@
 "use client";
-import React, { useState } from "react";
-import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { DefaultChildImage } from "@/lib/context/images";
+import type {
+  JoinSchoolRequestWithRelations
+} from "@/lib/schema/school/school-join-school/join-school-request-schema";
+import { cn } from "@/lib/utils";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useTheme } from "next-themes";
-import { SchoolJoinRequestDto } from "@/lib/schema/school/school-join-school/school-join-request.schema";
-import { DefaultChildImage } from "@/lib/context/images";
+import { useState } from "react";
 
 interface props {
-  request: SchoolJoinRequestDto;
+  request: JoinSchoolRequestWithRelations;
 }
 
 const StaffEvents = ({ request }: props) => {
@@ -22,7 +24,7 @@ const StaffEvents = ({ request }: props) => {
     <div
       className={cn(
         " card p-2 duration-200",
-        theme === "dark" ? "hover:bg-white/10" : "hover:bg-black/10"
+        theme === "dark" ? "hover:bg-white/10" : "hover:bg-black/10",
       )}
     >
       <div className="space-y-4">
@@ -32,7 +34,9 @@ const StaffEvents = ({ request }: props) => {
             <AvatarFallback>PR</AvatarFallback>
           </Avatar>
           <div className=" flex flex-col">
-            {request.name && <h4 className="basic-title text-base">{request.name}</h4>}
+            {request.invited_user && (
+              <h4 className="basic-title text-base">{request.invited_user.name}</h4>
+            )}
             {request.email && <span>{request.email}</span>}
           </div>
         </div>
@@ -56,7 +60,7 @@ const StaffEvents = ({ request }: props) => {
             <p
               className={cn(
                 "text-sm text-gray-300",
-                isExpanded ? "" : "line-clamp-1"
+                isExpanded ? "" : "line-clamp-1",
               )}
             >
               Voting school prifects Lorem ipsum dolor sit, amet consectetur
@@ -69,6 +73,7 @@ const StaffEvents = ({ request }: props) => {
                 e.stopPropagation();
                 toggleExpand();
               }}
+              type="button"
             >
               {isExpanded ? (
                 <ChevronUp className="h-4 w-4" />

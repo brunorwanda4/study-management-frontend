@@ -1,15 +1,16 @@
- import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { cn } from "@/lib/utils";
+import { generateImageProfile } from "@/lib/utils/generate-profile-image";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 interface props {
-    sender ?: boolean; 
+  sender?: boolean;
 }
 
-const MessageCard = ({sender} : props) => {
+const MessageCard = ({ sender }: props) => {
   return (
-    <div className={cn("chat" , sender ? "chat-end" : "chat-start")}>
-      <Avatar className=" chat-image avatar size-12">
-        <AvatarImage src="/images/p.jpg" />
+    <div className={cn("chat", sender ? "chat-end" : "chat-start")}>
+      <Avatar className="chat-image avatar size-12">
+        <AvatarImage src={generateImageProfile("happy", "FEMALE")} />
         <AvatarFallback>PR</AvatarFallback>
       </Avatar>
       <div className="chat-header">

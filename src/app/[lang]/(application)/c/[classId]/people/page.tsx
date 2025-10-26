@@ -1,9 +1,8 @@
 import ClassStudentCard from "@/components/page/class/cards/class-students-card";
 import ClassTeacherCard from "@/components/page/class/cards/class-teachers-card";
 import NotFoundPage from "@/components/page/not-found";
-import { Locale } from "@/i18n";
-import { getAuthUserServer } from "@/lib/utils/auth";
-import { getAllStudentByClassId } from "@/service/school/class-student-services";
+import type { Locale } from "@/i18n";
+import { authContext } from "@/lib/utils/auth-context";
 import { redirect } from "next/navigation";
 
 interface Props {
@@ -12,28 +11,23 @@ interface Props {
 const ClassIdPeoplePage = async (props: Props) => {
   const params = await props.params;
   const { lang, classId } = params;
-  const [currentUser] = await Promise.all([getAuthUserServer()]);
+  const [auth] = await Promise.all([authContext()]);
 
-  if (!currentUser) {
+  if (!auth) {
     return redirect(`/${lang}/auth/login`);
   }
-  if (!currentUser.role) {
-    return redirect(`/${lang}/auth/onboarding`);
-  }
 
-  const [student] = await Promise.all(
-    [getAllStudentByClassId(classId)]
-  )
+  const student = { data: [] };
   if (!student.data) {
     return <NotFoundPage />;
   }
-  
+
   return (
-    <div className=" flex space-x-4 w-full">
-      <div className=" w-1/2">
+    <div className="flex w-full space-x-4">
+      <div className="w-1/2">
         <ClassStudentCard student={student.data || []} lang={lang} />
       </div>
-      <div className=" w-1/2">
+      <div className="w-1/2">
         <ClassTeacherCard lang={lang} clsId={classId} />
       </div>
     </div>

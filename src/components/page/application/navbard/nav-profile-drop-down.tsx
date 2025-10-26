@@ -3,66 +3,65 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Locale } from "@/i18n";
-import { AuthUserDto, logout } from "@/lib/utils/auth";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Separator } from "@/components/ui/separator";
+import { type AuthContext, logout } from "@/lib/utils/auth-context";
+import { generateImageProfile } from "@/lib/utils/generate-profile-image";
 import { LogOut, User } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 
 interface props {
-  lang: Locale;
-  user : AuthUserDto
+  auth: AuthContext;
 }
 
-const NavProfileDropDown = ({ lang , user}: props) => {
-    const {theme} = useTheme()
+const NavProfileDropDown = ({ auth }: props) => {
+  const { theme } = useTheme();
+  const image = generateImageProfile(auth.user.name, auth.user.gender);
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+    <Popover>
+      <PopoverTrigger asChild>
         <Button library="daisy" variant="ghost" shape="circle">
-          <Avatar className=" size-10  ">
-            <AvatarImage src={user?.image ? user.image : "/images/2.jpg"} />
-            <AvatarFallback>{user.role}</AvatarFallback>
+          <Avatar className="size-10">
+            <AvatarImage src={auth.user?.image ? auth.user.image : image} />
+            <AvatarFallback>{auth.user.role}</AvatarFallback>
           </Avatar>
         </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className=" w-72" data-theme={theme}>
-        <DropdownMenuLabel className=" flex gap-2 items-center">
-          <Avatar className=" size-10">
-            <AvatarImage src={user?.image ? user.image : "https://res.cloudinary.com/dg9f2wy0t/image/upload/v1744817900/avatars/aef1b831f2dcdf4df0197c07e21f6cda.jpg"} />
-            <AvatarFallback>{user.role}</AvatarFallback>
+      </PopoverTrigger>
+      <PopoverContent className="w-72" data-theme={theme}>
+        <div className="flex items-center gap-2">
+          <Avatar className="size-10">
+            <AvatarImage src={auth.user?.image ? auth.user.image : image} />
+            <AvatarFallback>{auth.user.role}</AvatarFallback>
           </Avatar>
-          <div className=" flex flex-col">
-          <span className=" font-medium">{user.name}</span>
-          <span> {user.email}</span>
+          <div className="flex flex-col">
+            <span className="font-medium">{auth.user.name}</span>
+            <span> {auth.user.email}</span>
           </div>
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link href={`/${lang}/profile`}>
-           <Button variant="ghost" size="sm" className=" w-full justify-start">
-           <User />
-           <span>Your Profile</span>
-           </Button>
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Button onClick={() => logout(lang)} type="button" variant="ghost" size="sm" className=" text-error w-full justify-start cursor-pointer">
-            <LogOut />
-            <span>Logout</span>
+        </div>
+        <Separator />
+        <Link href={`/p`}>
+          <Button variant="ghost" size="sm" className="w-full justify-start">
+            <User />
+            <span>Your Profile</span>
           </Button>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-      </DropdownMenuContent>
-    </DropdownMenu>
+        </Link>
+        <Separator />
+        <Button
+          onClick={() => logout()}
+          type="button"
+          variant="ghost"
+          size="sm"
+          className="text-error w-full cursor-pointer justify-start"
+        >
+          <LogOut />
+          <span>Logout</span>
+        </Button>
+      </PopoverContent>
+    </Popover>
   );
 };
 

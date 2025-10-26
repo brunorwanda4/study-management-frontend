@@ -1,8 +1,8 @@
 "use client";
 import MessageUserCard from "@/components/cards/message-user-card";
-import { Locale } from "@/i18n";
-import React, { useState, useEffect } from "react";
+import type { Locale } from "@/i18n";
 import { useSearchParams } from "next/navigation"; // For Next.js 13+ App Router
+import { useEffect, useState } from "react";
 
 interface Props {
   lang: Locale;

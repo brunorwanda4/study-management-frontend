@@ -1,18 +1,19 @@
-import { Locale } from "@/i18n";
-import { UserRoleDto } from "../schema/user/user.dto";
+import type { Locale } from "@/i18n";
+import type { userRole } from "@/lib/schema/common-details-schema";
 
 type RedirectContentsProps = {
   lang: Locale;
-  role: UserRoleDto;
-}
+  role: userRole;
+};
 
 export const redirectContents = ({ lang, role }: RedirectContentsProps) => {
-  return `/${lang}/${role === "STUDENT"
+  return `/${lang}/${
+    role === "STUDENT"
       ? "s"
       : role === "SCHOOLSTAFF"
         ? "s-t"
         : role === "ADMIN"
           ? "a"
           : "t"
-    }`;
+  }`;
 };

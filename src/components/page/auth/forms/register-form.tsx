@@ -1,39 +1,41 @@
 "use client";
 
-import { CreateUserSchema, CreateUserDto } from "@/lib/schema/user/user.dto";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { FormError, FormSuccess } from "@/components/common/form-message";
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  //   FormDescription,
   FormField,
   FormItem,
-  // FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ChangeEvent, useMemo, useState, useTransition } from "react";
-import { CheckIcon, EyeIcon, EyeOffIcon, XIcon } from "lucide-react";
-import { registerUserService } from "@/service/auth/auth-service";
-import { FormError, FormSuccess } from "@/components/myComponents/form-message";
-import { useRouter } from "next/navigation";
 import { Locale } from "@/i18n";
-
+import {
+  AuthUserDto,
+  RegisterUser,
+  RegisterUserSchema,
+} from "@/lib/schema/user/auth-user-schema";
+import { setAuthCookies } from "@/lib/utils/auth-context";
+import apiRequest from "@/service/api-client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CheckIcon, EyeIcon, EyeOffIcon, XIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ChangeEvent, useMemo, useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
 interface props {
-  lang : Locale
+  lang: Locale;
 }
 
-const RegisterForm = ({lang} : props) => {
+const RegisterForm = ({ lang }: props) => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [password, setPassword] = useState("");
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
-  const router = useRouter()
-  const form = useForm<CreateUserDto>({
-    resolver: zodResolver(CreateUserSchema),
+  const router = useRouter();
+  const form = useForm<RegisterUser>({
+    resolver: zodResolver(RegisterUserSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -80,21 +82,28 @@ const RegisterForm = ({lang} : props) => {
   };
   const handlePasswordChange = (
     e: ChangeEvent<HTMLInputElement>,
-    fieldChange: (value: string) => void
+    fieldChange: (value: string) => void,
   ) => {
     const newPassword = e.target.value;
     setPassword(newPassword); // Update local state for strength checking
     fieldChange(newPassword); // Update react-hook-form's state for validation
   };
 
-  function onSubmit(values: CreateUserDto) {
+  function onSubmit(values: RegisterUser) {
     setError(null);
     setSuccess(null);
     startTransition(async () => {
-      const create = await registerUserService(values);
+      const create = await apiRequest<RegisterUser, AuthUserDto>(
+        "post",
+        "/register",
+        values,
+      );
       if (create.data) {
-        setSuccess("Account created successful! ☺️");
-        router.push(`/${lang}/auth/onboarding`)
+        if (create.data.accessToken) {
+          await setAuthCookies(create.data.accessToken, create.data.id);
+          setSuccess("Account created successful! ☺️");
+          router.push(`/${lang}/auth/onboarding`);
+        }
       } else if (create.error) {
         setError(create.error);
       }
@@ -102,7 +111,7 @@ const RegisterForm = ({lang} : props) => {
   }
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 w-96">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-96 space-y-4">
         <FormField
           control={form.control}
           name="name"
@@ -112,7 +121,7 @@ const RegisterForm = ({lang} : props) => {
                 <div className="group relative">
                   <label
                     htmlFor={"name"}
-                    className="origin-start  group-focus-within:  has-[+input:not(:placeholder-shown)]:  absolute top-1/2 block -translate-y-1/2 cursor-text px-1 text-sm transition-all group-focus-within:pointer-events-none group-focus-within:top-0 group-focus-within:cursor-default group-focus-within:text-base group-focus-within:font-medium has-[+input:not(:placeholder-shown)]:pointer-events-none has-[+input:not(:placeholder-shown)]:top-0 has-[+input:not(:placeholder-shown)]:cursor-default has-[+input:not(:placeholder-shown)]:text-base has-[+input:not(:placeholder-shown)]:font-medium "
+                    className="origin-start group-focus-within: has-[+input:not(:placeholder-shown)]: absolute top-1/2 block -translate-y-1/2 cursor-text px-1 text-sm transition-all group-focus-within:pointer-events-none group-focus-within:top-0 group-focus-within:cursor-default group-focus-within:text-base group-focus-within:font-medium has-[+input:not(:placeholder-shown)]:pointer-events-none has-[+input:not(:placeholder-shown)]:top-0 has-[+input:not(:placeholder-shown)]:cursor-default has-[+input:not(:placeholder-shown)]:text-base has-[+input:not(:placeholder-shown)]:font-medium"
                   >
                     <span className="bg-base-100 inline-flex px-2">
                       Full name
@@ -121,7 +130,7 @@ const RegisterForm = ({lang} : props) => {
                   <Input
                     disabled={isPending}
                     autoFocus
-                    className=" h-12 base text-lg"
+                    className="base h-12 text-lg"
                     {...field}
                     id="name"
                     placeholder=" "
@@ -142,7 +151,7 @@ const RegisterForm = ({lang} : props) => {
                 <div className="group relative">
                   <label
                     htmlFor={"email"}
-                    className="origin-start  group-focus-within:  has-[+input:not(:placeholder-shown)]:  absolute top-1/2 block -translate-y-1/2 cursor-text px-1 text-sm transition-all group-focus-within:pointer-events-none group-focus-within:top-0 group-focus-within:cursor-default group-focus-within:text-base group-focus-within:font-medium has-[+input:not(:placeholder-shown)]:pointer-events-none has-[+input:not(:placeholder-shown)]:top-0 has-[+input:not(:placeholder-shown)]:cursor-default has-[+input:not(:placeholder-shown)]:text-base has-[+input:not(:placeholder-shown)]:font-medium "
+                    className="origin-start group-focus-within: has-[+input:not(:placeholder-shown)]: absolute top-1/2 block -translate-y-1/2 cursor-text px-1 text-sm transition-all group-focus-within:pointer-events-none group-focus-within:top-0 group-focus-within:cursor-default group-focus-within:text-base group-focus-within:font-medium has-[+input:not(:placeholder-shown)]:pointer-events-none has-[+input:not(:placeholder-shown)]:top-0 has-[+input:not(:placeholder-shown)]:cursor-default has-[+input:not(:placeholder-shown)]:text-base has-[+input:not(:placeholder-shown)]:font-medium"
                   >
                     <span className="bg-base-100 inline-flex px-2">
                       Email Address*
@@ -150,7 +159,7 @@ const RegisterForm = ({lang} : props) => {
                   </label>
                   <Input
                     disabled={isPending}
-                    className=" h-12 base text-lg"
+                    className="base h-12 text-lg"
                     {...field}
                     id="email"
                     placeholder=" "
@@ -168,17 +177,17 @@ const RegisterForm = ({lang} : props) => {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <div className=" relative group">
+                <div className="group relative">
                   <label
                     htmlFor={"password"}
-                    className="group-focus-within:  has-[+input:not(:placeholder-shown)]:  absolute top-1/2 block -translate-y-1/2 cursor-text px-1 text-sm transition-all group-focus-within:pointer-events-none group-focus-within:top-0  group-focus-within:cursor-default group-focus-within:text-base group-focus-within:font-medium has-[+input:not(:placeholder-shown)]:pointer-events-none has-[+input:not(:placeholder-shown)]:top-0 has-[+input:not(:placeholder-shown)]:cursor-default has-[+input:not(:placeholder-shown)]:text-base has-[+input:not(:placeholder-shown)]:font-medium "
+                    className="group-focus-within: has-[+input:not(:placeholder-shown)]: absolute top-1/2 block -translate-y-1/2 cursor-text px-1 text-sm transition-all group-focus-within:pointer-events-none group-focus-within:top-0 group-focus-within:cursor-default group-focus-within:text-base group-focus-within:font-medium has-[+input:not(:placeholder-shown)]:pointer-events-none has-[+input:not(:placeholder-shown)]:top-0 has-[+input:not(:placeholder-shown)]:cursor-default has-[+input:not(:placeholder-shown)]:text-base has-[+input:not(:placeholder-shown)]:font-medium"
                   >
                     <span className="bg-base-100 inline-flex px-2">
                       Password*
                     </span>
                   </label>
                   <Input
-                    className=" h-12 base text-lg"
+                    className="base h-12 text-lg"
                     type={isVisible ? "text" : "password"}
                     placeholder=" "
                     disabled={isPending}
@@ -186,7 +195,7 @@ const RegisterForm = ({lang} : props) => {
                     onChange={(e) => handlePasswordChange(e, field.onChange)}
                   />
                   <button
-                    className=" /80 hover:  focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+                    className="/80 hover: focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
                     type="button"
                     onClick={toggleVisibility}
                     aria-label={isVisible ? "Hide password" : "Show password"}
@@ -214,7 +223,7 @@ const RegisterForm = ({lang} : props) => {
               >
                 <div
                   className={`h-full ${getStrengthColor(
-                    strengthScore
+                    strengthScore,
                   )} transition-all duration-500 ease-out`}
                   style={{ width: `${(strengthScore / 4) * 100}%` }}
                 ></div>
@@ -230,7 +239,7 @@ const RegisterForm = ({lang} : props) => {
 
               {/* Password requirements list */}
               <ul
-                className=" grid grid-cols-2"
+                className="grid grid-cols-2"
                 aria-label="Password requirements"
               >
                 {strength.map((req, index) => (
@@ -242,16 +251,10 @@ const RegisterForm = ({lang} : props) => {
                         aria-hidden="true"
                       />
                     ) : (
-                      <XIcon
-                        size={16}
-                        className=" /80"
-                        aria-hidden="true"
-                      />
+                      <XIcon size={16} className="/80" aria-hidden="true" />
                     )}
                     <span
-                      className={`text-xs ${
-                        req.met ? "text-emerald-600" : " "
-                      }`}
+                      className={`text-xs ${req.met ? "text-emerald-600" : " "}`}
                     >
                       {req.text}
                       <span className="sr-only">
@@ -276,7 +279,7 @@ const RegisterForm = ({lang} : props) => {
           library="daisy"
           variant={"info"}
           size={"lg"}
-          className=" w-full"
+          className="w-full"
         >
           Create an account{" "}
           {isPending && (

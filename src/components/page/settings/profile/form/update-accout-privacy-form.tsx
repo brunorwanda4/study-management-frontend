@@ -1,8 +1,5 @@
 "use client";
-  
-import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
+
 import {
   Form,
   FormControl,
@@ -12,17 +9,24 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
 
+import { FormError, FormSuccess } from "@/components/common/form-message";
 import { Checkbox } from "@/components/ui/checkbox";
-import { updateUserEmailDto, updateUserEmailSchema, } from "@/lib/schema/user/user-email.dto";
-import { FormError, FormSuccess } from "@/components/myComponents/form-message";
+import {
+  updateUserEmailDto,
+  updateUserEmailSchema,
+} from "@/lib/schema/user/user-email.dto";
 
 const UpdateAccountPrivacyForm = () => {
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
-   const [isPending, 
-     // startTransition
-   ] = useTransition();
+  const [
+    isPending,
+    // startTransition
+  ] = useTransition();
   const form = useForm<updateUserEmailDto>({
     resolver: zodResolver(updateUserEmailSchema),
     defaultValues: {
@@ -37,19 +41,30 @@ const UpdateAccountPrivacyForm = () => {
   };
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className=" flex items-center space-x-4">
-        <div className=" flex flex-col space-y-2">
+      <form
+        onSubmit={form.handleSubmit(handleSubmit)}
+        className="flex items-center space-x-4"
+      >
+        <div className="flex flex-col space-y-2">
           <FormField
             name="email"
             control={form.control}
             render={({ field }) => (
               <FormItem className="">
-                  <FormControl>
-                    <Checkbox disabled={isPending} className=" mr-2" id="privacy" {...field} />
-                  </FormControl>
-                  <FormLabel htmlFor="privacy" className=" cursor-pointer">Change account in private</FormLabel>
+                <FormControl>
+                  <Checkbox
+                    disabled={isPending}
+                    className="mr-2"
+                    id="privacy"
+                    {...field}
+                  />
+                </FormControl>
+                <FormLabel htmlFor="privacy" className="cursor-pointer">
+                  Change account in private
+                </FormLabel>
                 <FormDescription>
-                  make account private on you and school staff can access you information.
+                  make account private on you and school staff can access you
+                  information.
                 </FormDescription>
                 <FormMessage />
               </FormItem>

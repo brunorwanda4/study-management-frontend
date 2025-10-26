@@ -1,5 +1,5 @@
-import MyImage from "@/components/myComponents/myImage";
-import MyLink from "@/components/myComponents/myLink";
+import MyImage from "@/components/common/myImage";
+import MyLink from "@/components/common/myLink";
 import {
   Card,
   CardContent,
@@ -15,34 +15,34 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { studentImage } from "@/lib/context/images";
-import { studentsAndOther } from "@/lib/schema/school/student.dto";
+import type { StudentWithRelations } from "@/lib/schema/school/student-schema";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 
 interface props {
   lang: Locale;
-  students: studentsAndOther[];
+  students: StudentWithRelations[];
 }
 
 export default function StudentDashboardTable({ lang, students }: props) {
   return (
-    <Card className="w-1/2 pb-2 flex">
-      <CardHeader className=" flex justify-between">
+    <Card className="flex w-1/2 pb-2">
+      <CardHeader className="flex justify-between">
         <CardTitle className="text-lg font-semibold">Students</CardTitle>
-        <div className=" space-x-4">
+        <div className="space-x-4">
           <MyLink
             loading
             href={`/${lang}/s-t/students`}
             type="button"
             button={{ variant: "outline", library: "daisy", size: "sm" }}
-            className=" w-fit"
+            className="w-fit"
           >
             All students
           </MyLink>
         </div>
       </CardHeader>
-      <CardContent className=" p-0">
+      <CardContent className="p-0">
         <Table className="">
           <TableHeader>
             <TableRow className="hover:bg-transparent">
@@ -58,19 +58,19 @@ export default function StudentDashboardTable({ lang, students }: props) {
                   <div className="flex items-center gap-3">
                     <MyLink
                       loading
-                      href={`/${lang}/p/${item.userId}?studentId=${item.id}`}
+                      href={`/${lang}/p/${item.user_id}?studentId=${item.id}`}
                     >
                       <MyImage
-                        className="rounded-full size-12"
+                        className="size-12 rounded-full"
                         classname="mask mask-squircle"
-                        src={item.image || studentImage}
+                        src={item.user?.image || studentImage}
                         alt={item.name}
                       />
                     </MyLink>
                     <div>
                       <MyLink
                         loading
-                        href={`/${lang}/p/${item.userId}?studentId=${item.id}`}
+                        href={`/${lang}/p/${item.user_id}?studentId=${item.id}`}
                         className="font-medium"
                       >
                         {item.name}
@@ -82,8 +82,12 @@ export default function StudentDashboardTable({ lang, students }: props) {
                   </div>
                 </TableCell>
                 <TableCell>
-                  <MyLink loading className=" underline-offset-0" href={`/${lang}/c/${item.classId}`}>
-                    {item.class.name}
+                  <MyLink
+                    loading
+                    className="underline-offset-0"
+                    href={`/${lang}/c/${item.class?.username}`}
+                  >
+                    {item.class?.name}
                   </MyLink>
                 </TableCell>
                 <TableCell className="text-start">{item.gender}</TableCell>
@@ -102,7 +106,7 @@ export default function StudentDashboardTable({ lang, students }: props) {
           button={{ library: "daisy", variant: "ghost" }}
           href={`/${lang}/s-t/students`}
           classname=" w-full"
-          className=" w-full"
+          className="w-full"
         >
           See others {students.length}
         </MyLink>

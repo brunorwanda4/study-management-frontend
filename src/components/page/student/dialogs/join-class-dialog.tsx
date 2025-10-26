@@ -1,3 +1,5 @@
+import MyImage from "@/components/common/myImage";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -6,8 +8,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import MyImage from "@/components/myComponents/myImage";
-import { Button } from "@/components/ui/button";
 import JoinClassCodeForm from "../form/join-class-code-form";
 
 const JoinClassDialog = () => {

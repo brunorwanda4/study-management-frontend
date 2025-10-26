@@ -1,12 +1,12 @@
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { LuMessageCircle } from "react-icons/lu";
 import { Locale } from "@/i18n";
-import { Dot } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { TextTooltip } from "../myComponents/text-tooltip";
-import { toLowerCase } from "@/lib/functions/characters";
-import MyLink from "../myComponents/myLink";
 import { userImage } from "@/lib/context/images";
+import { toLowerCase } from "@/lib/functions/characters";
+import { cn } from "@/lib/utils";
+import { Dot } from "lucide-react";
+import { LuMessageCircle } from "react-icons/lu";
+import MyLink from "../common/myLink";
+import { TextTooltip } from "../common/text-tooltip";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 interface props {
   userRole: string;
@@ -31,55 +31,49 @@ const UserCardSmall = ({
 }: props) => {
   return (
     <div
-      className={cn("flex justify-between items-center  space-y-2", className)}
+      className={cn("flex items-center justify-between space-y-2", className)}
     >
-      <div className=" flex space-x-2">
+      <div className="flex space-x-2">
         <MyLink
           loading
-          className=" underline-offset-0"
+          className="underline-offset-0"
           href={`/${lang}/p/${userId}?${
             role === "t"
               ? `teacherId=${id}`
               : role === "s"
-              ? `studentId=${id}`
-              : role === "s-t"
-              ? `school-staff=${id}`
-              : null
+                ? `studentId=${id}`
+                : role === "s-t"
+                  ? `school-staff=${id}`
+                  : null
           }`}
         >
-          <Avatar className=" size-12">
-            <AvatarImage
-              src={
-                image
-                  ? image
-                  : userImage
-              }
-            />
+          <Avatar className="size-12">
+            <AvatarImage src={image ? image : userImage} />
             <AvatarFallback>PR</AvatarFallback>
           </Avatar>
         </MyLink>
         <div>
           <MyLink
             loading
-            className=" underline-offset-0"
+            className="underline-offset-0"
             href={`/${lang}/p/${userId}?${
               role === "t"
                 ? `teacherId=${id}`
                 : role === "s"
-                ? `studentId=${id}`
-                : role === "s-t"
-                ? `school-staff=${id}`
-                : null
+                  ? `studentId=${id}`
+                  : role === "s-t"
+                    ? `school-staff=${id}`
+                    : null
             }`}
           >
             <h4 className=" ">{name ? name : "Murekezi Hindiro"}</h4>
           </MyLink>
-          <div className=" flex items-center">
-            <span className=" text-myGray capitalize text-sm">
+          <div className="flex items-center">
+            <span className="text-myGray text-sm capitalize">
               {toLowerCase(userRole)}
             </span>
             {userRole === "STUDENT" && (
-              <div className=" flex -space-x-2 items-center">
+              <div className="flex items-center -space-x-2">
                 <Dot size={32} />
                 <TextTooltip
                   content={<span>Level 5 Software development</span>}
@@ -92,7 +86,7 @@ const UserCardSmall = ({
       </div>
       <MyLink
         loading
-        className=" underline-offset-0"
+        className="underline-offset-0"
         href={`/${lang}/messages/${id}`}
         type="button"
         button={{ library: "daisy", variant: "info", size: "sm" }}

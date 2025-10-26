@@ -1,4 +1,4 @@
- import { Button } from "../ui/button";
+import { Button } from "../ui/button";
 import { FaComment, FaReadme, FaRegBookmark, FaShare } from "react-icons/fa6";
 import { AiOutlineLike } from "react-icons/ai";
 import { CardFooter } from "../ui/card";
@@ -17,7 +17,13 @@ import { CardFooter } from "../ui/card";
 
 interface props {
   postRole?:
-    "NOTES" | "IMAGE" | "VIDEO" | "POST" | "ACTIVITY" | "BOOK" | "TEXT";
+    | "NOTES"
+    | "IMAGE"
+    | "VIDEO"
+    | "POST"
+    | "ACTIVITY"
+    | "BOOK"
+    | "TEXT";
 }
 
 const PostCardFooter = ({ postRole }: props) => {

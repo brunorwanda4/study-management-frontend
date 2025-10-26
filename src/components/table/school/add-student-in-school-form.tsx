@@ -10,9 +10,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
 import {
-  NewStudentForm,
+  type NewStudentForm,
   newStudentFormSchema,
 } from "@/lib/schema/table-forms/forms";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -56,8 +55,6 @@ const AddStudentInSchoolForm = () => {
             )}
           />
         </div>
-
-
 
         <AlertDialogFooter>
           <Button type="submit" library="daisy" variant={"info"}>

@@ -1,11 +1,14 @@
-import JoinSchoolDialog from "@/components/page/school-staff/dialog/join-school-dialog";
 import JoinSchoolRequestBody from "@/components/page/application/join-school-request/join-school-request-body";
+import DevelopingPage from "@/components/page/developing-page";
+import PermissionPage from "@/components/page/permission-page";
+import JoinSchoolDialog from "@/components/page/school-staff/dialog/join-school-dialog";
 import { Locale } from "@/i18n";
-import { getAuthUserServer, getSchoolServer } from "@/lib/utils/auth";
-import { GetAllJoinSchoolRequestByCurrentUserEmail } from "@/service/school/school-join-request.service";
+import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
+import { JoinSchoolRequestWithRelations } from "@/lib/schema/school/school-join-school/join-school-request-schema";
+import { authContext } from "@/lib/utils/auth-context";
+import apiRequest from "@/service/api-client";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
-import DevelopingPage from "@/components/page/developing-page";
 
 export const metadata: Metadata = {
   title: "School Dashboard",
@@ -17,35 +20,46 @@ interface props {
 const TeacherPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
-  const [currentUser, currentSchool] = await Promise.all([
-    await getAuthUserServer(),
-    await getSchoolServer(),
-  ]);
-
-  if (!currentUser) {
+  const auth = await authContext();
+  if (!auth) {
     redirect(`/${lang}/auth/login`);
   }
-  if (!currentUser.role) {
-    redirect(`/${lang}/auth/onboarding`);
+
+  if (auth.school) {
+    return <DevelopingPage lang={lang} role={auth.user.role} />;
+  }
+  if (auth.user.role !== "TEACHER") {
+    return <PermissionPage lang={lang} role={auth.user.role} />;
   }
 
-  const getSchoolJoinRequest = await GetAllJoinSchoolRequestByCurrentUserEmail(
-    currentUser.email
-  );
-  if (currentSchool) {
-    return <DevelopingPage lang={lang} role={currentUser.role}/>
-  }
+  const join_school_requestsRes = await apiRequest<
+    void,
+    JoinSchoolRequestWithRelations[]
+  >("get", `/join-school-requests/my/pending`, undefined, {
+    token: auth.token,
+    schoolToken: auth.schoolToken,
+  });
+
   return (
-    <div className="w-full px-4 py-2 space-y-4 grid place-content-center h-full">
-      <JoinSchoolDialog />
-      {getSchoolJoinRequest.data && (
-        <JoinSchoolRequestBody
-          lang={lang}
-          currentUser={currentUser}
-          requests={getSchoolJoinRequest.data}
-        />
-      )}
-    </div>
+    <RealtimeProvider<JoinSchoolRequestWithRelations>
+      channels={[
+        {
+          name: "join_school_request",
+          initialData: join_school_requestsRes.data ?? [],
+        },
+      ]}
+    >
+      <div className="grid h-full min-h-screen w-full place-content-center space-y-4 px-4 py-2">
+        <JoinSchoolDialog />
+        {join_school_requestsRes.data && (
+          <JoinSchoolRequestBody
+            lang={lang}
+            auth={auth}
+            requests={join_school_requestsRes.data}
+          />
+        )}
+      </div>
+    </RealtimeProvider>
   );
 };
 

@@ -1,9 +1,9 @@
-import { z } from "zod"
+import { z } from "zod";
 
 export const newStudentFormSchema = z.object({
   email: z.string().min(1, { message: "Name is required" }),
-  classId: z.string().min(1)
-})
+  classId: z.string().min(1),
+});
 
 // Schema for the "Edit Student" form
 export const editStudentSchema = z.object({
@@ -18,10 +18,8 @@ export const editStudentSchema = z.object({
     required_error: "Class is required",
   }),
   phone: z.string().min(1, { message: "Phone number is required" }),
-})
-
-
+});
 
 // Type definitions derived from schemas
-export type NewStudentForm = z.infer<typeof newStudentFormSchema>
-export type EditStudentDto = z.infer<typeof editStudentSchema>
+export type NewStudentForm = z.infer<typeof newStudentFormSchema>;
+export type EditStudentDto = z.infer<typeof editStudentSchema>;

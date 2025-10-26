@@ -1,4 +1,3 @@
-
 export const teacherContext = [
   {
     id: "1",

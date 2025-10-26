@@ -1,12 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-// import { Form } from '@/components/ui/form'
-import React from 'react'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const UpdateClassMembers = () => {
-  // const 
+  // const
   return (
     <Card>
-      <CardHeader className=' '>
+      <CardHeader className=" ">
         <CardTitle>Class People & Class Teacher </CardTitle>
       </CardHeader>
       <CardContent>
@@ -17,7 +15,7 @@ const UpdateClassMembers = () => {
         </Form> */}
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default UpdateClassMembers
+export default UpdateClassMembers;

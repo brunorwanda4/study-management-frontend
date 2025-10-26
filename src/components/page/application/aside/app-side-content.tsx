@@ -1,7 +1,8 @@
 "use client";
 
-import { Locale } from "@/i18n";
-import { ReactNode } from "react";
+import type { Locale } from "@/i18n";
+import { mainCollections } from "@/lib/const/main-collections";
+import type { ReactNode } from "react";
 
 export type SidebarItem = {
   title: string;
@@ -26,37 +27,23 @@ export const adminSidebarGroups: sidebarGroupsProps[] = [
     items: [
       {
         title: "Dashboard",
-        url: "/admin/",
+        icon: "/icons/dashboard.png",
+        url: "/a/",
       },
       {
         title: "Database",
-        url: "/admin/database",
+        url: "/a/database",
+        icon: "/icons/database.png",
       },
       {
         title: "Collections",
-        url: "/admin/collections",
-      },
-    ],
-  },
-  {
-    label: "Main collections",
-    items: [
-      {
-        title: "Users",
-        url: "/collection/users",
-        children: [
-          { title: "Students", url: "/admin/users/students" },
-          { title: "Teachers", url: "/admin/users/teachers" },
-          { title: "Manage Users", url: "/admin/users/crud" },
-        ],
-      },
-      {
-        title: "Classes",
-        children: [
-          { title: "All Classes", url: "/admin/classes/all" },
-          { title: "Create Class", url: "/admin/classes/create" },
-          { title: "Manage Classes", url: "/admin/classes/manage" },
-        ],
+        icon: "/icons/data-collection.png",
+        url: "/a/collections",
+        children: mainCollections.map((col) => ({
+          title: col.label,
+          url: col.href,
+          icon: col.icon,
+        })),
       },
     ],
   },
@@ -65,6 +52,7 @@ export const adminSidebarGroups: sidebarGroupsProps[] = [
     items: [
       {
         title: "Settings",
+        icon: "/icons/cogwheel.png",
         url: "/setting",
       },
     ],
@@ -145,7 +133,7 @@ export const teacherSidebarGroups: sidebarGroupsProps[] = [
 
 export const schoolStaffSidebarGroups: sidebarGroupsProps[] = [
   {
-      label: "Dashboard",
+    label: "Dashboard",
     items: [
       {
         title: "Dashboard",
@@ -170,8 +158,8 @@ export const schoolStaffSidebarGroups: sidebarGroupsProps[] = [
     ],
   },
   {
-    label : "Your school",
-    items : [
+    label: "Your school",
+    items: [
       {
         title: "Students",
         icon: "/icons/students.png",
@@ -227,10 +215,10 @@ export const schoolStaffSidebarGroups: sidebarGroupsProps[] = [
       //   icon: "/icons/shield.png",
       //   url: "/s-t/Securities",
       // },
-    ]
+    ],
   },
   {
-      label: "For you",
+    label: "For you",
     items: [
       {
         title: "Messages",
