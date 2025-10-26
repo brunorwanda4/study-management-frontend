@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+  admin:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: space-together-admin
+    ports:
+      - "4747:4747"
+    env_file:
+      - .env.production
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=http://api:4646
+    depends_on:
+      - api
+    restart: unless-stopped
+
+  api:
+    build:
+      context: ../space-together-api
+      dockerfile: Dockerfile
+    container_name: space-together-api
+    ports:
+      - "4646:4646"
+    env_file:
+      - ../space-together-api/.env
+    environment:
+      - RUST_LOG=info
+      - PORT=4646
+      - MONGO_URI=mongodb://mongo:27017/space_together_db
+    depends_on:
+      - mongo
+    restart: unless-stopped
+
+  mongo:
+    image: mongo:7
+    container_name: space-together-mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
