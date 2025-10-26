@@ -1,4 +1,7 @@
+import { MainSubjectSchema } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
 import { SubjectCategorySchema } from "@/lib/schema/admin/subjects/subject-category";
+import { ClassSchema } from "@/lib/schema/class/class-schema";
+import { TeacherSchema } from "@/lib/schema/school/teacher-schema";
 import { z } from "zod";
 
 // ------------ SUBJECT ------------
@@ -58,10 +61,10 @@ export type UpdateSubject = z.infer<typeof UpdateSubjectSchema>;
 // Replace z.any() with your own schemas for Class, User, and MainSubject
 
 export const SubjectWithRelationsSchema = z.object({
-  subject: SubjectSchema,
-  class: z.any().optional().nullable(),
-  class_teacher: z.any().optional().nullable(),
-  main_subject: z.any().optional().nullable(),
+  ...SubjectSchema.shape,
+  class: ClassSchema.optional().nullable(),
+  class_teacher: TeacherSchema.optional().nullable(),
+  main_subject: MainSubjectSchema.optional().nullable(),
 });
 
 export type SubjectWithRelations = z.infer<typeof SubjectWithRelationsSchema>;

@@ -10,10 +10,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
-import { SubjectGrading } from "@/lib/schema/admin/subjects/subject-grading-schema/subject-grading-schema";
+import type { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
+import type { SubjectGrading } from "@/lib/schema/admin/subjects/subject-grading-schema/subject-grading-schema";
 import { cn } from "@/lib/utils";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import { formatReadableDate } from "@/lib/utils/format-date";
 
 interface Props {

@@ -5,17 +5,17 @@ import { getUsersTableCollectionDashboardColumns } from "@/components/page/admin
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
-import { UserModel } from "@/lib/schema/user/user-schema";
+import type { UserModel } from "@/lib/schema/user/user-schema";
 import {
-  ColumnDef,
-  ColumnFiltersState,
+  type ColumnDef,
+  type ColumnFiltersState,
   getCoreRowModel,
   getFacetedMinMaxValues,
   getFacetedRowModel,
   getFacetedUniqueValues,
   getFilteredRowModel,
   getSortedRowModel,
-  SortingState,
+  type SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 import Link from "next/link";

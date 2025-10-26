@@ -15,7 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 
 const items = [
   {

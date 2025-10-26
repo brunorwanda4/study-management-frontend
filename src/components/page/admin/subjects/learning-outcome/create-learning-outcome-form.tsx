@@ -1,18 +1,11 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { LoaderCircle } from "lucide-react";
-import {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useState,
-  useTransition,
-} from "react";
-import { useForm, type Resolver } from "react-hook-form";
-
+import { FormError, FormSuccess } from "@/components/common/form-message";
+import SelectWithSearch from "@/components/common/select-with-search";
+import TagField from "@/components/common/tag-field";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -23,23 +16,28 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-
-import { FormError, FormSuccess } from "@/components/common/form-message";
-import SelectWithSearch from "@/components/common/select-with-search";
-import TagField from "@/components/common/tag-field";
-import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import MultipleSelector from "@/components/ui/multiselect";
+import { Textarea } from "@/components/ui/textarea";
 import { SubjectTypes } from "@/lib/const/subject-const";
 import { useToast } from "@/lib/context/toast/ToastContext";
-import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
+import type { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
 import {
-  CreateLearningOutcomeFormData,
+  type CreateLearningOutcomeFormData,
   CreateLearningOutcomeFormSchema,
 } from "@/lib/schema/admin/subjects/subject-learning-outcome-schema/create-subject-learning-outcome-schema";
-import { LearningOutcome } from "@/lib/schema/admin/subjects/subject-learning-outcome-schema/learning-outcome-schema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { LearningOutcome } from "@/lib/schema/admin/subjects/subject-learning-outcome-schema/learning-outcome-schema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { LoaderCircle } from "lucide-react";
+import {
+  type Dispatch,
+  type SetStateAction,
+  useEffect,
+  useState,
+  useTransition,
+} from "react";
+import { type Resolver, useForm } from "react-hook-form";
 
 interface Props {
   auth: AuthContext;
@@ -166,7 +164,7 @@ const CreateLearningOutcomeForm = ({
             type: "success",
           });
 
-          if (!!setLearningOutcome) setLearningOutcome(request.data);
+          if (setLearningOutcome) setLearningOutcome(request.data);
           form.reset(defaultValues);
         }
       } catch (err) {

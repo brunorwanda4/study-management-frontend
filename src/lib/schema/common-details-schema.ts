@@ -11,7 +11,7 @@ import {
 import z from "zod";
 
 const googleMapsUrlRegex =
-  /^https?:\/\/(www\.)?google\.[a-z]{2,}(\.[a-z]{2,})?\/maps([\/@?].*)?$/i;
+  /^https?:\/\/(www\.)?google\.[a-z]{2,}(\.[a-z]{2,})?\/maps([/@?].*)?$/i;
 
 export const AddressSchema = z.object({
   country: z.string().min(1, { message: "Country is required" }),
@@ -97,11 +97,14 @@ export const SocialMediaSchema = z.object({
 
 export type SocialMedia = z.infer<typeof SocialMediaSchema>;
 
-export const OptionSchema = z.object({
-  value: z.string(),
-  label: z.string(),
-  disable: z.boolean().optional(),
-});
+export const OptionSchema = z
+  .object({
+    value: z.string(),
+    label: z.string(),
+    disable: z.boolean().optional(),
+    fixed: z.boolean().optional(),
+  })
+  .catchall(z.any());
 
 export type Option = z.infer<typeof OptionSchema>;
 

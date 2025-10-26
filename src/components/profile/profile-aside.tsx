@@ -1,6 +1,6 @@
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { userImage } from "@/lib/context/images";
-import { UserModel } from "@/lib/schema/user/user-schema";
+import type { UserModel } from "@/lib/schema/user/user-schema";
 import { Phone, User } from "lucide-react";
 import { FaSchool } from "react-icons/fa6";
 import { MdEmail } from "react-icons/md";

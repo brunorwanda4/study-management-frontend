@@ -1,6 +1,5 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
 import {
   addDays,
   eachDayOfInterval,
@@ -13,18 +12,23 @@ import {
   startOfMonth,
   startOfWeek,
 } from "date-fns";
+import type React from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import {
   DefaultStartHour,
   EventGap,
   EventHeight,
-} from "@/components/origin/calendar/constants";
+} from "@/components/page/calendar/calendar/constants";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { CalendarEvent } from "./types";
+import { DraggableEvent } from "./draggable-event";
+import { DroppableCell } from "./droppable-cell";
+import { EventItem } from "./event-item";
+import type { CalendarEvent } from "./types";
 import { useEventVisibility } from "./use-event-visibility";
 import {
   getAllEventsForDay,
@@ -32,9 +36,6 @@ import {
   getSpanningEventsForDay,
   sortEvents,
 } from "./utils";
-import { DroppableCell } from "./droppable-cell";
-import { EventItem } from "./event-item";
-import { DraggableEvent } from "./draggable-event";
 
 interface MonthViewProps {
   currentDate: Date;
@@ -110,7 +111,7 @@ export function MonthView({
       <div className="grid flex-1 auto-rows-fr">
         {weeks.map((week, weekIndex) => (
           <div
-            key={`week-${weekIndex}`}
+            key={`week-${week[0].toISOString()}`}
             className="grid grid-cols-7 [&:last-child>*]:border-b-0"
           >
             {week.map((day, dayIndex) => {
@@ -219,6 +220,7 @@ export function MonthView({
                         <Popover modal>
                           <PopoverTrigger asChild>
                             <button
+                              type="button"
                               className="focus-visible:border-ring focus-visible:ring-ring/50 text-muted-foreground hover:text-foreground hover:bg-muted/50 mt-[var(--event-gap)] flex h-[var(--event-height)] w-full items-center overflow-hidden px-1 text-left text-[10px] backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] sm:px-2 sm:text-xs"
                               onClick={(e) => e.stopPropagation()}
                             >

@@ -15,9 +15,9 @@ import {
 } from "@/components/ui/alert-dialog";
 import { buttonVariants } from "@/components/ui/button";
 import { useToast } from "@/lib/context/toast/ToastContext";
-import { SectorModel } from "@/lib/schema/admin/sectorSchema";
+import type { SectorModel } from "@/lib/schema/admin/sectorSchema";
 import { cn } from "@/lib/utils";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { LoaderCircle } from "lucide-react";
 import { redirect } from "next/navigation";
@@ -74,6 +74,7 @@ const DeleteSectorDialog = ({ sector, auth }: Props) => {
           "cursor-pointer",
         )}
       >
+        {/** biome-ignore lint/a11y/useValidAriaRole: <explanation> */}
         <MyImage role="ICON" src="/icons/delete.png" />
         <span className="">Delete</span>
         {isPending && (

@@ -1,12 +1,12 @@
 "use client";
 
-import { useRef, useState } from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import { differenceInDays } from "date-fns";
-import { CalendarEvent } from "./types";
+import { useRef, useState } from "react";
 import { useCalendarDnd } from "./calendar-dnd-context";
 import { EventItem } from "./event-item";
+import type { CalendarEvent } from "./types";
 
 interface DraggableEventProps {
   event: CalendarEvent;

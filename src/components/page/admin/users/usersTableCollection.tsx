@@ -6,17 +6,17 @@ import CreateNewUserDialog from "@/components/page/admin/users/createNewUserDial
 import { getUsersTableCollectionColumns } from "@/components/page/admin/users/users_table_collection_columns";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
-import { UserModel } from "@/lib/schema/user/user-schema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { UserModel } from "@/lib/schema/user/user-schema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import {
-  ColumnDef,
-  ColumnFiltersState,
+  type ColumnDef,
+  type ColumnFiltersState,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  SortingState,
+  type SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 import { useRouter, useSearchParams } from "next/navigation";

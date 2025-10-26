@@ -1,11 +1,11 @@
 import MyImage from "@/components/common/myImage";
 import MyLink from "@/components/common/myLink";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { studentImage } from "@/lib/context/images";
-import { StudentWithRelations } from "@/lib/schema/school/student-schema";
+import type { StudentWithRelations } from "@/lib/schema/school/student-schema";
 import { calculateAge, formatReadableDate } from "@/lib/utils/format-date";
-import { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 
 export const StudentTableColumns = (
   lang: Locale,

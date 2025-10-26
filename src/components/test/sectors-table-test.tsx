@@ -1,7 +1,7 @@
 "use client";
 
 import { useRealtimeImproved } from "@/lib/hooks/useRealtimeImproved";
-import { SectorModel } from "@/lib/schema/admin/sectorSchema";
+import type { SectorModel } from "@/lib/schema/admin/sectorSchema";
 import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { useEffect, useState } from "react";
@@ -119,6 +119,7 @@ export default function SectorsTableTest() {
           <span>Error loading sectors: {error || realtimeError}</span>
         </div>
         <button
+          type="button"
           onClick={() => window.location.reload()}
           className="mt-2 rounded bg-red-600 px-3 py-1 text-white hover:bg-red-700"
         >
@@ -142,12 +143,14 @@ export default function SectorsTableTest() {
             {isConnected ? "Live" : "Disconnected"}
           </span>
           <button
+            type="button"
             onClick={testConnection}
             className="ml-2 rounded bg-blue-500 px-2 py-1 text-xs text-white hover:bg-blue-600"
           >
             Test Connect
           </button>
           <button
+            type="button"
             onClick={disconnect}
             className="rounded bg-gray-500 px-2 py-1 text-xs text-white hover:bg-gray-600"
           >

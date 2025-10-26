@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import { addDays, setHours, setMinutes, subDays } from "date-fns";
+import { useState } from "react";
 
-import { EventCalendar } from "@/components/origin/calendar/event-calendar";
-import { CalendarEvent } from "./calendar/types";
+import { EventCalendar } from "@/components/page/calendar/calendar/event-calendar";
+import type { CalendarEvent } from "../page/calendar/calendar/types";
 
 // Sample events data with hardcoded times
 const sampleEvents: CalendarEvent[] = [

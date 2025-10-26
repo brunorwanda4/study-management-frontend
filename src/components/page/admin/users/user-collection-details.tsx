@@ -1,7 +1,7 @@
 import DataDetailsCard, {
-  dataDetailsCardProps,
+  type dataDetailsCardProps,
 } from "@/components/common/cards/data-details-card";
-import { UserStats } from "@/lib/types/User-stats";
+import type { UserStats } from "@/lib/types/User-stats";
 
 interface Props {
   stats: UserStats;

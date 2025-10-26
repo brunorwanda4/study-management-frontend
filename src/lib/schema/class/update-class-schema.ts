@@ -1,3 +1,4 @@
+import { ClassTypeSchema } from "@/lib/schema/common-details-schema";
 import { z } from "zod";
 
 export const ClassUpdateSchema = z
@@ -8,7 +9,7 @@ export const ClassUpdateSchema = z
     name: z.string().optional(), // Still required if provided
     username: z.string().optional(), // Still required if provided
     image: z.string().optional().nullable(),
-    classType: ClassType.optional().nullable(),
+    classType: ClassTypeSchema.optional().nullable(),
     educationLever: z.string().optional().nullable(),
     curriculum: z.string().optional().nullable(),
     classTeacherId: z.string().optional().nullable(),

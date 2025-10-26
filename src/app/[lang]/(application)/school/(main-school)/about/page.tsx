@@ -3,14 +3,15 @@ import NotFoundPage from "@/components/page/not-found";
 import SchoolContacts from "@/components/page/school/school-contacts";
 import SchoolHomeAbout from "@/components/page/school/school-home-about";
 import SchoolImages from "@/components/page/school/school-images";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
-import { SectorModel } from "@/lib/schema/admin/sectorSchema";
-import { TradeModule } from "@/lib/schema/admin/tradeSchema";
-import { School } from "@/lib/schema/school/school-schema";
+import type { SectorModel } from "@/lib/schema/admin/sectorSchema";
+import type { TradeModule } from "@/lib/schema/admin/tradeSchema";
+import type { School } from "@/lib/schema/school/school-schema";
 import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { redirect } from "next/navigation";
+
 interface props {
   params: Promise<{ lang: Locale }>;
 }

@@ -1,5 +1,4 @@
 import SchoolCalendar from "@/components/page/calendar/school-calendar";
-import React from "react";
 
 const CalendarPage = () => {
   return (

@@ -1,10 +1,7 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { LoaderCircle } from "lucide-react";
-import { useEffect, useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
-
+import { FormError, FormSuccess } from "@/components/common/form-message";
+import SelectWithSearch from "@/components/common/select-with-search";
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import {
@@ -17,20 +14,20 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-
-import { FormError, FormSuccess } from "@/components/common/form-message";
-import SelectWithSearch from "@/components/common/select-with-search";
 import { useToast } from "@/lib/context/toast/ToastContext";
-import apiRequest from "@/service/api-client";
-
-import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
-import { LearningOutcome } from "@/lib/schema/admin/subjects/subject-learning-outcome-schema/learning-outcome-schema";
-import { SubjectTopic } from "@/lib/schema/admin/subjects/subject-topic-schema/subject-topic-schema";
+import type { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
+import type { LearningOutcome } from "@/lib/schema/admin/subjects/subject-learning-outcome-schema/learning-outcome-schema";
+import type { SubjectTopic } from "@/lib/schema/admin/subjects/subject-topic-schema/subject-topic-schema";
 import {
-  UpdateSubjectTopic,
+  type UpdateSubjectTopic,
   UpdateSubjectTopicSchema,
 } from "@/lib/schema/admin/subjects/subject-topic-schema/update-subject-topic-schema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { AuthContext } from "@/lib/utils/auth-context";
+import apiRequest from "@/service/api-client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { LoaderCircle } from "lucide-react";
+import { useEffect, useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
 
 interface Props {
   auth: AuthContext;

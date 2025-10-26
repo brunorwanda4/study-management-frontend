@@ -1,10 +1,7 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { LoaderCircle } from "lucide-react";
-import { useEffect, useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
-
+import { FormError, FormSuccess } from "@/components/common/form-message";
+import SelectWithSearch from "@/components/common/select-with-search";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
@@ -17,10 +14,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-
-import { FormError, FormSuccess } from "@/components/common/form-message";
-import SelectWithSearch from "@/components/common/select-with-search";
 import {
   Select,
   SelectContent,
@@ -28,15 +21,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/lib/context/toast/ToastContext";
-import { SectorModel } from "@/lib/schema/admin/sectorSchema";
+import type { SectorModel } from "@/lib/schema/admin/sectorSchema";
 import {
-  TradeModule,
-  UpdateTradeModule,
+  type TradeModule,
+  type UpdateTradeModule,
   updateTradeSchema,
 } from "@/lib/schema/admin/tradeSchema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { LoaderCircle } from "lucide-react";
+import { useEffect, useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
 
 interface Props {
   auth: AuthContext;

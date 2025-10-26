@@ -53,7 +53,6 @@ export default function StepperComponent() {
       </Stepper>
       <p
         className="text-muted-foreground mt-2 text-xs"
-        role="region"
         aria-live="polite"
       >
         Stepper with titles and descriptions

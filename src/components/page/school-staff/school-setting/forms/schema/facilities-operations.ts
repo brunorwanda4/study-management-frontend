@@ -1,5 +1,6 @@
 // schemas/facilities-operations.ts
-import { AttendanceSystemEnum } from "@/lib/schema/school/school.dto";
+
+import { AttendanceSystemSchema } from "@/lib/schema/school/school-schema";
 import { z } from "zod";
 
 export const FacilitiesOperationsSchema = z.object({
@@ -9,7 +10,7 @@ export const FacilitiesOperationsSchema = z.object({
     .positive({ message: "Student capacity must be a positive integer" })
     .optional(),
   uniformRequired: z.boolean().optional(),
-  attendanceSystem: AttendanceSystemEnum.optional(),
+  attendanceSystem: AttendanceSystemSchema.optional(),
   scholarshipAvailable: z.boolean().optional(),
   classrooms: z
     .number()

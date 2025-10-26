@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import * as SeparatorPrimitive from "@radix-ui/react-separator";
-import * as React from "react";
+import type * as React from "react";
 
 function Separator({
   className,
@@ -17,8 +17,8 @@ function Separator({
       className={cn(
         "bg-base-300 shrink-0",
         orientation === "horizontal"
-          ? "my-2 h-[1px] w-full"
-          : "mx-2 h-auto w-[1px] self-stretch",
+          ? "my-2 h-px w-full"
+          : "mx-2 h-auto w-px self-stretch",
         className,
       )}
       {...props}

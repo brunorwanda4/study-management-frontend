@@ -1,10 +1,8 @@
-import UpdateClassMembers from "@/components/page/class/setting/form/update-class-members";
-import UpdateClassPublicInfoForm from "@/components/page/class/setting/form/update-class-public-info-form";
-import NotFoundPage from "@/components/page/not-found";
-import { Locale } from "@/i18n";
+import DevelopingPage from "@/components/page/developing-page";
+import type { Locale } from "@/i18n";
 import { authContext } from "@/lib/utils/auth-context";
-import { getClassById } from "@/service/class/class.service";
 import { redirect } from "next/navigation";
+
 interface Props {
   params: Promise<{ lang: Locale; classId: string }>;
 }
@@ -17,16 +15,16 @@ const ClassSettingPage = async (props: Props) => {
     return redirect(`/${lang}/auth/login`);
   }
 
-  const cls = await getClassById(classId);
-  if (!cls.data) return <NotFoundPage />;
-  return (
-    <div className="space-y-4">
-      <h2 className="title-page">Class Setting</h2>
-      {/* TODO: make school management where to add class subjects and class teacher management */}
-      <UpdateClassPublicInfoForm classData={cls.data} />
-      <UpdateClassMembers />
-    </div>
-  );
+  return <DevelopingPage lang={lang} role={auth.user.role} />;
+
+  // return (
+  //   <div className="space-y-4">
+  //     <h2 className="title-page">Class Setting</h2>
+  //     {/* TODO: make school management where to add class subjects and class teacher management */}
+  //     <UpdateClassPublicInfoForm classData={cls.data} />
+  //     <UpdateClassMembers />
+  //   </div>
+  // );
 };
 
 export default ClassSettingPage;

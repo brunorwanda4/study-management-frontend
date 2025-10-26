@@ -31,14 +31,14 @@ import {
   TeacherTypes,
 } from "@/lib/const/common-details-const";
 import { useToast } from "@/lib/context/toast/ToastContext";
-import { Class } from "@/lib/schema/class/class-schema";
+import type { Class } from "@/lib/schema/class/class-schema";
 import {
-  CreateJoinSchoolRequest,
+  type CreateJoinSchoolRequest,
   CreateJoinSchoolRequestSchema,
 } from "@/lib/schema/school/school-join-school/create-join-school-request-schema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
-import { ClassCombobox, ComboboxItem } from "./class-combobox";
+import { ClassCombobox, type ComboboxItem } from "./class-combobox";
 
 /* -------------------------------------------------------------------------- */
 /*                                COMPONENT                                   */

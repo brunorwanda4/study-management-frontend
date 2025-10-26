@@ -2,10 +2,10 @@ import PermissionPage from "@/components/page/permission-page";
 import ClassesSchoolTable from "@/components/page/school-staff/table/class-table/classes-table";
 import type { Locale } from "@/i18n";
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
-import { ClassWithOthers } from "@/lib/schema/class/class-schema";
+import type { ClassWithOthers } from "@/lib/schema/class/class-schema";
 import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {

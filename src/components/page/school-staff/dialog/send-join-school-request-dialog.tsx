@@ -1,7 +1,7 @@
 "use client";
-import { Locale } from "@/i18n";
-import { Class } from "@/lib/schema/class/class-schema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { Locale } from "@/i18n";
+import type { Class } from "@/lib/schema/class/class-schema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import { Plus } from "lucide-react";
 import SendJoinSchoolRequestForm from "../../../table/school/send-join-school-request-form";
 import { Button } from "../../../ui/button";

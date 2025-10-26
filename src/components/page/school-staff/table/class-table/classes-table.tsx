@@ -4,18 +4,18 @@ import { CommonDataTable } from "@/components/common/table/common-data-table";
 import TableFilter from "@/components/common/table/table-filter";
 import { ClassTableColumn } from "@/components/page/school-staff/table/class-table/class-table-column";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
-import { ClassWithOthers } from "@/lib/schema/class/class-schema";
+import type { ClassWithOthers } from "@/lib/schema/class/class-schema";
 import {
-  ColumnFiltersState,
+  type ColumnFiltersState,
   getCoreRowModel,
   getFacetedMinMaxValues,
   getFacetedRowModel,
   getFacetedUniqueValues,
   getFilteredRowModel,
   getSortedRowModel,
-  SortingState,
+  type SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 import { useEffect, useState } from "react";

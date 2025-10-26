@@ -6,7 +6,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import UseTheme from "@/context/theme/use-theme";
+import UseTheme from "@/lib/context/theme/use-theme";
 
 const ProfileButton = () => {
   const theme = UseTheme();

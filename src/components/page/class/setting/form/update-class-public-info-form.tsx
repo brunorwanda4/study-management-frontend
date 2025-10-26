@@ -1,13 +1,8 @@
 "use client";
 
-import { useToast } from "@/lib/context/toast/ToastContext";
-import { ClassDto } from "@/lib/schema/class/class-schema";
-import { ClassType } from "@/lib/schema/class/create-class.dto";
-import { updateClassPublicInfo } from "@/service/class/class.service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
-
 // Components
 import { FormError, FormSuccess } from "@/components/common/form-message";
 import { ImageUpload } from "@/components/common/image-upload";
@@ -29,13 +24,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useToast } from "@/lib/context/toast/ToastContext";
+import type { ClassWithOthers } from "@/lib/schema/class/class-schema";
+import { ClassType } from "@/lib/schema/class/create-class.dto";
 import {
-  ClassUpdateDto,
+  type ClassUpdateDto,
   ClassUpdateSchema,
 } from "@/lib/schema/class/update-class-schema";
 
 interface UpdateClassPublicInfoFormProps {
-  classData: ClassDto;
+  classData: ClassWithOthers;
 }
 
 export default function UpdateClassPublicInfoForm({
@@ -53,9 +51,9 @@ export default function UpdateClassPublicInfoForm({
       code: classData.code || undefined,
       username: classData.username || undefined,
       image: classData.image || undefined,
-      classType: classData.classType || undefined,
-      educationLever: classData.educationLever || undefined,
-      curriculum: classData.curriculum || undefined,
+      classType: classData.type || undefined,
+      educationLever: undefined,
+      curriculum:  undefined,
       // Omit fields that shouldn't be updated like id, createdAt, etc.
     },
     mode: "onChange",
@@ -65,47 +63,47 @@ export default function UpdateClassPublicInfoForm({
     setError(undefined);
     setSuccess(undefined);
 
-    startTransition(async () => {
-      try {
-        const result = await updateClassPublicInfo(data, classData.id);
+    // startTransition(async () => {
+    //   try {
+    //     const result = await apiRequest<ClassUpdateDto, Class>("put", );
 
-        if (result.data) {
-          setSuccess("Class information updated successfully!");
-          showToast({
-            type: "success",
-            title: "Class update successful 🌻",
-            description: `${result.data.name} update class successful`,
-            duration: 4000,
-          });
-          // Reset form to new values
-          form.reset({
-            ...data,
-            // Ensure we don't reset to undefined values
-            name: result.data.name,
-            code: result.data.code,
-            username: result.data.username,
-            image: result.data.image || undefined,
-            classType: result.data.classType || undefined,
-            educationLever: result.data.educationLever || undefined,
-            curriculum: result.data.curriculum || undefined,
-          });
-        } else {
-          throw new Error(
-            result.message || "Failed to update class information",
-          );
-        }
-      } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : "An unknown error occurred";
-        showToast({
-          type: "error",
-          title: "Something went wrong to update class 🌋",
-          description: errorMessage,
-          duration: 3000,
-        });
-        setError(errorMessage);
-      }
-    });
+    //     if (result.data) {
+    //       setSuccess("Class information updated successfully!");
+    //       showToast({
+    //         type: "success",
+    //         title: "Class update successful 🌻",
+    //         description: `${result.data.name} update class successful`,
+    //         duration: 4000,
+    //       });
+    //       // Reset form to new values
+    //       form.reset({
+    //         ...data,
+    //         // Ensure we don't reset to undefined values
+    //         name: result.data.name,
+    //         code: result.data.code,
+    //         username: result.data.username,
+    //         image: result.data.image || undefined,
+    //         classType: result.data.classType || undefined,
+    //         educationLever: result.data.educationLever || undefined,
+    //         curriculum: result.data.curriculum || undefined,
+    //       });
+    //     } else {
+    //       throw new Error(
+    //         result.message || "Failed to update class information",
+    //       );
+    //     }
+    //   } catch (error) {
+    //     const errorMessage =
+    //       error instanceof Error ? error.message : "An unknown error occurred";
+    //     showToast({
+    //       type: "error",
+    //       title: "Something went wrong to update class 🌋",
+    //       description: errorMessage,
+    //       duration: 3000,
+    //     });
+    //     setError(errorMessage);
+    //   }
+    // });
   };
 
   const renderFormField = (

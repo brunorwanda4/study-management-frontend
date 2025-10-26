@@ -11,13 +11,14 @@ import {
   ItemTitle,
 } from "@/components/ui/item";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
-import { SectorModel } from "@/lib/schema/admin/sectorSchema";
-import { TradeModule } from "@/lib/schema/admin/tradeSchema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { SectorModel } from "@/lib/schema/admin/sectorSchema";
+import type { TradeModule } from "@/lib/schema/admin/tradeSchema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import { formatReadableDate } from "@/lib/utils/format-date";
 import { Calendar, Clock, GraduationCap, Lock, Unlock } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+
 interface Props {
   sector: SectorModel;
   auth: AuthContext;

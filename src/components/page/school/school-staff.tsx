@@ -1,11 +1,11 @@
 import UserCardSmall from "@/components/cards/user-card-small";
-import { Locale } from "@/i18n";
-import type { SchoolStaff } from "@/lib/schema/school/school-staff-schema";
+import type { Locale } from "@/i18n";
+import type { SchoolStaff as SchoolStaffModel } from "@/lib/schema/school/school-staff-schema";
 
 interface props {
   lang: Locale;
   onThePage?: boolean;
-  schoolStaff: SchoolStaff[];
+  schoolStaff: SchoolStaffModel[];
 }
 
 const SchoolStaff = ({ lang, schoolStaff }: props) => {

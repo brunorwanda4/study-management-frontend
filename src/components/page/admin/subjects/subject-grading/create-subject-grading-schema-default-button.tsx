@@ -1,12 +1,12 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/lib/context/toast/ToastContext";
-import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
-import {
+import type { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
+import type {
   DefaultLetterGrade,
   SubjectGrading,
 } from "@/lib/schema/admin/subjects/subject-grading-schema/subject-grading-schema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { LoaderCircle } from "lucide-react";
 import { redirect } from "next/navigation";
@@ -54,7 +54,7 @@ const CreateSubjectGradingSchemaDefaultButton = ({
           description: "Grading scheme created successfully!",
           type: "success",
         });
-        if (!!action) action();
+        if (action) action();
         redirect(`/a/collections/main_subjects/${subject.code}`);
       }
     });

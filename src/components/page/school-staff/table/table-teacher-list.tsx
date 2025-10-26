@@ -54,10 +54,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  editTeacherFormSchema,
-  newTeacherFormSchema,
   type EditTeacherForm,
+  editTeacherFormSchema,
   type NewTeacherForm,
+  newTeacherFormSchema,
 } from "@/lib/schema/table-forms/teacher-forms";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {

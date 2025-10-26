@@ -41,9 +41,19 @@ export function DroppableCell({
       : null;
 
   return (
-    <div
+    // biome-ignore lint/a11y/useSemanticElements: <explanation>
+<div
       ref={setNodeRef}
       onClick={onClick}
+      onKeyDown={(e) => {
+        if (!onClick) return;
+        if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
+          e.preventDefault();
+          onClick();
+        }
+      }}
+      role="button"
+      tabIndex={0}
       className={cn(
         "data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1",
         className,

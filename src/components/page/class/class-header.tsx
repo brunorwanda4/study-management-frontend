@@ -1,19 +1,19 @@
 import MyImage from "@/components/common/myImage";
 import MyLink from "@/components/common/myLink";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import {
   classImage,
   schoolLogoImage,
   teacherImage,
 } from "@/lib/context/images";
-import { ClassAndOthers } from "@/lib/schema/class/class-schema";
-import { UserSchool } from "@/lib/utils/auth";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { ClassWithOthers } from "@/lib/schema/class/class-schema";
+import type { School } from "@/lib/schema/school/school-schema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 
 interface props {
-  currentCls: ClassAndOthers;
+  currentCls: ClassWithOthers;
   lang: Locale;
-  currentSchool?: UserSchool;
+  currentSchool?: School;
   currentUser: AuthContext;
 }
 
@@ -34,22 +34,22 @@ const ClassHeader = ({
         <div className=" ">
           <h4 className="basic-title">{currentCls.name}</h4>
           <span>@ {currentCls.username}</span>
-          {currentCls.teacher && (
+          {currentCls.class_teacher && (
             <MyLink
               loading
-              href={`/${lang}/p/${currentCls.teacher.userId}?teacherId=${currentCls.classTeacherId}`}
+              href={`/${lang}/p/${currentCls.class_teacher.user_id}?teacherId=${currentCls.class_teacher_id}`}
               className="flex gap-2"
             >
               <MyImage
                 src={
-                  currentCls.teacher?.image
-                    ? currentCls.teacher.image
+                  currentCls.class_teacher?.image
+                    ? currentCls.class_teacher.image
                     : teacherImage
                 }
                 classname="mask mask-squircle"
                 className="size-6"
               />
-              {currentCls.teacher.name}
+              {currentCls.class_teacher.name}
             </MyLink>
           )}
         </div>
@@ -60,9 +60,9 @@ const ClassHeader = ({
           <div className="flex items-center space-x-2">
             <MyLink
               href={
-                currentSchool?.schoolId === currentCls.school.id
+                currentSchool?.id === currentCls.school.id
                   ? `/${lang}/school`
-                  : `/${lang}/school/${currentCls.school.id}`
+                  : `/${lang}/school/${currentCls.school.username}`
               }
               loading
               type="link"
@@ -81,7 +81,7 @@ const ClassHeader = ({
             <div className="">
               <MyLink
                 href={
-                  currentSchool?.schoolId === currentCls.school.id
+                  currentSchool?.id === currentCls.school.id
                     ? `/${lang}/school`
                     : `/${lang}/school/${currentCls.school.id}`
                 }

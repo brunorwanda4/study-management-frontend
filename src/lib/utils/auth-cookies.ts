@@ -4,7 +4,7 @@ import {
   expiresOneWeek,
   expiresThreeDays,
 } from "@/lib/const/time-expres";
-import { UserRoleDto } from "@/lib/schema/user/user-schema";
+import type { userRole } from "@/lib/schema/common-details-schema";
 import { cookies } from "next/headers";
 import {
   schoolStaffAccessTokenSchool,
@@ -33,7 +33,7 @@ export async function removeUserToken() {
   cooky.delete(schoolStaffAccessTokenSchool);
 }
 
-export async function setSchoolCookies(token: string, role: UserRoleDto) {
+export async function setSchoolCookies(token: string, role: userRole) {
   const cooky = await cookies();
   const key =
     role === "SCHOOLSTAFF"
@@ -58,7 +58,7 @@ export async function setSchoolCookies(token: string, role: UserRoleDto) {
   });
 }
 
-export async function getSchoolToken(role: UserRoleDto) {
+export async function getSchoolToken(role: userRole) {
   const cooky = await cookies();
   const key =
     role === "SCHOOLSTAFF"

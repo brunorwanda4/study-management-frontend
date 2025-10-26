@@ -1,6 +1,5 @@
 "use client";
 
-import React, { useMemo } from "react";
 import {
   addHours,
   areIntervalsOverlapping,
@@ -12,19 +11,21 @@ import {
   isSameDay,
   startOfDay,
 } from "date-fns";
+import type React from "react";
+import { useMemo } from "react";
 
 import {
   EndHour,
   StartHour,
   WeekCellsHeight,
-} from "@/components/origin/calendar/constants";
+} from "@/components/page/calendar/calendar/constants";
 import { cn } from "@/lib/utils";
-import { CalendarEvent } from "./types";
-import { isMultiDayEvent } from "./utils";
-import { useCurrentTimeIndicator } from "./use-current-time-indicator";
-import { EventItem } from "./event-item";
 import { DraggableEvent } from "./draggable-event";
 import { DroppableCell } from "./droppable-cell";
+import { EventItem } from "./event-item";
+import type { CalendarEvent } from "./types";
+import { useCurrentTimeIndicator } from "./use-current-time-indicator";
+import { isMultiDayEvent } from "./utils";
 
 interface DayViewProps {
   currentDate: Date;

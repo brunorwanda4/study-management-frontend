@@ -1,6 +1,6 @@
 "use client";
 import MyLink from "@/components/common/myLink";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { usePathname } from "next/navigation";
 import { BsGear } from "react-icons/bs";
 import { FaPeopleGroup } from "react-icons/fa6";

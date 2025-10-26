@@ -1,4 +1,3 @@
-// components/forms/academic-details.tsx
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,7 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import MultipleSelector, { Option } from "@/components/ui/multiselect";
+import MultipleSelector from "@/components/ui/multiselect";
 import {
   Select,
   SelectContent,
@@ -25,10 +24,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { AffiliationTypes } from "@/lib/const/common-details-const";
 import { schoolEducationLevel } from "@/lib/context/school.context";
-import { AffiliationTypeEnum } from "@/lib/schema/school/school.dto";
+import type { Option } from "@/lib/schema/common-details-schema";
 import {
-  AcademicDetailsDto,
+  type AcademicDetailsDto,
   AcademicDetailsSchema,
 } from "./schema/academic-details";
 
@@ -138,7 +138,7 @@ export const AcademicDetailsForm = ({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent data-theme={theme}>
-                      {AffiliationTypeEnum?.options?.map((type) => (
+                      {AffiliationTypes?.map((type) => (
                         <SelectItem key={type} value={type}>
                           {type}
                         </SelectItem>

@@ -7,9 +7,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { SectorModel } from "@/lib/schema/admin/sectorSchema";
+import type { SectorModel } from "@/lib/schema/admin/sectorSchema";
 import { cn } from "@/lib/utils";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { AuthContext } from "@/lib/utils/auth-context";
 
 interface Props {
   sector: SectorModel;
@@ -21,6 +21,7 @@ const UpdateSectorDialog = ({ sector, auth, isIcon }: Props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
+        {/** biome-ignore lint/a11y/useValidAriaRole: <explanation> */}
         <Button
           className={cn(
             "w-full cursor-pointer",

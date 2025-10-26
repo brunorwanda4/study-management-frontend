@@ -8,8 +8,7 @@ import {
 import { match as matchLocale } from "@formatjs/intl-localematcher";
 import { jwtDecode } from "jwt-decode";
 import Negotiator from "negotiator";
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { apiAuthPrefix, authRoutes, publicRoutes } from "./router";
 
 function getLocale(request: NextRequest): Locale {
@@ -17,7 +16,6 @@ function getLocale(request: NextRequest): Locale {
   request.headers.forEach((value, key) => {
     negotiatorHeaders[key] = value;
   });
-
   const locales: Locale[] = [...i18n.locales];
   const languages = new Negotiator({ headers: negotiatorHeaders }).languages();
 
@@ -44,9 +42,9 @@ function extractLocaleFromPath(pathname: string): Locale | null {
   return null;
 }
 
-async function authMiddleware(req: NextRequest) {
-  const { nextUrl } = req;
-  const pathname = nextUrl.pathname;
+export async function proxy(req: NextRequest) {
+  const url = new URL(req.url);
+  const pathname = url.pathname;
 
   const auth = await authContext();
   const isLoggedIn = !!auth;
@@ -57,12 +55,13 @@ async function authMiddleware(req: NextRequest) {
     (await willExpireSoon(jwtDecode<{ exp: number }>(auth.token).exp))
   ) {
     const newToken = await refreshAuthToken(auth.token);
-    if (newToken)
+    if (newToken) {
       await setAuthCookies(
         newToken,
         auth.user.id,
         auth.schoolToken ?? undefined,
       );
+    }
   }
 
   const detectedLocale = extractLocaleFromPath(pathname) || getLocale(req);
@@ -92,17 +91,14 @@ async function authMiddleware(req: NextRequest) {
           : `/${detectedLocale}${
               pathname.startsWith("/") ? pathname : `/${pathname}`
             }`;
-      return NextResponse.redirect(new URL(localePath, nextUrl.origin));
+      return NextResponse.redirect(new URL(localePath, url.origin));
     }
     return NextResponse.next();
   }
 
   if (!isLoggedIn) {
     if (!pathname.startsWith(`/${detectedLocale}/auth/login`)) {
-      const redirectUrl = new URL(
-        `/${detectedLocale}/auth/login`,
-        nextUrl.origin,
-      );
+      const redirectUrl = new URL(`/${detectedLocale}/auth/login`, url.origin);
       return NextResponse.redirect(redirectUrl);
     }
     return NextResponse.next();
@@ -110,15 +106,10 @@ async function authMiddleware(req: NextRequest) {
 
   if (!pathname.startsWith(`/${detectedLocale}`)) {
     const localePrefixPath = `/${detectedLocale}${pathname}`;
-    return NextResponse.redirect(new URL(localePrefixPath, nextUrl.origin));
+    return NextResponse.redirect(new URL(localePrefixPath, url.origin));
   }
 
   return NextResponse.next();
-}
-
-export default async function Middleware(req: NextRequest) {
-  const res = (await authMiddleware(req)) ?? NextResponse.next();
-  return res;
 }
 
 export const config = {

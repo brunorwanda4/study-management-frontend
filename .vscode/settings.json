@@ -1,5 +1,5 @@
 {
-  "cSpell.words": ["SCHOOLSTAFF", "TVET"],
+  "cSpell.words": ["cmdk", "SCHOOLSTAFF", "TVET"],
   "editor.defaultFormatter": "biomejs.biome",
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,

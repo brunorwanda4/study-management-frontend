@@ -1,7 +1,8 @@
 import SchoolHomePosts from "@/components/page/school/school-home-posts";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { authContext } from "@/lib/utils/auth-context";
 import { redirect } from "next/navigation";
+
 interface props {
   params: Promise<{ lang: Locale }>;
 }

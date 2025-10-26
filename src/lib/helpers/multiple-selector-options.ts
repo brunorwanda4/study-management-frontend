@@ -1,4 +1,4 @@
-import { Option } from "@/components/ui/multiselect";
+import type { Option } from "@/lib/schema/common-details-schema";
 
 export const stringsToOptions = (
   items: string[] | null | undefined,

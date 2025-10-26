@@ -11,7 +11,7 @@ import {
   TimelineSeparator,
   TimelineTitle,
 } from "@/components/ui/timeline";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { schoolImage } from "@/lib/context/images";
 
 const items = [

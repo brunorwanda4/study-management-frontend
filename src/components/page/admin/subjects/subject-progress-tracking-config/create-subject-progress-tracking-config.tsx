@@ -1,10 +1,7 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { LoaderCircle } from "lucide-react";
-import { useEffect, useState, useTransition } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-
+import { FormError, FormSuccess } from "@/components/common/form-message";
+import SelectWithSearch from "@/components/common/select-with-search";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -17,9 +14,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
-import { FormError, FormSuccess } from "@/components/common/form-message";
-import SelectWithSearch from "@/components/common/select-with-search";
 import {
   Select,
   SelectContent,
@@ -28,15 +22,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/lib/context/toast/ToastContext";
-import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
-import { SubjectProgressTrackingConfigType } from "@/lib/schema/admin/subjects/subject-category";
+import type { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
+import type { SubjectProgressTrackingConfigType } from "@/lib/schema/admin/subjects/subject-category";
 import {
-  CreateSubjectProgressTrackingConfig,
+  type CreateSubjectProgressTrackingConfig,
   CreateSubjectProgressTrackingConfigSchema,
 } from "@/lib/schema/admin/subjects/subject-progress-tracking-config-schema/create-subject-progress-tracking-config-schema";
-import { SubjectProgressTrackingConfig } from "@/lib/schema/admin/subjects/subject-progress-tracking-config-schema/subject-progress-tracking-config-schema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { SubjectProgressTrackingConfig } from "@/lib/schema/admin/subjects/subject-progress-tracking-config-schema/subject-progress-tracking-config-schema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { LoaderCircle } from "lucide-react";
+import { useEffect, useState, useTransition } from "react";
+import { type SubmitHandler, useForm } from "react-hook-form";
 
 interface Props {
   auth: AuthContext;
@@ -133,8 +131,8 @@ const CreateSubjectProgressTrackingConfigForm = ({
             type: "error",
           });
         } else {
-          if (!!setStep) setStep(4, subject?.id || subject?._id);
-          if (!!markStepCompleted) markStepCompleted(2);
+          if (setStep) setStep(4, subject?.id || subject?._id);
+          if (markStepCompleted) markStepCompleted(2);
           setSuccess("Progress tracking configuration created successfully!");
           showToast({
             title: "Configuration created",
@@ -180,8 +178,8 @@ const CreateSubjectProgressTrackingConfigForm = ({
             type: "error",
           });
         } else {
-          if (!!setStep) setStep(4, subject?.id || subject?._id);
-          if (!!markStepCompleted) markStepCompleted(2);
+          if (setStep) setStep(4, subject?.id || subject?._id);
+          if (markStepCompleted) markStepCompleted(2);
           setSuccess("Progress tracking configuration created successfully!");
           showToast({
             title: "Configuration created",

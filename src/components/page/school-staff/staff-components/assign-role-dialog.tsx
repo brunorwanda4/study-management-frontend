@@ -1,7 +1,5 @@
 "use client";
 
-import type React from "react";
-
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -21,14 +19,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SchoolStaffDto } from "@/lib/schema/school/school-staff-schema";
-import type { ReactNode } from "react";
+import type { SchoolStaff } from "@/lib/schema/school/school-staff-schema";
+import type React from "react";
 
 interface AssignRoleDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  staffMembers: SchoolStaffDto[];
-  trigger?: ReactNode;
+  staffMembers: SchoolStaff[];
+  trigger?: React.ReactNode;
 }
 
 export function AssignRoleDialog({
@@ -65,7 +63,10 @@ export function AssignRoleDialog({
                 </SelectTrigger>
                 <SelectContent>
                   {staffMembers.map((staff) => (
-                    <SelectItem key={staff.id} value={staff.id.toString()}>
+                    <SelectItem
+                      key={staff.id}
+                      value={staff.id || staff._id || ""}
+                    >
                       {staff.name}
                     </SelectItem>
                   ))}

@@ -22,12 +22,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { SchoolStaffTypes } from "@/lib/const/common-details-const";
 import { useToast } from "@/lib/context/toast/ToastContext";
 import {
-  BulkCreateJoinSchoolRequest,
+  type BulkCreateJoinSchoolRequest,
   BulkCreateJoinSchoolRequestSchema,
 } from "@/lib/schema/school/school-join-school/create-join-school-request-schema";
-import { JoinSchoolRequest } from "@/lib/schema/school/school-join-school/join-school-request-schema";
-import { School } from "@/lib/schema/school/school-schema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { JoinSchoolRequest } from "@/lib/schema/school/school-join-school/join-school-request-schema";
+import type { School } from "@/lib/schema/school/school-schema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trash } from "lucide-react";

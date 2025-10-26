@@ -12,18 +12,18 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { studentImage, teacherImage } from "@/lib/context/images";
 import { useToast } from "@/lib/context/toast/ToastContext";
 import { formatTimeAgo } from "@/lib/functions/change-time";
-import { JoinStatus } from "@/lib/schema/common-details-schema";
-import {
+import type { JoinStatus } from "@/lib/schema/common-details-schema";
+import type {
   JoinSchoolRequest,
   JoinSchoolRequestWithRelations,
 } from "@/lib/schema/school/school-join-school/join-school-request-schema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
-import { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 import {
   Clock,
   LogIn,

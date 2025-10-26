@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import MultipleSelector, { Option } from "@/components/ui/multiselect";
+import MultipleSelector from "@/components/ui/multiselect";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
@@ -27,13 +27,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { AttendanceSystems } from "@/lib/const/common-details-const";
 import {
-  schoolLabs,
   SchoolSportsExtracurricular,
+  schoolLabs,
 } from "@/lib/context/school.context";
-import { AttendanceSystemEnum } from "@/lib/schema/school/school.dto";
+import type { Option } from "@/lib/schema/common-details-schema";
 import {
-  FacilitiesOperationsDto,
+  type FacilitiesOperationsDto,
   FacilitiesOperationsSchema,
 } from "./schema/facilities-operations";
 
@@ -98,7 +99,6 @@ export const FacilitiesOperationsForm = ({
                     <Input
                       type="number"
                       min="0"
-                      step="1"
                       placeholder="Total student capacity"
                       {...field}
                       onChange={(e) =>
@@ -125,7 +125,6 @@ export const FacilitiesOperationsForm = ({
                     <Input
                       type="number"
                       min="0"
-                      step="1"
                       placeholder="Number of classrooms"
                       {...field}
                       onChange={(e) =>
@@ -158,7 +157,7 @@ export const FacilitiesOperationsForm = ({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent data-theme={theme}>
-                      {AttendanceSystemEnum.options.map((type) => (
+                      {AttendanceSystems.map((type) => (
                         <SelectItem key={type} value={type}>
                           {type}
                         </SelectItem>

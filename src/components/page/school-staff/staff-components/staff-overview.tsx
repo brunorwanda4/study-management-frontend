@@ -13,11 +13,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { SchoolStaffDto } from "@/lib/schema/school/school-staff-schema";
+import type { SchoolStaff } from "@/lib/schema/school/school-staff-schema";
 import { AssignRoleDialog } from "./assign-role-dialog";
 
 interface StaffOverviewProps {
-  staffMembers: SchoolStaffDto[];
+  staffMembers: SchoolStaff[];
 }
 
 export function StaffOverview({ staffMembers }: StaffOverviewProps) {

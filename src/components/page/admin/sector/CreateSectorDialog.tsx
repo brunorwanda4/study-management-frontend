@@ -9,8 +9,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { SectorModel } from "@/lib/schema/admin/sectorSchema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { SectorModel } from "@/lib/schema/admin/sectorSchema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import { BsPlus } from "react-icons/bs";
 
 interface props {

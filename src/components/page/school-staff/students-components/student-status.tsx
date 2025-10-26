@@ -1,6 +1,6 @@
 import MyImage from "@/components/common/myImage";
 import { Button } from "@/components/ui/button";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { BsThreeDots } from "react-icons/bs";
 
 interface props {

@@ -1,16 +1,13 @@
 "use client";
-import { Locale } from "@/i18n";
 import { cn } from "@/lib/utils";
-import React, { useEffect, useState } from "react";
-interface props {
-  lang: Locale;
-}
+import { useEffect, useState } from "react";
+
 type MessageTypes = "friends" | "requests";
 
-const MessagesAsideNavbar = ({}: props) => {
+const MessagesAsideNavbar = () => {
   const [choose, setChoose] = useState<MessageTypes>(() => {
     const storedChoice = localStorage.getItem("chooseMessages") as MessageTypes;
-    if (!!storedChoice) return storedChoice;
+    if (storedChoice) return storedChoice;
     const params = new URLSearchParams(window.location.search);
     return (params.get("type") as MessageTypes) || "friends";
   });
@@ -38,7 +35,9 @@ const MessagesAsideNavbar = ({}: props) => {
           messageType === "requests" && "border-b-2 border-b-info",
         )}
       >
-        <button onClick={() => handleChangeMessages("friends")}>Friends</button>
+        <button type="button" onClick={() => handleChangeMessages("friends")}>
+          Friends
+        </button>
       </div>
       <div
         className={cn(
@@ -46,7 +45,7 @@ const MessagesAsideNavbar = ({}: props) => {
           messageType === "friends" && "border-b-2 border-b-info",
         )}
       >
-        <button onClick={() => handleChangeMessages("requests")}>
+        <button type="button" onClick={() => handleChangeMessages("requests")}>
           Requests
         </button>
       </div>

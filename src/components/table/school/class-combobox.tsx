@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDownIcon, LucideIcon } from "lucide-react"; // Using UsersIcon as a placeholder
+import { ChevronDownIcon, type LucideIcon } from "lucide-react"; // Using UsersIcon as a placeholder
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";

@@ -1,5 +1,7 @@
 "use client";
 
+import { FormError, FormSuccess } from "@/components/common/form-message";
+import SelectWithSearch from "@/components/common/select-with-search";
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import {
@@ -12,36 +14,33 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { LoaderCircle } from "lucide-react";
-import { useEffect, useState, useTransition } from "react";
-import { useForm, useWatch } from "react-hook-form";
-import { MdOutlineDisabledVisible } from "react-icons/md";
-import { RiInputCursorMove } from "react-icons/ri";
-
-import { FormError, FormSuccess } from "@/components/common/form-message";
-import SelectWithSearch from "@/components/common/select-with-search";
-import { useToast } from "@/lib/context/toast/ToastContext";
-import apiRequest from "@/service/api-client";
-
-import { subjectGradingTypes, SubjectTypes } from "@/lib/const/subject-const";
 import {
   defaultLetterGrade,
   defaultPassFail,
   defaultPercentage,
   defaultPoints,
 } from "@/lib/const/subject/subject-grading-default-vaules";
-import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { LoaderCircle } from "lucide-react";
+import { redirect } from "next/navigation";
+import { useEffect, useState, useTransition } from "react";
+import { useForm, useWatch } from "react-hook-form";
+import { MdOutlineDisabledVisible } from "react-icons/md";
+import { RiInputCursorMove } from "react-icons/ri";
+
+import { SubjectTypes, subjectGradingTypes } from "@/lib/const/subject-const";
+import { useToast } from "@/lib/context/toast/ToastContext";
+import type { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
 import {
-  CreateSubjectGradingScheme,
+  type CreateSubjectGradingScheme,
   CreateSubjectGradingSchemeSchema,
 } from "@/lib/schema/admin/subjects/subject-grading-schema/create-subject-grading-schema";
-import {
+import type {
   DefaultLetterGrade,
   SubjectGrading,
 } from "@/lib/schema/admin/subjects/subject-grading-schema/subject-grading-schema";
-import { AuthContext } from "@/lib/utils/auth-context";
-import { redirect } from "next/navigation";
+import type { AuthContext } from "@/lib/utils/auth-context";
+import apiRequest from "@/service/api-client";
 
 interface Props {
   auth: AuthContext;
@@ -174,7 +173,7 @@ const CreateSubjectGradingSchemeForm = ({ auth, subject, action }: Props) => {
             description: "Grading scheme created successfully!",
             type: "success",
           });
-          if (!!action) action();
+          if (action) action();
           form.reset();
           redirect(`/a/collections/main_subjects/${subject.code}`);
         }

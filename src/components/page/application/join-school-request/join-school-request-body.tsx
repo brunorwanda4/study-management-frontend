@@ -1,9 +1,9 @@
 "use client";
 import SchoolJoinRequestCard from "@/components/cards/school-Join-request-card";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
-import { JoinSchoolRequestWithRelations } from "@/lib/schema/school/school-join-school/join-school-request-schema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { JoinSchoolRequestWithRelations } from "@/lib/schema/school/school-join-school/join-school-request-schema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import { useEffect, useState } from "react";
 
 interface props {
@@ -19,7 +19,7 @@ const JoinSchoolRequestBody = ({
   auth,
   realtimeEnabled = true,
 }: props) => {
-  const { data: initialRequests, isConnected } =
+  const { data: initialRequests } =
     useRealtimeData<JoinSchoolRequestWithRelations>("join_school_request");
   const [displayRequests, setDisplayRequests] =
     useState<JoinSchoolRequestWithRelations[]>(requests);

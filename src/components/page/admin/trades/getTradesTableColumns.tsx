@@ -1,9 +1,9 @@
 "use client";
 
 import MyImage from "@/components/common/myImage";
-import { TradeModelWithOthers } from "@/lib/schema/admin/tradeSchema";
+import type { TradeModelWithOthers } from "@/lib/schema/admin/tradeSchema";
 import { cn } from "@/lib/utils";
-import { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 
 export const getTradesTableColumns = (): ColumnDef<TradeModelWithOthers>[] => {

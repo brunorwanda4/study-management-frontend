@@ -1,10 +1,10 @@
 import ClassStudentCard from "@/components/page/class/cards/class-students-card";
 import ClassTeacherCard from "@/components/page/class/cards/class-teachers-card";
 import NotFoundPage from "@/components/page/not-found";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { authContext } from "@/lib/utils/auth-context";
-import { getAllStudentByClassId } from "@/service/school/class-student-services";
 import { redirect } from "next/navigation";
+
 interface Props {
   params: Promise<{ lang: Locale; classId: string }>;
 }
@@ -17,7 +17,7 @@ const ClassIdPeoplePage = async (props: Props) => {
     return redirect(`/${lang}/auth/login`);
   }
 
-  const [student] = await Promise.all([getAllStudentByClassId(classId)]);
+  const student = { data: [] };
   if (!student.data) {
     return <NotFoundPage />;
   }

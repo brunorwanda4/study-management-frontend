@@ -1,11 +1,11 @@
 "use client";
 
 import DataDetailsCard, {
-  dataDetailsCardProps,
+  type dataDetailsCardProps,
 } from "@/components/common/cards/data-details-card";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
-import { TradeModelWithOthers } from "@/lib/schema/admin/tradeSchema";
-import { TradeWithNonNullableId } from "@/lib/types/tradeModel";
+import type { TradeModelWithOthers } from "@/lib/schema/admin/tradeSchema";
+import type { TradeWithNonNullableId } from "@/lib/types/tradeModel";
 import { useEffect, useState } from "react";
 
 interface Props {
@@ -90,7 +90,7 @@ const TradeCollectionDetails = ({ initialTrades = [] }: Props) => {
     <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {cards.map((card, index) => (
         <DataDetailsCard
-          key={index}
+          key={card.title}
           title={card.title}
           icon={card.icon}
           size={card.size}

@@ -1,15 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { RiCalendarLine, RiDeleteBinLine } from "@remixicon/react";
-import { format, isBefore } from "date-fns";
 import {
   DefaultEndHour,
   DefaultStartHour,
   EndHour,
   StartHour,
-} from "@/components/origin/calendar/constants";
-import { cn } from "@/lib/utils";
+} from "@/components/page/calendar/calendar/constants";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -37,7 +33,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { CalendarEvent, EventColor } from "./types";
+import { cn } from "@/lib/utils";
+import { RiCalendarLine, RiDeleteBinLine } from "@remixicon/react";
+import { format, isBefore } from "date-fns";
+import { useEffect, useMemo, useState } from "react";
+import type { CalendarEvent, EventColor } from "./types";
 
 interface EventDialogProps {
   event: CalendarEvent | null;
@@ -67,6 +67,24 @@ export function EventDialog({
   const [startDateOpen, setStartDateOpen] = useState(false);
   const [endDateOpen, setEndDateOpen] = useState(false);
 
+  const resetForm = () => {
+    setTitle("");
+    setDescription("");
+    setStartDate(new Date());
+    setEndDate(new Date());
+    setStartTime(`${DefaultStartHour}:00`);
+    setEndTime(`${DefaultEndHour}:00`);
+    setAllDay(false);
+    setLocation("");
+    setColor("sky");
+    setError(null);
+  };
+
+  const formatTimeForInput = (date: Date) => {
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = Math.floor(date.getMinutes() / 15) * 15;
+    return `${hours}:${minutes.toString().padStart(2, "0")}`;
+  };
   // Debug log to check what event is being passed
   useEffect(() => {
     console.log("EventDialog received event:", event);
@@ -91,26 +109,8 @@ export function EventDialog({
     } else {
       resetForm();
     }
-  }, [event]);
-
-  const resetForm = () => {
-    setTitle("");
-    setDescription("");
-    setStartDate(new Date());
-    setEndDate(new Date());
-    setStartTime(`${DefaultStartHour}:00`);
-    setEndTime(`${DefaultEndHour}:00`);
-    setAllDay(false);
-    setLocation("");
-    setColor("sky");
-    setError(null);
-  };
-
-  const formatTimeForInput = (date: Date) => {
-    const hours = date.getHours().toString().padStart(2, "0");
-    const minutes = Math.floor(date.getMinutes() / 15) * 15;
-    return `${hours}:${minutes.toString().padStart(2, "0")}`;
-  };
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  }, [event, formatTimeForInput, resetForm]);
 
   // Memoize time options so they're only calculated once
   const timeOptions = useMemo(() => {

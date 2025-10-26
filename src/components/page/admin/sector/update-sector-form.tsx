@@ -1,6 +1,10 @@
 "use client";
 
+import UploadImage from "@/components/common/cards/form/upload-image";
+import { FormError, FormSuccess } from "@/components/common/form-message";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -17,19 +21,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  SectorModel,
-  UpdateSectorModel,
-  updateSectorSchema,
-} from "@/lib/schema/admin/sectorSchema";
-import { AuthContext } from "@/lib/utils/auth-context";
-
-import UploadImage from "@/components/common/cards/form/upload-image";
-import { FormError, FormSuccess } from "@/components/common/form-message";
-import { Checkbox } from "@/components/ui/checkbox";
-import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/lib/context/toast/ToastContext";
+import {
+  type SectorModel,
+  type UpdateSectorModel,
+  updateSectorSchema,
+} from "@/lib/schema/admin/sectorSchema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircle } from "lucide-react";

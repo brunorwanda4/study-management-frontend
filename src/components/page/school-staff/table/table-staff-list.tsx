@@ -54,10 +54,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  editStaffFormSchema,
-  newStaffFormSchema,
   type EditStaffForm,
+  editStaffFormSchema,
   type NewStaffForm,
+  newStaffFormSchema,
 } from "@/lib/schema/table-forms/staff-forms";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {

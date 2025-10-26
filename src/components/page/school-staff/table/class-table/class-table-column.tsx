@@ -11,11 +11,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"; // For Actions
-import { Locale } from "@/i18n";
-import { ClassWithOthers } from "@/lib/schema/class/class-schema";
-import { ClassType } from "@/lib/schema/common-details-schema";
+import type { Locale } from "@/i18n";
+import type { ClassWithOthers } from "@/lib/schema/class/class-schema";
+import type { ClassType } from "@/lib/schema/common-details-schema";
 import { cn } from "@/lib/utils"; // Assuming you have this utility
-import { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, ShieldCheckIcon } from "lucide-react";
 
 export const ClassTableColumn = (lang: Locale) => {

@@ -1,12 +1,12 @@
 import JoinSchoolPage from "@/components/page/join-school-page";
 import SchoolJoinRequestsTable from "@/components/page/school-staff/table/school-join-request-table/join-school-request-table";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
-import { Class } from "@/lib/schema/class/class-schema";
-import { JoinSchoolRequestWithRelations } from "@/lib/schema/school/school-join-school/join-school-request-schema";
+import type { Class } from "@/lib/schema/class/class-schema";
+import type { JoinSchoolRequestWithRelations } from "@/lib/schema/school/school-join-school/join-school-request-schema";
 import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 export const generateMetadata = async (): Promise<Metadata> => {

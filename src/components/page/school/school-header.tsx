@@ -1,14 +1,14 @@
 import MyImage from "@/components/common/myImage";
 import MyLink from "@/components/common/myLink";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import {
   schoolBackground,
   schoolImage,
   schoolLogoImage,
 } from "@/lib/context/images";
-import { School } from "@/lib/schema/school/school-schema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { School } from "@/lib/schema/school/school-schema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import Link from "next/link";
 import { TfiWorld } from "react-icons/tfi";
 

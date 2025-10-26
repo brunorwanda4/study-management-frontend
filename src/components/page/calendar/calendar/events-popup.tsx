@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
 import { format, isSameDay } from "date-fns";
 import { XIcon } from "lucide-react";
-import { CalendarEvent } from "./types";
+import { useEffect, useMemo, useRef } from "react";
+import { Button } from "react-aria-components";
 import { EventItem } from "./event-item";
+import type { CalendarEvent } from "./types";
 
 interface EventsPopupProps {
   date: Date;
@@ -94,13 +95,13 @@ export function EventsPopup({
     >
       <div className="bg-background sticky top-0 flex items-center justify-between border-b p-3">
         <h3 className="font-medium">{format(date, "d MMMM yyyy")}</h3>
-        <button
+        <Button
           onClick={onClose}
           className="hover:bg-muted rounded-full p-1"
           aria-label="Close"
         >
           <XIcon className="h-4 w-4" />
-        </button>
+        </Button>
       </div>
 
       <div className="space-y-2 p-3">
@@ -114,10 +115,15 @@ export function EventsPopup({
             const isLastDay = isSameDay(date, eventEnd);
 
             return (
-              <div
+              <Button
                 key={event.id}
-                className="cursor-pointer"
+                className="w-full text-left"
                 onClick={() => handleEventClick(event)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    handleEventClick(event);
+                  }
+                }}
               >
                 <EventItem
                   event={event}
@@ -125,7 +131,7 @@ export function EventsPopup({
                   isFirstDay={isFirstDay}
                   isLastDay={isLastDay}
                 />
-              </div>
+              </Button>
             );
           })
         )}

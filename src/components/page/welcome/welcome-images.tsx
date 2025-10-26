@@ -3,11 +3,12 @@ import MyImage from "@/components/common/myImage";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
+
 const WelcomeImage = () => {
   const { theme } = useTheme();
   const isDark = theme === "dark" || theme === "black";
   return (
-    <div className="from-base-100 to-base-300 h-full w-full space-y-4 rounded-3xl bg-gradient-to-tr p-4 px-6">
+    <div className="from-base-100 to-base-300 h-full w-full space-y-4 rounded-3xl bg-linear-to-tr p-4 px-6">
       <div className="space-y-2">
         <h2 className="text-4xl font-semibold">
           Start learning wherever you are.
@@ -30,28 +31,28 @@ const WelcomeImage = () => {
         <div className="space-y-2">
           <h3 className="font-semibold">Educations</h3>
           <div className="flex flex-row space-x-2">
-            <Button role="button" variant={"ghost"}>
+            <Button type="button" variant={"ghost"}>
               <MyImage
                 src="https://cdn-icons-png.flaticon.com/512/5331/5331750.png"
                 role="ICON"
               />{" "}
               Nursery
             </Button>
-            <Button role="button" variant={"ghost"}>
+            <Button type="button" variant={"ghost"}>
               <MyImage
                 src="https://cdn-icons-png.flaticon.com/512/17359/17359911.png"
                 role="ICON"
               />{" "}
               Primary
             </Button>
-            <Button role="button" variant={"ghost"}>
+            <Button type="button" variant={"ghost"}>
               <MyImage
                 src="https://cdn-icons-png.flaticon.com/512/2793/2793593.png"
                 role="ICON"
               />{" "}
               Secondary
             </Button>
-            <Button role="button" variant={"ghost"}>
+            <Button type="button" variant={"ghost"}>
               <MyImage
                 src="https://cdn-icons-png.flaticon.com/512/10337/10337470.png"
                 role="ICON"

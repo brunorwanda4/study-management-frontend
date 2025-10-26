@@ -7,9 +7,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { TradeModule } from "@/lib/schema/admin/tradeSchema";
+import type { TradeModule } from "@/lib/schema/admin/tradeSchema";
 import { cn } from "@/lib/utils";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { AuthContext } from "@/lib/utils/auth-context";
 
 interface Props {
   trade: TradeModule;

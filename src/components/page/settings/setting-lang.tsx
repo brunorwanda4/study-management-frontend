@@ -1,7 +1,7 @@
 "use client";
 import MyImage from "@/components/common/myImage";
 import { Button } from "@/components/ui/button";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { LoaderCircle } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useTransition } from "react";

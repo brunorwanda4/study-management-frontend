@@ -1,9 +1,9 @@
 import UserCardSmall from "@/components/cards/user-card-small";
 import MyLink from "@/components/common/myLink";
 import { Button } from "@/components/ui/button";
-import { Locale } from "@/i18n";
-import { Teacher } from "@/lib/schema/school/teacher-schema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { Locale } from "@/i18n";
+import type { Teacher } from "@/lib/schema/school/teacher-schema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import Link from "next/link";
 import { BsPlusCircle } from "react-icons/bs";
 

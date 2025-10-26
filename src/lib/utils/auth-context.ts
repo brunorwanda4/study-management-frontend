@@ -1,11 +1,10 @@
 "use server";
 
-import { Locale } from "@/i18n";
 import { expiresOneWeek } from "@/lib/const/time-expres";
 import { SCHOOL_TOKEN_KEY, TOKEN_KEY, UserId } from "@/lib/env";
-import { SchoolJwtClaims } from "@/lib/schema/school/school-token-schema";
+import type { SchoolJwtClaims } from "@/lib/schema/school/school-token-schema";
 import {
-  AuthUserDto,
+  type AuthUserDto,
   AuthUserSchema,
 } from "@/lib/schema/user/auth-user-schema";
 import { removeUserToken } from "@/lib/utils/auth-cookies";
@@ -153,7 +152,7 @@ export async function clearAuthCookies() {
   cooky.delete(SCHOOL_TOKEN_KEY);
 }
 
-export const logout = async (lang: Locale) => {
+export const logout = async () => {
   await removeUserToken();
-  redirect(`/${lang}/auth/login`);
+  redirect(`/auth/login`);
 };

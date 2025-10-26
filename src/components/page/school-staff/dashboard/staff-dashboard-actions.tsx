@@ -1,5 +1,4 @@
 import AttendanceChart from "@/components/cards/attendance-chart";
-import React from "react";
 
 const StaffDashboardActions = () => {
   return (

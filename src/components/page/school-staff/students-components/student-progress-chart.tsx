@@ -1,7 +1,7 @@
 "use client";
 
-import * as React from "react";
 import { TrendingUp } from "lucide-react";
+import * as React from "react";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
 import {

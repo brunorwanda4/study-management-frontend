@@ -1,14 +1,9 @@
 import { TextTooltip } from "@/components/common/text-tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import { Locale } from "@/i18n";
 import Link from "next/link";
 
-interface props {
-  lang: Locale;
-}
-
-const NavMessageDropDownCard = ({ lang }: props) => {
+const NavMessageDropDownCard = () => {
   return (
     <DropdownMenuItem>
       <Avatar className="size-10">
@@ -17,7 +12,7 @@ const NavMessageDropDownCard = ({ lang }: props) => {
       </Avatar>
       <div>
         <Link
-          href={`/${lang}/messages/students`}
+          href={`/messages/students`}
           className="flex items-center space-x-2"
         >
           <h4>Bruno Irakoze</h4>

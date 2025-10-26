@@ -1,4 +1,5 @@
 "use client";
+import CreateUserForm from "@/components/page/admin/users/create-user-form";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -7,10 +8,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import { BsPlus } from "react-icons/bs";
-
-import CreateUserForm from "@/components/page/admin/users/create-user-form";
-import { AuthContext } from "@/lib/utils/auth-context";
 
 interface props {
   auth: AuthContext;

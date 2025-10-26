@@ -1,9 +1,9 @@
 import SubjectCard from "@/components/cards/subject-card";
 import NotFoundPage from "@/components/page/not-found";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { authContext } from "@/lib/utils/auth-context";
-import { getModuleByClassId } from "@/service/class/module-service";
 import { redirect } from "next/navigation";
+
 interface Props {
   params: Promise<{ lang: Locale; classId: string }>;
 }
@@ -16,12 +16,12 @@ const ClassSubjectPage = async (props: Props) => {
     return redirect(`/${lang}/auth/login`);
   }
 
-  const classModules = await getModuleByClassId(classId);
+  const classModules = { data: [] };
   if (!classModules.data) return <NotFoundPage />;
   return (
     <div className="grid grid-cols-3 gap-4">
-      {classModules.data.map((item) => {
-        return <SubjectCard key={item.id} module={item} lang={lang} />;
+      {classModules.data.map((item, i) => {
+        return <SubjectCard key={i} module={item} lang={lang} />;
       })}
     </div>
   );

@@ -8,19 +8,17 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
-import { Locale } from "@/i18n";
-import { AuthContext, logout } from "@/lib/utils/auth-context";
+import { type AuthContext, logout } from "@/lib/utils/auth-context";
 import { generateImageProfile } from "@/lib/utils/generate-profile-image";
 import { LogOut, User } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 
 interface props {
-  lang: Locale;
   auth: AuthContext;
 }
 
-const NavProfileDropDown = ({ lang, auth }: props) => {
+const NavProfileDropDown = ({ auth }: props) => {
   const { theme } = useTheme();
   const image = generateImageProfile(auth.user.name, auth.user.gender);
   return (
@@ -45,7 +43,7 @@ const NavProfileDropDown = ({ lang, auth }: props) => {
           </div>
         </div>
         <Separator />
-        <Link href={`/${lang}/profile`}>
+        <Link href={`/p`}>
           <Button variant="ghost" size="sm" className="w-full justify-start">
             <User />
             <span>Your Profile</span>
@@ -53,7 +51,7 @@ const NavProfileDropDown = ({ lang, auth }: props) => {
         </Link>
         <Separator />
         <Button
-          onClick={() => logout(lang)}
+          onClick={() => logout()}
           type="button"
           variant="ghost"
           size="sm"

@@ -1,11 +1,13 @@
 import {
-  AttendanceSystemEnum,
+  AddressSchema,
   ContactSchema,
-  SchoolAddress,
-  SchoolMembers,
-  SchoolTypeEnum,
   SocialMediaSchema,
-} from "@/lib/schema/school/school.dto";
+} from "@/lib/schema/common-details-schema";
+import {
+  AttendanceSystemSchema,
+  SchoolMemberSchema,
+  SchoolTypeEnum,
+} from "@/lib/schema/school/school-schema";
 import z from "zod";
 
 export const PublicSchoolUpdateSchema = z.object({
@@ -20,7 +22,7 @@ export const PublicSchoolUpdateSchema = z.object({
     .optional(),
   description: z.string().optional(),
   schoolType: SchoolTypeEnum.optional(),
-  schoolMembers: SchoolMembers.optional(),
+  schoolMembers: SchoolMemberSchema.optional(),
   curriculum: z
     .array(z.string())
     .min(1, { message: "Curriculum array cannot be empty if provided" })
@@ -32,7 +34,7 @@ export const PublicSchoolUpdateSchema = z.object({
   accreditationNumber: z.string().optional(), // Allow setting accreditation to empty string if needed
   affiliation: z.string().optional(), // Allow setting affiliation to empty string if needed
 
-  address: SchoolAddress.optional(),
+  address: AddressSchema.optional(),
   contact: ContactSchema.optional(),
   website: z.string().url({ message: "Invalid website URL" }).optional(), // Allow empty string? If so .or(z.literal('')) before optional
   socialMedia: z.array(SocialMediaSchema).optional(), // Array of partial social media updates
@@ -43,7 +45,7 @@ export const PublicSchoolUpdateSchema = z.object({
     .positive({ message: "Student capacity must be a positive integer" })
     .optional(),
   uniformRequired: z.boolean().optional(),
-  attendanceSystem: AttendanceSystemEnum.optional(),
+  attendanceSystem: AttendanceSystemSchema.optional(),
   scholarshipAvailable: z.boolean().optional(),
 
   classrooms: z

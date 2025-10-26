@@ -5,20 +5,20 @@ import TableFilter from "@/components/common/table/table-filter";
 import { JoinSchoolRequestColumns } from "@/components/page/school-staff/table/school-join-request-table/join-school-request-columns-table";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Locale } from "@/i18n"; // Assuming you use this for i18n
+import type { Locale } from "@/i18n"; // Assuming you use this for i18n
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
-import { Class } from "@/lib/schema/class/class-schema";
-import { JoinSchoolRequestWithRelations } from "@/lib/schema/school/school-join-school/join-school-request-schema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { Class } from "@/lib/schema/class/class-schema";
+import type { JoinSchoolRequestWithRelations } from "@/lib/schema/school/school-join-school/join-school-request-schema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import {
-  ColumnFiltersState,
+  type ColumnFiltersState,
   getCoreRowModel,
   getFacetedMinMaxValues,
   getFacetedRowModel,
   getFacetedUniqueValues,
   getFilteredRowModel,
   getSortedRowModel,
-  SortingState,
+  type SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 import { useEffect, useState } from "react";

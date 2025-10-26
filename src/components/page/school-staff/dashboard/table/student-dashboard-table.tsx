@@ -15,14 +15,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { studentImage } from "@/lib/context/images";
-import { studentsAndOther } from "@/lib/schema/school/student0schema";
+import type { StudentWithRelations } from "@/lib/schema/school/student-schema";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 
 interface props {
   lang: Locale;
-  students: studentsAndOther[];
+  students: StudentWithRelations[];
 }
 
 export default function StudentDashboardTable({ lang, students }: props) {
@@ -58,19 +58,19 @@ export default function StudentDashboardTable({ lang, students }: props) {
                   <div className="flex items-center gap-3">
                     <MyLink
                       loading
-                      href={`/${lang}/p/${item.userId}?studentId=${item.id}`}
+                      href={`/${lang}/p/${item.user_id}?studentId=${item.id}`}
                     >
                       <MyImage
                         className="size-12 rounded-full"
                         classname="mask mask-squircle"
-                        src={item.image || studentImage}
+                        src={item.user?.image || studentImage}
                         alt={item.name}
                       />
                     </MyLink>
                     <div>
                       <MyLink
                         loading
-                        href={`/${lang}/p/${item.userId}?studentId=${item.id}`}
+                        href={`/${lang}/p/${item.user_id}?studentId=${item.id}`}
                         className="font-medium"
                       >
                         {item.name}
@@ -85,9 +85,9 @@ export default function StudentDashboardTable({ lang, students }: props) {
                   <MyLink
                     loading
                     className="underline-offset-0"
-                    href={`/${lang}/c/${item.classId}`}
+                    href={`/${lang}/c/${item.class?.username}`}
                   >
-                    {item.class.name}
+                    {item.class?.name}
                   </MyLink>
                 </TableCell>
                 <TableCell className="text-start">{item.gender}</TableCell>

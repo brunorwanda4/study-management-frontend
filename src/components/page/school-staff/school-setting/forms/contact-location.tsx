@@ -19,15 +19,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { DefaultPlatform } from "@/lib/const/social-media-const";
 import { useToast } from "@/lib/context/toast/ToastContext";
-import { School } from "@/lib/schema/school/school-schema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { School } from "@/lib/schema/school/school-schema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusCircle } from "lucide-react";
-import React, { useState, useTransition } from "react";
+import type React from "react";
+import { useState, useTransition } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import {
-  ContactLocationDto,
+  type ContactLocationDto,
   ContactLocationSchema,
 } from "./schema/contact-location";
 

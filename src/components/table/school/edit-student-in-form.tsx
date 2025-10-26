@@ -18,7 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  EditStudentDto,
+  type EditStudentDto,
   editStudentSchema,
 } from "@/lib/schema/table-forms/forms";
 import { zodResolver } from "@hookform/resolvers/zod";

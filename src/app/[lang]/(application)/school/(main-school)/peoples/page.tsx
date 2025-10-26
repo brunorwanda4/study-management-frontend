@@ -3,14 +3,15 @@ import NotFoundPage from "@/components/page/not-found";
 import SchoolStaff from "@/components/page/school/school-staff";
 import SchoolStudents from "@/components/page/school/school-student";
 import SchoolTeachers from "@/components/page/school/school-teachers";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
-import { School } from "@/lib/schema/school/school-schema";
-import { Student } from "@/lib/schema/school/student-schema";
-import { Teacher } from "@/lib/schema/school/teacher-schema";
+import type { School } from "@/lib/schema/school/school-schema";
+import type { SchoolStaff as SchoolStaffModel } from "@/lib/schema/school/school-staff-schema";
+import type { Student } from "@/lib/schema/school/student-schema";
+import type { Teacher } from "@/lib/schema/school/teacher-schema";
 import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 export const generateMetadata = async (): Promise<Metadata> => {
@@ -45,7 +46,7 @@ const SchoolPeoplePage = async (props: props) => {
         token: auth.token,
         schoolToken: auth.schoolToken,
       }),
-      apiRequest<void, SchoolStaff[]>(
+      apiRequest<void, SchoolStaffModel[]>(
         "get",
         "/school/staff?limit=5",
         undefined,
@@ -79,7 +80,7 @@ const SchoolPeoplePage = async (props: props) => {
   }
 
   return (
-    <RealtimeProvider<School | Student | Teacher | SchoolStaff>
+    <RealtimeProvider<School | Student | Teacher | SchoolStaffModel>
       channels={[
         { name: "school", initialData: [schoolRes.data] },
         {

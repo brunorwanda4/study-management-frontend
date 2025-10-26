@@ -5,11 +5,9 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { HiOutlineDotsHorizontal } from "react-icons/hi";
-
 import { useToast } from "@/lib/context/toast/ToastContext";
-import { deleteSchoolJoinRequestById } from "@/service/school/school-join-request.service";
 import { useState, useTransition } from "react";
+import { HiOutlineDotsHorizontal } from "react-icons/hi";
 
 interface props {
   requestId: string;
@@ -20,26 +18,26 @@ const JoinSchoolTableDropdown = ({ requestId }: props) => {
   const [isDelete, setIsDelete] = useState(false);
   const { showToast } = useToast();
   const handleDelete = () => {
-    startTransition(async () => {
-      setIsDelete(true);
-      const deleteRequest = await deleteSchoolJoinRequestById(requestId);
-      if (deleteRequest.data) {
-        showToast({
-          type: "warning",
-          title: "Success!",
-          description: "You have been delete request!",
-          duration: 2000,
-        });
-      } else {
-        showToast({
-          type: "error",
-          title: "Some thing went wrong to delete request",
-          description: deleteRequest.message,
-          duration: 3000,
-        });
-      }
-      setIsDelete(false);
-    });
+    // startTransition(async () => {
+    //   setIsDelete(true);
+    //   const deleteRequest = await deleteSchoolJoinRequestById(requestId);
+    //   if (deleteRequest.data) {
+    //     showToast({
+    //       type: "warning",
+    //       title: "Success!",
+    //       description: "You have been delete request!",
+    //       duration: 2000,
+    //     });
+    //   } else {
+    //     showToast({
+    //       type: "error",
+    //       title: "Some thing went wrong to delete request",
+    //       description: deleteRequest.message,
+    //       duration: 3000,
+    //     });
+    //   }
+    //   setIsDelete(false);
+    // });
   };
 
   // const handleError = () => {

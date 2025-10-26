@@ -1,12 +1,12 @@
 import MyImage from "@/components/common/myImage";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { toLowerCase } from "@/lib/functions/characters";
-import { authContextDto } from "@/lib/utils/auth";
+import type { AuthUserDto } from "@/lib/schema/user/auth-user-schema";
 import Link from "next/link";
 
 interface props {
   lang: Locale;
-  user: authContextDto;
+  user: AuthUserDto;
 }
 const SettingHeader = ({ user, lang }: props) => {
   return (
@@ -25,7 +25,7 @@ const SettingHeader = ({ user, lang }: props) => {
             <span>username:</span>
             <span className="to-myGray text-sm">
               @{" "}
-              {!!user?.username ? (
+              {user?.username ? (
                 user.username
               ) : (
                 <span className="text-warning">No username</span>

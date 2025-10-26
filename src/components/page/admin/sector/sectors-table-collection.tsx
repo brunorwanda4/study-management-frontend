@@ -13,18 +13,18 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
-import { SectorModel } from "@/lib/schema/admin/sectorSchema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { SectorModel } from "@/lib/schema/admin/sectorSchema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import {
-  ColumnDef,
-  ColumnFiltersState,
+  type ColumnDef,
+  type ColumnFiltersState,
   getCoreRowModel,
   getFacetedMinMaxValues,
   getFacetedRowModel,
   getFacetedUniqueValues,
   getFilteredRowModel,
   getSortedRowModel,
-  SortingState,
+  type SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 import { useState } from "react";

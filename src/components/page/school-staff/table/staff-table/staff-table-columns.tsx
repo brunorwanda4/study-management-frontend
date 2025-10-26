@@ -1,11 +1,11 @@
 import MyImage from "@/components/common/myImage";
 import MyLink from "@/components/common/myLink";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { studentImage } from "@/lib/context/images";
-import { SchoolStaffWithRelations } from "@/lib/schema/school/school-staff-schema";
+import type { SchoolStaffWithRelations } from "@/lib/schema/school/school-staff-schema";
 import { formatReadableDate } from "@/lib/utils/format-date";
-import { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 
 // ========================================================================
 // The complete columns() function
@@ -25,7 +25,7 @@ export const StaffTableColumns = (
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
           aria-label="Select all"
-          className="ms-[-4px]" // Adjust alignment if needed
+          className="-ms-1" // Adjust alignment if needed
         />
       ),
       cell: ({ row }) => (
@@ -33,7 +33,7 @@ export const StaffTableColumns = (
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
           aria-label="Select row"
-          className="ms-[-4px]" // Adjust alignment if needed
+          className="-ms-1" // Adjust alignment if needed
         />
       ),
       enableSorting: false,
@@ -52,7 +52,7 @@ export const StaffTableColumns = (
           <MyLink
             loading
             href={`/${lang}/p/${row.original.user?.username}?schoolStaff=${row.original.id}`}
-            className="flex-shrink-0" // Prevent avatar shrinking
+            className="shrink-0" // Prevent avatar shrinking
           >
             <MyImage
               role="AVATAR"

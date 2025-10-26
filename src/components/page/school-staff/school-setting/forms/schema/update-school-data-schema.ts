@@ -1,11 +1,13 @@
 import {
-  AttendanceSystemEnum,
+  AddressSchema,
   ContactSchema,
-  SchoolAddress,
-  SchoolMembers,
-  SchoolTypeEnum,
   SocialMediaSchema,
-} from "@/lib/schema/school/school.dto";
+} from "@/lib/schema/common-details-schema";
+import {
+  AttendanceSystemSchema,
+  SchoolMemberSchema,
+  SchoolTypeEnum,
+} from "@/lib/schema/school/school-schema";
 import z from "zod";
 
 export const SchoolIdentitySchema = z.object({
@@ -24,7 +26,7 @@ export type SchoolIdentityDto = z.infer<typeof SchoolIdentitySchema>;
 
 export const SchoolClassificationSchema = z.object({
   schoolType: SchoolTypeEnum.optional(),
-  schoolMembers: SchoolMembers.optional(), // Ensure this matches your SchoolMembers definition
+  schoolMembers: SchoolMemberSchema.optional(), // Ensure this matches your SchoolMembers definition
   affiliation: z.string().optional(), // Or use AffiliationTypeEnum if applicable
   accreditationNumber: z.string().optional(),
 });
@@ -48,7 +50,7 @@ export type AcademicProgramsDto = z.infer<typeof AcademicProgramsSchema>;
 
 // 4. Contact & Location Schema (4 fields)
 export const ContactLocationSchema = z.object({
-  address: SchoolAddress.optional(),
+  address: AddressSchema.optional(),
   contact: ContactSchema.optional(),
   website: z.string().url({ message: "Invalid website URL" }).optional(),
   socialMedia: z.array(SocialMediaSchema).optional(),
@@ -67,7 +69,7 @@ export const OperationsSchema = z.object({
     .int()
     .positive({ message: "Number of classrooms must be a positive integer" })
     .optional(),
-  attendanceSystem: AttendanceSystemEnum.optional(),
+  attendanceSystem: AttendanceSystemSchema.optional(),
   uniformRequired: z.boolean().optional(),
   scholarshipAvailable: z.boolean().optional(),
 });

@@ -1,11 +1,10 @@
+import { Button } from "@/components/ui/button";
 import {
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -14,13 +13,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import React, { useState } from "react";
-import {
-  newStaffFormSchema,
-  type NewStaffForm,
-} from "@/lib/schema/table-forms/staff-forms";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -28,6 +21,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  type NewStaffForm,
+  newStaffFormSchema,
+} from "@/lib/schema/table-forms/staff-forms";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 const initialStaff = [
   {
@@ -83,10 +83,7 @@ const initialStaff = [
 ];
 
 const StaffForm = () => {
-  const [
-    // isAddDialogOpen,
-    setIsAddDialogOpen,
-  ] = useState(false);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   // const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   // const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   // const [staffToDelete, setStaffToDelete] = useState<string | null>(null)

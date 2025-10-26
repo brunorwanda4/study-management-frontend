@@ -1,13 +1,13 @@
 "use client";
 
+import OpenImages from "@/components/common/image/open-images";
 import DeleteSectorDialog from "@/components/page/admin/sector/deleteSectorDialog";
 import SectorDisableDialog from "@/components/page/admin/sector/sector-disable-dialog";
 import UpdateSectorDialog from "@/components/page/admin/sector/updateSectorDialog";
-import OpenImages from "@/components/page/admin/users/open-images";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
-import { SectorModel } from "@/lib/schema/admin/sectorSchema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { SectorModel } from "@/lib/schema/admin/sectorSchema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import { formatReadableDate } from "@/lib/utils/format-date";
 import { useEffect, useState } from "react";
 

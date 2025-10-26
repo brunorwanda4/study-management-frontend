@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChangeEvent, useState, useTransition } from "react";
+import { type ChangeEvent, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 
 // Import your sub-schema and its type
@@ -24,7 +24,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { schoolLogoImage } from "@/lib/context/images"; // Default/placeholder logo
 import {
-  SchoolIdentityDto,
+  type SchoolIdentityDto,
   SchoolIdentitySchema,
 } from "./schema/update-school-data-schema";
 

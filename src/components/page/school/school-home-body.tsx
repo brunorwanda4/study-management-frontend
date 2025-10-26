@@ -1,9 +1,9 @@
-import { Locale } from "@/i18n";
-import { School } from "@/lib/schema/school/school-schema";
-import { SchoolStaff as school_staff_t } from "@/lib/schema/school/school-staff-schema";
-import { Student } from "@/lib/schema/school/student-schema";
-import { Teacher } from "@/lib/schema/school/teacher-schema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { Locale } from "@/i18n";
+import type { School } from "@/lib/schema/school/school-schema";
+import type { SchoolStaff as school_staff_t } from "@/lib/schema/school/school-staff-schema";
+import type { Student } from "@/lib/schema/school/student-schema";
+import type { Teacher } from "@/lib/schema/school/teacher-schema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import SchoolContacts from "./school-contacts";
 import SchoolHomeAbout from "./school-home-about";
 import SchoolHomePosts from "./school-home-posts";

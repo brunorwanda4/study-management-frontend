@@ -13,19 +13,19 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
-import { TradeModelWithOthers } from "@/lib/schema/admin/tradeSchema";
-import { TradeWithNonNullableId } from "@/lib/types/tradeModel";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { TradeModelWithOthers } from "@/lib/schema/admin/tradeSchema";
+import type { TradeWithNonNullableId } from "@/lib/types/tradeModel";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import {
-  ColumnDef,
-  ColumnFiltersState,
+  type ColumnDef,
+  type ColumnFiltersState,
   getCoreRowModel,
   getFacetedMinMaxValues,
   getFacetedRowModel,
   getFacetedUniqueValues,
   getFilteredRowModel,
   getSortedRowModel,
-  SortingState,
+  type SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 import { useEffect, useState } from "react";

@@ -1,8 +1,8 @@
 "use client";
 
+import OpenImages from "@/components/common/image/open-images";
 import UserDisableDialog from "@/components/page/admin/documentId/users/user-disable-dialog";
 import DeleteUserDialog from "@/components/page/admin/users/deleteUserDialog";
-import OpenImages from "@/components/page/admin/users/open-images";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -12,9 +12,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
-import { UserModel } from "@/lib/schema/user/user-schema";
+import type { UserModel } from "@/lib/schema/user/user-schema";
 import { cn } from "@/lib/utils";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import { calculateAge, formatReadableDate } from "@/lib/utils/format-date";
 import { generateImageProfile } from "@/lib/utils/generate-profile-image";
 import { useEffect, useState } from "react";

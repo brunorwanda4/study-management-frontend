@@ -36,14 +36,11 @@ export const metadata: Metadata = {
 
 interface LayoutProps {
   children: ReactNode;
-  params: { lang: string };
 }
 
-export default function RootLayout({ children, params }: LayoutProps) {
-  const { lang } = params;
-
+export default async function RootLayout({ children }: LayoutProps) {
   return (
-    <html lang={lang} suppressHydrationWarning data-theme="cupcake">
+    <html lang="en" suppressHydrationWarning data-theme="cupcake">
       <body>
         <ThemeProvider
           attribute={["data-theme", "class"]}

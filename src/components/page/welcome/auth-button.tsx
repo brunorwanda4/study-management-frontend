@@ -1,7 +1,7 @@
 import MyImage from "@/components/common/myImage";
 import MyLink from "@/components/common/myLink";
 import { Button } from "@/components/ui/button";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 
 interface props {
   lang: Locale;

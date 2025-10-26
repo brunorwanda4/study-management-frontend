@@ -1,4 +1,5 @@
 // schemas/basic-information.ts
+
 import {
   SchoolMemberSchema,
   SchoolTypeEnum,

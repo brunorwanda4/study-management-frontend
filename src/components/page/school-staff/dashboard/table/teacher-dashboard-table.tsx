@@ -15,14 +15,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { teacherImage } from "@/lib/context/images";
-import { TeacherDto } from "@/lib/schema/school/teacher-schema";
+import type {
+  TeacherWithRelations
+} from "@/lib/schema/school/teacher-schema";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 
 interface props {
   lang: Locale;
-  teachers: TeacherDto[];
+  teachers: TeacherWithRelations[];
 }
 
 export default function TeachersDashboardTable({ lang, teachers }: props) {
@@ -56,7 +58,7 @@ export default function TeachersDashboardTable({ lang, teachers }: props) {
                   <div className="flex items-center gap-3">
                     <MyLink
                       loading
-                      href={`/${lang}/p/${item.userId}?teacherId=${item.id}`}
+                      href={`/${lang}/p/${item.user?.username}?teacherId=${item.id}`}
                     >
                       <MyImage
                         className="size-12 rounded-full"
@@ -68,7 +70,7 @@ export default function TeachersDashboardTable({ lang, teachers }: props) {
                     <div>
                       <MyLink
                         loading
-                        href={`/${lang}/p/${item.userId}?teacherId=${item.id}`}
+                        href={`/${lang}/p/${item.user?.username}?teacherId=${item.id}`}
                         className="font-medium"
                       >
                         {item.name}

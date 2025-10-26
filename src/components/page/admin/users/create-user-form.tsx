@@ -1,5 +1,8 @@
 "use client";
+import UploadImage from "@/components/common/cards/form/upload-image";
+import { FormError, FormSuccess } from "@/components/common/form-message";
 import { Button } from "@/components/ui/button";
+import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -9,14 +12,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { CheckIcon, EyeIcon, EyeOffIcon, XIcon } from "lucide-react";
-import { ChangeEvent, useMemo, useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
-
-import UploadImage from "@/components/common/cards/form/upload-image";
-import { FormError, FormSuccess } from "@/components/common/form-message";
-import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
@@ -30,12 +25,16 @@ import { Textarea } from "@/components/ui/textarea";
 import { genders, userRoles } from "@/lib/const/common-details-const";
 import { useToast } from "@/lib/context/toast/ToastContext";
 import {
-  CreateUser,
+  type CreateUser,
   CreateUserSchema,
 } from "@/lib/schema/user/create-user-schema";
-import { UserModel } from "@/lib/schema/user/user-schema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { UserModel } from "@/lib/schema/user/user-schema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CheckIcon, EyeIcon, EyeOffIcon, XIcon } from "lucide-react";
+import { type ChangeEvent, useMemo, useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
 
 interface props {
   auth: AuthContext;
@@ -152,12 +151,6 @@ const CreateUserForm = ({ auth }: props) => {
       }
     });
   };
-
-  // Generate years, months, and days for age selection
-  const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 100 }, (_, i) => currentYear - i);
-  const months = Array.from({ length: 12 }, (_, i) => i + 1);
-  const days = Array.from({ length: 31 }, (_, i) => i + 1);
 
   return (
     <Form {...form}>

@@ -1,28 +1,25 @@
 import DevelopingPage from "@/components/page/developing-page";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { authContext } from "@/lib/utils/auth-context";
-import { getClassById } from "@/service/class/class.service";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 interface Props {
-  params: Promise<{ lang: Locale; classId: string }>;
+  params: Promise<{ lang: Locale; classUsername: string }>;
 }
 
 export const generateMetadata = async (props: Props): Promise<Metadata> => {
   const params = await props.params;
-  const { classId } = params;
-  const classResponse = await getClassById(classId);
 
   return {
-    title: classResponse.data?.name || "Class not found",
-    description: `${classResponse.data?.name}`,
+    title: "Class not found",
+    description: `classUsername`,
   };
 };
 
-const ClassIdPage = async (props: Props) => {
+const ClassUsernamePage = async (props: Props) => {
   const params = await props.params;
-  const { lang, classId } = params;
+  const { lang, classUsername } = params;
 
   const auth = await authContext();
 
@@ -54,4 +51,4 @@ const ClassIdPage = async (props: Props) => {
   // );
 };
 
-export default ClassIdPage;
+export default ClassUsernamePage;

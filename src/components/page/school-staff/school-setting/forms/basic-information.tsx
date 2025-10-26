@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTheme } from "next-themes";
-import { ChangeEvent, useState, useTransition } from "react";
+import { type ChangeEvent, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 
 import { FormError } from "@/components/common/form-message";
@@ -31,11 +31,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { schoolMembers, schoolTypes } from "@/lib/const/common-details-const";
 import { schoolLogoImage } from "@/lib/context/images";
 import { useToast } from "@/lib/context/toast/ToastContext";
-import { School } from "@/lib/schema/school/school-schema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { School } from "@/lib/schema/school/school-schema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import {
-  BasicInformationDto,
+  type BasicInformationDto,
   BasicInformationSchema,
 } from "./schema/basic-information";
 
@@ -135,7 +135,7 @@ export const BasicInformationForm = ({
                     <FormLabel>School Name</FormLabel>
                     <FormControl>
                       <Input
-                        className="w-[30rem]"
+                        className="w-120"
                         placeholder="e.g., Green Hills Academy"
                         {...field}
                       />
@@ -155,7 +155,7 @@ export const BasicInformationForm = ({
                     <FormLabel>School Username</FormLabel>
                     <FormControl>
                       <Input
-                        className="w-[30rem]"
+                        className="w-120"
                         placeholder="e.g., greenhills"
                         {...field}
                       />
@@ -241,7 +241,7 @@ export const BasicInformationForm = ({
                     <FormControl>
                       <Textarea
                         placeholder="Tell us a little bit about the school"
-                        className="min-h-[100px] w-[30rem] resize-y"
+                        className="min-h-[100px] w-120 resize-y"
                         {...field}
                       />
                     </FormControl>

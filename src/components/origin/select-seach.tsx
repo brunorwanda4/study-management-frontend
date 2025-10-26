@@ -1,7 +1,7 @@
 "use client";
 
-import { useId, useState } from "react";
 import { BrainIcon, ChevronDownIcon, LineChartIcon } from "lucide-react";
+import { useId, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -47,7 +47,6 @@ export default function Component() {
           <Button
             id={id}
             variant="outline"
-            role="combobox"
             aria-expanded={open}
             className="bg-background hover:bg-background border-input w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]"
           >
@@ -80,7 +79,7 @@ export default function Component() {
           </Button>
         </PopoverTrigger>
         <PopoverContent
-          className="border-input w-full min-w-[var(--radix-popper-anchor-width)] p-0"
+          className="border-input w-full min-w-(--radix-popper-anchor-width) p-0"
           align="start"
         >
           <Command>

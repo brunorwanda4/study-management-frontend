@@ -12,9 +12,9 @@ import {
   ItemTitle,
 } from "@/components/ui/item";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
-import { MainClassModel } from "@/lib/schema/admin/main-classes-schema";
-import { TradeModule } from "@/lib/schema/admin/tradeSchema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { MainClassModel } from "@/lib/schema/admin/main-classes-schema";
+import type { TradeModule } from "@/lib/schema/admin/tradeSchema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import { formatReadableDate } from "@/lib/utils/format-date";
 import { Calendar, Clock, Layers } from "lucide-react";
 import Link from "next/link";

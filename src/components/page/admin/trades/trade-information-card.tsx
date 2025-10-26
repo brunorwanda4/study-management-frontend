@@ -7,9 +7,9 @@ import UpdateTradeDialog from "@/components/page/admin/trades/updateTradeDialog"
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
-import { MainClassModel } from "@/lib/schema/admin/main-classes-schema";
-import { TradeModelWithOthers } from "@/lib/schema/admin/tradeSchema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { MainClassModel } from "@/lib/schema/admin/main-classes-schema";
+import type { TradeModelWithOthers } from "@/lib/schema/admin/tradeSchema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import { formatReadableDate } from "@/lib/utils/format-date";
 import {
   ArrowUpRight,

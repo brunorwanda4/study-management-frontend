@@ -8,8 +8,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import { PlusCircle } from "lucide-react";
 
 interface props {

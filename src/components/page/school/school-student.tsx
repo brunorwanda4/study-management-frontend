@@ -1,9 +1,9 @@
 import UserCardSmall from "@/components/cards/user-card-small";
 import MyLink from "@/components/common/myLink";
 import { Button } from "@/components/ui/button";
-import { Locale } from "@/i18n";
-import { Student } from "@/lib/schema/school/student-schema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { Locale } from "@/i18n";
+import type { Student } from "@/lib/schema/school/student-schema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import Link from "next/link";
 import { BsPlusCircle } from "react-icons/bs";
 
@@ -53,7 +53,7 @@ const SchoolStudents = ({ lang, auth, students, onThePage }: props) => {
               role="s"
               lang={lang}
               userRole="STUDENT"
-              userId={item.user_id}
+              userId={item.user_id || ""}
             />
           );
         })}

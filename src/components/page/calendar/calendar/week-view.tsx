@@ -1,6 +1,5 @@
 "use client";
 
-import React, { useMemo } from "react";
 import {
   addHours,
   areIntervalsOverlapping,
@@ -17,19 +16,21 @@ import {
   startOfDay,
   startOfWeek,
 } from "date-fns";
+import type React from "react";
+import { useMemo } from "react";
 
 import {
   EndHour,
   StartHour,
   WeekCellsHeight,
-} from "@/components/origin/calendar/constants";
+} from "@/components/page/calendar/calendar/constants";
 import { cn } from "@/lib/utils";
-import { CalendarEvent } from "./types";
-import { isMultiDayEvent } from "./utils";
-import { useCurrentTimeIndicator } from "./use-current-time-indicator";
-import { EventItem } from "./event-item";
 import { DraggableEvent } from "./draggable-event";
 import { DroppableCell } from "./droppable-cell";
+import { EventItem } from "./event-item";
+import type { CalendarEvent } from "./types";
+import { useCurrentTimeIndicator } from "./use-current-time-indicator";
+import { isMultiDayEvent } from "./utils";
 
 interface WeekViewProps {
   currentDate: Date;
@@ -308,7 +309,7 @@ export function WeekView({
           {hours.map((hour, index) => (
             <div
               key={hour.toString()}
-              className="border-border/70 relative min-h-[var(--week-cells-height)] border-b last:border-b-0"
+              className="border-border/70 relative min-h-(--week-cells-height) border-b last:border-b-0"
             >
               {index > 0 && (
                 <span className="bg-background text-muted-foreground/70 absolute -top-3 left-0 flex h-6 w-16 max-w-full items-center justify-end pe-2 text-[10px] sm:pe-4 sm:text-xs">
@@ -327,7 +328,8 @@ export function WeekView({
           >
             {/* Positioned events */}
             {(processedDayEvents[dayIndex] ?? []).map((positionedEvent) => (
-              <div
+              <button
+                type="button"
                 key={positionedEvent.event.id}
                 className="absolute z-10 px-0.5"
                 style={{
@@ -338,6 +340,11 @@ export function WeekView({
                   zIndex: positionedEvent.zIndex,
                 }}
                 onClick={(e) => e.stopPropagation()}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.stopPropagation();
+                  }
+                }}
               >
                 <div className="size-full">
                   <DraggableEvent
@@ -348,7 +355,7 @@ export function WeekView({
                     height={positionedEvent.height}
                   />
                 </div>
-              </div>
+              </button>
             ))}
 
             {/* Current time indicator - only show for today's column */}
@@ -359,7 +366,7 @@ export function WeekView({
               >
                 <div className="relative flex items-center">
                   <div className="bg-primary absolute -left-1 h-2 w-2 rounded-full"></div>
-                  <div className="bg-primary h-[2px] w-full"></div>
+                  <div className="bg-primary h-0.5 w-full"></div>
                 </div>
               </div>
             )}
@@ -368,7 +375,7 @@ export function WeekView({
               return (
                 <div
                   key={hour.toString()}
-                  className="border-border/70 relative min-h-[var(--week-cells-height)] border-b last:border-b-0"
+                  className="border-border/70 relative min-h-(--week-cells-height) border-b last:border-b-0"
                 >
                   {/* Quarter-hour intervals */}
                   {[0, 1, 2, 3].map((quarter) => {

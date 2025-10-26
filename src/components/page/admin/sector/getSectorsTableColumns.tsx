@@ -1,10 +1,10 @@
 "use client";
 
 import MyImage from "@/components/common/myImage";
-import { SectorModel } from "@/lib/schema/admin/sectorSchema";
+import type { SectorModel } from "@/lib/schema/admin/sectorSchema";
 import { cn } from "@/lib/utils";
 import { generateEducationIcon } from "@/lib/utils/generate-profile-image";
-import { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 
 export const getSectorsTableColumns = (): ColumnDef<SectorModel>[] => {

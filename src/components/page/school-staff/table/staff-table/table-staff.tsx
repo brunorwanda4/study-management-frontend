@@ -3,19 +3,19 @@
 import { CommonDataTable } from "@/components/common/table/common-data-table";
 import TableFilter from "@/components/common/table/table-filter";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
-import { SchoolStaffWithRelations } from "@/lib/schema/school/school-staff-schema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { SchoolStaffWithRelations } from "@/lib/schema/school/school-staff-schema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import {
-  ColumnFiltersState,
+  type ColumnFiltersState,
   getCoreRowModel,
   getFacetedMinMaxValues,
   getFacetedRowModel,
   getFacetedUniqueValues,
   getFilteredRowModel,
   getSortedRowModel,
-  SortingState,
+  type SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 import { useEffect, useMemo, useState } from "react";

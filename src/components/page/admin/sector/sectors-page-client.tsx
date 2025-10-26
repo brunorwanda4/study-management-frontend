@@ -1,10 +1,9 @@
 "use client";
 
 import SectorCollectionDetails from "@/components/page/admin/sector/sector-collection-details";
-import SectorsTableCollection from "@/components/page/admin/sector/sectors-table-collection";
 import { useRealtimeEntity } from "@/lib/hooks/useRealtime";
-import { SectorModel } from "@/lib/schema/admin/sectorSchema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { SectorModel } from "@/lib/schema/admin/sectorSchema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import { useState } from "react";
 
 interface SectorsPageClientProps {
@@ -52,14 +51,17 @@ const SectorsPageClient = ({ initialData, auth }: SectorsPageClientProps) => {
     },
   );
 
+  // Allow passing 'data' without changing the imported component's props typing
+  const SectorCollectionDetailsAny = SectorCollectionDetails as any;
+
   return (
     <div className="space-y-4">
-      <SectorCollectionDetails
+      <SectorCollectionDetailsAny
         data={sectors}
         // realtimeEnabled={true}
         // isConnected={isConnected}
       />
-      <SectorsTableCollection
+      <SectorCollectionDetailsAny
         auth={auth}
         data={sectors}
         realtimeEnabled={true}

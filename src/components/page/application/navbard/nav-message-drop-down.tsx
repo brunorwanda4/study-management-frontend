@@ -8,14 +8,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Locale } from "@/i18n";
 import NavMessageDropDownCard from "./nav-message-dropdown-card";
 
-interface props {
-  lang: Locale;
-}
 
-const NavMessageDropDown = ({ lang }: props) => {
+const NavMessageDropDown = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -28,7 +24,7 @@ const NavMessageDropDown = ({ lang }: props) => {
           <h3 className="basic-title">Messages</h3>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <NavMessageDropDownCard lang={lang} />
+        <NavMessageDropDownCard />
       </DropdownMenuContent>
     </DropdownMenu>
   );

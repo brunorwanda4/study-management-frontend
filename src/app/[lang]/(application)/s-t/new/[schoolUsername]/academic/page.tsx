@@ -8,11 +8,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Locale } from "@/i18n";
-import { School } from "@/lib/schema/school/school-schema";
+import type { Locale } from "@/i18n";
+import type { School } from "@/lib/schema/school/school-schema";
 import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 export async function generateMetadata({

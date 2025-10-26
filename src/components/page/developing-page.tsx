@@ -1,7 +1,7 @@
 "use client";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { redirectContents } from "@/lib/hooks/redirect";
-import { userRole } from "@/lib/schema/common-details-schema";
+import type { userRole } from "@/lib/schema/common-details-schema";
 import { useRouter } from "next/navigation";
 import { BsArrowLeft } from "react-icons/bs";
 import MyImage from "../common/myImage";
@@ -36,7 +36,7 @@ const DevelopingPage = ({ lang, role }: props) => {
                 loading
                 button={{ library: "daisy", variant: "default" }}
                 type="button"
-                href={redirectContents({ lang, role })}
+                href={redirectContents({ lang, role : role ?? "STUDENT" })}
               >
                 <MyImage role="ICON" src="/icons/3d-house.png" /> Go Home
               </MyLink>

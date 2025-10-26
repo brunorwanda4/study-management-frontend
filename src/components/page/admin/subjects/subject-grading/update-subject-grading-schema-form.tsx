@@ -21,25 +21,24 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/lib/context/toast/ToastContext";
-import apiRequest from "@/service/api-client";
-
-import { subjectGradingTypes, SubjectTypes } from "@/lib/const/subject-const";
+import { SubjectTypes, subjectGradingTypes } from "@/lib/const/subject-const";
 import {
   defaultLetterGrade,
   defaultPassFail,
   defaultPercentage,
   defaultPoints,
 } from "@/lib/const/subject/subject-grading-default-vaules";
-import {
+import { useToast } from "@/lib/context/toast/ToastContext";
+import type {
   DefaultLetterGrade,
   SubjectGrading,
 } from "@/lib/schema/admin/subjects/subject-grading-schema/subject-grading-schema";
 import {
-  UpdateSubjectGradingScheme,
+  type UpdateSubjectGradingScheme,
   UpdateSubjectGradingSchemeSchema,
 } from "@/lib/schema/admin/subjects/subject-grading-schema/update-subject-grading-schema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { AuthContext } from "@/lib/utils/auth-context";
+import apiRequest from "@/service/api-client";
 
 interface Props {
   auth: AuthContext;

@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Locale } from "@/i18n";
-import { SectorModel } from "@/lib/schema/admin/sectorSchema";
-import { TradeModule } from "@/lib/schema/admin/tradeSchema";
-import { School } from "@/lib/schema/school/school-schema";
+import type { Locale } from "@/i18n";
+import type { SectorModel } from "@/lib/schema/admin/sectorSchema";
+import type { TradeModule } from "@/lib/schema/admin/tradeSchema";
+import type { School } from "@/lib/schema/school/school-schema";
 import { BookOpen, Dot } from "lucide-react";
 import Link from "next/link";
 import { FaSchool } from "react-icons/fa6";

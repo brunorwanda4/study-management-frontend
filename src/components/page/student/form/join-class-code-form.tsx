@@ -1,8 +1,5 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-
 import { FormError, FormSuccess } from "@/components/common/form-message";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,9 +17,11 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { JoinSchoolDto } from "@/lib/schema/school/join-school-schema";
+import type { JoinSchoolDto } from "@/lib/schema/school/join-school-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useTransition } from "react";
-import { JoinClassDto, JoinClassSchema } from "./schema/join-class-schema";
+import { useForm } from "react-hook-form";
+import { type JoinClassDto, JoinClassSchema } from "./schema/join-class-schema";
 
 export default function JoinClassCodeForm() {
   const [error, setError] = useState<undefined | null | string>("");

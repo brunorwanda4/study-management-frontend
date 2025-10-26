@@ -1,6 +1,7 @@
 "use client";
 import { useTheme } from "next-themes";
 import { BsCheck2Circle, BsPalette } from "react-icons/bs";
+
 const SettingTheme = () => {
   const { setTheme, theme } = useTheme();
   const themes = [

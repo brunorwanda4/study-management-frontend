@@ -1,8 +1,5 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-
 import { FormError, FormSuccess } from "@/components/common/form-message";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,10 +18,12 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp"; // Import InputOTP components
 import {
-  JoinSchoolDto,
+  type JoinSchoolDto,
   JoinSchoolSchema,
 } from "@/lib/schema/school/join-school-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
 // OTPInput_ is no longer needed if using shadcn/ui InputOTP
 // import OTPInput_ from "@/components/origin/otp-input";
 

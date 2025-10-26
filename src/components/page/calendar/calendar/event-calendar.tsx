@@ -1,6 +1,14 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 import { RiCalendarCheckLine } from "@remixicon/react";
 import {
   addDays,
@@ -19,46 +27,22 @@ import {
   ChevronRightIcon,
   PlusIcon,
 } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-
-// import {
-//   addHoursToDate,
-//   AgendaDaysToShow,
-//   AgendaView,
-//   CalendarDndProvider,
-//   CalendarEvent,
-//   CalendarView,
-//   DayView,
-//   EventDialog,
-//   EventGap,
-//   EventHeight,
-//   MonthView,
-//   WeekCellsHeight,
-//   WeekView,
-// } from "@/components/event-calendar"
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuShortcut,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { CalendarEvent, CalendarView } from "./types";
+import { AgendaView } from "./agenda-view";
+import { CalendarDndProvider } from "./calendar-dnd-context";
 import {
   AgendaDaysToShow,
   EventGap,
   EventHeight,
   WeekCellsHeight,
 } from "./constants";
-import { addHoursToDate } from "./utils";
-import { CalendarDndProvider } from "./calendar-dnd-context";
-import { MonthView } from "./month-view";
-import { WeekView } from "./week-view";
 import { DayView } from "./day-view";
 import { EventDialog } from "./event-dialog";
-import { AgendaView } from "./agenda-view";
+import { MonthView } from "./month-view";
+import type { CalendarEvent, CalendarView } from "./types";
+import { addHoursToDate } from "./utils";
+import { WeekView } from "./week-view";
 
 export interface EventCalendarProps {
   events?: CalendarEvent[];
@@ -251,7 +235,7 @@ export function EventCalendar({
           <span className="min-[480px]:hidden" aria-hidden="true">
             {format(currentDate, "MMM d, yyyy")}
           </span>
-          <span className="max-[479px]:hidden min-md:hidden" aria-hidden="true">
+          <span className="max-[479px]:hidden md:hidden" aria-hidden="true">
             {format(currentDate, "MMMM d, yyyy")}
           </span>
           <span className="max-md:hidden">

@@ -3,8 +3,8 @@
 import UpdateSubjectGradingSchemeDialog from "@/components/page/admin/subjects/subject-grading/update-subject-grading-schema-dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
-import { SubjectGrading } from "@/lib/schema/admin/subjects/subject-grading-schema/subject-grading-schema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { SubjectGrading } from "@/lib/schema/admin/subjects/subject-grading-schema/subject-grading-schema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import {
   BarChart2,
   Clock,

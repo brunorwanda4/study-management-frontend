@@ -1,5 +1,5 @@
-import { Locale } from "@/i18n";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { Locale } from "@/i18n";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 
 interface Props {

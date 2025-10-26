@@ -1,8 +1,8 @@
 "use client";
 
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { mainCollections } from "@/lib/const/main-collections";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 export type SidebarItem = {
   title: string;

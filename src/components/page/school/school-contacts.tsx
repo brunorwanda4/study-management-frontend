@@ -5,7 +5,8 @@ import { TiContacts } from "react-icons/ti";
 
 import MyImage from "@/components/common/myImage"; // Assuming MyImage handles its own styling and accessibility for icons
 import { Card, CardHeader } from "@/components/ui/card";
-import { SchoolDto, SocialMediaDto } from "@/lib/schema/school/school.dto"; // Assuming SocialMediaItem is defined in school.dto or can be inferred
+import type { SocialMedia } from "@/lib/schema/common-details-schema";
+import type { School } from "@/lib/schema/school/school-schema";
 
 // --- Helper for Social Media Icons ---
 // This makes the social media mapping much cleaner and easier to extend.
@@ -28,7 +29,7 @@ const getSocialIcon = (platform?: string): string => {
 
 // --- Props Interface ---
 interface SchoolContactsProps {
-  school: SchoolDto;
+  school: School;
 }
 interface ContactDetailProps {
   icon: React.ReactNode;
@@ -52,7 +53,7 @@ const ContactDetail: React.FC<ContactDetailProps> = ({
 
 // --- Main Component ---
 const SchoolContacts: React.FC<SchoolContactsProps> = ({ school }) => {
-  const { contact, socialMedia } = school;
+  const { contact, social_media } = school;
 
   return (
     <Card className="w-full p-2">
@@ -69,7 +70,7 @@ const SchoolContacts: React.FC<SchoolContactsProps> = ({ school }) => {
           icon={<Mail size={16} aria-hidden="true" />}
           text={contact?.email}
         />
-        {contact?.whatsappNumber && ( // Custom logic for WhatsApp if MyImage is specific
+        {contact?.whatsapp && ( // Custom logic for WhatsApp if MyImage is specific
           <div className="text-myGray flex items-center space-x-2">
             <MyImage
               role="ICON"
@@ -77,11 +78,11 @@ const SchoolContacts: React.FC<SchoolContactsProps> = ({ school }) => {
               alt="WhatsApp Icon"
             />{" "}
             {/* Added alt text */}
-            <h5 className="">{contact.whatsappNumber}</h5>
+            <h5 className="">{contact.whatsapp}</h5>
           </div>
         )}
         {/* Social Media Accounts */}
-        {socialMedia && socialMedia.length > 0 && (
+        {social_media && social_media.length > 0 && (
           <div className="pt-2">
             {" "}
             {/* Added padding-top for separation */}
@@ -90,13 +91,13 @@ const SchoolContacts: React.FC<SchoolContactsProps> = ({ school }) => {
               <h4 className="font-medium">Social Accounts</h4>
             </div>
             <div className="mt-2 ml-2 space-y-1.5">
-              {socialMedia.map(
+              {social_media.map(
                 (
-                  item: SocialMediaDto,
+                  item: SocialMedia,
                   index: number, // Added types for item
                 ) => (
                   <Link
-                    href={item.link || "#"} // Provide a fallback href
+                    href={item.url || "#"} // Provide a fallback href
                     key={index}
                     className="group text-myGray flex items-center gap-2 transition-colors duration-150 hover:text-blue-600" // Added hover effect and group for potential parent styling
                     target="_blank"
@@ -111,7 +112,7 @@ const SchoolContacts: React.FC<SchoolContactsProps> = ({ school }) => {
                       alt={`${item.platform || "Social Media"} Icon`}
                     />
                     <span className="line-clamp-1 group-hover:underline">
-                      {item.platform || item.link}
+                      {item.platform || item.url}
                     </span>
                   </Link>
                 ),

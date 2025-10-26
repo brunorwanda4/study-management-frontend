@@ -1,7 +1,7 @@
 "use client";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { redirectContents } from "@/lib/hooks/redirect";
-import { userRole } from "@/lib/schema/common-details-schema";
+import type { userRole } from "@/lib/schema/common-details-schema";
 import { useRouter } from "next/navigation";
 import { BsArrowLeft } from "react-icons/bs";
 import MyImage from "../common/myImage";
@@ -30,7 +30,7 @@ const PermissionPage = ({ description, lang, role }: props) => {
         <div>
           <div className="text-center">
             <p className=" ">
-              {!!description
+              {description
                 ? description
                 : "Your permission not allowed on this page"}
             </p>
@@ -38,7 +38,7 @@ const PermissionPage = ({ description, lang, role }: props) => {
               <MyLink
                 button={{ library: "daisy", variant: "default" }}
                 type="button"
-                href={redirectContents({ lang, role })}
+                href={redirectContents({ lang, role: role ?? "STUDENT" })}
               >
                 <MyImage role="ICON" src="/icons/3d-house.png" /> Go Home
               </MyLink>

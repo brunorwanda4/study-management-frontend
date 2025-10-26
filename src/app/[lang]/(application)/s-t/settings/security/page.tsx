@@ -1,7 +1,8 @@
 import DevelopingPage from "@/components/page/developing-page";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { authContext } from "@/lib/utils/auth-context";
 import { redirect } from "next/navigation";
+
 interface Props {
   params: Promise<{ lang: Locale; classId: string }>;
 }
