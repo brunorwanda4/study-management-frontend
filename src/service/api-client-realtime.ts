@@ -1,5 +1,8 @@
 // api-client-realtime.ts
-import apiRequest, { APIResponse, ApiRequestOptions } from "./api-client";
+import apiRequest, {
+  type APIResponse,
+  type ApiRequestOptions,
+} from "./api-client";
 import { realtimeClient } from "./realtime-client";
 
 /**
