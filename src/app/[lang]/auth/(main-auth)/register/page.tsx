@@ -1,7 +1,8 @@
 import MyLink from "@/components/common/myLink";
+import AuthProviders from "@/components/page/auth/auth-provider";
 import RegisterForm from "@/components/page/auth/forms/register-form";
-import { Locale } from "@/i18n";
-import { Metadata } from "next";
+import { getDictionary, type Locale } from "@/i18n";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "create an account",
@@ -15,31 +16,25 @@ interface props {
 const RegisterPage = async (props: props) => {
   const params = await props.params;
   const { lang } = params;
+  const diction = await getDictionary(lang);
   return (
-    <main className="flex flex-col">
-      <div className="space-y-4">
-        <div className="space-y-1 text-center"></div>
-        <div className="mt-4 flex w-full flex-col-reverse space-y-4 space-x-4 lg:flex-row lg:space-y-0">
-          <div className="space-y-2">
-            <h4 className="basic-title">Use your email:</h4>
-            <RegisterForm lang={lang} />
-          </div>
-        </div>
-        <div>
-          <div className="flex items-center space-x-2">
-            I have an account{" "}
-            <MyLink
-              href={`/${lang}/auth/login`}
-              type="link"
-              loading
-              className="link text-info ml-1"
-            >
-              Login
-            </MyLink>
-          </div>
-        </div>
+    <div className=" h-screen flex flex-col items-start pt-4  gap-2">
+      <div className=" space-y-2">
+        <h1 className=" happy-title-head">
+          {diction.auth.register.page.title}
+        </h1>
       </div>
-    </main>
+      <div className=" mt-4 w-full space-y-3">
+        <RegisterForm lang={lang} />
+        <p>
+          {diction.auth.register.page.paragraph}{" "}
+          <MyLink href={`/${lang}/auth/login`} className=" link link-info">
+            {diction.auth.register.page.login}
+          </MyLink>
+        </p>
+        <AuthProviders />
+      </div>
+    </div>
   );
 };
 

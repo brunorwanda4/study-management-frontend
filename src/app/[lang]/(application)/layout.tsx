@@ -6,17 +6,22 @@ import {
   teacherSidebarGroups,
 } from "@/components/page/application/aside/app-side-content";
 import { AppSidebar } from "@/components/page/application/aside/app-sidebar";
-import AppNav from "@/components/page/application/navbard/app-nav";
+import AppNav from "@/components/page/application/navbar/app-nav";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import type { Locale } from "@/i18n";
 import { authContext } from "@/lib/utils/auth-context";
 import { redirect } from "next/navigation";
 import type React from "react";
 
 interface Props {
   children: React.ReactNode;
+  params: Promise<{ lang: string }>;
 }
 
-export default async function ApplicationLayout({ children }: Props) {
+export default async function ApplicationLayout(props: Props) {
+  const params = await props.params;
+  const { lang } = params;
+  const { children } = props;
   const auth = await authContext();
 
   if (!auth) {
@@ -27,7 +32,7 @@ export default async function ApplicationLayout({ children }: Props) {
 
   return (
     <SidebarProvider>
-      <AppNav /> {/* cast to Locale when needed */}
+      <AppNav auth={auth} lang={lang as Locale} />
       <AppSidebar
         items={
           role === "STUDENT"

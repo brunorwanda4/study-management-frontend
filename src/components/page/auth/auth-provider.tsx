@@ -1,60 +1,28 @@
+"use client";
+
 import MyImage from "@/components/common/myImage";
-import MyLink from "@/components/common/myLink";
-import AuthLogo from "./auth-logo";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
-const AuthProvider = () => {
+const AuthProviders = () => {
   return (
-    <div className="flex flex-col space-y-3">
-      <AuthLogo />
-      <p className="text-center">Welcome to your space-together account! ☺️</p>
-
-      <div className="flex flex-col space-y-2">
-        <MyLink
-          className="flex justify-start space-x-2"
-          type="button"
-          href="/"
-          classname=" w-full"
-          button={{ library: "daisy", size: "lg", variant: "default" }}
-        >
-          <MyImage
-            src="https://cdn-icons-png.flaticon.com/512/300/300221.png"
-            role="ICON"
-            className="size-6"
-          />
+    <div className=" w-full mt-2 space-y-6">
+      <div className=" flex flex-col w-full items-center relative  pt-4">
+        <p className=" bg-base-100 absolute top-3 px-2">Or continuer with</p>
+        <Separator />
+      </div>
+      <div className=" flex  w-full space-x-2">
+        <Button size={"lg"} variant="outline" library="daisy" className=" w-1/2 border">
+          <MyImage src="/icons/google.png" className="size-4 " />
           Google
-        </MyLink>
-        <MyLink
-          className="flex justify-start space-x-2"
-          type="button"
-          href="/"
-          classname=" w-full"
-          button={{ library: "daisy", size: "lg", variant: "default" }}
-        >
-          <MyImage
-            src="https://cdn-icons-png.flaticon.com/512/5968/5968764.png"
-            role="ICON"
-            className="size-6"
-            classname=" w-full"
-          />
-          facebook
-        </MyLink>
-        <MyLink
-          className="flex justify-start space-x-2"
-          type="button"
-          href="/"
-          classname=" w-full"
-          button={{ library: "daisy", size: "lg", variant: "default" }}
-        >
-          <MyImage
-            src="https://cdn-icons-png.flaticon.com/512/1051/1051326.png"
-            role="ICON"
-            className="size-6"
-          />
-          Github
-        </MyLink>
+        </Button>
+        <Button size={"lg"} variant="outline" library="daisy" className=" w-1/2 border">
+          <MyImage src="/icons/facebook.png" className="size-4 " />
+          Facebook
+        </Button>
       </div>
     </div>
   );
 };
 
-export default AuthProvider;
+export default AuthProviders;

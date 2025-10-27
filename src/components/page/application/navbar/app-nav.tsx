@@ -1,15 +1,20 @@
 import AppBreadcrumb from "@/components/common/app-breadcrumb";
 import MyImage from "@/components/common/myImage";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { authContext } from "@/lib/utils/auth-context";
+import type { Locale } from "@/i18n";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import AppLogo from "./app-logo";
 import NavMessageDropDown from "./nav-message-drop-down";
 import NavProfileDropDown from "./nav-profile-drop-down";
 
-const AppNav = async () => {
-  const auth = await authContext();
+interface AppNavProps {
+  lang: Locale;
+  auth: AuthContext;
+}
+
+const AppNav = async ({ lang, auth }: AppNavProps) => {
   if (!auth) {
     redirect(`/auth/login`);
   }
@@ -19,7 +24,7 @@ const AppNav = async () => {
       <div className="flex items-center space-x-8">
         <div className="flex items-center space-x-2">
           <SidebarTrigger className="btn btn-circle btn-ghost size-12 rounded-full" />
-          <AppLogo />
+          <AppLogo lang={lang} user={auth.user} />
         </div>
         <AppBreadcrumb />
       </div>

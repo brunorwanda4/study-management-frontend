@@ -1,4 +1,4 @@
-import "server-only";
+// import "server-only";
 export type Locale = "en" | "rw";
 
 export const i18n = {

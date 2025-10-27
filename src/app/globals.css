@@ -196,10 +196,6 @@
   @apply bg-base-300 card border-base-200 border-2 p-4;
 }
 
-.happy-line {
-  @apply flex flex-col gap-4;
-}
-
 .happy-title-base {
   @apply text-lg font-semibold;
 }

@@ -19,7 +19,7 @@ const WelcomeImage = () => {
         </p>
       </div>
       <MyImage
-        className="h-96 w-full"
+        className="h-80 w-full"
         classname="rounded-3xl"
         src={cn(
           isDark

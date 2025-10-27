@@ -30,7 +30,8 @@
       },
       "correctness": {
         "useExhaustiveDependencies": "off",
-        "useHookAtTopLevel": "off"
+        "useHookAtTopLevel": "off",
+        "noUnknownTypeSelector": "off"
       },
       "suspicious": {
         "noUnknownAtRules": "off",

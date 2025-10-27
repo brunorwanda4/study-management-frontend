@@ -15,7 +15,7 @@ function Separator({
       decorative={decorative}
       orientation={orientation}
       className={cn(
-        "bg-base-300 shrink-0",
+        "bg-base-content/20 shrink-0",
         orientation === "horizontal"
           ? "my-2 h-px w-full"
           : "mx-2 h-auto w-px self-stretch",
@@ -27,3 +27,4 @@ function Separator({
 }
 
 export { Separator };
+

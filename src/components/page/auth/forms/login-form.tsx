@@ -10,11 +10,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { redirectContents } from "@/lib/hooks/redirect";
 import {
-  AuthUserDto,
-  LoginUserDto,
+  type AuthUserDto,
+  type LoginUserDto,
   LoginUserSchema,
 } from "@/lib/schema/user/auth-user-schema";
 import { setAuthCookies } from "@/lib/utils/auth-context";
@@ -27,12 +27,13 @@ import { useForm } from "react-hook-form";
 
 interface props {
   lang: Locale;
+  oauthError?: string;
 }
 
-const LoginForm = ({ lang }: props) => {
+const LoginForm = ({ lang, oauthError }: props) => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState<undefined | null | string>("");
+  const [error, setError] = useState<undefined | null | string>(oauthError);
   const [success, setSuccess] = useState<undefined | null | string>("");
   const router = useRouter();
   const form = useForm<LoginUserDto>({
@@ -66,14 +67,14 @@ const LoginForm = ({ lang }: props) => {
             router.push(redirectContents({ lang, role: login.data.role }));
           }
         }
-      } else if (login.error) {
-        setError(login.error);
+      } else if (login.message) {
+        setError(login.message);
       }
     });
   }
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-96 space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className=" space-y-8">
         <FormField
           control={form.control}
           name="email"

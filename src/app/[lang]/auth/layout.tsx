@@ -1,20 +1,28 @@
-import AuthLang from "@/components/lang/auth-lang";
-import AuthTheme from "@/components/theme/auth-theme";
+import AuthLayoutImage from "@/components/page/auth/auth-layout-images";
+import AuthSetting from "@/components/page/auth/auth-setting";
+import { getDictionary, type Locale } from "@/i18n";
 
-interface props {
+interface Props {
   children: React.ReactNode;
+  params: Promise<{ lang: string }>;
 }
-const AuthLayout = ({ children }: props) => {
+const AuthLayout = async (props: Props) => {
+  const params = await props.params;
+  const { lang } = params;
+  const { children } = props;
+  const diction = await getDictionary(lang as Locale);
   return (
-    <main className="min-h-screen px-4 py-2 md:space-x-4 max-md:w-full">
-      <nav className=" flex justify-end ">
-        <AuthTheme />
-      </nav>
-      <div className=" grid place-content-center space-y-4 max-lg:w-full min-h-screen">
-        <section className=" bg-base-100 card lg:px-12 px-8 py-4 shadow">
+    <main className="">
+      <div className=" pr-4">
+          <nav className=" relative">
+          <AuthSetting lang={lang as Locale} diction={diction.auth.setting}/>
+        </nav>
+      </div>
+       <div className=" items-center justify-between flex min-h-screen w-full">
+        <AuthLayoutImage diction={diction.auth.leftSide} lang={lang as Locale} />
+        <section className=" w-1/2 right-0 absolute px-16">
           {children}
         </section>
-        <AuthLang />
       </div>
     </main>
   );

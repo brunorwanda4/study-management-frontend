@@ -5,15 +5,19 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
+
+("@/i18n");
+
 import {
-  AuthUserDto,
-  RegisterUser,
+  type AuthUserDto,
+  type RegisterUser,
   RegisterUserSchema,
 } from "@/lib/schema/user/auth-user-schema";
 import { setAuthCookies } from "@/lib/utils/auth-context";
@@ -21,8 +25,9 @@ import apiRequest from "@/service/api-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckIcon, EyeIcon, EyeOffIcon, XIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, useMemo, useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
+
 interface props {
   lang: Locale;
 }
@@ -80,14 +85,6 @@ const RegisterForm = ({ lang }: props) => {
     if (score === 3) return "Medium password";
     return "Strong password";
   };
-  const handlePasswordChange = (
-    e: ChangeEvent<HTMLInputElement>,
-    fieldChange: (value: string) => void,
-  ) => {
-    const newPassword = e.target.value;
-    setPassword(newPassword); // Update local state for strength checking
-    fieldChange(newPassword); // Update react-hook-form's state for validation
-  };
 
   function onSubmit(values: RegisterUser) {
     setError(null);
@@ -104,14 +101,14 @@ const RegisterForm = ({ lang }: props) => {
           setSuccess("Account created successful! ☺️");
           router.push(`/${lang}/auth/onboarding`);
         }
-      } else if (create.error) {
-        setError(create.error);
+      } else if (create.message) {
+        setError(create.message);
       }
     });
   }
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-96 space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-4">
         <FormField
           control={form.control}
           name="name"
@@ -174,101 +171,146 @@ const RegisterForm = ({ lang }: props) => {
         <FormField
           name="password"
           control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <div className="group relative">
-                  <label
-                    htmlFor={"password"}
-                    className="group-focus-within: has-[+input:not(:placeholder-shown)]: absolute top-1/2 block -translate-y-1/2 cursor-text px-1 text-sm transition-all group-focus-within:pointer-events-none group-focus-within:top-0 group-focus-within:cursor-default group-focus-within:text-base group-focus-within:font-medium has-[+input:not(:placeholder-shown)]:pointer-events-none has-[+input:not(:placeholder-shown)]:top-0 has-[+input:not(:placeholder-shown)]:cursor-default has-[+input:not(:placeholder-shown)]:text-base has-[+input:not(:placeholder-shown)]:font-medium"
-                  >
-                    <span className="bg-base-100 inline-flex px-2">
-                      Password*
-                    </span>
-                  </label>
-                  <Input
-                    className="base h-12 text-lg"
-                    type={isVisible ? "text" : "password"}
-                    placeholder=" "
-                    disabled={isPending}
-                    {...field}
-                    onChange={(e) => handlePasswordChange(e, field.onChange)}
-                  />
-                  <button
-                    className="/80 hover: focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
-                    type="button"
-                    onClick={toggleVisibility}
-                    aria-label={isVisible ? "Hide password" : "Show password"}
-                    aria-pressed={isVisible}
-                    aria-controls="password"
-                  >
-                    {isVisible ? (
-                      <EyeOffIcon size={16} aria-hidden="true" />
-                    ) : (
-                      <EyeIcon size={16} aria-hidden="true" />
-                    )}
-                  </button>
-                </div>
-              </FormControl>
-              {/* <FormDescription>Your secret password which you will to login.</FormDescription> */}
-              <FormMessage />
-              {/* Password strength indicator */}
-              <div
-                className="bg-border mt-3 mb-4 h-1 w-full overflow-hidden rounded-full"
-                role="progressbar"
-                aria-valuenow={strengthScore}
-                aria-valuemin={0}
-                aria-valuemax={4}
-                aria-label="Password strength"
-              >
-                <div
-                  className={`h-full ${getStrengthColor(
-                    strengthScore,
-                  )} transition-all duration-500 ease-out`}
-                  style={{ width: `${(strengthScore / 4) * 100}%` }}
-                ></div>
-              </div>
+          render={({ field }) => {
+            const [showFeedback, setShowFeedback] = useState(false);
 
-              {/* Password strength description */}
-              <p
-                id={`password-description`}
-                className="mb-2 text-sm font-medium"
-              >
-                {getStrengthText(strengthScore)}. Must contain:
-              </p>
+            const handleBlur = () => {
+              // Only show feedback if password isn't strong enough
+              if (strengthScore < 4) setShowFeedback(true);
+              field.onBlur();
+            };
 
-              {/* Password requirements list */}
-              <ul
-                className="grid grid-cols-2"
-                aria-label="Password requirements"
-              >
-                {strength.map((req, index) => (
-                  <li key={index} className="flex items-center gap-2">
-                    {req.met ? (
-                      <CheckIcon
-                        size={16}
-                        className="text-emerald-500"
-                        aria-hidden="true"
-                      />
-                    ) : (
-                      <XIcon size={16} className="/80" aria-hidden="true" />
-                    )}
-                    <span
-                      className={`text-xs ${req.met ? "text-emerald-600" : " "}`}
+            const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+              const value = e.target.value;
+              setPassword(value);
+              field.onChange(value);
+
+              // Hide feedback while typing again
+              if (showFeedback) setShowFeedback(false);
+            };
+
+            return (
+              <FormItem>
+                <FormControl>
+                  <div className="group relative">
+                    <label
+                      htmlFor="password"
+                      className="group-focus-within:has-[+input:not(:placeholder-shown)]: absolute top-1/2 block -translate-y-1/2 cursor-text px-1 text-sm transition-all
+                         group-focus-within:pointer-events-none group-focus-within:top-0 group-focus-within:cursor-default group-focus-within:text-base
+                         group-focus-within:font-medium has-[+input:not(:placeholder-shown)]:pointer-events-none has-[+input:not(:placeholder-shown)]:top-0
+                         has-[+input:not(:placeholder-shown)]:cursor-default has-[+input:not(:placeholder-shown)]:text-base has-[+input:not(:placeholder-shown)]:font-medium"
                     >
-                      {req.text}
-                      <span className="sr-only">
-                        {req.met
-                          ? " - Requirement met"
-                          : " - Requirement not met"}
+                      <span className="bg-base-100 inline-flex px-2">
+                        Password*
                       </span>
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </FormItem>
-          )}
+                    </label>
+
+                    <Input
+                      id="password"
+                      className={`base h-12 text-lg transition-all duration-300 ${
+                        showFeedback && strengthScore < 4 && password.length > 0
+                          ? "border-red-500 focus-visible:ring-red-500"
+                          : "border-border"
+                      }`}
+                      type={isVisible ? "text" : "password"}
+                      placeholder=" "
+                      disabled={isPending}
+                      {...field}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                    />
+
+                    <button
+                      className="text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50
+                         absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow]
+                         outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+                      type="button"
+                      onClick={toggleVisibility}
+                      aria-label={isVisible ? "Hide password" : "Show password"}
+                      aria-pressed={isVisible}
+                      aria-controls="password"
+                    >
+                      {isVisible ? (
+                        <EyeOffIcon size={16} aria-hidden="true" />
+                      ) : (
+                        <EyeIcon size={16} aria-hidden="true" />
+                      )}
+                    </button>
+                  </div>
+                </FormControl>
+
+                <FormDescription>
+                  Your secret password which you will use to log in.
+                </FormDescription>
+                <FormMessage />
+
+                {/* Only show feedback when password is weak */}
+                {showFeedback && strengthScore < 4 && (
+                  <div className="animate-fadeIn">
+                    {/* Strength indicator */}
+                    <div
+                      className="bg-border mt-3 mb-4 h-1 w-full overflow-hidden rounded-full"
+                      role="progressbar"
+                      aria-valuenow={strengthScore}
+                      aria-valuemin={0}
+                      aria-valuemax={4}
+                      aria-label="Password strength"
+                    >
+                      <div
+                        className={`h-full ${getStrengthColor(
+                          strengthScore,
+                        )} transition-all duration-500 ease-out`}
+                        style={{ width: `${(strengthScore / 4) * 100}%` }}
+                      ></div>
+                    </div>
+
+                    {/* Password feedback text */}
+                    <p
+                      id="password-description"
+                      className={`mb-2 text-sm font-medium text-red-600`}
+                    >
+                      {getStrengthText(strengthScore)}. Must contain:
+                    </p>
+
+                    {/* Requirements list */}
+                    <ul
+                      className="grid grid-cols-2"
+                      aria-label="Password requirements"
+                    >
+                      {strength.map((req, index) => (
+                        <li key={index} className="flex items-center gap-2">
+                          {req.met ? (
+                            <CheckIcon
+                              size={16}
+                              className="text-emerald-500"
+                              aria-hidden="true"
+                            />
+                          ) : (
+                            <XIcon
+                              size={16}
+                              className="text-muted-foreground/80"
+                              aria-hidden="true"
+                            />
+                          )}
+                          <span
+                            className={`text-xs ${
+                              req.met
+                                ? "text-emerald-600"
+                                : "text-muted-foreground"
+                            }`}
+                          >
+                            {req.text}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </FormItem>
+            );
+          }}
         />
+
         <div>
           <FormError message={error} />
           <FormSuccess message={success} />
