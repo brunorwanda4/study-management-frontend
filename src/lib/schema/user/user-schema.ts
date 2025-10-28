@@ -27,3 +27,4 @@ export const UserModelSchema = z.object({
   updated_at: z.string().optional(),
 });
 export type UserModel = z.infer<typeof UserModelSchema>;
+

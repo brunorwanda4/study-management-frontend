@@ -14,24 +14,24 @@ export const UserRoleDetails: Record<
 > = {
   STUDENT: {
     name: "Student",
-    image: "/images/roles/student.png",
+    image: "/icons/roles/student.png",
     description: "Learns, participates in classes, and completes assignments.",
   },
   ADMIN: {
     name: "Administrator",
-    image: "/images/roles/admin.png",
+    image: "/icons/roles/admin.png",
     description:
       "Oversees the school system and manages users and permissions.",
   },
   TEACHER: {
     name: "Teacher",
-    image: "/images/roles/teacher.png",
+    image: "/icons/roles/teacher.png",
     description:
       "Guides and instructs students in specific subjects or classes.",
   },
   SCHOOLSTAFF: {
     name: "School Staff",
-    image: "/images/roles/staff.png",
+    image: "/icons/roles/staff.png",
     description:
       "Handles daily school operations such as administration and logistics.",
   },
@@ -46,17 +46,17 @@ export const GenderDetails: Record<
 > = {
   MALE: {
     name: "Male",
-    image: "/images/gender/male.png",
+    image: "/icons/gender/male.png",
     description: "Identifies as male.",
   },
   FEMALE: {
     name: "Female",
-    image: "/images/gender/female.png",
+    image: "/icons/gender/female.png",
     description: "Identifies as female.",
   },
   OTHER: {
     name: "Other",
-    image: "/images/gender/other.png",
+    image: "/icons/gender/genders.png",
     description: "Non-binary or prefers not to specify.",
   },
 };
@@ -75,22 +75,22 @@ export const SchoolTypeDetails: Record<
 > = {
   Public: {
     name: "Public",
-    image: "/images/schools/public.png",
+    image: "/icons/schools/public.png",
     description: "Government funded and managed.",
   },
   Private: {
     name: "Private",
-    image: "/images/schools/private.png",
+    image: "/icons/schools/private.png",
     description: "Funded independently through tuition or donations.",
   },
   Charter: {
     name: "Charter",
-    image: "/images/schools/charter.png",
+    image: "/icons/schools/charter.png",
     description: "Publicly funded but operates independently.",
   },
   International: {
     name: "International",
-    image: "/images/schools/international.png",
+    image: "/icons/schools/international.png",
     description: "Follows international curricula and diverse student body.",
   },
 };
@@ -103,17 +103,17 @@ export const SchoolMemberDetails: Record<
 > = {
   Mixed: {
     name: "Mixed",
-    image: "/images/schools/mixed.png",
+    image: "/icons/schools/children.png",
     description: "Boys and girls study together.",
   },
   Boys: {
     name: "Boys",
-    image: "/images/schools/boys.png",
+    image: "/icons/schools/boy.png",
     description: "Only male students.",
   },
   Girls: {
     name: "Girls",
-    image: "/images/schools/girls.png",
+    image: "/icons/schools/woman.png",
     description: "Only female students.",
   },
 };
@@ -125,12 +125,12 @@ export const AttendanceSystemDetails: Record<
 > = {
   Manual: {
     name: "Manual",
-    image: "/images/attendance/manual.png",
+    image: "/icons/attendance/manual.png",
     description: "Attendance recorded manually on paper or books.",
   },
   Online: {
     name: "Online",
-    image: "/images/attendance/online.png",
+    image: "/icons/attendance/online.png",
     description: "Attendance tracked digitally within the system.",
   },
 };
@@ -148,22 +148,22 @@ export const AffiliationTypeDetails: Record<
 > = {
   Government: {
     name: "Government",
-    image: "/images/affiliation/gov.png",
+    image: "/icons/affiliation/gov.png",
     description: "Managed and funded by government.",
   },
   Religious: {
     name: "Religious",
-    image: "/images/affiliation/religious.png",
+    image: "/icons/affiliation/religious.png",
     description: "Operated under a faith-based organization.",
   },
   NGO: {
     name: "NGO",
-    image: "/images/affiliation/ngo.png",
+    image: "/icons/affiliation/ngo.png",
     description: "Run by a non-governmental organization.",
   },
   Independent: {
     name: "Independent",
-    image: "/images/affiliation/independent.png",
+    image: "/icons/affiliation/independent.png",
     description: "Self-managed and autonomous.",
   },
 };
@@ -181,22 +181,22 @@ export const StudentStatusDetails: Record<
 > = {
   Active: {
     name: "Active",
-    image: "/images/students/active.png",
+    image: "/icons/students/active.png",
     description: "Currently enrolled and attending.",
   },
   Suspended: {
     name: "Suspended",
-    image: "/images/students/suspended.png",
+    image: "/icons/students/suspended.png",
     description: "Temporarily removed from active study.",
   },
   Graduated: {
     name: "Graduated",
-    image: "/images/students/graduated.png",
+    image: "/icons/students/graduated.png",
     description: "Successfully completed their education.",
   },
   Left: {
     name: "Left",
-    image: "/images/students/left.png",
+    image: "/icons/students/left.png",
     description: "No longer part of the school for other reasons.",
   },
 };
@@ -209,12 +209,12 @@ export const SchoolStaffTypeDetails: Record<
 > = {
   Director: {
     name: "Director",
-    image: "/images/staff/director.png",
+    image: "/icons/staff/director.png",
     description: "Oversees the entire school operations and policies.",
   },
   HeadOfStudies: {
     name: "Head of Studies",
-    image: "/images/staff/head.png",
+    image: "/icons/staff/head-of-studies.png",
     description: "Supervises academic programs and teacher performance.",
   },
 };
@@ -232,22 +232,22 @@ export const TeacherTypeDetails: Record<
 > = {
   Regular: {
     name: "Regular",
-    image: "/images/teacher/regular.png",
+    image: "/icons/teacher/regular.png",
     description: "Handles regular classroom duties.",
   },
   HeadTeacher: {
     name: "Head Teacher",
-    image: "/images/teacher/head.png",
+    image: "/icons/teacher/head.png",
     description: "Leads teachers within a class or grade level.",
   },
   SubjectTeacher: {
     name: "Subject Teacher",
-    image: "/images/teacher/subject.png",
+    image: "/icons/teacher/subject.png",
     description: "Teaches specific subjects.",
   },
   Deputy: {
     name: "Deputy",
-    image: "/images/teacher/deputy.png",
+    image: "/icons/teacher/deputy.png",
     description: "Assists head teacher or school management.",
   },
 };
@@ -266,27 +266,27 @@ export const JoinStatusDetails: Record<
 > = {
   Pending: {
     name: "Pending",
-    image: "/images/join/pending.png",
+    image: "/icons/join/pending.png",
     description: "Awaiting approval or review.",
   },
   Accepted: {
     name: "Accepted",
-    image: "/images/join/accepted.png",
+    image: "/icons/join/accepted.png",
     description: "Approved and active membership.",
   },
   Rejected: {
     name: "Rejected",
-    image: "/images/join/rejected.png",
+    image: "/icons/join/rejected.png",
     description: "Request was not approved.",
   },
   Expired: {
     name: "Expired",
-    image: "/images/join/expired.png",
+    image: "/icons/join/expired.png",
     description: "Request timed out or no longer valid.",
   },
   Cancelled: {
     name: "Cancelled",
-    image: "/images/join/cancelled.png",
+    image: "/icons/join/cancelled.png",
     description: "Cancelled by the user or admin.",
   },
 };
@@ -299,17 +299,17 @@ export const JoinRoleDetails: Record<
 > = {
   Teacher: {
     name: "Teacher",
-    image: "/images/join/teacher.png",
+    image: "/icons/join/teacher.png",
     description: "Joins school as an educator.",
   },
   Student: {
     name: "Student",
-    image: "/images/join/student.png",
+    image: "/icons/join/student.png",
     description: "Joins school as a learner.",
   },
   Staff: {
     name: "Staff",
-    image: "/images/join/staff.png",
+    image: "/icons/join/staff.png",
     description: "Joins school as a support or administrative member.",
   },
 };
@@ -323,17 +323,17 @@ export const ClassTypeDetails: Record<
 > = {
   Private: {
     name: "Private",
-    image: "/images/class/private.png",
+    image: "/icons/class/private.png",
     description: "Accessible to invited or specific members.",
   },
   School: {
     name: "School",
-    image: "/images/class/school.png",
+    image: "/icons/class/school.png",
     description: "Class within the official school structure.",
   },
   Public: {
     name: "Public",
-    image: "/images/class/public.png",
+    image: "/icons/class/public.png",
     description: "Open to wider or community-based participants.",
   },
 };
@@ -352,22 +352,22 @@ export const LanguageDetails: Record<
 > = {
   English: {
     name: "English",
-    image: "/images/languages/english.png",
+    image: "/icons/languages/english.png",
     description: "Widely spoken international language.",
   },
   French: {
     name: "French",
-    image: "/images/languages/french.png",
+    image: "/icons/languages/french.png",
     description: "Language used in many African and European schools.",
   },
   Kinyarwanda: {
     name: "Kinyarwanda",
-    image: "/images/languages/kinyarwanda.png",
+    image: "/icons/languages/kinyarwanda.png",
     description: "National language of Rwanda.",
   },
   Kiswahili: {
     name: "Kiswahili",
-    image: "/images/languages/kiswahili.png",
+    image: "/icons/languages/kiswahili.png",
     description: "Regional East African communication language.",
   },
 };
@@ -392,52 +392,52 @@ export const StudyStyleDetails: Record<
 > = {
   Visual: {
     name: "Visual",
-    image: "/images/study/visual.png",
-    description: "Learns best through images, diagrams, and visual materials.",
+    image: "/icons/study/visual.png",
+    description: "Learns best through icons, diagrams, and visual materials.",
   },
   Discussion: {
     name: "Discussion",
-    image: "/images/study/discussion.png",
+    image: "/icons/study/discussion.png",
     description: "Prefers learning through conversations and group dialogue.",
   },
   HandsOn: {
     name: "Hands-On",
-    image: "/images/study/handson.png",
+    image: "/icons/study/handson.png",
     description: "Learns by doing practical or physical activities.",
   },
   Reading: {
     name: "Reading",
-    image: "/images/study/reading.png",
+    image: "/icons/study/reading.png",
     description: "Learns through reading books, notes, and written content.",
   },
   Writing: {
     name: "Writing",
-    image: "/images/study/writing.png",
+    image: "/icons/study/writing.png",
     description: "Retains knowledge through writing and note-taking.",
   },
   Group: {
     name: "Group",
-    image: "/images/study/group.png",
+    image: "/icons/study/group.png",
     description: "Learns collaboratively with peers.",
   },
   Solo: {
     name: "Solo",
-    image: "/images/study/solo.png",
+    image: "/icons/study/solo.png",
     description: "Prefers independent learning.",
   },
   ProjectBased: {
     name: "Project-Based",
-    image: "/images/study/project.png",
+    image: "/icons/study/project.png",
     description: "Learns through real-world projects and activities.",
   },
   Digital: {
     name: "Digital",
-    image: "/images/study/digital.png",
+    image: "/icons/study/digital.png",
     description: "Learns effectively through online tools or technology.",
   },
   Other: {
     name: "Other",
-    image: "/images/study/other.png",
+    image: "/icons/study/other.png",
     description: "Other unique or mixed learning approaches.",
   },
 };
@@ -459,37 +459,37 @@ export const CommunicationMethodDetails: Record<
 > = {
   Chat: {
     name: "Chat",
-    image: "/images/communication/chat.png",
+    image: "/icons/communication/chat.png",
     description: "Real-time text messaging.",
   },
   Sms: {
     name: "SMS",
-    image: "/images/communication/sms.png",
+    image: "/icons/communication/sms.png",
     description: "Short message service via mobile.",
   },
   Email: {
     name: "Email",
-    image: "/images/communication/email.png",
+    image: "/icons/communication/email.png",
     description: "Formal or structured communication via email.",
   },
   Call: {
     name: "Call",
-    image: "/images/communication/call.png",
+    image: "/icons/communication/call.png",
     description: "Voice-based communication over the phone.",
   },
   VideoCall: {
     name: "Video Call",
-    image: "/images/communication/video.png",
+    image: "/icons/communication/video.png",
     description: "Face-to-face communication via video.",
   },
   InPerson: {
     name: "In-Person",
-    image: "/images/communication/inperson.png",
+    image: "/icons/communication/inperson.png",
     description: "Physical meeting or discussion.",
   },
   Other: {
     name: "Other",
-    image: "/images/communication/other.png",
+    image: "/icons/communication/other.png",
     description: "Other or unspecified communication method.",
   },
 };
@@ -530,7 +530,7 @@ export const RelationshipDetails: Record<
     r,
     {
       name: r.replace(/([A-Z])/g, " $1").trim(),
-      image: "/images/relationship/default.png",
+      image: "/icons/relationship/default.png",
       description: `${r.replace(/([A-Z])/g, " $1").trim()} related to or responsible for the student.`,
     },
   ]),
@@ -558,7 +558,7 @@ export const SpecialSupportDetails: Record<
     s,
     {
       name: s.replace(/([A-Z])/g, " $1").trim(),
-      image: "/images/support/default.png",
+      image: "/icons/support/default.png",
       description: `${s.replace(/([A-Z])/g, " $1").trim()} support for student needs.`,
     },
   ]),
@@ -591,7 +591,7 @@ export const LearningChallengeDetails: Record<
     l,
     {
       name: l.replace(/([A-Z])/g, " $1").trim(),
-      image: "/images/challenges/default.png",
+      image: "/icons/challenges/default.png",
       description: `Challenge: ${l.replace(/([A-Z])/g, " $1").trim()}.`,
     },
   ]),
@@ -620,7 +620,7 @@ export const EmploymentTypeDetails: Record<
     e,
     {
       name: e.replace(/([A-Z])/g, " $1").trim(),
-      image: "/images/employment/default.png",
+      image: "/icons/employment/default.png",
       description: `${e.replace(/([A-Z])/g, " $1").trim()} job type or work arrangement.`,
     },
   ]),
@@ -652,7 +652,7 @@ export const EducationLevelDetails: Record<
     l,
     {
       name: l.replace(/([A-Z])/g, " $1").trim(),
-      image: "/images/education/default.png",
+      image: "/icons/education/default.png",
       description: `Education level: ${l.replace(/([A-Z])/g, " $1").trim()}.`,
     },
   ]),
@@ -685,7 +685,7 @@ export const CertificationDetails: Record<
     c,
     {
       name: c.replace(/([A-Z])/g, " $1").trim(),
-      image: "/images/certifications/default.png",
+      image: "/icons/certifications/default.png",
       description: `Training or certification in ${c.replace(/([A-Z])/g, " $1").trim()}.`,
     },
   ]),
@@ -715,7 +715,7 @@ export const TeachingStyleDetails: Record<
     t,
     {
       name: t.replace(/([A-Z])/g, " $1").trim(),
-      image: "/images/teaching/default.png",
+      image: "/icons/teaching/default.png",
       description: `${t.replace(/([A-Z])/g, " $1").trim()} teaching method.`,
     },
   ]),
@@ -746,7 +746,7 @@ export const AgeGroupDetails: Record<
     a,
     {
       name: a.replace(/([A-Z])/g, " $1").trim(),
-      image: "/images/agegroups/default.png",
+      image: "/icons/agegroups/default.png",
       description: `Applicable age or grade: ${a.replace(/([A-Z])/g, " $1").trim()}.`,
     },
   ]),
@@ -772,7 +772,7 @@ export const ProfessionalGoalDetails: Record<
     p,
     {
       name: p.replace(/([A-Z])/g, " $1").trim(),
-      image: "/images/goals/default.png",
+      image: "/icons/goals/default.png",
       description: `Professional goal: ${p.replace(/([A-Z])/g, " $1").trim()}.`,
     },
   ]),
@@ -803,7 +803,7 @@ export const DepartmentDetails: Record<
     d,
     {
       name: d.replace(/([A-Z])/g, " $1").trim(),
-      image: "/images/departments/default.png",
+      image: "/icons/departments/default.png",
       description: `Department of ${d.replace(/([A-Z])/g, " $1").trim()}.`,
     },
   ]),
@@ -831,7 +831,7 @@ export const JobTitleDetails: Record<
     j,
     {
       name: j.replace(/([A-Z])/g, " $1").trim(),
-      image: "/images/jobs/default.png",
+      image: "/icons/jobs/default.png",
       description: `${j.replace(/([A-Z])/g, " $1").trim()} role in the organization.`,
     },
   ]),
@@ -854,37 +854,37 @@ export const WeekdayDetails: Record<
 > = {
   Mon: {
     name: "Monday",
-    image: "/images/days/mon.png",
+    image: "/icons/days/mon.png",
     description: "First working day of the week.",
   },
   Tue: {
     name: "Tuesday",
-    image: "/images/days/tue.png",
+    image: "/icons/days/tue.png",
     description: "Second working day of the week.",
   },
   Wed: {
     name: "Wednesday",
-    image: "/images/days/wed.png",
+    image: "/icons/days/wed.png",
     description: "Midweek day.",
   },
   Thu: {
     name: "Thursday",
-    image: "/images/days/thu.png",
+    image: "/icons/days/thu.png",
     description: "Fourth working day of the week.",
   },
   Fri: {
     name: "Friday",
-    image: "/images/days/fri.png",
+    image: "/icons/days/fri.png",
     description: "Last working day of the week.",
   },
   Sat: {
     name: "Saturday",
-    image: "/images/days/sat.png",
+    image: "/icons/days/sat.png",
     description: "Weekend day, sometimes for activities.",
   },
   Sun: {
     name: "Sunday",
-    image: "/images/days/sun.png",
+    image: "/icons/days/sun.png",
     description: "Rest day or religious observance day.",
   },
 };

@@ -22,15 +22,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { CountriesContext } from "@/lib/data/locations";
 import { redirectContents } from "@/lib/hooks/redirect";
-import { AuthUserDto } from "@/lib/schema/user/auth-user-schema";
+import type { AuthUserDto } from "@/lib/schema/user/auth-user-schema";
 import {
-  onboardingDto,
+  type onboardingDto,
   OnboardingSchema,
 } from "@/lib/schema/user/update-user-schema";
-import { AuthContext, setAuthCookies } from "@/lib/utils/auth-context";
+import { type AuthContext, setAuthCookies } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTheme } from "next-themes";
