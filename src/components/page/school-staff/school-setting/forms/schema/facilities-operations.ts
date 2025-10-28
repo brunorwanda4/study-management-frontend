@@ -1,6 +1,4 @@
-// schemas/facilities-operations.ts
-
-import { AttendanceSystemSchema } from "@/lib/schema/school/school-schema";
+import { AttendanceSystemSchema } from "@/lib/schema/common-details-schema";
 import { z } from "zod";
 
 export const FacilitiesOperationsSchema = z.object({

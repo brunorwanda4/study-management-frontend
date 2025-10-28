@@ -1,15 +1,14 @@
 import {
   AddressSchema,
-  ContactSchema,
-  OptionSchema,
-  SocialMediaSchema,
-} from "@/lib/schema/common-details-schema";
-import {
   AffiliationTypeSchema,
   AttendanceSystemSchema,
+  ContactSchema,
+  OptionSchema,
   SchoolMemberSchema,
-  SchoolTypeEnum,
-} from "@/lib/schema/school/school-schema";
+  SchoolTypeSchema,
+  SocialMediaSchema,
+} from "@/lib/schema/common-details-schema";
+
 import { z } from "zod";
 
 export const CreateSchoolSchema = z.object({
@@ -22,7 +21,7 @@ export const CreateSchoolSchema = z.object({
   description: z.string().optional(),
 
   // Categorical fields
-  school_type: SchoolTypeEnum.optional(),
+  school_type: SchoolTypeSchema.optional(),
   // curriculum: z.array(OptionSchema).optional(),
   // education_level: z.array(OptionSchema).optional(),
   accreditation_number: z.string().optional(),

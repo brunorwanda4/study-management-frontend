@@ -26,13 +26,13 @@ const AuthLayoutImage = ({ lang, diction }: props) => {
     ));
 
     return (
-      <p className="happy-title-base text-3xl text-white text-center">
+      <p className=" font-semibold text-2xl text-white text-center">
         {splitSentence}
       </p>
     );
   };
   return (
-    <div className=" w-1/2 h-screen fixed">
+    <div className={cn("w-1/2 h-screen fixed", pathname === `/${lang}/auth/onboarding` && " w-1/3" )}>
       <div
         className={cn(
           "absolute z-50 top-0 items-center m-2 flex justify-between w-full",

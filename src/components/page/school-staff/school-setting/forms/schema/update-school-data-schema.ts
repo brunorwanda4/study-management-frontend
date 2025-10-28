@@ -1,13 +1,12 @@
 import {
   AddressSchema,
+  AttendanceSystemSchema,
   ContactSchema,
+  SchoolMemberSchema,
+  SchoolTypeSchema,
   SocialMediaSchema,
 } from "@/lib/schema/common-details-schema";
-import {
-  AttendanceSystemSchema,
-  SchoolMemberSchema,
-  SchoolTypeEnum,
-} from "@/lib/schema/school/school-schema";
+
 import z from "zod";
 
 export const SchoolIdentitySchema = z.object({
@@ -25,7 +24,7 @@ export const SchoolIdentitySchema = z.object({
 export type SchoolIdentityDto = z.infer<typeof SchoolIdentitySchema>;
 
 export const SchoolClassificationSchema = z.object({
-  schoolType: SchoolTypeEnum.optional(),
+  schoolType: SchoolTypeSchema.optional(),
   schoolMembers: SchoolMemberSchema.optional(), // Ensure this matches your SchoolMembers definition
   affiliation: z.string().optional(), // Or use AffiliationTypeEnum if applicable
   accreditationNumber: z.string().optional(),

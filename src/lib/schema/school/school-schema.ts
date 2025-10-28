@@ -1,21 +1,14 @@
 import {
-  AffiliationTypes,
-  AttendanceSystems,
-  schoolMembers,
-  schoolTypes,
-} from "@/lib/const/common-details-const";
-import {
   AddressSchema,
+  AffiliationTypeSchema,
+  AttendanceSystemSchema,
   ContactSchema,
+  SchoolMemberSchema,
+  SchoolTypeSchema,
   SocialMediaSchema,
 } from "@/lib/schema/common-details-schema";
 import { z } from "zod";
 
-export const SchoolMemberSchema = z.enum(schoolMembers);
-export const SchoolTypeEnum = z.enum(schoolTypes);
-export const AttendanceSystemSchema = z.enum(AttendanceSystems);
-
-export const AffiliationTypeSchema = z.enum(AffiliationTypes);
 
 export const SchoolAcademicCreation = z.object({
   totalClasses: z.number(),
@@ -36,7 +29,7 @@ export const SchoolSchema = z.object({
   name: z.string(),
   code: z.string().nullable().optional(),
   description: z.string().nullable().optional(),
-  school_type: SchoolTypeEnum.optional(),
+  school_type: SchoolTypeSchema.optional(),
 
   curriculum: z.array(z.string()).optional(),
   education_level: z.array(z.string()).optional(),

@@ -5,7 +5,7 @@ import { useTheme } from "next-themes";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 
 // Import Shadcn UI Components
 import { Button } from "@/components/ui/button";
@@ -45,10 +45,10 @@ import {
 } from "@/lib/context/school.context";
 import { useToast } from "@/lib/context/toast/ToastContext";
 import {
-  CreateSchool,
+  type CreateSchool,
   CreateSchoolSchema,
 } from "@/lib/schema/school/create-school-schema";
-import { AuthContext, setAuthCookies } from "@/lib/utils/auth-context";
+import { type AuthContext, setAuthCookies } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { useRouter } from "next/navigation";
 import MultipleSelector from "../../../ui/multiselect";

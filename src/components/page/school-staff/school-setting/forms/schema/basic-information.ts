@@ -1,9 +1,4 @@
-// schemas/basic-information.ts
-
-import {
-  SchoolMemberSchema,
-  SchoolTypeEnum,
-} from "@/lib/schema/school/school-schema";
+import { SchoolMemberSchema, SchoolTypeSchema } from "@/lib/schema/common-details-schema";
 import z from "zod";
 
 export const BasicInformationSchema = z.object({
@@ -17,7 +12,7 @@ export const BasicInformationSchema = z.object({
     .min(1, { message: "Username cannot be empty if provided" })
     .optional(),
   description: z.string().optional(),
-  school_type: SchoolTypeEnum.optional(),
+  school_type: SchoolTypeSchema.optional(),
   school_members: SchoolMemberSchema.optional(),
 });
 

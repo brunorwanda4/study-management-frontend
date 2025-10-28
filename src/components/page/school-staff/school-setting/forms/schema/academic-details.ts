@@ -1,4 +1,4 @@
-import { AffiliationTypeSchema } from "@/lib/schema/school/school-schema";
+import { AffiliationTypeSchema } from "@/lib/schema/common-details-schema";
 import { z } from "zod";
 
 export const AcademicDetailsSchema = z.object({
