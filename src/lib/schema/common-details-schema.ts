@@ -89,6 +89,13 @@ export const AgeSchema = z
 
 export type Age = z.infer<typeof AgeSchema>;
 
+export const commonDetailsSchema = z.object({
+  name: z.string().min(1, { message: "Name is required" }),
+  image : z.string().min(1, { message: "Image is required" }).optional(),
+  description: z.string().optional(),
+})
+export type CommonDetails = z.infer<typeof commonDetailsSchema>;
+
 export const GenderSchema = z.enum(genders);
 export type Gender = z.infer<typeof GenderSchema>;
 

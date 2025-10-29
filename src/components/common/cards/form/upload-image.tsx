@@ -23,6 +23,7 @@ interface Props {
   onChange: (value: string | null) => void;
   classname?: string;
   Classname?: string;
+  description?: string;
 }
 
 export default function UploadImage({
@@ -33,6 +34,7 @@ export default function UploadImage({
   onChange,
   classname,
   Classname,
+  description,
 }: Props) {
   const maxSize = maxSizeMB * 1024 * 1024;
 
@@ -55,6 +57,7 @@ export default function UploadImage({
   const [uploadedUrl, setUploadedUrl] = useState<string | null>(value || null);
   const [urlInput, setUrlInput] = useState("");
   const [isUrl, setIsUrl] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Convert selected file -> base64
   useEffect(() => {
@@ -62,7 +65,6 @@ export default function UploadImage({
     if (fileToUpload instanceof File) {
       const objectUrl = URL.createObjectURL(fileToUpload);
       setUploadedUrl(objectUrl);
-
       fileToBase64(fileToUpload).then((base64) => {
         onChange(base64);
       });
@@ -70,6 +72,7 @@ export default function UploadImage({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [files]);
 
+  // Keep internal URL state synced with prop value
   useEffect(() => {
     if (value !== uploadedUrl) {
       setUploadedUrl(value || null);
@@ -77,16 +80,37 @@ export default function UploadImage({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
+  // Error management
+  useEffect(() => {
+    if (validationErrors.length > 0) {
+      setErrorMessage(validationErrors[0]);
+    } else {
+      setErrorMessage(null);
+    }
+  }, [validationErrors]);
+
+  useEffect(() => {
+    if (uploadedUrl) {
+      setErrorMessage(null);
+    }
+  }, [uploadedUrl]);
+
+  useEffect(() => {
+    if (isUrl) {
+      setErrorMessage(null);
+    }
+  }, [isUrl]);
+
   const handleRemoveImage = () => {
     setUploadedUrl(null);
     onChange(null);
     if (files.length > 0) {
       removeFile(files[0].id);
     }
+    setErrorMessage(null);
   };
 
   const displayUrl = uploadedUrl || files[0]?.preview || null;
-  const allErrors = validationErrors;
 
   const handleIsUrl = () => {
     setIsUrl((state) => !state);
@@ -102,7 +126,7 @@ export default function UploadImage({
   return (
     <div
       className={cn(
-        "max-size-60 relative flex size-60 w-full max-w-lg flex-col gap-4 rounded-xl shadow-md",
+        "relative flex w-full max-w-lg flex-col gap-4 rounded-xl shadow-md",
         className,
       )}
     >
@@ -110,7 +134,7 @@ export default function UploadImage({
         {isUrl && !displayUrl ? (
           <div
             className={cn(
-              "border-input card data-[dragging=true]:border-primary relative grid h-full min-h-40 w-full cursor-pointer flex-col place-content-center items-center justify-center overflow-hidden rounded-xl border-2 border-dashed transition-all duration-300 ease-in-out",
+              "border-base-content/50 card data-[dragging=true]:border-primary relative grid h-40 w-full cursor-pointer flex-col place-content-center items-center justify-center overflow-hidden rounded-xl border border-dashed transition-all duration-300 ease-in-out",
               Classname,
             )}
           >
@@ -120,7 +144,7 @@ export default function UploadImage({
                 value={urlInput}
                 onChange={(e) => setUrlInput(e.target.value)}
                 placeholder="Or paste an image URL"
-                className="w-86 flex-grow"
+                className="w-86 grow"
                 aria-label="Image URL"
               />
               <Button
@@ -130,8 +154,9 @@ export default function UploadImage({
                 onClick={() => {
                   if (urlInput) {
                     setUploadedUrl(urlInput);
-                    onChange(urlInput); // already a normal URL
+                    onChange(urlInput); // direct URL
                     setUrlInput("");
+                    setErrorMessage(null);
                   }
                 }}
                 disabled={!urlInput}
@@ -159,9 +184,11 @@ export default function UploadImage({
             className={cn(
               isUrl
                 ? "min-h-0"
-                : "border-input card data-[dragging=true]:border-primary relative flex min-h-64 w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-xl border-2 border-dashed transition-all duration-300 ease-in-out",
-              { "bg-base-200 card border-solid": displayUrl },
-              { "hover:border-neutral card bg-base-100": !displayUrl },
+                : "border-base-content/50 card data-[dragging=true]:border-primary relative flex h-64 w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-xl border border-dashed transition-all duration-300 ease-in-out",
+              {
+                "bg-base-200 card border-solid": displayUrl,
+                "hover:border-neutral card bg-base-100": !displayUrl,
+              },
               disabled
                 ? "bg-base-300 card border-base-300 cursor-not-allowed border-solid hover:border-none"
                 : "",
@@ -181,48 +208,48 @@ export default function UploadImage({
                 src={displayUrl}
                 alt={files[0]?.file?.name || "Uploaded image"}
                 fill
+                unoptimized
                 className={cn("object-contain", classname)}
               />
             ) : (
-              <>
-                {!isUrl && !displayUrl && (
-                  <div className="flex flex-col items-center justify-center text-center">
-                    <ImageUpIcon
+              !isUrl &&
+              !displayUrl && (
+                <div className="flex flex-col items-center justify-center text-center">
+                  <ImageUpIcon
+                    className={cn(
+                      "mb-4 size-12 text-gray-400",
+                      disabled ? "text-neutral" : "",
+                    )}
+                  />
+                  <p className="mb-1.5 text-lg font-semibold">
+                    {description ? description : "Drop your image here"}
+                  </p>
+                  <p
+                    className={cn(
+                      "text-sm text-gray-500",
+                      disabled ? "text-neutral" : "",
+                    )}
+                  >
+                    or{" "}
+                    <span
                       className={cn(
-                        "mb-4 size-12 text-gray-400",
-                        disabled ? "text-neutral" : "",
-                      )}
-                    />
-                    <p className="mb-1.5 text-lg font-semibold text-gray-700">
-                      Drop your image here
-                    </p>
-                    <p
-                      className={cn(
-                        "text-sm text-gray-500",
-                        disabled ? "text-neutral" : "",
-                      )}
-                    >
-                      or{" "}
-                      <span
-                        className={cn(
-                          "text-base-content font-medium",
-                          disabled ? "text-neutral" : "",
-                        )}
-                      >
-                        click to browse
-                      </span>
-                    </p>
-                    <p
-                      className={cn(
-                        "mt-2 text-xs text-gray-400",
+                        "text-base-content font-medium",
                         disabled ? "text-neutral" : "",
                       )}
                     >
-                      Max file size: {maxSizeMB}MB
-                    </p>
-                  </div>
-                )}
-              </>
+                      click to browse
+                    </span>
+                  </p>
+                  <p
+                    className={cn(
+                      "mt-2 text-xs text-gray-400",
+                      disabled ? "text-neutral" : "",
+                    )}
+                  >
+                    Max file size: {maxSizeMB}MB
+                  </p>
+                </div>
+              )
             )}
           </div>
         )}
@@ -252,14 +279,14 @@ export default function UploadImage({
         )}
       </div>
 
-      {/* Error message */}
-      {allErrors.length > 0 && (
+      {/* Dynamic Error Message */}
+      {errorMessage && (
         <div
           className="bg-destructive/10 text-destructive flex items-center gap-2 rounded-md p-3 text-sm font-medium"
           role="alert"
         >
           <AlertCircleIcon className="size-5 shrink-0" />
-          <span>{allErrors[0]}</span>
+          <span>{errorMessage}</span>
         </div>
       )}
     </div>

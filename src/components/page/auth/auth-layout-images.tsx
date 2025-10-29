@@ -31,8 +31,11 @@ const AuthLayoutImage = ({ lang, diction }: props) => {
       </p>
     );
   };
+
+  const isOnboarding = new RegExp(`^/${lang}/auth/onboarding`).test(pathname);
+
   return (
-    <div className={cn("w-1/2 h-screen fixed", pathname === `/${lang}/auth/onboarding` && " w-1/3" )}>
+    <div className={cn("w-1/2 h-screen fixed", isOnboarding && " w-1/3")}>
       <div
         className={cn(
           "absolute z-50 top-0 items-center m-2 flex justify-between w-full",

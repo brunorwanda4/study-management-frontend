@@ -1,4 +1,4 @@
-import AppFooter from "@/components/page/application/app-fotter";
+import AppFooter from "@/components/page/application/app-footer";
 import {
   adminSidebarGroups,
   schoolStaffSidebarGroups,

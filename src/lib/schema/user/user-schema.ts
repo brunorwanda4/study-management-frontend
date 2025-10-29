@@ -28,3 +28,38 @@ export const UserModelSchema = z.object({
 });
 export type UserModel = z.infer<typeof UserModelSchema>;
 
+// Schema for user onboarding
+export const UserOnboardingSchema = z.object({
+  username: z
+    .string()
+    .min(3, { message: "Username must be at least 3 characters long" })
+    .max(30, { message: "Username cannot exceed 30 characters" })
+    .regex(/^[a-zA-Z0-9_]+$/, {
+      message: "Username can only contain letters, numbers, and underscores",
+    }),
+
+  role: userRoleSchema,
+
+  gender: GenderSchema,
+
+  image: z
+    .string()
+    .optional()
+    .refine(
+      (val) =>
+        !val || (val.startsWith("data:image/") && val.length < 2 * 1024 * 1024),
+      {
+        message: "Invalid image format or image too large (max 2MB)",
+      }
+    ),
+
+  phone: z
+    .string()
+    .min(10, { message: "Phone number must be at least 10 digits" })
+    .max(15, { message: "Phone number cannot exceed 15 digits" })
+    .regex(/^\+?\d+$/, {
+      message: "Phone number must contain only digits and may start with '+'",
+    }),
+});
+
+export type UserOnboarding = z.infer<typeof UserOnboardingSchema>;

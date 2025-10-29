@@ -1,5 +1,5 @@
 import OnboardingForm from "@/components/page/auth/forms/onboarding-form";
-import type { Locale } from "@/i18n";
+import { getDictionary, type Locale } from "@/i18n";
 import { authContext } from "@/lib/utils/auth-context";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
@@ -16,15 +16,16 @@ const OnboardingPage = async (props: Props) => {
   const { lang } = params;
   const auth = await authContext();
   if (!auth) redirect("/auth/login");
-
+  const diction = await getDictionary(lang);
   return (
     <div className=" ">
-      <div className="space-y-1 text-center">
-        <p>Help others understand you better. ☺️</p>
-        <h1 className="title-page">Complete Your Profile {auth.user.name}</h1>
-      </div>
+      <h1 className="title-page">Complete Your Profile {auth.user.name}</h1>
       <div className="mt-4">
-        <OnboardingForm auth={auth} lang={lang} />
+        <OnboardingForm
+          auth={auth}
+          lang={lang}
+          dictionary={diction.auth.onboarding.form}
+        />
       </div>
     </div>
   );

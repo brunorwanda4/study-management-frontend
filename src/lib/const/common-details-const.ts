@@ -1,4 +1,4 @@
-import type { AffiliationType, AgeGroup, AttendanceSystem, CertificationOrTraining, ClassType, CommunicationMethod, Department, EducationLevel, EmploymentType, Gender, JobTitle, JoinRole, JoinStatus, Language, LearningChallenge, ProfessionalGoal, Relationship, SchoolMember, SchoolStaffType, SchoolType, SpecialSupport, StudentStatus, StudyStyle, TeacherType, TeachingStyle, userRole, Weekday } from "@/lib/schema/common-details-schema";
+import type { AffiliationType, AgeGroup, AttendanceSystem, CertificationOrTraining, ClassType, CommonDetails, CommunicationMethod, Department, EducationLevel, EmploymentType, Gender, JobTitle, JoinRole, JoinStatus, Language, LearningChallenge, ProfessionalGoal, Relationship, SchoolMember, SchoolStaffType, SchoolType, SpecialSupport, StudentStatus, StudyStyle, TeacherType, TeachingStyle, userRole, Weekday } from "@/lib/schema/common-details-schema";
 
 /** ---------- USER ROLES ---------- */
 export const userRoles = [
@@ -10,7 +10,7 @@ export const userRoles = [
 
 export const UserRoleDetails: Record<
   userRole,
-  { name: string; image: string; description: string }
+ CommonDetails
 > = {
   STUDENT: {
     name: "Student",
@@ -42,7 +42,7 @@ export const genders = ["MALE", "FEMALE", "OTHER"] as const;
 
 export const GenderDetails: Record<
   Gender,
-  { name: string; image: string; description: string }
+ CommonDetails
 > = {
   MALE: {
     name: "Male",
@@ -71,7 +71,7 @@ export const schoolTypes = [
 
 export const SchoolTypeDetails: Record<
   SchoolType,
-  { name: string; image: string; description: string }
+ CommonDetails
 > = {
   Public: {
     name: "Public",
@@ -99,7 +99,7 @@ export const schoolMembers = ["Mixed", "Boys", "Girls"] as const;
 
 export const SchoolMemberDetails: Record<
   SchoolMember,
-  { name: string; image: string; description: string }
+ CommonDetails
 > = {
   Mixed: {
     name: "Mixed",
@@ -121,7 +121,7 @@ export const SchoolMemberDetails: Record<
 export const AttendanceSystems = ["Manual", "Online"] as const;
 export const AttendanceSystemDetails: Record<
   AttendanceSystem,
-  { name: string; image: string; description: string }
+ CommonDetails
 > = {
   Manual: {
     name: "Manual",
@@ -144,7 +144,7 @@ export const AffiliationTypes = [
 
 export const AffiliationTypeDetails: Record<
   AffiliationType,
-  { name: string; image: string; description: string }
+ CommonDetails
 > = {
   Government: {
     name: "Government",
@@ -177,7 +177,7 @@ export const StudentStatuses = [
 
 export const StudentStatusDetails: Record<
   StudentStatus,
-  { name: string; image: string; description: string }
+ CommonDetails
 > = {
   Active: {
     name: "Active",
@@ -205,7 +205,7 @@ export const SchoolStaffTypes = ["Director", "HeadOfStudies"] as const;
 
 export const SchoolStaffTypeDetails: Record<
   SchoolStaffType,
-  { name: string; image: string; description: string }
+ CommonDetails
 > = {
   Director: {
     name: "Director",
@@ -228,7 +228,7 @@ export const TeacherTypes = [
 
 export const TeacherTypeDetails: Record<
   TeacherType,
-  { name: string; image: string; description: string }
+ CommonDetails
 > = {
   Regular: {
     name: "Regular",
@@ -262,7 +262,7 @@ export const JoinStatusEnums = [
 
 export const JoinStatusDetails: Record<
   JoinStatus,
-  { name: string; image: string; description: string }
+ CommonDetails
 > = {
   Pending: {
     name: "Pending",
@@ -295,7 +295,7 @@ export const JoinRoleEnums = ["Teacher", "Student", "Staff"] as const;
 
 export const JoinRoleDetails: Record<
   JoinRole,
-  { name: string; image: string; description: string }
+ CommonDetails
 > = {
   Teacher: {
     name: "Teacher",
@@ -319,7 +319,7 @@ export const ClassTypes = ["Private", "School", "Public"] as const;
 
 export const ClassTypeDetails: Record<
   ClassType,
-  { name: string; image: string; description: string }
+ CommonDetails
 > = {
   Private: {
     name: "Private",
@@ -348,7 +348,7 @@ export const languages = [
 
 export const LanguageDetails: Record<
   Language,
-  { name: string; image: string; description: string }
+ CommonDetails
 > = {
   English: {
     name: "English",
@@ -388,7 +388,7 @@ export const StudyStyles = [
 
 export const StudyStyleDetails: Record<
   StudyStyle,
-  { name: string; image: string; description: string }
+ CommonDetails
 > = {
   Visual: {
     name: "Visual",
@@ -455,7 +455,7 @@ export const CommunicationMethods = [
 
 export const CommunicationMethodDetails: Record<
   CommunicationMethod,
-  { name: string; image: string; description: string }
+ CommonDetails
 > = {
   Chat: {
     name: "Chat",
@@ -524,7 +524,7 @@ export const Relationships = [
 
 export const RelationshipDetails: Record<
   Relationship,
-  { name: string; image: string; description: string }
+ CommonDetails
 > = Object.fromEntries(
   Relationships.map((r) => [
     r,
@@ -534,7 +534,7 @@ export const RelationshipDetails: Record<
       description: `${r.replace(/([A-Z])/g, " $1").trim()} related to or responsible for the student.`,
     },
   ]),
-) as Record<Relationship, { name: string; image: string; description: string }>;
+) as Record<Relationship,CommonDetails>;
 
 /** ---------- SPECIAL SUPPORT ---------- */
 export const SpecialSupports = [
@@ -552,7 +552,7 @@ export const SpecialSupports = [
 
 export const SpecialSupportDetails: Record<
   SpecialSupport,
-  { name: string; image: string; description: string }
+ CommonDetails
 > = Object.fromEntries(
   SpecialSupports.map((s) => [
     s,
@@ -564,7 +564,7 @@ export const SpecialSupportDetails: Record<
   ]),
 ) as Record<
   SpecialSupport,
-  { name: string; image: string; description: string }
+ CommonDetails
 >;
 
 /** ---------- LEARNING CHALLENGES ---------- */
@@ -585,7 +585,7 @@ export const LearningChallenges = [
 
 export const LearningChallengeDetails: Record<
   LearningChallenge,
-  { name: string; image: string; description: string }
+ CommonDetails
 > = Object.fromEntries(
   LearningChallenges.map((l) => [
     l,
@@ -597,7 +597,7 @@ export const LearningChallengeDetails: Record<
   ]),
 ) as Record<
   LearningChallenge,
-  { name: string; image: string; description: string }
+ CommonDetails
 >;
 
 /** ---------- EMPLOYMENT TYPES ---------- */
@@ -614,7 +614,7 @@ export const EmploymentTypes = [
 
 export const EmploymentTypeDetails: Record<
   EmploymentType,
-  { name: string; image: string; description: string }
+ CommonDetails
 > = Object.fromEntries(
   EmploymentTypes.map((e) => [
     e,
@@ -626,7 +626,7 @@ export const EmploymentTypeDetails: Record<
   ]),
 ) as Record<
   EmploymentType,
-  { name: string; image: string; description: string }
+ CommonDetails
 >;
 
 /** ---------- EDUCATION LEVELS ---------- */
@@ -646,7 +646,7 @@ export const EducationLevels = [
 
 export const EducationLevelDetails: Record<
   EducationLevel,
-  { name: string; image: string; description: string }
+ CommonDetails
 > = Object.fromEntries(
   EducationLevels.map((l) => [
     l,
@@ -658,7 +658,7 @@ export const EducationLevelDetails: Record<
   ]),
 ) as Record<
   EducationLevel,
-  { name: string; image: string; description: string }
+ CommonDetails
 >;
 
 /** ---------- CERTIFICATION / TRAINING ---------- */
@@ -679,7 +679,7 @@ export const CertificationOrTrainings = [
 
 export const CertificationDetails: Record<
   CertificationOrTraining,
-  { name: string; image: string; description: string }
+ CommonDetails
 > = Object.fromEntries(
   CertificationOrTrainings.map((c) => [
     c,
@@ -691,7 +691,7 @@ export const CertificationDetails: Record<
   ]),
 ) as Record<
   CertificationOrTraining,
-  { name: string; image: string; description: string }
+ CommonDetails
 >;
 
 /** ---------- TEACHING STYLES ---------- */
@@ -709,7 +709,7 @@ export const TeachingStyles = [
 
 export const TeachingStyleDetails: Record<
   TeachingStyle,
-  { name: string; image: string; description: string }
+ CommonDetails
 > = Object.fromEntries(
   TeachingStyles.map((t) => [
     t,
@@ -721,7 +721,7 @@ export const TeachingStyleDetails: Record<
   ]),
 ) as Record<
   TeachingStyle,
-  { name: string; image: string; description: string }
+ CommonDetails
 >;
 
 /** ---------- AGE GROUPS ---------- */
@@ -740,7 +740,7 @@ export const AgeGroups = [
 
 export const AgeGroupDetails: Record<
   AgeGroup,
-  { name: string; image: string; description: string }
+ CommonDetails
 > = Object.fromEntries(
   AgeGroups.map((a) => [
     a,
@@ -750,7 +750,7 @@ export const AgeGroupDetails: Record<
       description: `Applicable age or grade: ${a.replace(/([A-Z])/g, " $1").trim()}.`,
     },
   ]),
-) as Record<AgeGroup, { name: string; image: string; description: string }>;
+) as Record<AgeGroup,CommonDetails>;
 
 /** ---------- PROFESSIONAL GOALS ---------- */
 export const ProfessionalGoals = [
@@ -766,7 +766,7 @@ export const ProfessionalGoals = [
 
 export const ProfessionalGoalDetails: Record<
   ProfessionalGoal,
-  { name: string; image: string; description: string }
+ CommonDetails
 > = Object.fromEntries(
   ProfessionalGoals.map((p) => [
     p,
@@ -778,7 +778,7 @@ export const ProfessionalGoalDetails: Record<
   ]),
 ) as Record<
   ProfessionalGoal,
-  { name: string; image: string; description: string }
+ CommonDetails
 >;
 
 /** ---------- DEPARTMENTS ---------- */
@@ -797,7 +797,7 @@ export const Departments = [
 
 export const DepartmentDetails: Record<
   Department,
-  { name: string; image: string; description: string }
+ CommonDetails
 > = Object.fromEntries(
   Departments.map((d) => [
     d,
@@ -807,7 +807,7 @@ export const DepartmentDetails: Record<
       description: `Department of ${d.replace(/([A-Z])/g, " $1").trim()}.`,
     },
   ]),
-) as Record<Department, { name: string; image: string; description: string }>;
+) as Record<Department,CommonDetails>;
 
 /** ---------- JOB TITLES ---------- */
 export const JobTitles = [
@@ -825,7 +825,7 @@ export const JobTitles = [
 
 export const JobTitleDetails: Record<
   JobTitle,
-  { name: string; image: string; description: string }
+ CommonDetails
 > = Object.fromEntries(
   JobTitles.map((j) => [
     j,
@@ -835,7 +835,7 @@ export const JobTitleDetails: Record<
       description: `${j.replace(/([A-Z])/g, " $1").trim()} role in the organization.`,
     },
   ]),
-) as Record<JobTitle, { name: string; image: string; description: string }>;
+) as Record<JobTitle,CommonDetails>;
 
 /** ---------- WEEKDAYS ---------- */
 export const Weekdays = [
@@ -850,7 +850,7 @@ export const Weekdays = [
 
 export const WeekdayDetails: Record<
   Weekday,
-  { name: string; image: string; description: string }
+ CommonDetails
 > = {
   Mon: {
     name: "Monday",

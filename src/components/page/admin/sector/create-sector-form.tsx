@@ -129,7 +129,6 @@ const CreateSectorForm = ({ auth, onSectorCreated }: props) => {
                       onChange={field.onChange}
                       disabled={isPending}
                       className="size-40 w-full md:mb-4"
-                      Classname=" w-full min-h-44"
                       value={field.value?.toString() ?? null}
                     />
                   </FormControl>

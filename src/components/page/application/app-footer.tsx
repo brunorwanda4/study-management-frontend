@@ -1,9 +1,18 @@
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 
+interface props {
+  className?: string;
+}
 
-const AppFooter = () => {
+const AppFooter = ({ className }: props) => {
   return (
-    <footer className="footer footer-center text-base-content p-4 border-t border-base-content/ bg-base-100 bottom-0">
+    <footer
+      className={cn(
+        "footer footer-center text-base-content p-4 border-t border-base-content/50 bg-base-100 bottom-0",
+        className,
+      )}
+    >
       <aside>
         <p>
           Copyright © {new Date().getFullYear()} - All right reserved by{" "}
