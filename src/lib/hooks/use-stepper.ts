@@ -1,163 +1,242 @@
-"use client";
-
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+// "use client"
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 
 export type Step<T extends string = string> = {
   step: number;
   key: T;
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
 };
 
-/**
- * useStepper – A persistent, URL-synced step manager.
- *
- * ✅ Syncs with localStorage
- * ✅ Syncs with URL (?step=1&id=xxx)
- * ✅ Restores state after refresh
- * ✅ Detects when ready (isReady)
- * ✅ Supports backward navigation safely
- * ✅ Resets when ID changes
- */
-export function useStepper<T extends string>(
+export function useStepper<T extends string = string>(
   steps: readonly Step<T>[],
-  storageKey?: string,
+  storageKey?: string, // when provided we persist highest step here
 ) {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // --- STATE ---
+  const maxStep = Math.max(1, steps.length);
+
+  const clamp = useCallback(
+    (n: number) => {
+      const i = Number.isFinite(n) ? Math.floor(n) : 1;
+      return Math.min(Math.max(1, i), maxStep);
+    },
+    [maxStep],
+  );
+
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [idParam, setIdParam] = useState<string | null>(null);
-  const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [isReady, setIsReady] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
 
-  // --- INITIALIZE from URL or storage ---
-  useEffect(() => {
-    if (typeof window === "undefined") return;
+  // --- init: read URL and localStorage (if provided) ---
+  const initStepper = useCallback(() => {
+    if (typeof window === "undefined" || isInitialized) return;
 
-    const urlStep = parseInt(searchParams.get("step") || "1", 10);
-    const urlId = searchParams.get("id");
+    const params = new URLSearchParams(window.location.search);
+    const urlStep = clamp(Number(params.get("step") || "1"));
+    const urlId = params.get("id") || null;
 
-    let storedCompleted: number[] = [];
-    let storedId: string | null = null;
-
+    let initialStep = urlStep;
+    // try read stored highest if storageKey provided
     if (storageKey) {
       try {
-        const stored = localStorage.getItem(storageKey);
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          storedCompleted = parsed.completedSteps || [];
-          storedId = parsed.id || null;
+        const raw = localStorage.getItem(storageKey);
+        if (raw) {
+          const parsed = JSON.parse(raw) as {
+            highestStep?: number;
+            id?: string | null;
+          } | null;
+          const storedHighest = parsed?.highestStep ?? 0;
+          const storedId = parsed?.id ?? null;
+
+          // if different id in URL -> reset progress for this key
+          const sameId = !urlId || !storedId || urlId === storedId;
+          if (sameId) {
+            // restore the higher of urlStep or storedHighest
+            initialStep = clamp(Math.max(urlStep, storedHighest || 1));
+            // preserve stored id if any, prefer urlId
+            // if no urlId but storedId exists, keep it in state (useful if you want to re-save)
+            setIdParam(urlId ?? storedId);
+          } else {
+            // different instance: reset stored info to url values
+            localStorage.setItem(
+              storageKey,
+              JSON.stringify({ highestStep: urlStep, id: urlId }),
+            );
+            initialStep = urlStep;
+            setIdParam(urlId);
+          }
+        } else {
+          // nothing stored
+          initialStep = urlStep;
+          setIdParam(urlId);
         }
       } catch {
-        // ignore corrupted storage
+        // parse error -> ignore & fall back to URL
+        initialStep = urlStep;
+        setIdParam(urlId);
       }
-    }
-
-    // If a different ID is in the URL → reset progress
-    if (urlId && urlId !== storedId) {
-      setCompletedSteps([]);
-      setCurrentStep(urlStep <= steps.length ? urlStep : 1);
-      setIdParam(urlId);
-      setIsReady(true);
-      return;
-    }
-
-    // Use URL step if valid, otherwise fallback to stored progress
-    if (urlStep && urlStep <= steps.length) {
-      setCurrentStep(urlStep);
-    } else if (storedCompleted.length) {
-      setCurrentStep(Math.max(...storedCompleted) + 1);
     } else {
-      setCurrentStep(1);
+      // no storage key requested -> just rely on URL
+      setIdParam(urlId);
+      initialStep = urlStep;
     }
 
-    setIdParam(urlId || storedId || null);
-    setCompletedSteps(storedCompleted);
+    setCurrentStep(initialStep);
     setIsReady(true);
-  }, [storageKey, searchParams, steps.length]);
+    setIsInitialized(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isInitialized, clamp, storageKey]);
 
-  // --- SAVE to localStorage ---
+  // --- keep in sync with browser back/forward via useSearchParams ---
   useEffect(() => {
-    if (!isReady || !storageKey || typeof window === "undefined") return;
-    localStorage.setItem(
-      storageKey,
-      JSON.stringify({
-        completedSteps,
-        id: idParam,
-      }),
-    );
-  }, [completedSteps, idParam, storageKey, isReady]);
+    if (!isInitialized) return;
+    const s = Number(searchParams?.get("step") || "1");
+    const id = searchParams?.get("id") || null;
+    const clamped = clamp(s);
 
-  // --- SYNC URL with current state ---
+    setCurrentStep((prev) => (prev !== clamped ? clamped : prev));
+    setIdParam((prev) => (prev !== id ? id : prev));
+  }, [searchParams, clamp, isInitialized]);
+
+  // --- update URL helper (replace to avoid spamming history) ---
+  const updateUrl = useCallback(
+    (step: number, id?: string | null) => {
+      const params = new URLSearchParams(window.location.search);
+      params.set("step", String(step));
+      if (id) params.set("id", id);
+      else params.delete("id");
+
+      const qs = params.toString();
+      router.replace(`${pathname}${qs ? `?${qs}` : ""}`);
+    },
+    [router, pathname],
+  );
+
+  // --- persist highestStep to localStorage whenever it increases ---
   useEffect(() => {
-    if (!isReady) return;
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("step", String(currentStep));
-    if (idParam) params.set("id", idParam);
-    else params.delete("id");
+    if (!isInitialized || !storageKey) return;
 
-    router.replace(`?${params.toString()}`);
-  }, [currentStep, idParam, router, searchParams, isReady]);
+    try {
+      const raw = localStorage.getItem(storageKey);
+      const parsed = raw
+        ? (JSON.parse(raw) as { highestStep?: number; id?: string | null })
+        : null;
+      const storedHighest = parsed?.highestStep ?? 0;
+      const storedId = parsed?.id ?? null;
 
-  // --- STEP CONTROL FUNCTIONS ---
-  function setStep(step: number, id?: string) {
-    const maxCompleted = completedSteps.length
-      ? Math.max(...completedSteps)
-      : 0;
-
-    // Going backward → always allow (no completed change)
-    if (step < currentStep) {
-      setCurrentStep(step);
-      if (id) setIdParam(id);
-      return;
-    }
-
-    // Going forward → only allow one ahead of completed
-    if (step <= maxCompleted + 1 && step <= steps.length) {
-      setCurrentStep(step);
-      if (id) setIdParam(id);
-    }
-  }
-
-  function markStepCompleted(step: number, autoNext = true, id?: string) {
-    setCompletedSteps((prev) => {
-      const updated = Array.from(new Set([...prev, step]));
-      // If last step, mark all steps as completed
-      if (step === steps.length) {
-        const allSteps = steps.map((s) => s.step);
-        return Array.from(new Set([...updated, ...allSteps]));
+      // If currentStep is higher than storedHighest -> persist new highest and idParam
+      if (currentStep > (storedHighest || 0)) {
+        localStorage.setItem(
+          storageKey,
+          JSON.stringify({ highestStep: currentStep, id: idParam }),
+        );
+      } else {
+        // keep existing storedHighest, but ensure stored id aligns with idParam if present
+        if (idParam && idParam !== storedId) {
+          localStorage.setItem(
+            storageKey,
+            JSON.stringify({
+              highestStep: storedHighest || currentStep,
+              id: idParam,
+            }),
+          );
+        }
       }
-      return updated;
-    });
+    } catch {
+      // ignore storage failures (e.g. private mode)
+    }
+  }, [currentStep, idParam, isInitialized, storageKey]);
 
-    if (autoNext && step < steps.length) {
-      setCurrentStep(step + 1);
+  // --- controls: setStep/next/prev/markStepCompleted/reset ---
+  const setStep = useCallback(
+    (step: number, id?: string) => {
+      if (!isInitialized) return;
+      const clamped = clamp(step);
+      setCurrentStep(clamped);
+      if (typeof id !== "undefined") setIdParam(id ?? null);
+      updateUrl(clamped, typeof id !== "undefined" ? (id ?? null) : idParam);
+    },
+    [clamp, isInitialized, updateUrl, idParam],
+  );
+
+  const next = useCallback(
+    (id?: string) => {
+      if (!isInitialized) return;
+      setCurrentStep((prev) => {
+        const nxt = Math.min(prev + 1, maxStep);
+        if (typeof id !== "undefined") setIdParam(id ?? null);
+        updateUrl(nxt, typeof id !== "undefined" ? (id ?? null) : idParam);
+        return nxt;
+      });
+    },
+    [isInitialized, maxStep, updateUrl, idParam],
+  );
+
+  const prev = useCallback(() => {
+    if (!isInitialized) return;
+    setCurrentStep((prev) => {
+      const p = Math.max(prev - 1, 1);
+      updateUrl(p, idParam);
+      return p;
+    });
+  }, [isInitialized, updateUrl, idParam]);
+
+  // markStepCompleted: mark the step as done by optionally advancing step
+  // we don't keep a completed array — persistence is only the highest step reached
+  const markStepCompleted = useCallback(
+    (step: number, autoNext = true, id?: string) => {
+      if (!isInitialized) return;
+      const clamped = clamp(step);
+
+      if (typeof id !== "undefined") setIdParam(id ?? null);
+
+      // If autoNext, advance to next (and localStorage effect will persist if higher)
+      if (autoNext && clamped < maxStep) {
+        const nxt = clamped + 1;
+        setCurrentStep(nxt);
+        updateUrl(nxt, typeof id !== "undefined" ? (id ?? null) : idParam);
+      } else {
+        // stay on the clamped step
+        setCurrentStep(clamped);
+        updateUrl(clamped, typeof id !== "undefined" ? (id ?? null) : idParam);
+      }
+    },
+    [clamp, isInitialized, maxStep, updateUrl, idParam],
+  );
+
+  const reset = useCallback(() => {
+    if (!isInitialized) return;
+    setCurrentStep(1);
+    setIdParam(null);
+
+    // remove stored progress if we used storageKey
+    if (storageKey) {
+      try {
+        localStorage.removeItem(storageKey);
+      } catch {
+        /* ignore */
+      }
     }
 
-    if (id) setIdParam(id);
-  }
-
-  function resetStepper() {
-    setCurrentStep(1);
-    setCompletedSteps([]);
-    setIdParam(null);
-    setIsReady(false);
-    if (storageKey) localStorage.removeItem(storageKey);
-    router.push(`?step=1`);
-    setTimeout(() => setIsReady(true), 100); // re-enable after reset
-  }
+    updateUrl(1, null);
+  }, [isInitialized, updateUrl, storageKey]);
 
   return {
     currentStep,
     currentKey: steps.find((s) => s.step === currentStep)?.key,
-    completedSteps,
     idParam,
+    isReady,
+    isInitialized,
+    initStepper,
     setStep,
+    next,
+    prev,
     markStepCompleted,
-    resetStepper,
-    isReady, // ✅ new flag to ensure hook initialized
-  };
+    reset,
+  } as const;
 }

@@ -1,4 +1,4 @@
-import { SubjectTypeSchema } from "@/lib/schema/admin/subjects/subject-category";
+import { SubjectTypeSchema } from "@/lib/schema/common-details-schema";
 import { z } from "zod";
 
 export const CreateLearningOutcomeFormSchema = z.object({

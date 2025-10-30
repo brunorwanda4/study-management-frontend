@@ -1,9 +1,9 @@
 import {
+  OptionSchema,
   SubjectAuthSchema,
   SubjectCategorySchema,
   SubjectLevelSchema,
-} from "@/lib/schema/admin/subjects/subject-category";
-import { OptionSchema } from "@/lib/schema/common-details-schema";
+} from "@/lib/schema/common-details-schema";
 import { z } from "zod";
 
 export const CreateMainSubjectFormSchema = z

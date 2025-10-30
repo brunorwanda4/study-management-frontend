@@ -1,81 +1,113 @@
-import { useId } from "react"
+"use client";
 
-import { Checkbox } from "@/components/ui/checkbox"
-import { Label } from "@/components/ui/label"
+import MyImage from "@/components/common/myImage";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
+import { useId } from "react";
 
-export default function CheckboxInput() {
-  const id = useId()
-  return (
-    <div className="relative flex w-full items-start gap-2 rounded-md border border-input p-4 shadow-xs outline-none has-data-[state=checked]:border-primary/50">
-      <Checkbox
-        id={id}
-        className="order-1 after:absolute after:inset-0"
-        aria-describedby={`${id}-description`}
-      />
-      <div className="flex grow items-center gap-3">
-        <svg
-          className="shrink-0"
-          xmlns="http://www.w3.org/2000/svg"
-          width={32}
-          height={32}
+import type { CommonDetails } from "@/lib/schema/common-details-schema";
+
+interface CheckboxInputProps {
+  items: Record<string, CommonDetails>;
+  values?: string[]; // multiple selection
+  onChange?: (values: string[]) => void;
+  showDescription?: boolean;
+  showTooltip?: boolean;
+  className?: string; // items in component name and image
+  classname?: string; // for all component
+  disabled?: boolean;
+}
+
+export default function CheckboxInput({
+  items,
+  values = [],
+  onChange,
+  showDescription = false,
+  showTooltip = false,
+  className,
+  classname,
+  disabled,
+}: CheckboxInputProps) {
+  const id = useId();
+
+  // Handles checkbox toggle logic
+  const toggleValue = (key: string) => {
+    const updated = values.includes(key)
+      ? values.filter((v) => v !== key)
+      : [...values, key];
+    onChange?.(updated);
+  };
+
+  const Content = ({ item, keyId }: { item: CommonDetails; keyId: string }) => (
+    <div className={cn("flex gap-4 items-center cursor-pointer", className)}>
+      {item.image && (
+        <MyImage
+          src={item.image}
+          className={cn(showDescription ? "size-12" : "size-6")}
+          role="ICON"
           aria-hidden="true"
-        >
-          <circle cx="16" cy="16" r="16" fill="#121212" />
-          <g clipPath="url(#sb-a)">
-            <path
-              fill="url(#sb-b)"
-              d="M17.63 25.52c-.506.637-1.533.287-1.545-.526l-.178-11.903h8.003c1.45 0 2.259 1.674 1.357 2.81l-7.637 9.618Z"
-            />
-            <path
-              fill="url(#sb-c)"
-              fillOpacity=".2"
-              d="M17.63 25.52c-.506.637-1.533.287-1.545-.526l-.178-11.903h8.003c1.45 0 2.259 1.674 1.357 2.81l-7.637 9.618Z"
-            />
-            <path
-              fill="#3ECF8E"
-              d="M14.375 6.367c.506-.638 1.532-.289 1.544.525l.078 11.903H8.094c-1.45 0-2.258-1.674-1.357-2.81l7.638-9.618Z"
-            />
-          </g>
-          <defs>
-            <linearGradient
-              id="sb-b"
-              x1="15.907"
-              x2="23.02"
-              y1="15.73"
-              y2="18.713"
-              gradientUnits="userSpaceOnUse"
-            >
-              <stop stopColor="#249361" />
-              <stop offset="1" stopColor="#3ECF8E" />
-            </linearGradient>
-            <linearGradient
-              id="sb-c"
-              x1="12.753"
-              x2="15.997"
-              y1="11.412"
-              y2="17.519"
-              gradientUnits="userSpaceOnUse"
-            >
-              <stop />
-              <stop offset="1" stopOpacity="0" />
-            </linearGradient>
-            <clipPath id="sb-a">
-              <path fill="#fff" d="M6.354 6h19.292v20H6.354z" />
-            </clipPath>
-          </defs>
-        </svg>
-        <div className="grid gap-2">
-          <Label htmlFor={id}>
-            Label{" "}
-            <span className="text-xs leading-[inherit] font-normal text-muted-foreground">
-              (Sublabel)
-            </span>
-          </Label>
-          <p id={`${id}-description`} className="text-xs text-muted-foreground">
-            A short description goes here.
-          </p>
-        </div>
+          classname="object-contain"
+        />
+      )}
+      <div>
+        <Label htmlFor={keyId}>{item.name}</Label>
+        {showDescription && (
+          <p className="text-sm text-muted-foreground">{item.description}</p>
+        )}
       </div>
     </div>
-  )
+  );
+
+  return (
+    <TooltipProvider delayDuration={100}>
+      <div className={cn("grid grid-cols-2 gap-4", classname)}>
+        {Object.entries(items).map(([key, item]) => {
+          const keyId = `${id}-${key}`;
+          const isChecked = values.includes(key);
+          const content = <Content item={item} keyId={keyId} />;
+
+          return (
+            <div
+              key={keyId}
+              className={cn(
+                "relative flex flex-col gap-4 rounded-md border border-base-content/50 p-2 shadow-xs outline-none",
+                isChecked && "border-primary/50",
+              )}
+            >
+              <div className="flex justify-between gap-2">
+                <Checkbox
+                  disabled={disabled}
+                  id={keyId}
+                  checked={isChecked}
+                  onCheckedChange={() => toggleValue(key)}
+                  className="order-1 after:absolute after:inset-0 top-2 w-fit"
+                />
+                {showTooltip && item.description && !showDescription ? (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="w-full">{content}</div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p className="max-w-xs text-sm text-muted-foreground">
+                        {item.description}
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                ) : (
+                  content
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </TooltipProvider>
+  );
 }

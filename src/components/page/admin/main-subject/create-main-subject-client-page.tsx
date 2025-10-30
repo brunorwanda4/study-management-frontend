@@ -29,13 +29,13 @@ import CreateSubjectGradingSchemaDefaultButton from "@/components/page/admin/sub
 import CreateSubjectGradingDialog from "@/components/page/admin/subjects/subject-grading/create-subject-grading-schema-dialog";
 import CreateSubjectTopicDialog from "@/components/page/admin/subjects/subject-topic/create-subject-topic-dialog";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
-import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
-import {
+import type { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
+import type {
   LearningOutcome,
   LearningOutcomeWithOthers,
 } from "@/lib/schema/admin/subjects/subject-learning-outcome-schema/learning-outcome-schema";
-import { SubjectProgressTrackingConfig } from "@/lib/schema/admin/subjects/subject-progress-tracking-config-schema/subject-progress-tracking-config-schema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { SubjectProgressTrackingConfig } from "@/lib/schema/admin/subjects/subject-progress-tracking-config-schema/subject-progress-tracking-config-schema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { ArrowRight } from "lucide-react";
 

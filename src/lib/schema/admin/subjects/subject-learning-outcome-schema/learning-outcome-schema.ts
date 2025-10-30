@@ -1,6 +1,6 @@
-import { SubjectTypeSchema } from "@/lib/schema/admin/subjects/subject-category";
 import { SubjectCompetencyBlockSchema } from "@/lib/schema/admin/subjects/subject-competency-block";
 import { SubjectTopicWithOthersSchema } from "@/lib/schema/admin/subjects/subject-topic-schema/subject-topic-schema";
+import { SubjectTypeSchema } from "@/lib/schema/common-details-schema";
 import { z } from "zod";
 
 const LearningOutcomeBaseSchema = z.object({

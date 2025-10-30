@@ -2,7 +2,7 @@ import {
   SubjectAuthSchema,
   SubjectCategorySchema,
   SubjectLevelSchema,
-} from "@/lib/schema/admin/subjects/subject-category";
+} from "@/lib/schema/common-details-schema";
 import { z } from "zod";
 
 export const MainSubjectSchema = z.object({

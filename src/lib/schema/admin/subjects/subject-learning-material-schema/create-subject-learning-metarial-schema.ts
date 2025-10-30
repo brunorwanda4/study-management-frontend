@@ -1,7 +1,7 @@
 import {
   SubjectLearningMaterialRoleEnum,
   SubjectMaterialTypeEnum,
-} from "@/lib/schema/admin/subjects/subject-category";
+} from "@/lib/schema/common-details-schema";
 import z from "zod";
 
 export const CreateSubjectLearningMaterialSchema = z.object({

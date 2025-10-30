@@ -22,6 +22,14 @@ import {
   SpecialSupports,
   StudentStatuses,
   StudyStyles,
+  subjectAuths,
+  SubjectCategories,
+  subjectGradingTypes,
+  SubjectLearningMaterialRoles,
+  SubjectLevels,
+  SubjectMaterialTypes,
+  SubjectProgressTrackingConfigTypes,
+  SubjectTypes,
   TeacherTypes,
   TeachingStyles,
   userRoles,
@@ -51,6 +59,8 @@ export const AddressSchema = z.object({
     })
     .optional(),
 });
+
+export type address = z.infer<typeof AddressSchema>;
 
 export const AgeSchema = z
   .object({
@@ -91,9 +101,9 @@ export type Age = z.infer<typeof AgeSchema>;
 
 export const commonDetailsSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
-  image : z.string().min(1, { message: "Image is required" }).optional(),
+  image: z.string().min(1, { message: "Image is required" }).optional(),
   description: z.string().optional(),
-})
+});
 export type CommonDetails = z.infer<typeof commonDetailsSchema>;
 
 export const GenderSchema = z.enum(genders);
@@ -134,12 +144,14 @@ export const OptionSchema = z
 
 export type Option = z.infer<typeof OptionSchema>;
 
-
-
 // ------------------ TimeRange ------------------
 export const TimeRangeSchema = z.object({
-  start: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid start time format (HH:MM)"),
-  end: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid end time format (HH:MM)"),
+  start: z
+    .string()
+    .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid start time format (HH:MM)"),
+  end: z
+    .string()
+    .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid end time format (HH:MM)"),
 });
 
 export type TimeRange = z.infer<typeof TimeRangeSchema>;
@@ -217,7 +229,9 @@ export const EducationLevelSchema = z.enum(EducationLevels);
 export type EducationLevel = z.infer<typeof EducationLevelSchema>;
 
 export const CertificationOrTrainingSchema = z.enum(CertificationOrTrainings);
-export type CertificationOrTraining = z.infer<typeof CertificationOrTrainingSchema>;
+export type CertificationOrTraining = z.infer<
+  typeof CertificationOrTrainingSchema
+>;
 
 export const TeachingStyleSchema = z.enum(TeachingStyles);
 export type TeachingStyle = z.infer<typeof TeachingStyleSchema>;
@@ -233,3 +247,48 @@ export type Department = z.infer<typeof DepartmentSchema>;
 
 export const JobTitleSchema = z.enum(JobTitles);
 export type JobTitle = z.infer<typeof JobTitleSchema>;
+
+// Subject
+
+// Subject Category
+export const SubjectCategorySchema = z
+  .enum(SubjectCategories)
+  .or(z.string())
+  .transform((val) => val as any);
+
+export type SubjectCategory = z.infer<typeof SubjectCategorySchema>;
+
+// Subject Level
+export const SubjectLevelSchema = z.enum(SubjectLevels);
+
+export type SubjectLevel = z.infer<typeof SubjectLevelSchema>;
+
+// Subject Auth
+export const SubjectAuthSchema = z.enum(subjectAuths);
+export type SubjectAuth = z.infer<typeof SubjectAuthSchema>;
+
+// Subject Type
+export const SubjectTypeSchema = z.enum(SubjectTypes);
+export type SubjectType = z.infer<typeof SubjectTypeSchema>;
+
+export const SubjectProgressTrackingConfigTypeSchema = z.enum(
+  SubjectProgressTrackingConfigTypes,
+);
+
+export type SubjectProgressTrackingConfigType = z.infer<
+  typeof SubjectProgressTrackingConfigTypeSchema
+>;
+
+export const SubjectLearningMaterialRoleEnum = z.enum(
+  SubjectLearningMaterialRoles,
+);
+export type SubjectLearningMaterialRole = z.infer<
+  typeof SubjectLearningMaterialRoleEnum
+>;
+
+export const SubjectMaterialTypeEnum = z.enum(SubjectMaterialTypes);
+export type SubjectMaterialType = z.infer<typeof SubjectMaterialTypeEnum>;
+
+export const SubjectGradingTypeEnum = z.enum(subjectGradingTypes);
+
+export type SubjectGradingType = z.infer<typeof SubjectGradingTypeEnum>;

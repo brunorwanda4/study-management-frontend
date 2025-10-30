@@ -23,6 +23,7 @@ import {
   GenderDetails,
   UserRoleDetails,
 } from "@/lib/const/common-details-const";
+import { useToast } from "@/lib/context/toast/ToastContext";
 import { redirectContents } from "@/lib/hooks/redirect";
 import type { AuthUserDto } from "@/lib/schema/user/auth-user-schema";
 import {
@@ -47,6 +48,7 @@ const OnboardingForm = ({ lang, auth, dictionary }: Props) => {
   const [success, setSuccess] = useState<undefined | null | string>("");
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const { showToast } = useToast();
   const form = useForm<UserOnboarding>({
     resolver: zodResolver(UserOnboardingSchema),
     defaultValues: {
@@ -75,7 +77,12 @@ const OnboardingForm = ({ lang, auth, dictionary }: Props) => {
             update.data.id,
             update.data.schoolAccessToken,
           );
-          setSuccess("Thanks to help us to know you better! ☺️");
+          setSuccess("Your basic info profile ☺️");
+          showToast({
+            title: "Your basic info profile ☺️",
+            description: " Thanks to help us to know you better!",
+            type: "success",
+          });
           if (update.data.role) {
             if (update.data.role === "STUDENT") {
               router.push(`/${lang}/auth/onboarding/student`);
@@ -88,7 +95,14 @@ const OnboardingForm = ({ lang, auth, dictionary }: Props) => {
             }
           }
         }
-      } else if (update.error) {
+      } else if (update.message) {
+        showToast({
+          title: "Some thing went wrong 😥",
+          description: update.message,
+          type: "error",
+        });
+        setError(update.message);
+      } else {
         setError(`${update.error}`);
       }
     });
@@ -144,6 +158,7 @@ const OnboardingForm = ({ lang, auth, dictionary }: Props) => {
                           defaultCountry="RW"
                           placeholder="Enter phone number"
                           onChange={(value) => field.onChange(value ?? "")}
+                          disabled={isPending}
                         />
                       )}
                     />
@@ -165,6 +180,7 @@ const OnboardingForm = ({ lang, auth, dictionary }: Props) => {
                         dictionary.username.placeholder ?? "Enter your username"
                       }
                       {...field}
+                      disabled={isPending}
                     />
                   </FormControl>
                   <FormMessage />
@@ -185,6 +201,7 @@ const OnboardingForm = ({ lang, auth, dictionary }: Props) => {
                       items={GenderDetails}
                       value={field.value}
                       onChange={field.onChange}
+                      disabled={isPending}
                     />
                   </FormControl>
                   <FormMessage />
@@ -206,6 +223,7 @@ const OnboardingForm = ({ lang, auth, dictionary }: Props) => {
                       )}
                       value={field.value}
                       onChange={field.onChange}
+                      disabled={isPending}
                     />
                   </FormControl>
                   <FormMessage />

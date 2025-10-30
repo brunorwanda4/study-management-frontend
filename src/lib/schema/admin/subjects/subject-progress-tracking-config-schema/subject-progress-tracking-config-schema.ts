@@ -1,4 +1,4 @@
-import { SubjectProgressTrackingConfigTypeSchema } from "@/lib/schema/admin/subjects/subject-category";
+import { SubjectProgressTrackingConfigTypeSchema } from "@/lib/schema/common-details-schema";
 import { z } from "zod";
 
 // Threshold Schemas

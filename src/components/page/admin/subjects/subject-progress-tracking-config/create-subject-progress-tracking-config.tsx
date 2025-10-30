@@ -23,12 +23,12 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/lib/context/toast/ToastContext";
 import type { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
-import type { SubjectProgressTrackingConfigType } from "@/lib/schema/admin/subjects/subject-category";
 import {
   type CreateSubjectProgressTrackingConfig,
   CreateSubjectProgressTrackingConfigSchema,
 } from "@/lib/schema/admin/subjects/subject-progress-tracking-config-schema/create-subject-progress-tracking-config-schema";
 import type { SubjectProgressTrackingConfig } from "@/lib/schema/admin/subjects/subject-progress-tracking-config-schema/subject-progress-tracking-config-schema";
+import type { SubjectProgressTrackingConfigType } from "@/lib/schema/common-details-schema";
 import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { zodResolver } from "@hookform/resolvers/zod";

@@ -1,6 +1,6 @@
 import { MainSubjectSchema } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
-import { SubjectCategorySchema } from "@/lib/schema/admin/subjects/subject-category";
 import { ClassSchema } from "@/lib/schema/class/class-schema";
+import { SubjectCategorySchema } from "@/lib/schema/common-details-schema";
 import { TeacherSchema } from "@/lib/schema/school/teacher-schema";
 import { z } from "zod";
 

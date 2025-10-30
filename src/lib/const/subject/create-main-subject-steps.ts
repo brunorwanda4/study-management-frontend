@@ -24,6 +24,3 @@ export const createMainSubjectSteps = [
     description: "Set grading rules",
   },
 ] as const;
-
-export type CreateMainSubjectStepKey =
-  (typeof createMainSubjectSteps)[number]["key"];

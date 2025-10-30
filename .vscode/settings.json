@@ -1,6 +1,6 @@
 {
   // Custom dictionary (optional)
-  "cSpell.words": ["cmdk", "SCHOOLSTAFF", "TVET"],
+  "cSpell.words": ["cmdk", "intereset", "SCHOOLSTAFF", "TVET"],
 
   // --- Biome formatter setup ---
   "editor.defaultFormatter": "biomejs.biome",

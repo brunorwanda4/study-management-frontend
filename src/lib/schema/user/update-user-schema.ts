@@ -1,26 +1,99 @@
 import {
   AddressSchema,
+  AgeGroupSchema,
   AgeSchema,
+  CertificationOrTrainingSchema,
+  CommunicationMethodSchema,
+  DailyAvailabilitySchema,
+  DepartmentSchema,
+  EducationLevelSchema,
+  EmploymentTypeSchema,
   GenderSchema,
+  ImageSchema,
+  JobTitleSchema,
+  LanguageSchema,
+  LearningChallengeSchema,
+  ProfessionalGoalSchema,
+  SocialMediaSchema,
+  SpecialSupportSchema,
+  StudyStyleSchema,
+  SubjectCategorySchema,
   userRoleSchema,
 } from "@/lib/schema/common-details-schema";
+import { GuardianInfoSchema } from "@/lib/schema/parent/guardian-schema";
 import z from "zod";
 
+// =========================================================
+// 🔹 UpdateUserSchema (Frontend form validation / PATCH)
+// =========================================================
 export const UpdateUserSchema = z.object({
+  // 🔹 Basic Info
   name: z.string().optional(),
   email: z.string().email().optional(),
   username: z.string().optional(),
   password_hash: z.string().optional(),
   role: userRoleSchema.optional(),
+
+  // 🔹 Profile Image
+  image_id: z.string().optional(),
   image: z.string().optional(),
+  background_images: z.array(ImageSchema).optional(),
+
+  // 🔹 Contact
   phone: z.string().optional(),
+
+  // 🔹 Personal Details
   gender: GenderSchema.optional(),
   age: AgeSchema.optional(),
+
+  // 🔹 Location & Social
   address: AddressSchema.optional(),
+  social_media: z.array(SocialMediaSchema).optional(),
+
+  // 🔹 School Relationships
   current_school_id: z.string().optional(),
-  disable: z.boolean().optional(),
+  schools: z.array(z.string()).optional(),
+  accessible_classes: z.array(z.string()).optional(),
+
+  // 🔹 Profile
   bio: z.string().optional(),
+  disable: z.boolean().optional(),
+
+  // 🔹 Academic Interests
+  favorite_subjects_category: z.array(SubjectCategorySchema).optional(),
+  preferred_study_styles: z.array(StudyStyleSchema).optional(),
+  languages_spoken: z.array(LanguageSchema).optional(),
+  hobbies_interests: z.array(z.string()).optional(),
+  dream_career: z.string().optional(),
+  special_skills: z.array(z.string()).optional(),
+  health_or_learning_notes: z.string().optional(),
+
+  // 🔹 Communication Preferences
+  preferred_communication_method: z.array(CommunicationMethodSchema).optional(),
+
+  // 🔹 Guardian & Support Info
+  guardian_info: z.array(GuardianInfoSchema).optional(),
+  special_support_needed: z.array(SpecialSupportSchema).optional(),
+  learning_challenges: z.array(LearningChallengeSchema).optional(),
+
+  // 🔹 Teaching-related Info
+  teaching_level: z.array(z.string()).optional(),
+  employment_type: EmploymentTypeSchema.optional(),
+  teaching_start_date: z.string().optional(), // DateTime<Utc> as string
+  years_of_experience: z.string().optional(), // DateTime<Utc> as string
+  education_level: EducationLevelSchema.optional(),
+  certifications_trainings: z.array(CertificationOrTrainingSchema).optional(),
+  preferred_age_group: AgeGroupSchema.optional(),
+  professional_goals: z.array(ProfessionalGoalSchema).optional(),
+  availability_schedule: z.array(DailyAvailabilitySchema).optional(),
+  department: DepartmentSchema.optional(),
+  job_title: JobTitleSchema.optional(),
+  teaching_style: z.array(StudyStyleSchema).optional(),
+
+  // 🔹 Timestamp
+  updated_at: z.string().optional(),
 });
+
 export type UpdateUser = z.infer<typeof UpdateUserSchema>;
 
 export const OnboardingSchema = z.object({

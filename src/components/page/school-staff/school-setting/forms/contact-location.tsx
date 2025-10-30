@@ -66,6 +66,7 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
           url: sm.url || "",
         })) ?? [],
     },
+    mode: "onChange",
   });
 
   const { fields, append, remove } = useFieldArray({

@@ -2,10 +2,10 @@ import UserInformation from "@/components/page/admin/users/user-information-card
 import ErrorPage from "@/components/page/error-page";
 import NotFoundPage from "@/components/page/not-found";
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
-import { UserModel } from "@/lib/schema/user/user-schema";
+import type { UserModel } from "@/lib/schema/user/user-schema";
 import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 export async function generateMetadata({

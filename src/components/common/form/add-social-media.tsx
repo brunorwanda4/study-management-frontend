@@ -26,13 +26,13 @@ import { motion } from "framer-motion";
 import { Trash2 } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import {
-  Control,
-  FieldValues,
-  Path,
-  PathValue,
-  UseFormGetValues,
-  UseFormSetValue,
-  UseFormWatch,
+  type Control,
+  type FieldValues,
+  type Path,
+  type PathValue,
+  type UseFormGetValues,
+  type UseFormSetValue,
+  type UseFormWatch,
   useWatch,
 } from "react-hook-form";
 

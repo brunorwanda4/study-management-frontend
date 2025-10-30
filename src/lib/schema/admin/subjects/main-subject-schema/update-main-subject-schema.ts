@@ -2,7 +2,7 @@ import {
   SubjectAuthSchema,
   SubjectCategorySchema,
   SubjectLevelSchema,
-} from "@/lib/schema/admin/subjects/subject-category";
+} from "@/lib/schema/common-details-schema";
 import { z } from "zod";
 
 export const UpdateMainSubjectFormSchema = z
@@ -85,14 +85,14 @@ export const UpdateMainSubjectFormSchema = z
     starting_year: z
       .string()
       .optional()
-      .refine((val) => !val || !isNaN(Date.parse(val)), {
+      .refine((val) => !val || !Number.isNaN(Date.parse(val)), {
         message: "Invalid start date format",
       }),
 
     ending_year: z
       .string()
       .optional()
-      .refine((val) => !val || !isNaN(Date.parse(val)), {
+      .refine((val) => !val || !Number.isNaN(Date.parse(val)), {
         message: "Invalid end date format",
       }),
 

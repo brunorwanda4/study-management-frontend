@@ -1,5 +1,5 @@
-import { SubjectProgressTrackingConfigTypeSchema } from "@/lib/schema/admin/subjects/subject-category";
 import { SubjectProgressThresholdsSchema } from "@/lib/schema/admin/subjects/subject-progress-tracking-config-schema/subject-progress-tracking-config-schema";
+import { SubjectProgressTrackingConfigTypeSchema } from "@/lib/schema/common-details-schema";
 import { z } from "zod";
 
 export const CreateSubjectProgressTrackingConfigSchema = z

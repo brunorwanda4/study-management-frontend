@@ -1,6 +1,6 @@
 export const CountriesContext = [
   {
-    name: "Rwanda",
+    country: "Rwanda",
     provinces: [
       {
         name: "Kigali City",
