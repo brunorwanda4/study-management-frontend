@@ -39,7 +39,7 @@ export const SocialMediaPlatformsList: SocialMediaPlatform[] = [
   {
     name: "Threads",
     urlRegex: /threads\.com|threads\.be/i,
-    urlTemplate: "https://www.youtube.com/@{username}", // Corrected YouTube template
+    urlTemplate: "https://www.threads.com/@{username}", // Corrected YouTube template
     icon: "/icons/threads.png",
   },
   {

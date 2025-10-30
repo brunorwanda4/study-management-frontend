@@ -12,11 +12,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import type { Locale } from "@/i18n";
 import {
   LearningChallengeDetails,
   SpecialSupportDetails,
 } from "@/lib/const/common-details-const";
 import { useToast } from "@/lib/context/toast/ToastContext";
+import { redirectContents } from "@/lib/hooks/redirect";
 import {
   type studentSupport,
   studentSupportSchema,
@@ -25,6 +27,7 @@ import type { UserModel } from "@/lib/schema/user/user-schema";
 import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 
@@ -33,6 +36,7 @@ interface Props {
   auth: AuthContext;
   setStep?: (step: number, id?: string) => void;
   markStepCompleted?: (step: number, autoNext?: boolean, id?: string) => void;
+  lang: Locale;
 }
 
 const StudentSupportForm = ({
@@ -40,11 +44,13 @@ const StudentSupportForm = ({
   auth,
   setStep,
   markStepCompleted,
+  lang,
 }: Props) => {
   const [error, setError] = useState<string | null | undefined>("");
   const [success, setSuccess] = useState<string | null | undefined>("");
   const [isPending, startTransition] = useTransition();
   const { showToast } = useToast();
+  const router = useRouter();
 
   const form = useForm<studentSupport>({
     resolver: zodResolver(studentSupportSchema),
@@ -81,6 +87,7 @@ const StudentSupportForm = ({
         if (setStep) setStep(4, update.data.id);
         if (markStepCompleted)
           markStepCompleted(3, true, update.data.id || update.data._id);
+        router.push(redirectContents({ lang, role: user.role || "STUDENT" }));
       } else if (update.message) {
         showToast({
           title: "Something went wrong 😥",
@@ -176,16 +183,60 @@ const StudentSupportForm = ({
         </div>
 
         {/* ✅ Submit Button */}
-        <Button
-          disabled={isPending}
-          type="submit"
-          variant="info"
-          className="w-full"
-          library="daisy"
-          role={isPending ? "loading" : undefined}
-        >
-          Add academic interests
-        </Button>
+        {setStep && markStepCompleted ? (
+          <div className=" flex justify-between">
+            <Button
+              disabled={isPending}
+              type="button"
+              variant="outline"
+              className=" w-fit"
+              library="daisy"
+              onClick={() => {
+                setStep(3, user._id);
+              }}
+            >
+              Go back
+            </Button>
+            <div className=" flex gap-4">
+              <Button
+                disabled={isPending}
+                type="button"
+                variant="outline"
+                className=" w-fit"
+                library="daisy"
+                onClick={() => {
+                  router.push(
+                    redirectContents({ role: user.role || "STUDENT", lang }),
+                  );
+                }}
+              >
+                Skip
+              </Button>
+
+              <Button
+                disabled={isPending}
+                type="submit"
+                variant="info"
+                className="  w-fit"
+                library="daisy"
+                role={isPending ? "loading" : undefined}
+              >
+                Add your supports need
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <Button
+            disabled={isPending}
+            type="submit"
+            variant="info"
+            className=" w-full"
+            library="daisy"
+            role={isPending ? "loading" : undefined}
+          >
+            Add your supports need
+          </Button>
+        )}
       </form>
     </Form>
   );

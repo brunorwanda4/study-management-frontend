@@ -128,17 +128,60 @@ const StudentBackgroundForm = ({
           <FormError message={error} />
           <FormSuccess message={success} />
         </div>
-        <Button
-          disabled={isPending}
-          type="submit"
-          variant="info"
-          className=" w-full"
-          library="daisy"
-          role={isPending ? "loading" : undefined}
-        >
-          Add academic interests
-        </Button>
-      </form>{" "}
+        {setStep && markStepCompleted ? (
+          <div className=" flex justify-between">
+            <Button
+              disabled={isPending}
+              type="button"
+              variant="outline"
+              className=" w-fit"
+              library="daisy"
+              onClick={() => {
+                setStep(1, user._id);
+              }}
+            >
+              Go back
+            </Button>
+            <div className=" flex gap-4">
+              <Button
+                disabled={isPending}
+                type="button"
+                variant="outline"
+                className=" w-fit"
+                library="daisy"
+                onClick={() => {
+                  setStep(3, user._id);
+                  markStepCompleted(2, true, user._id);
+                }}
+              >
+                Skip
+              </Button>
+
+              <Button
+                disabled={isPending}
+                type="submit"
+                variant="info"
+                className="  w-fit"
+                library="daisy"
+                role={isPending ? "loading" : undefined}
+              >
+                Add Background
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <Button
+            disabled={isPending}
+            type="submit"
+            variant="info"
+            className=" w-full"
+            library="daisy"
+            role={isPending ? "loading" : undefined}
+          >
+            Add Background
+          </Button>
+        )}
+      </form>
     </Form>
   );
 };

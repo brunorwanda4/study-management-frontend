@@ -213,12 +213,12 @@ const AddSocialMedia = <
         </motion.div>
       </div>
 
-      <div className="flex-grow space-y-3">
+      <div className="grow space-y-3">
         {platformValue !== DefaultPlatform && (
           <div className="flex space-x-2">
             <Button
               type="button"
-              variant={inputMode === "url" ? "secondary" : "outline"}
+              variant={inputMode === "url" ? "info" : "outline"}
               size="xs"
               onClick={() => setInputMode("url")}
               disabled={disable}
@@ -228,7 +228,7 @@ const AddSocialMedia = <
             </Button>
             <Button
               type="button"
-              variant={inputMode === "username" ? "secondary" : "outline"}
+              variant={inputMode === "username" ? "info" : "outline"}
               size="xs"
               onClick={() => setInputMode("username")}
               disabled={!urlTemplate.includes("{username}") || disable}

@@ -170,16 +170,59 @@ export const SocialAndCommunicationForm = ({
           <FormError message={error} />
           <FormSuccess message={success} />
         </div>
-        <Button
-          disabled={isPending}
-          type="submit"
-          variant="info"
-          className=" w-full"
-          library="daisy"
-          role={isPending ? "loading" : undefined}
-        >
-          Upgrade social and communication
-        </Button>
+        {setStep && markStepCompleted ? (
+          <div className=" flex justify-between">
+            <Button
+              disabled={isPending}
+              type="button"
+              variant="outline"
+              className=" w-fit"
+              library="daisy"
+              onClick={() => {
+                setStep(2, initialData._id);
+              }}
+            >
+              Go back
+            </Button>
+            <div className=" flex gap-4">
+              <Button
+                disabled={isPending}
+                type="button"
+                variant="outline"
+                className=" w-fit"
+                library="daisy"
+                onClick={() => {
+                  setStep(4, initialData._id);
+                  markStepCompleted(3, true, initialData._id);
+                }}
+              >
+                Skip
+              </Button>
+
+              <Button
+                disabled={isPending}
+                type="submit"
+                variant="info"
+                className="  w-fit"
+                library="daisy"
+                role={isPending ? "loading" : undefined}
+              >
+                Upgrade social and communication
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <Button
+            disabled={isPending}
+            type="submit"
+            variant="info"
+            className=" w-full"
+            library="daisy"
+            role={isPending ? "loading" : undefined}
+          >
+            Upgrade social and communication
+          </Button>
+        )}
       </form>
     </Form>
   );

@@ -550,7 +550,7 @@ export const SpecialSupportDetails: Record<SpecialSupport, CommonDetails> =
       s,
       {
         name: s.replace(/([A-Z])/g, " $1").trim(),
-        image: "/icons/support/default.png",
+        // image: "/icons/support/default.png",
         description: `${s.replace(/([A-Z])/g, " $1").trim()} support for student needs.`,
       },
     ]),

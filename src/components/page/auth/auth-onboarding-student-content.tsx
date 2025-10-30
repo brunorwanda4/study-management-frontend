@@ -92,6 +92,7 @@ const AuthOnboardingStudentContent = ({ lang, auth, user }: Props) => {
           user={user}
           setStep={setStep}
           markStepCompleted={markStepCompleted}
+          lang={lang}
         />
       </CardContent>
     </Card>
