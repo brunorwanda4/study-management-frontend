@@ -17,13 +17,12 @@ import {
   CertificationDetails,
   EducationLevelDetails,
   LanguageDetails,
-  TeachingStyleDetails,
 } from "@/lib/const/common-details-const";
 import { useToast } from "@/lib/context/toast/ToastContext";
 import {
-  teacherBackgroundSchema,
-  type teacherBackground,
-} from "@/lib/schema/teacher/teacher-schema";
+  StaffBackgroundSchema,
+  type StaffBackground,
+} from "@/lib/schema/school-staff/school-staff-schema";
 import type { UserModel } from "@/lib/schema/user/user-schema";
 import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
@@ -38,7 +37,7 @@ interface props {
   markStepCompleted?: (step: number, autoNext?: boolean, id?: string) => void;
 }
 
-const TeacherBackgroundForm = ({
+const StaffBackgroundForm = ({
   user,
   auth,
   setStep,
@@ -49,8 +48,8 @@ const TeacherBackgroundForm = ({
   const [isPending, startTransition] = useTransition();
   const { showToast } = useToast();
 
-  const form = useForm<teacherBackground>({
-    resolver: zodResolver(teacherBackgroundSchema),
+  const form = useForm<StaffBackground>({
+    resolver: zodResolver(StaffBackgroundSchema),
     defaultValues: {
       years_of_experience: user.years_of_experience
         ? user.years_of_experience
@@ -63,16 +62,15 @@ const TeacherBackgroundForm = ({
       languages_spoken: user.languages_spoken
         ? user.languages_spoken
         : undefined,
-      teaching_style: user.teaching_style ? user.teaching_style : undefined,
     },
     mode: "onChange",
   });
 
-  const onSubmit = (value: teacherBackground) => {
+  const onSubmit = (value: StaffBackground) => {
     setSuccess(null);
     setError(null);
     startTransition(async () => {
-      const update = await apiRequest<teacherBackground, UserModel>(
+      const update = await apiRequest<StaffBackground, UserModel>(
         "put",
         `/users/${auth.user.id}`,
         value,
@@ -201,26 +199,6 @@ const TeacherBackgroundForm = ({
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="teaching_style"
-            render={({ field }) => (
-              <FormItem className=" w-full space-y-2">
-                <FormLabel>Teaching style</FormLabel>
-                <FormControl>
-                  <CheckboxInput
-                    showTooltip
-                    items={TeachingStyleDetails}
-                    values={field.value}
-                    onChange={field.onChange}
-                    classname=" grid-cols-3 gap-2"
-                    disabled={isPending}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
         </div>
 
         <div className=" mt-2">
@@ -285,4 +263,4 @@ const TeacherBackgroundForm = ({
   );
 };
 
-export default TeacherBackgroundForm;
+export default StaffBackgroundForm;

@@ -1,12 +1,11 @@
 "use client";
 import { SocialAndCommunicationForm } from "@/components/common/form/forms";
 import { GenericStepper } from "@/components/common/generic-stepper";
-import TeacherBackgroundForm from "@/components/page/teacher/form/teacher-background-form";
-import TeacherPositionForm from "@/components/page/teacher/form/teacher-position-form";
-import TeacherPreferencesForm from "@/components/page/teacher/form/teacher-preferences-form";
+import StaffBackgroundForm from "@/components/page/school-staff/form/staff-background-form";
+import StaffDepartmentForm from "@/components/page/school-staff/form/staff-department-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Locale } from "@/i18n";
-import { authOnboardingTeacherSteps } from "@/lib/const/auth-onboarding-const";
+import { authOnboardingStaffSteps } from "@/lib/const/auth-onboarding-const";
 import { useStepper } from "@/lib/hooks/use-stepper";
 import type { UserModel } from "@/lib/schema/user/user-schema";
 import type { AuthContext } from "@/lib/utils/auth-context";
@@ -18,11 +17,11 @@ interface Props {
   user: UserModel;
 }
 
-const STORAGE_KEY = "auth-onboarding-teacher-content";
+const STORAGE_KEY = "auth-onboarding-staff-content";
 
-const AuthOnboardingTeacherContent = ({ lang, auth, user }: Props) => {
+const AuthOnboardingStaffContent = ({ lang, auth, user }: Props) => {
   // pass the same storageKey to the hook so progress is persisted per this key
-  const stepper = useStepper(authOnboardingTeacherSteps, STORAGE_KEY);
+  const stepper = useStepper(authOnboardingStaffSteps, STORAGE_KEY);
 
   const {
     currentStep,
@@ -42,10 +41,10 @@ const AuthOnboardingTeacherContent = ({ lang, auth, user }: Props) => {
   const renderStep1 = () => (
     <Card>
       <CardHeader>
-        <CardTitle>School & Position Information</CardTitle>
+        <CardTitle>School & Department Information</CardTitle>
       </CardHeader>
       <CardContent>
-        <TeacherPositionForm
+        <StaffDepartmentForm
           auth={auth}
           user={user}
           setStep={setStep}
@@ -61,7 +60,7 @@ const AuthOnboardingTeacherContent = ({ lang, auth, user }: Props) => {
         <CardTitle>Professional Background</CardTitle>
       </CardHeader>
       <CardContent>
-        <TeacherBackgroundForm
+        <StaffBackgroundForm
           auth={auth}
           user={user}
           setStep={setStep}
@@ -82,24 +81,9 @@ const AuthOnboardingTeacherContent = ({ lang, auth, user }: Props) => {
           initialData={user}
           setStep={setStep}
           markStepCompleted={markStepCompleted}
-        />
-      </CardContent>
-    </Card>
-  );
-
-  const renderStep4 = () => (
-    <Card>
-      <CardHeader>
-        <CardTitle>Teaching Preferences & Goals</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <TeacherPreferencesForm
-          auth={auth}
-          user={user}
-          setStep={setStep}
-          markStepCompleted={markStepCompleted}
           lang={lang}
           reset={reset}
+          redirect={true}
         />
       </CardContent>
     </Card>
@@ -110,7 +94,7 @@ const AuthOnboardingTeacherContent = ({ lang, auth, user }: Props) => {
       {/* pass storageKey here so the GenericStepper can show the resume banner */}
       <GenericStepper
         {...stepper}
-        steps={authOnboardingTeacherSteps}
+        steps={authOnboardingStaffSteps}
         allowAllPreviousSteps
         storageKey={STORAGE_KEY}
         allowResumeJump
@@ -120,10 +104,9 @@ const AuthOnboardingTeacherContent = ({ lang, auth, user }: Props) => {
         {currentStep === 1 && renderStep1()}
         {currentStep === 2 && renderStep2()}
         {currentStep === 3 && renderStep3()}
-        {currentStep === 4 && renderStep4()}
       </div>
     </div>
   );
 };
 
-export default AuthOnboardingTeacherContent;
+export default AuthOnboardingStaffContent;

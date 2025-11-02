@@ -815,9 +815,9 @@ export const Departments = [
   "IT",
   "HR",
   "Maintenance",
-  "Security",
-  "Cafeteria",
-  "Transport",
+  // "Security",
+  // "Cafeteria",
+  // "Transport",
   "Other",
 ] as const;
 
@@ -827,7 +827,7 @@ export const DepartmentDetails: Record<Department, CommonDetails> =
       d,
       {
         name: d.replace(/([A-Z])/g, " $1").trim(),
-        image: "/icons/departments/default.png",
+        // image: "/icons/departments/default.png",
         description: `Department of ${d.replace(/([A-Z])/g, " $1").trim()}.`,
       },
     ]),
@@ -837,13 +837,13 @@ export const DepartmentDetails: Record<Department, CommonDetails> =
 export const JobTitles = [
   "Accountant",
   "Secretary",
-  "Clerk",
+  // "Clerk",
   "Librarian",
-  "SecurityGuard",
-  "ITSupport",
+  // "SecurityGuard",
+  // "ITSupport",
   "Manager",
   "Teacher",
-  "Counselor",
+  // "Counselor",
   "Other",
 ] as const;
 
@@ -853,7 +853,7 @@ export const JobTitleDetails: Record<JobTitle, CommonDetails> =
       j,
       {
         name: j.replace(/([A-Z])/g, " $1").trim(),
-        image: "/icons/jobs/default.png",
+        // image: "/icons/jobs/default.png",
         description: `${j.replace(/([A-Z])/g, " $1").trim()} role in the organization.`,
       },
     ]),

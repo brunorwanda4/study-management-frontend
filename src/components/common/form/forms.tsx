@@ -13,9 +13,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import type { Locale } from "@/i18n";
 import { CommunicationMethodDetails } from "@/lib/const/common-details-const";
 import { DefaultPlatform } from "@/lib/const/social-media-const";
 import { useToast } from "@/lib/context/toast/ToastContext";
+import { redirectContents } from "@/lib/hooks/redirect";
 import {
   type SocialAndCommunication,
   SocialAndCommunicationSchema,
@@ -24,6 +26,7 @@ import type { UserModel } from "@/lib/schema/user/user-schema";
 import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 
@@ -34,6 +37,9 @@ interface propsSocialAndCommunication {
   auth: AuthContext;
   setStep?: (step: number, id?: string) => void;
   markStepCompleted?: (step: number, autoNext?: boolean, id?: string) => void;
+  reset?: () => void;
+  redirect?: boolean;
+  lang?: Locale;
 }
 
 export const SocialAndCommunicationForm = ({
@@ -41,11 +47,15 @@ export const SocialAndCommunicationForm = ({
   auth,
   setStep,
   markStepCompleted,
+  reset,
+  redirect,
+  lang,
 }: propsSocialAndCommunication) => {
   const [error, setError] = useState<undefined | null | string>("");
   const [success, setSuccess] = useState<undefined | null | string>("");
   const [isPending, startTransition] = useTransition();
   const { showToast } = useToast();
+  const router = useRouter();
 
   const form = useForm<SocialAndCommunication>({
     resolver: zodResolver(SocialAndCommunicationSchema),
@@ -84,6 +94,14 @@ export const SocialAndCommunicationForm = ({
             " You have been add Upgrade social and communication info",
           type: "success",
         });
+        if (reset) reset;
+        if (redirect)
+          return router.push(
+            redirectContents({
+              lang: lang || "en",
+              role: auth.user.role || "STUDENT",
+            }),
+          );
         if (setStep) setStep(4, update.data.id);
         if (markStepCompleted)
           markStepCompleted(3, true, update.data.id || update.data._id);

@@ -35,6 +35,8 @@ import {
   userRoles,
   Weekdays,
 } from "@/lib/const/common-details-const";
+import { MIN_YEAR } from "@/lib/env";
+import { todayISO } from "@/lib/utils";
 import z from "zod";
 
 const googleMapsUrlRegex =
@@ -166,6 +168,60 @@ export const DailyAvailabilitySchema = z.object({
 });
 
 export type DailyAvailability = z.infer<typeof DailyAvailabilitySchema>;
+
+// ----------------- Years Of experience ------------------
+export const YearsOfExperienceSchema = z
+  .string()
+  .nullable()
+  .refine(
+    (val) => {
+      if (!val) return true; // allow empty
+
+      // If incoming is already date-only (YYYY-MM-DD) capture parts
+      const dateOnlyMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(val);
+      let year: number, month: number, day: number;
+
+      if (dateOnlyMatch) {
+        year = Number(dateOnlyMatch[1]);
+        month = Number(dateOnlyMatch[2]);
+        day = Number(dateOnlyMatch[3]);
+      } else {
+        // Otherwise try to parse any ISO-like timestamp (with time and/or offset)
+        const parsed = new Date(val);
+        if (Number.isNaN(parsed.getTime())) return false;
+        // Use UTC components to avoid timezone/time-of-day issues
+        year = parsed.getUTCFullYear();
+        month = parsed.getUTCMonth() + 1;
+        day = parsed.getUTCDate();
+      }
+
+      // Quick year bound check
+      if (year < MIN_YEAR) return false;
+
+      // Build a UTC date-only object for comparison (midnight UTC)
+      const candidateUtc = new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0));
+
+      // Today (UTC) date-only
+      const now = new Date();
+      const todayUtc = new Date(
+        Date.UTC(
+          now.getUTCFullYear(),
+          now.getUTCMonth(),
+          now.getUTCDate(),
+          0,
+          0,
+          0,
+          0,
+        ),
+      );
+
+      // Candidate must not be in the future (compare date-only)
+      if (candidateUtc > todayUtc) return false;
+
+      return true;
+    },
+    { message: `Date must be between ${MIN_YEAR}-01-01 and ${todayISO}` },
+  );
 
 // ------------------ Image ------------------
 export const ImageSchema = z.object({

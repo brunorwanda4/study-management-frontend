@@ -11,20 +11,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Weekdays } from "@/lib/const/common-details-const";
-import type { Weekday } from "@/lib/schema/common-details-schema";
+import type {
+  DailyAvailability,
+  TimeRange,
+  Weekday,
+} from "@/lib/schema/common-details-schema";
 import { cn } from "@/lib/utils";
 import { Copy, Plus, Trash } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-
-export type TimeRange = {
-  start: string; // "HH:MM"
-  end: string; // "HH:MM"
-};
-
-export type DailyAvailability = {
-  day: Weekday;
-  time_range: TimeRange;
-};
 
 interface DailyAvailabilityInputProps {
   value?: DailyAvailability[] | null;
@@ -145,7 +139,7 @@ export default function DailyAvailabilityInput({
   onChange,
   disabled,
   error,
-  label = "Availability",
+  label,
   className,
 }: DailyAvailabilityInputProps) {
   const [map, setMap] = useState<Record<Weekday, TimeRange[]>>(() =>
@@ -251,7 +245,7 @@ export default function DailyAvailabilityInput({
   return (
     <div className={cn("space-y-3 w-full", className)}>
       <div className="flex items-center justify-between">
-        <Label>{label}</Label>
+        {label && <Label>{label}</Label>}
 
         <div className="flex items-center gap-2">
           <Popover>
