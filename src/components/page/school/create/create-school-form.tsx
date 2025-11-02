@@ -32,6 +32,7 @@ import { Textarea } from "@/components/ui/textarea";
 // Import Custom Components
 import UploadImage from "@/components/common/cards/form/upload-image";
 import { FormError, FormSuccess } from "@/components/common/form-message";
+import AddressInput from "@/components/common/form/address-input";
 import MyImage from "@/components/common/myImage";
 import {
   AffiliationTypes,
@@ -496,89 +497,23 @@ const CreateSchoolForm = ({ lang, auth }: Props) => {
         <div className="">
           <h3 className="mb-4 text-lg font-medium">Contact & Location</h3>
           {/* Address Fields */}
-          <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-2">
-            <FormField
-              control={form.control}
-              name="address.street"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Street</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Street address" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="address.city"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>City</FormLabel>
-                  <FormControl>
-                    <Input placeholder="City" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="address.state"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Province / State</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Province or State" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="address.postal_code"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Postal Code</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Postal Code" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="address.country"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Country</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Country" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="address.google_map_url"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Google map URL</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="e.g., https://www.google.com/maps/place/Eiffel+Tower/@48.8583701,2.2922926,17z"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+          <FormField
+            control={form.control}
+            name="address"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Address details</FormLabel>
+                <FormControl>
+                  <AddressInput
+                    value={field.value}
+                    onChange={field.onChange}
+                    disabled={isPending}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           {/* Contact Fields */}
           <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-2">

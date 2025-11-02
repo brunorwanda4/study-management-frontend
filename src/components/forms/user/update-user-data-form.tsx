@@ -3,6 +3,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 
 import { FormError, FormSuccess } from "@/components/common/form-message";
+import AgeInput from "@/components/common/form/age-input";
+import {
+  CountrySelect,
+  FlagComponent,
+  PhoneInput,
+} from "@/components/common/form/phone-input";
 import MyImage from "@/components/common/myImage";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,38 +23,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  UpdateUser,
+  type UpdateUser,
   UpdateUserSchema,
 } from "@/lib/schema/user/update-user-schema";
-import { UserModel } from "@/lib/schema/user/user-schema";
+import type { UserModel } from "@/lib/schema/user/user-schema";
 import { cn } from "@/lib/utils";
-import { getLocalTimeZone, today, toZoned } from "@internationalized/date";
-import { CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
-import { useTheme } from "next-themes";
 import { useState, useTransition } from "react";
-import {
-  Button as ButtonDate,
-  Calendar,
-  CalendarCell,
-  CalendarGrid,
-  CalendarGridBody,
-  CalendarGridHeader,
-  CalendarHeaderCell,
-  DateInput,
-  DatePicker,
-  DateSegment,
-  Dialog,
-  Group,
-  Heading,
-  Popover,
-} from "react-aria-components";
 import { useDropzone } from "react-dropzone";
 import * as RPNInput from "react-phone-number-input";
-import {
-  CountrySelect,
-  FlagComponent,
-  PhoneInput,
-} from "../component-form-need";
 
 interface props {
   currentUser: UserModel;
@@ -61,7 +43,6 @@ const UserUserDataForm = ({ currentUser }: props) => {
     isPending,
     //  startTransition
   ] = useTransition();
-  const { theme } = useTheme();
   const form = useForm<UpdateUser>({
     resolver: zodResolver(UpdateUserSchema),
     defaultValues: {
@@ -105,7 +86,6 @@ const UserUserDataForm = ({ currentUser }: props) => {
     // accept: "image/*",
     maxFiles: 1,
   });
-  const now = today(getLocalTimeZone());
   const handleSubmit = (values: UpdateUser) => {
     setError("");
     setSuccess("");
@@ -173,117 +153,12 @@ const UserUserDataForm = ({ currentUser }: props) => {
               name="age"
               render={({ field }) => (
                 <FormItem className="w-full">
+                  <FormLabel>Date of Birth / Age</FormLabel>
                   <FormControl>
-                    <Controller
-                      name="age"
-                      render={({ field: { onChange, value } }) => (
-                        <DatePicker
-                          className="space-y-2"
-                          onChange={(selectedDate) => {
-                            const currentDate = new Date();
-                            if (selectedDate) {
-                              const date = selectedDate.toDate();
-                              date.setHours(
-                                currentDate.getHours(),
-                                currentDate.getMinutes(),
-                                currentDate.getSeconds(),
-                                currentDate.getMilliseconds(),
-                              );
-                              onChange(date);
-                            }
-                            onChange(
-                              selectedDate ? selectedDate.toDate() : null,
-                            );
-                          }}
-                          value={
-                            value
-                              ? toZoned(
-                                  today(getLocalTimeZone()).set({
-                                    year: new Date(value).getFullYear(),
-                                    month: new Date(value).getMonth() + 1,
-                                    day: new Date(value).getDate(),
-                                  }),
-                                  getLocalTimeZone(),
-                                )
-                              : null
-                          }
-                        >
-                          <FormLabel>Age</FormLabel>
-                          <div className="flex">
-                            <Group className="bg-base-100 ring-offset-background data-[focus-within]:border-ring inline-flex h-10 w-full items-center overflow-hidden rounded-md px-3 py-2 pe-9 text-base whitespace-nowrap shadow-sm shadow-black/5 transition-shadow data-[disabled]:opacity-50 data-[focus-within]:outline-none">
-                              <DateInput {...field}>
-                                {(segment) =>
-                                  segment &&
-                                  (segment.type === "year" ||
-                                    segment.type === "month" ||
-                                    segment.type === "day") ? (
-                                    <>
-                                      <DateSegment
-                                        segment={segment}
-                                        className="data-[focused]:bg-accent data-[invalid]:data-[focused]:bg-destructive data-[focused]:data-[placeholder]: data-[focused]: data-[invalid]:data-[focused]:data-[placeholder]:text-destructive-foreground data-[invalid]:data-[focused]:text-destructive-foreground data-[invalid]:data-[placeholder]:text-destructive data-[invalid]:text-destructive data-[placeholder]: /70 data-[type=literal]: /70 inline rounded p-0.5 caret-transparent outline data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50 data-[type=literal]:px-0"
-                                      />
-                                      {segment.type !== "year" && (
-                                        <span>/</span>
-                                      )}
-                                    </>
-                                  ) : (
-                                    <></>
-                                  )
-                                }
-                              </DateInput>
-                            </Group>
-                            <ButtonDate className="hover:text-info data-[focus-visible]:outline-ring/70 z-10 -ms-9 -me-px flex w-9 items-center justify-center rounded-e-lg outline-offset-2 transition-colors focus-visible:outline-none data-[focus-visible]:outline">
-                              <CalendarIcon size={16} strokeWidth={2} />
-                            </ButtonDate>
-                          </div>
-                          <Popover
-                            className="border-base-300 bg-base-200 data-[entering]:animate-in data-[exiting]:animate-out data-[entering]:fade-in-0 data-[exiting]:fade-out-0 data-[entering]:zoom-in-95 data-[exiting]:zoom-out-95 data-[placement=bottom]:slide-in-from-top-2 data-[placement=left]:slide-in-from-right-2 data-[placement=right]:slide-in-from-left-2 data-[placement=top]:slide-in-from-bottom-2 z-50 rounded-lg border shadow-lg shadow-black/5 outline-none"
-                            offset={4}
-                            data-theme={theme}
-                          >
-                            <Dialog className="max-h-[inherit] overflow-auto p-2">
-                              <Calendar className="w-fit">
-                                <header className="flex w-full items-center gap-1 pb-1">
-                                  <ButtonDate
-                                    slot="previous"
-                                    className="hover:bg-accent hover: data-[focus-visible]:outline-ring/70 flex size-9 items-center justify-center rounded-lg outline-offset-2 transition-colors data-[focus-visible]:outline"
-                                  >
-                                    <ChevronLeft size={16} strokeWidth={2} />
-                                  </ButtonDate>
-                                  <Heading className="grow text-center text-sm font-medium" />
-                                  <ButtonDate
-                                    slot="next"
-                                    className="hover:bg-accent hover: data-[focus-visible]:outline-ring/70 flex size-9 items-center justify-center rounded-lg outline-offset-2 transition-colors data-[focus-visible]:outline"
-                                  >
-                                    <ChevronRight size={16} strokeWidth={2} />
-                                  </ButtonDate>
-                                </header>
-                                <CalendarGrid>
-                                  <CalendarGridHeader>
-                                    {(day) => (
-                                      <CalendarHeaderCell className="/80 size-9 rounded-lg p-0 text-xs font-medium">
-                                        {day}
-                                      </CalendarHeaderCell>
-                                    )}
-                                  </CalendarGridHeader>
-                                  <CalendarGridBody className="border-0 [&_td]:px-0">
-                                    {(date) => (
-                                      <CalendarCell
-                                        date={date}
-                                        className={cn(
-                                          "data-[hovered]:bg-accent data-[selected]:bg-info data-[hovered]: data-[selected]:text-primary-foreground data-[focus-visible]:outline-ring/70 data-[invalid]:data-[selected]:[&:not([data-hover])]:bg-destructive data-[invalid]:data-[selected]:[&:not([data-hover])]:text-destructive-foreground relative flex size-9 items-center justify-center rounded-lg border border-transparent p-0 text-sm font-normal whitespace-nowrap outline-offset-2 transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-30 data-[focus-visible]:z-10 data-[focus-visible]:outline data-[unavailable]:pointer-events-none data-[unavailable]:line-through data-[unavailable]:opacity-30",
-                                          date.compare(now) === 0 &&
-                                            "after:bg-info data-[selected]:after:bg-info after:pointer-events-none after:absolute after:start-1/2 after:bottom-1 after:z-10 after:size-[3px] after:-translate-x-1/2 after:rounded-full",
-                                        )}
-                                      />
-                                    )}
-                                  </CalendarGridBody>
-                                </CalendarGrid>
-                              </Calendar>
-                            </Dialog>
-                          </Popover>
-                        </DatePicker>
-                      )}
+                    <AgeInput
+                      value={field.value}
+                      onChange={field.onChange}
+                      disabled={isPending}
                     />
                   </FormControl>
                   <FormDescription>
@@ -307,7 +182,7 @@ const UserUserDataForm = ({ currentUser }: props) => {
                       render={({ field }) => (
                         <RPNInput.default
                           {...field}
-                          className="flex w-96 rounded-lg border-l-0"
+                          className="flex rounded-lg border-l-0"
                           international
                           flagComponent={FlagComponent}
                           countrySelectComponent={CountrySelect}
@@ -315,6 +190,7 @@ const UserUserDataForm = ({ currentUser }: props) => {
                           defaultCountry="RW"
                           placeholder="Enter phone number"
                           onChange={(value) => field.onChange(value ?? "")}
+                          disabled={isPending}
                         />
                       )}
                     />

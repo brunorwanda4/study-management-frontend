@@ -2,11 +2,11 @@ import UserUserDataForm from "@/components/forms/user/update-user-data-form";
 import NotFoundPage from "@/components/page/not-found";
 import SettingPrivacyBody from "@/components/page/settings/profile/setting-privacy-body";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Locale } from "@/i18n";
-import { UserModel } from "@/lib/schema/user/user-schema";
+import type { Locale } from "@/i18n";
+import type { UserModel } from "@/lib/schema/user/user-schema";
 import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 export async function generateMetadata(): Promise<Metadata> {

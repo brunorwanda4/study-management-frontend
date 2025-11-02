@@ -172,7 +172,7 @@ const TeacherPreferencesForm = ({
                 className=" w-fit"
                 library="daisy"
                 onClick={() => {
-                  reset;
+                  if (reset) reset();
                   router.push(
                     redirectContents({
                       role: auth.user.role || "TEACHER",

@@ -1,6 +1,8 @@
 "use client";
 import UploadImage from "@/components/common/cards/form/upload-image";
 import { FormError, FormSuccess } from "@/components/common/form-message";
+import AddressInput from "@/components/common/form/address-input";
+import AgeInput from "@/components/common/form/age-input";
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import {
@@ -12,15 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { genders, userRoles } from "@/lib/const/common-details-const";
 import { useToast } from "@/lib/context/toast/ToastContext";
@@ -417,86 +411,11 @@ const CreateUserForm = ({ auth }: props) => {
                 <FormItem className="w-full">
                   <FormLabel className=" ">Age</FormLabel>
                   <FormControl>
-                    <div className="flex gap-2">
-                      {/* Year Select */}
-                      <div className="flex w-full flex-col space-y-1">
-                        <Label>years</Label>
-                        <Select
-                          onValueChange={(value) =>
-                            field.onChange({
-                              ...(field.value || {}),
-                              year: Number(value),
-                            })
-                          }
-                        >
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Year" />
-                          </SelectTrigger>
-                          <SelectContent className="max-h-60">
-                            {Array.from(
-                              { length: 100 },
-                              (_, i) => new Date().getFullYear() - i,
-                            ).map((year) => (
-                              <SelectItem key={year} value={String(year)}>
-                                {year}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      {/* Month Select */}
-                      <div className="flex w-full flex-col space-y-1">
-                        <Label>Month</Label>
-                        <Select
-                          onValueChange={(value) =>
-                            field.onChange({
-                              ...(field.value || {}),
-                              month: Number(value),
-                            })
-                          }
-                        >
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Month" />
-                          </SelectTrigger>
-                          <SelectContent className="max-h-60">
-                            {Array.from({ length: 12 }, (_, i) => i + 1).map(
-                              (month) => (
-                                <SelectItem key={month} value={String(month)}>
-                                  {month}
-                                </SelectItem>
-                              ),
-                            )}
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      {/* Day Select */}
-                      <div className="flex w-full flex-col space-y-1">
-                        <Label>Day</Label>
-                        <Select
-                          onValueChange={(value) =>
-                            field.onChange({
-                              ...(field.value || {}),
-                              day: Number(value),
-                            })
-                          }
-                        >
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Day" />
-                          </SelectTrigger>
-                          <SelectContent className="max-h-60">
-                            {Array.from({ length: 31 }, (_, i) => i + 1).map(
-                              (day) => (
-                                <SelectItem key={day} value={String(day)}>
-                                  {day}
-                                </SelectItem>
-                              ),
-                            )}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
+                    <AgeInput
+                      value={field.value}
+                      onChange={field.onChange}
+                      disabled={isPending}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -526,59 +445,23 @@ const CreateUserForm = ({ auth }: props) => {
         </div>
 
         {/* Address Section */}
-        <div className="space-y-4 rounded-lg border p-4">
-          <h3 className="text-lg font-semibold">Address Information</h3>
-          <div className="grid grid-cols-2 gap-4">
-            {[
-              { name: "address.country", label: "Country" },
-              { name: "address.province", label: "Province" },
-              { name: "address.district", label: "District" },
-              { name: "address.sector", label: "Sector" },
-              { name: "address.cell", label: "Cell" },
-              { name: "address.village", label: "Village" },
-              { name: "address.state", label: "State" },
-              { name: "address.postal_code", label: "Postal Code" },
-            ].map((field) => (
-              <FormField
-                key={field.name}
-                name={field.name as any}
-                control={form.control}
-                render={({ field: f }) => (
-                  <FormItem>
-                    <FormLabel className="text-base">{field.label}</FormLabel>
-                    <FormControl>
-                      <Input
-                        disabled={isPending}
-                        {...f}
-                        placeholder={field.label}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            ))}
-          </div>
-
-          {/* Google Map URL (full width) */}
-          <FormField
-            name="address.google_map_url"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-base">Google Map URL</FormLabel>
-                <FormControl>
-                  <Input
-                    disabled={isPending}
-                    {...field}
-                    placeholder="https://maps.google.com/..."
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+        <FormField
+          control={form.control}
+          name="address"
+          render={({ field }) => (
+            <FormItem className="w-full">
+              <FormLabel>Address information</FormLabel>
+              <FormControl>
+                <AddressInput
+                  value={field.value}
+                  onChange={field.onChange}
+                  disabled={isPending}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <div>
           <FormError message={error} />

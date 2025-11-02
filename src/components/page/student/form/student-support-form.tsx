@@ -205,7 +205,7 @@ const StudentSupportForm = ({
                 className=" w-fit"
                 library="daisy"
                 onClick={() => {
-                  reset;
+                  if (reset) reset();
                   router.push(
                     redirectContents({ role: user.role || "STUDENT", lang }),
                   );

@@ -10,7 +10,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: "Onboarding | space-together",
+  title: "Teacher onboarding | space-together",
   description: "Update user information",
 };
 interface Props {
@@ -21,6 +21,11 @@ const TeacherOnboardingPage = async (props: Props) => {
   const { lang } = params;
   const auth = await authContext();
   if (!auth) redirect("/auth/login");
+  if (auth.user.role !== "TEACHER")
+    redirect(
+      `/${lang}/auth/onboarding/${auth.user.role === "STUDENT" ? "student" : auth.user.role === "SCHOOLSTAFF" ? "staff" : ""}`,
+    );
+
   const userRes = await apiRequest<void, UserModel>(
     "get",
     `/users/${auth.user.id}`,

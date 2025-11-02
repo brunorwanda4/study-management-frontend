@@ -21,6 +21,11 @@ const StudentOnboardingPage = async (props: Props) => {
   const { lang } = params;
   const auth = await authContext();
   if (!auth) redirect("/auth/login");
+  if (auth.user.role !== "STUDENT")
+    redirect(
+      `/${lang}/auth/onboarding/${auth.user.role === "TEACHER" ? "teacher" : auth.user.role === "SCHOOLSTAFF" ? "staff" : ""}`,
+    );
+
   const userRes = await apiRequest<void, UserModel>(
     "get",
     `/users/${auth.user.id}`,

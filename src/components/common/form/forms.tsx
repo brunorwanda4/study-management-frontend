@@ -210,6 +210,14 @@ export const SocialAndCommunicationForm = ({
                 className=" w-fit"
                 library="daisy"
                 onClick={() => {
+                  if (reset) reset();
+                  if (redirect)
+                    return router.push(
+                      redirectContents({
+                        role: auth.user.role || "STUDENT",
+                        lang: lang || "en",
+                      }),
+                    );
                   setStep(4, initialData._id);
                   markStepCompleted(3, true, initialData._id);
                 }}

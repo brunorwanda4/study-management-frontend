@@ -4,6 +4,12 @@
 import AddSocialMedia, {
   detectSocialMediaPlatform,
 } from "@/components/common/form/add-social-media";
+import AddressInput from "@/components/common/form/address-input";
+import {
+  CountrySelect,
+  FlagComponent,
+  PhoneInput,
+} from "@/components/common/form/phone-input";
 import MyImage from "@/components/common/myImage";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -26,7 +32,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusCircle } from "lucide-react";
 import type React from "react";
 import { useState, useTransition } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
+import * as RPNInput from "react-phone-number-input";
 import {
   type ContactLocationDto,
   ContactLocationSchema,
@@ -128,105 +135,23 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
           </h3>
 
           {/* Address Fields */}
-          <fieldset className="space-y-4 rounded-lg p-4">
-            <legend className="px-1 text-lg font-medium">
-              Address Details
-            </legend>
-            <div className="grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-2">
-              <FormField
-                control={form.control}
-                name="address.street"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Street</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., 123 Main St" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              {/* ... other address fields (city, state, postalCode, country) ... */}
-              <FormField
-                control={form.control}
-                name="address.city"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>City</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., Kigali" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="address.state"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Province / State</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., Kigali Province" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="address.postal_code"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Postal Code <span className="text-xs">(Optional)</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., 5000" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="address.country"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Country</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="e.g., Rwanda"
-                        {...field}
-                        // Value is handled by defaultValues and field state
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="address.google_map_url"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Google Maps URL{" "}
-                      <span className="text-xs">(Optional)</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="url"
-                        placeholder="https://maps.google.com/?q=..."
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-          </fieldset>
+          <FormField
+            control={form.control}
+            name="address"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Address details</FormLabel>
+                <FormControl>
+                  <AddressInput
+                    value={field.value}
+                    onChange={field.onChange}
+                    disabled={isPending}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           {/* Contact Fields */}
           <fieldset className="space-y-4 rounded-lg p-4">
@@ -241,10 +166,23 @@ export const ContactLocationForm: React.FC<ContactLocationFormProps> = ({
                   <FormItem>
                     <FormLabel>Phone Number</FormLabel>
                     <FormControl>
-                      <Input
-                        type="tel"
-                        placeholder="e.g., +250 788 123 456"
-                        {...field}
+                      <Controller
+                        name={field.name}
+                        control={form.control}
+                        render={({ field }) => (
+                          <RPNInput.default
+                            {...field}
+                            className="flex rounded-lg border-l-0"
+                            international
+                            flagComponent={FlagComponent}
+                            countrySelectComponent={CountrySelect}
+                            inputComponent={PhoneInput}
+                            defaultCountry="RW"
+                            placeholder="Enter phone number"
+                            onChange={(value) => field.onChange(value ?? "")}
+                            disabled={isPending}
+                          />
+                        )}
                       />
                     </FormControl>
                     <FormMessage />

@@ -45,14 +45,8 @@ interface Props {
 }
 
 export default function CreateMainSubjectClientPage({ auth }: Props) {
-  const {
-    currentStep,
-    setStep,
-    markStepCompleted,
-    resetStepper,
-    isReady,
-    idParam,
-  } = useStepper(createMainSubjectSteps, "main-subject-steps");
+  const { currentStep, setStep, markStepCompleted, reset, isReady, idParam } =
+    useStepper(createMainSubjectSteps, "main-subject-steps");
 
   const { showToast } = useToast();
 
@@ -291,7 +285,7 @@ export default function CreateMainSubjectClientPage({ auth }: Props) {
         <CardContent className="grid grid-cols-2 gap-4 md:grid-cols-3">
           <CreateSubjectGradingDialog
             action={() => {
-              resetStepper;
+              reset();
             }}
             auth={auth}
             subject={subject}
@@ -299,7 +293,7 @@ export default function CreateMainSubjectClientPage({ auth }: Props) {
 
           <CreateSubjectGradingSchemaDefaultButton
             action={() => {
-              resetStepper;
+              reset();
             }}
             auth={auth}
             subject={subject}
@@ -313,7 +307,7 @@ export default function CreateMainSubjectClientPage({ auth }: Props) {
 
           <CreateSubjectGradingSchemaDefaultButton
             action={() => {
-              resetStepper;
+              reset();
             }}
             auth={auth}
             subject={subject}

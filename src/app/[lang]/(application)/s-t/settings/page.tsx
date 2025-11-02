@@ -1,11 +1,11 @@
 import NotFoundPage from "@/components/page/not-found";
 import { BasicInformationForm } from "@/components/page/school-staff/school-setting/forms/basic-information";
 import { ContactLocationForm } from "@/components/page/school-staff/school-setting/forms/contact-location";
-import { Locale } from "@/i18n";
-import { School } from "@/lib/schema/school/school-schema";
+import type { Locale } from "@/i18n";
+import type { School } from "@/lib/schema/school/school-schema";
 import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
