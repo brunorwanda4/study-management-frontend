@@ -207,7 +207,7 @@ export const SocialAndCommunicationForm = ({
                 library="daisy"
                 role={isPending ? "loading" : undefined}
               >
-                Upgrade social and communication
+                Continue
               </Button>
             </div>
           </div>

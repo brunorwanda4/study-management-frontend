@@ -1,5 +1,9 @@
+"use client";
 import { FormError, FormSuccess } from "@/components/common/form-message";
+import AddressInput from "@/components/common/form/address-input";
 import CheckboxInput from "@/components/common/form/checkbox-input";
+import DateInput from "@/components/common/form/date-input";
+import RadioInput from "@/components/common/form/radio-input";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -10,15 +14,16 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import {
+  CertificationDetails,
+  EducationLevelDetails,
   LanguageDetails,
-  StudyStyleDetails,
-  SubjectCategoryDetails,
+  TeachingStyleDetails,
 } from "@/lib/const/common-details-const";
 import { useToast } from "@/lib/context/toast/ToastContext";
 import {
-  type StudentAcademicInterest,
-  StudentAcademicInterestSchema,
-} from "@/lib/schema/student/student-schema";
+  teacherBackgroundSchema,
+  type teacherBackground,
+} from "@/lib/schema/teacher/teacher-schema";
 import type { UserModel } from "@/lib/schema/user/user-schema";
 import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
@@ -33,7 +38,7 @@ interface props {
   markStepCompleted?: (step: number, autoNext?: boolean, id?: string) => void;
 }
 
-const StudentAcademicInterestForm = ({
+const TeacherBackgroundForm = ({
   user,
   auth,
   setStep,
@@ -44,25 +49,31 @@ const StudentAcademicInterestForm = ({
   const [isPending, startTransition] = useTransition();
   const { showToast } = useToast();
 
-  const form = useForm<StudentAcademicInterest>({
-    resolver: zodResolver(StudentAcademicInterestSchema),
+  const form = useForm<teacherBackground>({
+    resolver: zodResolver(teacherBackgroundSchema),
     defaultValues: {
-      favorite_subjects_category: user.favorite_subjects_category
-        ? user.favorite_subjects_category
-        : [],
-      preferred_study_styles: user.preferred_study_styles
-        ? user.preferred_study_styles
-        : [],
-      languages_spoken: user.languages_spoken ? user.languages_spoken : [],
+      years_of_experience: user.years_of_experience
+        ? user.years_of_experience
+        : undefined,
+      address: user.address ? user.address : undefined,
+      education_level: user.education_level ? user.education_level : undefined,
+      certifications_trainings: user.certifications_trainings
+        ? user.certifications_trainings
+        : undefined,
+      languages_spoken: user.languages_spoken
+        ? user.languages_spoken
+        : undefined,
+      teaching_style: user.teaching_style ? user.teaching_style : undefined,
     },
     mode: "onChange",
   });
 
-  const onSubmit = (value: StudentAcademicInterest) => {
+  const onSubmit = (value: teacherBackground) => {
+    console.log("🌻🌻", value);
     setSuccess(null);
     setError(null);
     startTransition(async () => {
-      const update = await apiRequest<StudentAcademicInterest, UserModel>(
+      const update = await apiRequest<teacherBackground, UserModel>(
         "put",
         `/users/${auth.user.id}`,
         value,
@@ -71,12 +82,12 @@ const StudentAcademicInterestForm = ({
       if (update.data) {
         showToast({
           title: "Thanks for upgrading your profile 🌻",
-          description: " You have been add student academic intereset info",
+          description: " You have been add Background info",
           type: "success",
         });
-        if (setStep) setStep(2, update.data.id);
+        if (setStep) setStep(3, update.data.id);
         if (markStepCompleted)
-          markStepCompleted(1, true, update.data.id || update.data._id);
+          markStepCompleted(2, true, update.data.id || update.data._id);
       } else if (update.message) {
         showToast({
           title: "Some thing went wrong 😥",
@@ -96,20 +107,17 @@ const StudentAcademicInterestForm = ({
         onSubmit={form.handleSubmit(onSubmit)}
         className=" w-full space-y-4 "
       >
-        <div className=" flex flex-col gap-4">
+        <div className=" flex flex-col space-y-4">
           <FormField
             control={form.control}
-            name="favorite_subjects_category"
+            name="years_of_experience"
             render={({ field }) => (
-              <FormItem className=" w-full space-y-2">
-                <FormLabel>Favorite subjects category</FormLabel>
+              <FormItem className="lg:w-1/2 w-full space-y-2">
+                <FormLabel>Years of experience</FormLabel>
                 <FormControl>
-                  <CheckboxInput
-                    showTooltip
-                    items={SubjectCategoryDetails}
-                    values={field.value}
+                  <DateInput
+                    value={field.value}
                     onChange={field.onChange}
-                    classname=" grid-cols-3 gap-2"
                     disabled={isPending}
                   />
                 </FormControl>
@@ -119,17 +127,14 @@ const StudentAcademicInterestForm = ({
           />
           <FormField
             control={form.control}
-            name="preferred_study_styles"
+            name="address"
             render={({ field }) => (
-              <FormItem className=" w-full space-y-2">
-                <FormLabel>Preferred study style</FormLabel>
+              <FormItem className="w-full">
+                <FormLabel>Your Address</FormLabel>
                 <FormControl>
-                  <CheckboxInput
-                    showTooltip
-                    items={StudyStyleDetails}
-                    values={field.value}
+                  <AddressInput
+                    value={field.value}
                     onChange={field.onChange}
-                    classname=" grid-cols-3 gap-2"
                     disabled={isPending}
                   />
                 </FormControl>
@@ -157,13 +162,86 @@ const StudentAcademicInterestForm = ({
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="education_level"
+            render={({ field }) => (
+              <FormItem className=" w-full space-y-2">
+                <FormLabel>Education level</FormLabel>
+                <FormControl>
+                  <RadioInput
+                    showTooltip
+                    items={EducationLevelDetails}
+                    value={field.value}
+                    onChange={field.onChange}
+                    classname=" grid-cols-3 gap-2"
+                    disabled={isPending}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="certifications_trainings"
+            render={({ field }) => (
+              <FormItem className=" w-full space-y-2">
+                <FormLabel>Certifications trainings</FormLabel>
+                <FormControl>
+                  <CheckboxInput
+                    showTooltip
+                    items={CertificationDetails}
+                    values={field.value}
+                    onChange={field.onChange}
+                    classname=" grid-cols-3 gap-2"
+                    disabled={isPending}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="teaching_style"
+            render={({ field }) => (
+              <FormItem className=" w-full space-y-2">
+                <FormLabel>Teaching style</FormLabel>
+                <FormControl>
+                  <CheckboxInput
+                    showTooltip
+                    items={TeachingStyleDetails}
+                    values={field.value}
+                    onChange={field.onChange}
+                    classname=" grid-cols-3 gap-2"
+                    disabled={isPending}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
+
         <div className=" mt-2">
           <FormError message={error} />
           <FormSuccess message={success} />
         </div>
         {setStep && markStepCompleted ? (
-          <div className=" flex justify-end">
+          <div className=" flex justify-between">
+            <Button
+              disabled={isPending}
+              type="button"
+              variant="outline"
+              className=" w-fit"
+              library="daisy"
+              onClick={() => {
+                setStep(1, user._id);
+              }}
+            >
+              Go back
+            </Button>
             <div className=" flex gap-4">
               <Button
                 disabled={isPending}
@@ -172,8 +250,8 @@ const StudentAcademicInterestForm = ({
                 className=" w-fit"
                 library="daisy"
                 onClick={() => {
-                  setStep(2, user._id);
-                  markStepCompleted(1, true, user._id);
+                  setStep(3, user._id);
+                  markStepCompleted(2, true, user._id);
                 }}
               >
                 Skip
@@ -187,7 +265,7 @@ const StudentAcademicInterestForm = ({
                 library="daisy"
                 role={isPending ? "loading" : undefined}
               >
-                Add academic interests
+                Continue
               </Button>
             </div>
           </div>
@@ -200,7 +278,7 @@ const StudentAcademicInterestForm = ({
             library="daisy"
             role={isPending ? "loading" : undefined}
           >
-            Add academic interests
+            Add Background
           </Button>
         )}
       </form>
@@ -208,4 +286,4 @@ const StudentAcademicInterestForm = ({
   );
 };
 
-export default StudentAcademicInterestForm;
+export default TeacherBackgroundForm;

@@ -37,6 +37,7 @@ interface Props {
   setStep?: (step: number, id?: string) => void;
   markStepCompleted?: (step: number, autoNext?: boolean, id?: string) => void;
   lang: Locale;
+  reset: () => void;
 }
 
 const StudentSupportForm = ({
@@ -44,6 +45,7 @@ const StudentSupportForm = ({
   auth,
   setStep,
   markStepCompleted,
+  reset,
   lang,
 }: Props) => {
   const [error, setError] = useState<string | null | undefined>("");
@@ -84,9 +86,7 @@ const StudentSupportForm = ({
           type: "success",
         });
 
-        if (setStep) setStep(4, update.data.id);
-        if (markStepCompleted)
-          markStepCompleted(3, true, update.data.id || update.data._id);
+        reset;
         router.push(redirectContents({ lang, role: user.role || "STUDENT" }));
       } else if (update.message) {
         showToast({
@@ -205,6 +205,7 @@ const StudentSupportForm = ({
                 className=" w-fit"
                 library="daisy"
                 onClick={() => {
+                  reset;
                   router.push(
                     redirectContents({ role: user.role || "STUDENT", lang }),
                   );

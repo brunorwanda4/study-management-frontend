@@ -41,23 +41,27 @@ const googleMapsUrlRegex =
   /^https?:\/\/(www\.)?google\.[a-z]{2,}(\.[a-z]{2,})?\/maps([/@?].*)?$/i;
 
 export const AddressSchema = z.object({
-  country: z.string().min(1, { message: "Country is required" }),
-  province: z.string().optional(),
-  district: z.string().optional(),
-  sector: z.string().optional(),
-  cell: z.string().optional(),
-  village: z.string().optional(),
-  state: z.string().optional(),
-  street: z.string().optional(),
-  city: z.string().optional(),
-  postal_code: z.string().optional(),
+  country: z.string().optional().nullable(),
+  province: z.string().optional().nullable(),
+  district: z.string().optional().nullable(),
+  sector: z.string().optional().nullable(),
+  cell: z.string().optional().nullable(),
+  village: z.string().optional().nullable(),
+  state: z.string().optional().nullable(),
+  street: z.string().optional().nullable(),
+  city: z.string().optional().nullable(),
+  postal_code: z.string().optional().nullable(),
   google_map_url: z
     .string()
-    .url({ message: "Invalid URL" })
-    .regex(googleMapsUrlRegex, {
-      message: "URL must be a valid Google Maps link",
-    })
-    .optional(),
+    .optional()
+    .refine(
+      (val) => {
+        if (!val || val.trim() === "") return true; // allow empty
+        return googleMapsUrlRegex.test(val);
+      },
+      { message: "URL must be a valid Google Maps link" },
+    )
+    .nullable(),
 });
 
 export type address = z.infer<typeof AddressSchema>;
@@ -146,12 +150,8 @@ export type Option = z.infer<typeof OptionSchema>;
 
 // ------------------ TimeRange ------------------
 export const TimeRangeSchema = z.object({
-  start: z
-    .string()
-    .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid start time format (HH:MM)"),
-  end: z
-    .string()
-    .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid end time format (HH:MM)"),
+  start: z.string(),
+  end: z.string(),
 });
 
 export type TimeRange = z.infer<typeof TimeRangeSchema>;

@@ -24,3 +24,30 @@ export const authOnboardingStudentSteps = [
     description: "",
   },
 ] as const;
+
+export const authOnboardingTeacherSteps = [
+  {
+    step: 1,
+    key: "position",
+    title: "School & Position Information",
+    description: "",
+  },
+  {
+    step: 2,
+    key: "background",
+    title: "Professional Background",
+    description: "",
+  },
+  {
+    step: 3,
+    key: "communication",
+    title: "Social & Communication",
+    description: "",
+  },
+  {
+    step: 4,
+    key: "teaching",
+    title: "Teaching Preferences & Goals",
+    description: "",
+  },
+] as const;

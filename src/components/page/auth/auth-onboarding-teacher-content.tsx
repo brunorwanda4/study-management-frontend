@@ -1,12 +1,12 @@
 "use client";
 import { SocialAndCommunicationForm } from "@/components/common/form/forms";
 import { GenericStepper } from "@/components/common/generic-stepper";
-import StudentAcademicInterestForm from "@/components/page/student/form/student-academic-interests-form";
-import StudentBackgroundForm from "@/components/page/student/form/student-background-form";
-import StudentSupportForm from "@/components/page/student/form/student-support-form";
+import TeacherBackgroundForm from "@/components/page/teacher/form/teacher-background-form";
+import TeacherPositionForm from "@/components/page/teacher/form/teacher-position-form";
+import TeacherPreferencesForm from "@/components/page/teacher/form/teacher-preferences-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Locale } from "@/i18n";
-import { authOnboardingStudentSteps } from "@/lib/const/auth-onboarding-const";
+import { authOnboardingTeacherSteps } from "@/lib/const/auth-onboarding-const";
 import { useStepper } from "@/lib/hooks/use-stepper";
 import type { UserModel } from "@/lib/schema/user/user-schema";
 import type { AuthContext } from "@/lib/utils/auth-context";
@@ -18,16 +18,16 @@ interface Props {
   user: UserModel;
 }
 
-const STORAGE_KEY = "auth-onboarding-student-content";
+const STORAGE_KEY = "auth-onboarding-teacher-content";
 
-const AuthOnboardingStudentContent = ({ lang, auth, user }: Props) => {
+const AuthOnboardingTeacherContent = ({ lang, auth, user }: Props) => {
   // pass the same storageKey to the hook so progress is persisted per this key
-  const stepper = useStepper(authOnboardingStudentSteps, STORAGE_KEY);
+  const stepper = useStepper(authOnboardingTeacherSteps, STORAGE_KEY);
 
   const {
     currentStep,
-    reset,
     setStep,
+    reset,
     markStepCompleted,
     initStepper,
     isReady,
@@ -42,10 +42,10 @@ const AuthOnboardingStudentContent = ({ lang, auth, user }: Props) => {
   const renderStep1 = () => (
     <Card>
       <CardHeader>
-        <CardTitle>Academic Interests & Subjects</CardTitle>
+        <CardTitle>School & Position Information</CardTitle>
       </CardHeader>
       <CardContent>
-        <StudentAcademicInterestForm
+        <TeacherPositionForm
           auth={auth}
           user={user}
           setStep={setStep}
@@ -58,10 +58,10 @@ const AuthOnboardingStudentContent = ({ lang, auth, user }: Props) => {
   const renderStep2 = () => (
     <Card>
       <CardHeader>
-        <CardTitle>Personal Details & Background</CardTitle>
+        <CardTitle>Professional Background</CardTitle>
       </CardHeader>
       <CardContent>
-        <StudentBackgroundForm
+        <TeacherBackgroundForm
           auth={auth}
           user={user}
           setStep={setStep}
@@ -74,7 +74,7 @@ const AuthOnboardingStudentContent = ({ lang, auth, user }: Props) => {
   const renderStep3 = () => (
     <Card>
       <CardHeader>
-        <CardTitle>Social & Communication </CardTitle>
+        <CardTitle>Teaching Preferences & Goals </CardTitle>
       </CardHeader>
       <CardContent>
         <SocialAndCommunicationForm
@@ -90,10 +90,10 @@ const AuthOnboardingStudentContent = ({ lang, auth, user }: Props) => {
   const renderStep4 = () => (
     <Card>
       <CardHeader>
-        <CardTitle>Support & Needs</CardTitle>
+        <CardTitle>Teaching Preferences & Goals</CardTitle>
       </CardHeader>
       <CardContent>
-        <StudentSupportForm
+        <TeacherPreferencesForm
           auth={auth}
           user={user}
           setStep={setStep}
@@ -110,7 +110,7 @@ const AuthOnboardingStudentContent = ({ lang, auth, user }: Props) => {
       {/* pass storageKey here so the GenericStepper can show the resume banner */}
       <GenericStepper
         {...stepper}
-        steps={authOnboardingStudentSteps}
+        steps={authOnboardingTeacherSteps}
         allowAllPreviousSteps
         storageKey={STORAGE_KEY}
         allowResumeJump
@@ -126,4 +126,4 @@ const AuthOnboardingStudentContent = ({ lang, auth, user }: Props) => {
   );
 };
 
-export default AuthOnboardingStudentContent;
+export default AuthOnboardingTeacherContent;

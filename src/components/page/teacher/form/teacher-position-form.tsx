@@ -1,5 +1,7 @@
+"use client";
 import { FormError, FormSuccess } from "@/components/common/form-message";
 import CheckboxInput from "@/components/common/form/checkbox-input";
+import RadioInput from "@/components/common/form/radio-input";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -10,20 +12,20 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import {
-  LanguageDetails,
-  StudyStyleDetails,
+  EmploymentTypeDetails,
   SubjectCategoryDetails,
 } from "@/lib/const/common-details-const";
 import { useToast } from "@/lib/context/toast/ToastContext";
+import type { TradeModule } from "@/lib/schema/admin/tradeSchema";
 import {
-  type StudentAcademicInterest,
-  StudentAcademicInterestSchema,
-} from "@/lib/schema/student/student-schema";
+  type TeacherPosition,
+  TeacherPositionSchema,
+} from "@/lib/schema/teacher/teacher-schema";
 import type { UserModel } from "@/lib/schema/user/user-schema";
 import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 
 interface props {
@@ -33,7 +35,7 @@ interface props {
   markStepCompleted?: (step: number, autoNext?: boolean, id?: string) => void;
 }
 
-const StudentAcademicInterestForm = ({
+const TeacherPositionForm = ({
   user,
   auth,
   setStep,
@@ -43,26 +45,47 @@ const StudentAcademicInterestForm = ({
   const [success, setSuccess] = useState<undefined | null | string>("");
   const [isPending, startTransition] = useTransition();
   const { showToast } = useToast();
+  const [trades, setTrades] = useState<TradeModule[]>([]);
+  const [loadingOptions, setLoadingOptions] = useState(true);
 
-  const form = useForm<StudentAcademicInterest>({
-    resolver: zodResolver(StudentAcademicInterestSchema),
+  useEffect(() => {
+    const fetchOptions = async () => {
+      try {
+        const [tradesRes] = await Promise.all([
+          apiRequest<any, TradeModule[]>("get", "/trades", undefined, {
+            token: auth.token,
+          }),
+        ]);
+
+        if (tradesRes.data) {
+          const activeTrades = tradesRes.data.filter((t) => !t.disable);
+          setTrades(activeTrades);
+        }
+      } finally {
+        setLoadingOptions(false);
+      }
+    };
+
+    fetchOptions();
+  }, [auth.token]);
+
+  const form = useForm<TeacherPosition>({
+    resolver: zodResolver(TeacherPositionSchema),
     defaultValues: {
       favorite_subjects_category: user.favorite_subjects_category
         ? user.favorite_subjects_category
         : [],
-      preferred_study_styles: user.preferred_study_styles
-        ? user.preferred_study_styles
-        : [],
-      languages_spoken: user.languages_spoken ? user.languages_spoken : [],
+      employment_type: user.employment_type ? user.employment_type : undefined,
+      teaching_level: user.teaching_level ? user.teaching_level : [],
     },
     mode: "onChange",
   });
 
-  const onSubmit = (value: StudentAcademicInterest) => {
+  const onSubmit = (value: TeacherPosition) => {
     setSuccess(null);
     setError(null);
     startTransition(async () => {
-      const update = await apiRequest<StudentAcademicInterest, UserModel>(
+      const update = await apiRequest<TeacherPosition, UserModel>(
         "put",
         `/users/${auth.user.id}`,
         value,
@@ -119,17 +142,17 @@ const StudentAcademicInterestForm = ({
           />
           <FormField
             control={form.control}
-            name="preferred_study_styles"
+            name="employment_type"
             render={({ field }) => (
               <FormItem className=" w-full space-y-2">
-                <FormLabel>Preferred study style</FormLabel>
+                <FormLabel>Employment type</FormLabel>
                 <FormControl>
-                  <CheckboxInput
+                  <RadioInput
                     showTooltip
-                    items={StudyStyleDetails}
-                    values={field.value}
+                    items={EmploymentTypeDetails}
+                    value={field.value}
                     onChange={field.onChange}
-                    classname=" grid-cols-3 gap-2"
+                    className=" grid-cols-3 gap-2"
                     disabled={isPending}
                   />
                 </FormControl>
@@ -139,20 +162,33 @@ const StudentAcademicInterestForm = ({
           />
           <FormField
             control={form.control}
-            name="languages_spoken"
+            name="teaching_level"
             render={({ field }) => (
               <FormItem className=" w-full space-y-2">
-                <FormLabel>Languages you speak</FormLabel>
-                <FormControl>
-                  <CheckboxInput
-                    showTooltip
-                    items={LanguageDetails}
-                    values={field.value}
-                    onChange={field.onChange}
-                    classname=" grid-cols-3 gap-2"
-                    disabled={isPending}
-                  />
-                </FormControl>
+                <FormLabel>Teaching Level</FormLabel>
+                {loadingOptions ? (
+                  <div className=" skeleton h-12 w-full" />
+                ) : (
+                  <FormControl>
+                    <CheckboxInput
+                      showTooltip
+                      items={Object.fromEntries(
+                        trades.map((t) => [
+                          t.id || t._id,
+                          {
+                            name: t.name,
+                            description: t.description ?? undefined,
+                            image: undefined,
+                          },
+                        ]),
+                      )}
+                      values={field.value}
+                      onChange={field.onChange}
+                      classname=" grid-cols-3 gap-2"
+                      disabled={isPending}
+                    />
+                  </FormControl>
+                )}
                 <FormMessage />
               </FormItem>
             )}
@@ -187,7 +223,7 @@ const StudentAcademicInterestForm = ({
                 library="daisy"
                 role={isPending ? "loading" : undefined}
               >
-                Add academic interests
+                Continue
               </Button>
             </div>
           </div>
@@ -200,7 +236,7 @@ const StudentAcademicInterestForm = ({
             library="daisy"
             role={isPending ? "loading" : undefined}
           >
-            Add academic interests
+            Add Position information
           </Button>
         )}
       </form>
@@ -208,4 +244,4 @@ const StudentAcademicInterestForm = ({
   );
 };
 
-export default StudentAcademicInterestForm;
+export default TeacherPositionForm;

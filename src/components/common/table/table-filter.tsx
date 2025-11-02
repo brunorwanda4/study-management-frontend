@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Column } from "@tanstack/react-table";
+import type { Column } from "@tanstack/react-table";
 import { SearchIcon } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useId, useMemo } from "react";
@@ -151,10 +151,10 @@ export default function TableFilter({
     return (
       <div className="*:not-first:mt-2">
         <Label>{columnHeader}</Label>
-        <div className="flex">
+        <div className="flex gap-1">
           <Input
             id={`${id}-min`}
-            className="flex-1 rounded-e-none"
+            className="flex-1 rounded-e-none w-24"
             value={(columnFilterValue as [number, number])?.[0] ?? ""}
             onChange={(e) =>
               column.setFilterValue((old: [number, number]) => [
@@ -167,7 +167,7 @@ export default function TableFilter({
           />
           <Input
             id={`${id}-max`}
-            className="-ms-px flex-1 rounded-s-none"
+            className="-ms-px flex-1 rounded-s-none w-24"
             value={(columnFilterValue as [number, number])?.[1] ?? ""}
             onChange={(e) =>
               column.setFilterValue((old: [number, number]) => [

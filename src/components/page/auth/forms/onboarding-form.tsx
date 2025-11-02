@@ -59,7 +59,6 @@ const OnboardingForm = ({ lang, auth, dictionary }: Props) => {
       gender: auth.user.gender ?? undefined,
     },
   });
-
   const onSubmit = (value: UserOnboarding) => {
     setSuccess(null);
     setError(null);

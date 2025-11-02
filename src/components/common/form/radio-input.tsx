@@ -20,6 +20,7 @@ interface RadioInputProps {
   showTooltip?: boolean;
   className?: string;
   disabled?: boolean;
+  classname?: string;
 }
 
 export default function RadioInput({
@@ -30,6 +31,7 @@ export default function RadioInput({
   showTooltip = false,
   className,
   disabled,
+  classname,
 }: RadioInputProps) {
   const id = useId();
 
@@ -58,7 +60,7 @@ export default function RadioInput({
       <RadioGroup
         value={value}
         onValueChange={(val) => onChange?.(val)}
-        className="grid-cols-2"
+        className={cn("grid-cols-2", classname)}
         disabled={disabled}
       >
         {Object.entries(items).map(([key, item]) => {

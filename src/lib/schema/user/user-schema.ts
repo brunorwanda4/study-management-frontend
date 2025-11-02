@@ -18,6 +18,7 @@ import {
   SpecialSupportSchema,
   StudyStyleSchema,
   SubjectCategorySchema,
+  TeachingStyleSchema,
   userRoleSchema,
 } from "@/lib/schema/common-details-schema";
 import { GuardianInfoSchema } from "@/lib/schema/parent/guardian-schema";
@@ -85,7 +86,7 @@ export const UserModelSchema = z.object({
 
   department: DepartmentSchema.optional(),
   job_title: JobTitleSchema.optional(),
-  teaching_style: z.array(StudyStyleSchema).optional(),
+  teaching_style: z.array(TeachingStyleSchema).optional(),
 
   // 🔹 Timestamps
   created_at: z.string().optional(),

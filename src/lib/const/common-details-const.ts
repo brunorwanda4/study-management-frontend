@@ -669,7 +669,7 @@ export const EmploymentTypeDetails: Record<EmploymentType, CommonDetails> =
       e,
       {
         name: e.replace(/([A-Z])/g, " $1").trim(),
-        image: "/icons/employment/default.png",
+        // image: "/icons/employment/default.png",
         description: `${e.replace(/([A-Z])/g, " $1").trim()} job type or work arrangement.`,
       },
     ]),
@@ -696,7 +696,7 @@ export const EducationLevelDetails: Record<EducationLevel, CommonDetails> =
       l,
       {
         name: l.replace(/([A-Z])/g, " $1").trim(),
-        image: "/icons/education/default.png",
+        // image: "/icons/education/default.png",
         description: `Education level: ${l.replace(/([A-Z])/g, " $1").trim()}.`,
       },
     ]),
@@ -726,7 +726,7 @@ export const CertificationDetails: Record<
     c,
     {
       name: c.replace(/([A-Z])/g, " $1").trim(),
-      image: "/icons/certifications/default.png",
+      // image: "/icons/certifications/default.png",
       description: `Training or certification in ${c.replace(/([A-Z])/g, " $1").trim()}.`,
     },
   ]),
@@ -751,7 +751,7 @@ export const TeachingStyleDetails: Record<TeachingStyle, CommonDetails> =
       t,
       {
         name: t.replace(/([A-Z])/g, " $1").trim(),
-        image: "/icons/teaching/default.png",
+        // image: "/icons/teaching/default.png",
         description: `${t.replace(/([A-Z])/g, " $1").trim()} teaching method.`,
       },
     ]),
@@ -801,7 +801,7 @@ export const ProfessionalGoalDetails: Record<ProfessionalGoal, CommonDetails> =
       p,
       {
         name: p.replace(/([A-Z])/g, " $1").trim(),
-        image: "/icons/goals/default.png",
+        // image: "/icons/goals/default.png",
         description: `Professional goal: ${p.replace(/([A-Z])/g, " $1").trim()}.`,
       },
     ]),

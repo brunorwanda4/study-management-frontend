@@ -13,7 +13,6 @@ import {
 import { CountriesContext } from "@/lib/data/locations";
 import type { address } from "@/lib/schema/common-details-schema";
 import { cn } from "@/lib/utils";
-import { useTheme } from "next-themes";
 
 interface AddressInputProps {
   value?: address | null;
@@ -35,14 +34,11 @@ export default function AddressInput({
   onChange,
   disabled,
   error,
-  label = "Address",
   className,
 }: AddressInputProps) {
-  const { theme } = useTheme();
-
   const handleChange = (key: keyof address, val: string) => {
     onChange?.({
-      ...value,
+      ...(value ?? {}),
       [key]: val,
       country: "Rwanda", // always Rwanda
     });
@@ -63,7 +59,7 @@ export default function AddressInput({
           <SelectTrigger>
             <SelectValue placeholder="Rwanda" />
           </SelectTrigger>
-          <SelectContent data-theme={theme}>
+          <SelectContent>
             <SelectItem value="Rwanda">Rwanda</SelectItem>
           </SelectContent>
         </Select>
@@ -81,7 +77,7 @@ export default function AddressInput({
             <SelectTrigger>
               <SelectValue placeholder="Select Province" />
             </SelectTrigger>
-            <SelectContent data-theme={theme}>
+            <SelectContent>
               {provinces.map((p) => (
                 <SelectItem key={p.name} value={p.name}>
                   {p.name}
@@ -101,7 +97,7 @@ export default function AddressInput({
             <SelectTrigger>
               <SelectValue placeholder="Select District" />
             </SelectTrigger>
-            <SelectContent data-theme={theme}>
+            <SelectContent>
               {districts.map((d) => (
                 <SelectItem key={d} value={d}>
                   {d}
