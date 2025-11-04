@@ -1,11 +1,10 @@
 import { mainClassSchema } from "@/lib/schema/admin/main-classes-schema";
+import { tradeSchema } from "@/lib/schema/admin/tradeSchema";
 import { ClassTypeSchema } from "@/lib/schema/common-details-schema";
 import { SchoolSchema } from "@/lib/schema/school/school-schema";
-import { TeacherSchema } from "@/lib/schema/school/teacher-schema";
+// import { TeacherSchema } from "@/lib/schema/school/teacher-schema";
 import { UserModelSchema } from "@/lib/schema/user/user-schema";
-import { z } from "zod";
-
-// 🧩 Enum: ClassType
+import z from "zod";
 
 // 🧩 Base Class Schema
 export const ClassSchema = z.object({
@@ -23,6 +22,7 @@ export const ClassSchema = z.object({
   type: ClassTypeSchema.default("Private"),
 
   main_class_id: z.string().optional(),
+  trade_id: z.string().optional(),
 
   is_active: z.boolean(),
 
@@ -37,6 +37,36 @@ export const ClassSchema = z.object({
   updated_at: z.coerce.date().optional(),
 });
 export type Class = z.infer<typeof ClassSchema>;
+
+export const CreateClassSchema = z.object({
+  name: z.string().min(1, "Class name is required"),
+  username: z.string().min(1, "Username is required"),
+
+  image: z.string().optional(),
+  school_id: z.string().optional(),
+  creator_id: z.string().optional(),
+  class_teacher_id: z.string().optional(),
+  trade_id: z.string().optional(),
+  // ✅ Remove `.optional()` and use `.default()` directly
+  type: ClassTypeSchema,
+
+  main_class_id: z.string().optional(),
+
+  // ✅ Default value makes this required but with a fallback
+  is_active: z.boolean(),
+
+  description: z.string().nullable().optional(),
+  capacity: z
+    .number()
+    .int()
+    .positive("Capacity must be a positive number")
+    .max(80, "Capacity cannot exceed 80")
+    .min(5, "Min student must be gether than 50")
+    .optional(),
+  grade_level: z.string().optional(),
+});
+
+export type CreateClass = z.infer<typeof CreateClassSchema>;
 
 // 🧩 UpdateClass Schema (mirrors Rust UpdateClass)
 export const UpdateClassSchema = z.object({
@@ -70,8 +100,9 @@ export const ClassWithOthersSchema = z.object({
   ...ClassSchema.shape,
   school: SchoolSchema.optional(), // SchoolSchema if available
   creator: UserModelSchema.optional(), // UserSchema
-  class_teacher: TeacherSchema.optional(), // TeacherSchema
+  // class_teacher: TeacherSchema.optional(), // TeacherSchema
   main_class: mainClassSchema.optional(), // MainClassSchema
+  trade: tradeSchema.optional(),
 });
 export type ClassWithOthers = z.infer<typeof ClassWithOthersSchema>;
 

@@ -2,7 +2,7 @@ import { MainSubjectSchema } from "@/lib/schema/admin/subjects/main-subject-sche
 import { ClassSchema } from "@/lib/schema/class/class-schema";
 import { SubjectCategorySchema } from "@/lib/schema/common-details-schema";
 import { TeacherSchema } from "@/lib/schema/school/teacher-schema";
-import { z } from "zod";
+import z from "zod";
 
 // ------------ SUBJECT ------------
 

@@ -1,7 +1,20 @@
+import CreateClassForm from "@/components/page/class/form/create-class-form";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import type { AuthContext } from "@/lib/utils/auth-context";
 
-const CreateClassDialog = () => {
+interface props {
+  auth: AuthContext;
+  isSchool?: boolean;
+}
+
+const CreateClassDialog = ({ auth, isSchool }: props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -9,7 +22,13 @@ const CreateClassDialog = () => {
           Create class
         </Button>
       </DialogTrigger>
-      <DialogContent>Create class dialog</DialogContent>
+      <DialogContent className="max- max-h-[95vh] overflow-y-auto sm:max-w-4xl">
+        <DialogHeader>Create Class</DialogHeader>
+        <DialogDescription>
+          Create new class which is not exits
+        </DialogDescription>
+        <CreateClassForm auth={auth} isSchool />
+      </DialogContent>
     </Dialog>
   );
 };

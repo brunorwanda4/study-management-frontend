@@ -60,7 +60,7 @@ const SchoolStaffClassesPage = async (props: props) => {
           <h2 className="title-page">Classes</h2>
           <p>Manage and view all classes in your school.</p>
         </div>
-        <SchoolStaffClassFilter />
+        <SchoolStaffClassFilter auth={auth} />
         <div>
           <DisplaySwitcher
             table={

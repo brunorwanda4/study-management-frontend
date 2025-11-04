@@ -22,20 +22,21 @@ import { FormError, FormSuccess } from "@/components/common/form-message";
 import { useToast } from "@/lib/context/toast/ToastContext";
 
 import SelectWithSearch from "@/components/common/select-with-search";
-import {
-  type MainClassModel,
-  mainClassSchema,
-} from "@/lib/schema/admin/main-classes-schema";
 import type { TradeModule } from "@/lib/schema/admin/tradeSchema";
+import {
+  CreateClassSchema,
+  type CreateClass,
+} from "@/lib/schema/class/class-schema";
 import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 
 interface Props {
   auth: AuthContext;
+  isSchool?: boolean;
   trade?: TradeModule;
 }
 
-const CreateMainClassForm = ({ auth, trade }: Props) => {
+const CreateClassForm = ({ auth, trade }: Props) => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
@@ -44,7 +45,6 @@ const CreateMainClassForm = ({ auth, trade }: Props) => {
   const [trades, setTrades] = useState<TradeModule[]>([]);
   const [loadingOptions, setLoadingOptions] = useState(true);
 
-  // Fetch options when component mounts
   useEffect(() => {
     const fetchOptions = async () => {
       try {
@@ -68,32 +68,36 @@ const CreateMainClassForm = ({ auth, trade }: Props) => {
     fetchOptions();
   }, [auth.token, trade]);
 
-  const form = useForm<MainClassModel>({
-    resolver: zodResolver(mainClassSchema),
+  const form = useForm<CreateClass>({
+    resolver: zodResolver(CreateClassSchema),
     defaultValues: {
       name: "",
       username: "",
       description: "",
-      trade_id: trade ? trade._id || trade.id : undefined,
-      disable: false,
-      level: "1",
+      is_active: true,
+      type: "Private",
+      capacity: 45,
+      grade_level: "",
+      school_id: auth.school ? auth.school.id : undefined,
+      creator_id: auth.user.id,
+      trade_id: undefined,
     },
     mode: "onChange",
   });
 
-  const handleSubmit = (values: MainClassModel) => {
+  const handleSubmit = (values: CreateClass) => {
     setError("");
     setSuccess("");
 
     startTransition(async () => {
-      console.log("🫡🫡", values);
       try {
-        const api_data = { ...values, level: Number(values.level) };
+        const api_data = { ...values };
+
         const request = await apiRequest<typeof api_data, any>(
           "post",
-          "/main-classes",
+          "/school/classes", // ✅ changed to correct endpoint
           api_data,
-          { token: auth.token },
+          { token: auth.token, schoolToken: auth.schoolToken },
         );
 
         if (!request.data) {
@@ -104,9 +108,9 @@ const CreateMainClassForm = ({ auth, trade }: Props) => {
             type: "error",
           });
         } else {
-          setSuccess("Main class created successfully!");
+          setSuccess("Class created successfully!");
           showToast({
-            title: "Main Class created",
+            title: "Class Created",
             description: `Created: ${request.data.name}`,
             type: "success",
           });
@@ -121,9 +125,10 @@ const CreateMainClassForm = ({ auth, trade }: Props) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
-        {/* Name */}
         <div className="flex flex-row gap-4">
+          {/* Left Side */}
           <div className="flex w-1/2 flex-col space-y-4">
+            {/* Name */}
             <FormField
               name="name"
               control={form.control}
@@ -133,7 +138,7 @@ const CreateMainClassForm = ({ auth, trade }: Props) => {
                   <FormControl>
                     <Input
                       {...field}
-                      placeholder="Main class name"
+                      placeholder="Class name"
                       disabled={isPending}
                     />
                   </FormControl>
@@ -182,7 +187,31 @@ const CreateMainClassForm = ({ auth, trade }: Props) => {
               )}
             />
           </div>
+
+          {/* Right Side */}
           <div className="flex w-1/2 flex-col space-y-4">
+            {/* Capacity */}
+            <FormField
+              name="capacity"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Capacity</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="number"
+                      min={5}
+                      max={80}
+                      placeholder="Number of students"
+                      disabled={isPending}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             {!trade && (
               <FormField
                 name="trade_id"
@@ -210,19 +239,17 @@ const CreateMainClassForm = ({ auth, trade }: Props) => {
                 )}
               />
             )}
-            {/* level */}
+            {/* Grade level */}
             <FormField
-              name="level"
+              name="grade_level"
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Level</FormLabel>
+                  <FormLabel>Grade Level</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
-                      type="number"
-                      placeholder="level"
-                      numberMode="level"
+                      placeholder="Grade level"
                       disabled={isPending}
                     />
                   </FormControl>
@@ -230,13 +257,14 @@ const CreateMainClassForm = ({ auth, trade }: Props) => {
                 </FormItem>
               )}
             />
-            {/* Disable */}
+
+            {/* Is Active */}
             <FormField
-              name="disable"
+              name="is_active"
               control={form.control}
               render={({ field }) => (
                 <FormItem className="flex flex-row-reverse justify-start gap-2">
-                  <FormLabel>Disable</FormLabel>
+                  <FormLabel>Active</FormLabel>
                   <FormControl>
                     <Checkbox
                       checked={field.value ?? false}
@@ -258,18 +286,19 @@ const CreateMainClassForm = ({ auth, trade }: Props) => {
         {/* Footer */}
         <DialogFooter className="px-6 pb-6 sm:justify-end">
           <DialogClose asChild>
-            <Button type="button" variant="outline">
+            <Button type="button" variant="outline" library="daisy">
               Cancel
             </Button>
           </DialogClose>
           <Button
             type="submit"
-            variant="default"
+            variant="info"
             disabled={isPending}
             className="w-full sm:w-auto"
             role={isPending ? "loading" : undefined}
+            library="daisy"
           >
-            Add Main Class
+            Add Class
           </Button>
         </DialogFooter>
       </form>
@@ -277,4 +306,4 @@ const CreateMainClassForm = ({ auth, trade }: Props) => {
   );
 };
 
-export default CreateMainClassForm;
+export default CreateClassForm;

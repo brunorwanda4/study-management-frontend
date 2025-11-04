@@ -92,6 +92,9 @@ export const GenderDetails: Record<Gender, CommonDetails> = {
   },
 };
 
+// class Level
+export const TradeTypes = ["Senior", "Primary", "Level", "Nursing"] as const;
+
 /** ---------- SCHOOL ---------- */
 export const schoolTypes = [
   "Public",

@@ -1,12 +1,14 @@
-import NoItemsPage from "@/components/common/pages/no-items-page";
+import CreateClassForm from "@/components/page/class/form/create-class-form";
+import { authContext } from "@/lib/utils/auth-context";
+import { redirect } from "next/navigation";
 
-const TestingPages = () => {
-  return (
-    <NoItemsPage
-      title="It look you don't have school"
-      details="Create new school if you want all create new"
-    />
-  );
+const TestingPages = async () => {
+  const auth = await authContext();
+
+  if (!auth) {
+    redirect(`/en/auth/login`);
+  }
+  return <CreateClassForm auth={auth} />;
 };
 
 export default TestingPages;

@@ -23,7 +23,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Option } from "@/lib/schema/common-details-schema";
+import type { Option } from "@/lib/schema/common-details-schema";
 import { cn } from "@/lib/utils";
 
 interface SelectWithSearchProps {
@@ -78,7 +78,7 @@ export default function SelectWithSearch({
             variant="outline"
             aria-expanded={open}
             disabled={disabled}
-            className="bg-background hover:bg-background border-input w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]"
+            className="bg-background hover:bg-background border border-base-content/50 w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]"
           >
             <span
               className={cn(

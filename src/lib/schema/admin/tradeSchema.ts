@@ -1,4 +1,5 @@
 import { sectorSchema } from "@/lib/schema/admin/sectorSchema";
+import { TradeTypeSchema } from "@/lib/schema/common-details-schema";
 import z from "zod";
 
 export const tradeSchema = z.object({
@@ -21,7 +22,7 @@ export const tradeSchema = z.object({
   class_max: z
     .number()
     .min(0, { message: "Class maximum must be 0 or greater" }),
-  type: z.enum(["Senior", "Primary", "Level", "Nursing"]),
+  type: TradeTypeSchema,
   disable: z.boolean().optional().nullable(),
   created_at: z.date().optional().nullable(),
   updated_at: z.date().optional().nullable(),

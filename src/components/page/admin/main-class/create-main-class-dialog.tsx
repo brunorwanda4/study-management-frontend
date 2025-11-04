@@ -9,8 +9,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { TradeModule } from "@/lib/schema/admin/tradeSchema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { TradeModule } from "@/lib/schema/admin/tradeSchema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import { BsPlus } from "react-icons/bs";
 
 interface props {

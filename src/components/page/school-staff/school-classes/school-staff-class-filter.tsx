@@ -3,9 +3,14 @@ import CreateClassDialog from "@/components/page/school-staff/dialog/create-clas
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import { BsSearch } from "react-icons/bs";
 
-const SchoolStaffClassFilter = () => {
+interface props {
+  auth: AuthContext;
+}
+
+const SchoolStaffClassFilter = ({ auth }: props) => {
   return (
     <div>
       <div className=" flex justify-between w-full items-center">
@@ -29,7 +34,7 @@ const SchoolStaffClassFilter = () => {
             </Button>
           </div>
         </div>
-        <CreateClassDialog />
+        <CreateClassDialog auth={auth} isSchool />
       </div>
       <Separator />
     </div>

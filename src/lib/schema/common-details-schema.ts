@@ -32,6 +32,7 @@ import {
   SubjectTypes,
   TeacherTypes,
   TeachingStyles,
+  TradeTypes,
   userRoles,
   Weekdays,
 } from "@/lib/const/common-details-const";
@@ -348,3 +349,7 @@ export type SubjectMaterialType = z.infer<typeof SubjectMaterialTypeEnum>;
 export const SubjectGradingTypeEnum = z.enum(subjectGradingTypes);
 
 export type SubjectGradingType = z.infer<typeof SubjectGradingTypeEnum>;
+
+// trades
+export const TradeTypeSchema = z.enum(TradeTypes);
+export type TradeType = z.infer<typeof TradeTypeSchema>;
