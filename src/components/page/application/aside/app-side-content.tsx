@@ -133,7 +133,7 @@ export const teacherSidebarGroups: sidebarGroupsProps[] = [
 
 export const schoolStaffSidebarGroups: sidebarGroupsProps[] = [
   {
-    label: "Dashboard",
+    label: "School Space",
     items: [
       {
         title: "Dashboard",
@@ -141,28 +141,24 @@ export const schoolStaffSidebarGroups: sidebarGroupsProps[] = [
         url: "/s-t",
       },
       {
-        title: "School",
+        title: "School Overview",
         icon: "/icons/school.png",
-        url: "/school",
+        url: "/s-t/school",
       },
       {
         title: "Calendar",
-        icon: "/icons/event.png",
+        icon: "/icons/attendance/online.png",
         url: "/s-t/calendar",
-      },
-      {
-        title: "Join school requests",
-        icon: "/icons/request.png",
-        url: "/s-t/join-school-requests",
       },
     ],
   },
+
   {
-    label: "Your school",
+    label: "Members",
     items: [
       {
         title: "Students",
-        icon: "/icons/students.png",
+        icon: "/icons/student.png",
         url: "/s-t/students",
       },
       {
@@ -171,54 +167,68 @@ export const schoolStaffSidebarGroups: sidebarGroupsProps[] = [
         url: "/s-t/teachers",
       },
       {
+        title: "Staff",
+        icon: "/icons/staff.png",
+        url: "/s-t/staffs",
+      },
+    ],
+  },
+
+  {
+    label: "Academics",
+    items: [
+      {
         title: "Classes",
         icon: "/icons/classroom.png",
         url: "/s-t/classes",
       },
       {
-        title: "Staff",
-        icon: "/icons/staff.png",
-        url: "/s-t/staffs",
+        title: "Timetable & Schedule",
+        icon: "/icons/timetable.png",
+        url: "/s-t/timetable",
       },
       {
-        title: "School Setting",
-        icon: "/icons/settings.png",
-        url: "/s-t/settings",
+        title: "Performance & Exams",
+        icon: "/icons/performance.png",
+        url: "/s-t/performance",
       },
-      // {
-      //   title: "Subjects & Curriculum",
-      //   icon: "/icons/book-stack.png",
-      //   url: "/s-t/subjects",
-      // },
-      // {
-      //   title: "Academic & Performance",
-      //   icon: "/icons/academic.png",
-      //   url: "/s-t/academics",
-      // },
-      // {
-      //   title: "School Announcements",
-      //   icon: "/icons/bell.png",
-      //   url: "/s-t/notifications",
-      // },
-      // {
-      //   title: "Extracurricular Activities",
-      //   icon: "/icons/extracurricular.png",
-      //   url: "/s-t/extracurricular",
-      // },
-      // {
-      //   title: "Parental & Guardian",
-      //   icon: "/icons/family.png",
-      //   url: "/s-t/parents",
-      // },
-      // {
-      //   title: "Security & User Access",
-      //   icon: "/icons/shield.png",
-      //   url: "/s-t/Securities",
-      // },
+      {
+        title: "Attendance",
+        icon: "/icons/attendance/manual.png",
+        url: "/s-t/attendance",
+      },
+    ],
+  },
+
+  {
+    label: "Communication",
+    items: [
+      {
+        title: "Announcements",
+        icon: "/icons/announcement.png",
+        url: "/s-t/announcements",
+      },
+      {
+        title: "Join School Requests",
+        icon: "/icons/request.png",
+        url: "/s-t/join-school-requests",
+      },
     ],
   },
   {
-    label: "For you",
+    label: "Management",
+    items: [
+      {
+        title: "School Settings",
+        icon: "/icons/settings.png",
+        url: "/s-t/setting",
+      },
+    ],
+  },
+
+  // 👇 USER-LEVEL SECTION
+  {
+    label: "For You",
     items: [
       {
         title: "Messages",

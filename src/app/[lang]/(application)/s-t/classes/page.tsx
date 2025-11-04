@@ -67,6 +67,7 @@ const SchoolStaffClassesPage = async (props: props) => {
               <ClassesSchoolTable
                 lang={lang}
                 realtimeEnabled
+                auth={auth}
                 classes={classes.data ?? []}
               />
             }

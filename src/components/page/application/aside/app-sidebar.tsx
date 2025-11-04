@@ -21,6 +21,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import type { Locale } from "@/i18n";
 import { isActivePath } from "@/lib/helpers/link-is-active";
 import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
@@ -31,9 +32,10 @@ import type { sidebarGroupsProps } from "./app-side-content";
 
 interface AppSidebarProps {
   items: sidebarGroupsProps[];
+  lang: Locale;
 }
 
-export function AppSidebar({ items }: AppSidebarProps) {
+export function AppSidebar({ items, lang }: AppSidebarProps) {
   const path = usePathname();
   const { theme } = useTheme();
   return (
@@ -59,7 +61,7 @@ export function AppSidebar({ items }: AppSidebarProps) {
                           <AccordionTrigger
                             className={cn(
                               buttonVariants({ variant: "ghost" }),
-                              isActivePath(path, item.url) &&
+                              isActivePath(path, item.url, lang) &&
                                 `bg-base-300 ${theme === "dark" && "bg-white/10"}`,
                               "hover:bg-base-200 w-full justify-between rounded-l-none",
                             )}
@@ -91,7 +93,7 @@ export function AppSidebar({ items }: AppSidebarProps) {
                                       variant: "ghost",
                                       size: "sm",
                                     }),
-                                    isActivePath(path, subItem.url) &&
+                                    isActivePath(path, subItem.url, lang) &&
                                       "bg-base-300",
                                     "hover:bg-base-200 ml-6 justify-start rounded-l-none",
                                   )}
@@ -127,7 +129,7 @@ export function AppSidebar({ items }: AppSidebarProps) {
                         <Link
                           className={cn(
                             buttonVariants({ variant: "ghost" }),
-                            isActivePath(path, item.url) &&
+                            isActivePath(path, item.url, lang) &&
                               `bg-base-300 ${theme === "dark" && "bg-white/10"}`,
                             "hover:bg-base-200 justify-between rounded-l-none",
                           )}

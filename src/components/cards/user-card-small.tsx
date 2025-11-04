@@ -1,4 +1,4 @@
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { userImage } from "@/lib/context/images";
 import { toLowerCase } from "@/lib/functions/characters";
 import { cn } from "@/lib/utils";

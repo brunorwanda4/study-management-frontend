@@ -35,6 +35,7 @@ export default async function ApplicationLayout(props: Props) {
     <SidebarProvider>
       <AppNav auth={auth} lang={lang as Locale} />
       <AppSidebar
+        lang={lang as Locale}
         items={
           role === "STUDENT"
             ? studentSidebarGroups
