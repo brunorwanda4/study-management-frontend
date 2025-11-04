@@ -334,8 +334,6 @@ const CreateSchoolForm = ({ lang, auth }: Props) => {
                   <UploadImage
                     onChange={field.onChange}
                     disabled={isPending}
-                    className="size-40 w-full md:mb-4"
-                    Classname=" w-full min-h-44"
                     value={field.value?.toString() ?? null}
                   />
                 </FormControl>
@@ -516,7 +514,7 @@ const CreateSchoolForm = ({ lang, auth }: Props) => {
           />
 
           {/* Contact Fields */}
-          <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="my-4 grid grid-cols-1 gap-4 md:grid-cols-2">
             <FormField
               control={form.control}
               name="contact.phone"

@@ -36,7 +36,7 @@ const SchoolStaffClassesPage = async (props: props) => {
   const [classes] = await Promise.all([
     apiRequest<void, ClassWithOthers[]>(
       "get",
-      `/school/classes/with-details`,
+      `/school/classes/with-others?limit=9`,
       undefined,
       {
         token: auth.token,
@@ -64,9 +64,20 @@ const SchoolStaffClassesPage = async (props: props) => {
         <div>
           <DisplaySwitcher
             table={
-              <ClassesSchoolTable lang={lang} classes={classes.data ?? []} />
+              <ClassesSchoolTable
+                lang={lang}
+                realtimeEnabled
+                classes={classes.data ?? []}
+              />
             }
-            cards={<AllClassesCards lang={lang} auth={auth} />}
+            cards={
+              <AllClassesCards
+                classes={classes.data ?? []}
+                lang={lang}
+                realtimeEnabled
+                auth={auth}
+              />
+            }
           />
         </div>
       </div>

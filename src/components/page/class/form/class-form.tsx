@@ -18,120 +18,177 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
+import UploadImage from "@/components/common/cards/form/upload-image";
 import { FormError, FormSuccess } from "@/components/common/form-message";
-import { useToast } from "@/lib/context/toast/ToastContext";
-
 import SelectWithSearch from "@/components/common/select-with-search";
+
+import { useToast } from "@/lib/context/toast/ToastContext";
+import apiRequest from "@/service/api-client";
+
 import type { TradeModule } from "@/lib/schema/admin/tradeSchema";
 import {
   CreateClassSchema,
+  type Class,
   type CreateClass,
 } from "@/lib/schema/class/class-schema";
 import type { AuthContext } from "@/lib/utils/auth-context";
-import apiRequest from "@/service/api-client";
 
 interface Props {
   auth: AuthContext;
   isSchool?: boolean;
   trade?: TradeModule;
+  cls?: Class;
 }
 
-const CreateClassForm = ({ auth, trade }: Props) => {
-  const [error, setError] = useState<string | undefined>("");
-  const [success, setSuccess] = useState<string | undefined>("");
+const ClassForm = ({ auth, trade, cls, isSchool }: Props) => {
+  const [error, setError] = useState<string>();
+  const [success, setSuccess] = useState<string>();
   const [isPending, startTransition] = useTransition();
+  const [trades, setTrades] = useState<TradeModule[]>([]);
+  const [loadingTrades, setLoadingTrades] = useState(true);
+
   const { showToast } = useToast();
 
-  const [trades, setTrades] = useState<TradeModule[]>([]);
-  const [loadingOptions, setLoadingOptions] = useState(true);
-
+  // -------------------------------
+  // Fetch available trades
+  // -------------------------------
   useEffect(() => {
-    const fetchOptions = async () => {
+    const loadTrades = async () => {
       try {
-        const [tradesRes] = await Promise.all([
-          trade
-            ? { data: [] }
-            : apiRequest<any, TradeModule[]>("get", "/trades", undefined, {
-                token: auth.token,
-              }),
-        ]);
-
-        if (tradesRes.data) {
-          const activeTrades = tradesRes.data.filter((t) => !t.disable);
-          setTrades(activeTrades);
+        if (trade) {
+          setTrades([]);
+          return;
         }
+
+        const res = await apiRequest<any, TradeModule[]>(
+          "get",
+          "/trades",
+          undefined,
+          {
+            token: auth.token,
+          },
+        );
+
+        const activeTrades = res.data?.filter((t) => !t.disable) ?? [];
+        setTrades(activeTrades);
       } finally {
-        setLoadingOptions(false);
+        setLoadingTrades(false);
       }
     };
 
-    fetchOptions();
+    loadTrades();
   }, [auth.token, trade]);
 
+  // -------------------------------
+  // Initialize form
+  // -------------------------------
   const form = useForm<CreateClass>({
     resolver: zodResolver(CreateClassSchema),
     defaultValues: {
-      name: "",
-      username: "",
-      description: "",
-      is_active: true,
-      type: "Private",
-      capacity: 45,
-      grade_level: "",
-      school_id: auth.school ? auth.school.id : undefined,
-      creator_id: auth.user.id,
-      trade_id: undefined,
+      name: cls?.name ?? "",
+      username: cls?.username ?? "",
+      description: cls?.description ?? "",
+      is_active: cls?.is_active ?? true,
+      type: cls?.type ?? "Private",
+      capacity: cls?.capacity ?? 45,
+      grade_level: cls?.grade_level ?? "",
+      image: cls?.image,
+      school_id:
+        cls?.school_id ??
+        (isSchool && auth.school ? auth.school.id : undefined),
+      creator_id: cls?.creator_id ?? auth.user.id,
+      trade_id: cls?.trade_id,
     },
     mode: "onChange",
   });
 
+  // -------------------------------
+  // Submit handler
+  // -------------------------------
   const handleSubmit = (values: CreateClass) => {
-    setError("");
-    setSuccess("");
-
+    setError(undefined);
+    setSuccess(undefined);
+    console.log("🤣🤣", values);
     startTransition(async () => {
       try {
-        const api_data = { ...values };
+        const endpoint = cls
+          ? isSchool
+            ? `/school/classes/${cls._id || cls.id}`
+            : `/classes/${cls._id || cls.id}`
+          : isSchool
+            ? "/school/classes"
+            : "/classes";
 
-        const request = await apiRequest<typeof api_data, any>(
-          "post",
-          "/school/classes", // ✅ changed to correct endpoint
-          api_data,
+        const response = await apiRequest<typeof values, Class>(
+          cls ? "put" : "post",
+          endpoint,
+          values,
           { token: auth.token, schoolToken: auth.schoolToken },
         );
 
-        if (!request.data) {
-          setError(request.message);
+        if (!response.data) {
+          setError(response.message);
           showToast({
             title: "Error",
-            description: request.message,
+            description: response.message,
             type: "error",
           });
-        } else {
-          setSuccess("Class created successfully!");
-          showToast({
-            title: "Class Created",
-            description: `Created: ${request.data.name}`,
-            type: "success",
-          });
-          form.reset();
+          return;
         }
+
+        const message = cls
+          ? "Class updated successfully!"
+          : "Class created successfully!";
+        setSuccess(message);
+
+        showToast({
+          title: cls ? "Class Updated" : "Class Created",
+          description: response.data.name,
+          type: "success",
+        });
+
+        if (!cls) form.reset();
       } catch (err) {
-        setError(`Unexpected error occurred [${err}]. Please try again.`);
+        setError(
+          `Unexpected error occurred [${String(err)}]. Please try again.`,
+        );
       }
     });
   };
 
+  // -------------------------------
+  // Render
+  // -------------------------------
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
-        <div className="flex flex-row gap-4">
-          {/* Left Side */}
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+        <div className="flex flex-row gap-6">
+          {/* ---------- Left Section ---------- */}
           <div className="flex w-1/2 flex-col space-y-4">
+            {/* Image Upload */}
+            <FormField
+              control={form.control}
+              name="image"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Class Profile Image</FormLabel>
+                  <FormControl>
+                    <UploadImage
+                      onChange={field.onChange}
+                      value={field.value?.toString() ?? null}
+                      disabled={isPending}
+                      description="Drop your profile image here"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             {/* Name */}
             <FormField
-              name="name"
               control={form.control}
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Name</FormLabel>
@@ -149,8 +206,8 @@ const CreateClassForm = ({ auth, trade }: Props) => {
 
             {/* Username */}
             <FormField
-              name="username"
               control={form.control}
+              name="username"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Username</FormLabel>
@@ -165,11 +222,82 @@ const CreateClassForm = ({ auth, trade }: Props) => {
                 </FormItem>
               )}
             />
+          </div>
+
+          {/* ---------- Right Section ---------- */}
+          <div className="flex w-1/2 flex-col space-y-4">
+            {/* Capacity */}
+            <FormField
+              control={form.control}
+              name="capacity"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Capacity</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      min={5}
+                      max={80}
+                      placeholder="Number of students"
+                      disabled={isPending}
+                      value={field.value}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Trade Selection */}
+            {!trade && (
+              <FormField
+                control={form.control}
+                name="trade_id"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Trade</FormLabel>
+                    <SelectWithSearch
+                      options={trades.map((t) => ({
+                        value: String(t.id ?? t._id),
+                        label: t.name,
+                      }))}
+                      value={field.value ?? ""}
+                      onChange={field.onChange}
+                      placeholder={
+                        loadingTrades ? "Loading trades..." : "Select trade"
+                      }
+                      disabled={isPending || loadingTrades}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+
+            {/* Grade Level */}
+            <FormField
+              control={form.control}
+              name="grade_level"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Grade Level</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      placeholder="Grade level"
+                      disabled={isPending}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             {/* Description */}
             <FormField
-              name="description"
               control={form.control}
+              name="description"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Description</FormLabel>
@@ -186,82 +314,11 @@ const CreateClassForm = ({ auth, trade }: Props) => {
                 </FormItem>
               )}
             />
-          </div>
 
-          {/* Right Side */}
-          <div className="flex w-1/2 flex-col space-y-4">
-            {/* Capacity */}
+            {/* Active Checkbox */}
             <FormField
-              name="capacity"
               control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Capacity</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="number"
-                      min={5}
-                      max={80}
-                      placeholder="Number of students"
-                      disabled={isPending}
-                      onChange={(e) => field.onChange(Number(e.target.value))}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {!trade && (
-              <FormField
-                name="trade_id"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Trade</FormLabel>
-                    <SelectWithSearch
-                      options={trades
-                        .filter((t) => t.id || t._id)
-                        .map((t) => ({
-                          value: String(t.id ?? t._id),
-                          label: t.name,
-                        }))}
-                      value={field.value ?? ""}
-                      onChange={field.onChange}
-                      placeholder={
-                        loadingOptions ? "Loading trades..." : "Select trade"
-                      }
-                      disabled={isPending || loadingOptions}
-                    />
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
-            {/* Grade level */}
-            <FormField
-              name="grade_level"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Grade Level</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      placeholder="Grade level"
-                      disabled={isPending}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Is Active */}
-            <FormField
               name="is_active"
-              control={form.control}
               render={({ field }) => (
                 <FormItem className="flex flex-row-reverse justify-start gap-2">
                   <FormLabel>Active</FormLabel>
@@ -279,11 +336,11 @@ const CreateClassForm = ({ auth, trade }: Props) => {
           </div>
         </div>
 
-        {/* Messages */}
+        {/* ---------- Messages ---------- */}
         <FormError message={error} />
         <FormSuccess message={success} />
 
-        {/* Footer */}
+        {/* ---------- Footer ---------- */}
         <DialogFooter className="px-6 pb-6 sm:justify-end">
           <DialogClose asChild>
             <Button type="button" variant="outline" library="daisy">
@@ -298,7 +355,7 @@ const CreateClassForm = ({ auth, trade }: Props) => {
             role={isPending ? "loading" : undefined}
             library="daisy"
           >
-            Add Class
+            {cls ? "Update Class" : "Add Class"}
           </Button>
         </DialogFooter>
       </form>
@@ -306,4 +363,4 @@ const CreateClassForm = ({ auth, trade }: Props) => {
   );
 };
 
-export default CreateClassForm;
+export default ClassForm;

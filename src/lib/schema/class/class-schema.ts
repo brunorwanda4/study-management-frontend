@@ -1,6 +1,9 @@
 import { mainClassSchema } from "@/lib/schema/admin/main-classes-schema";
 import { tradeSchema } from "@/lib/schema/admin/tradeSchema";
-import { ClassTypeSchema } from "@/lib/schema/common-details-schema";
+import {
+  ClassTypeSchema,
+  ImageSchema,
+} from "@/lib/schema/common-details-schema";
 import { SchoolSchema } from "@/lib/schema/school/school-schema";
 // import { TeacherSchema } from "@/lib/schema/school/teacher-schema";
 import { UserModelSchema } from "@/lib/schema/user/user-schema";
@@ -13,7 +16,9 @@ export const ClassSchema = z.object({
   name: z.string(),
   username: z.string(),
   code: z.string().optional(),
+  image_id: z.string().optional(),
   image: z.string().optional(),
+  background_images: z.array(ImageSchema).optional(),
 
   school_id: z.string().optional(),
   creator_id: z.string().optional(),

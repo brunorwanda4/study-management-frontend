@@ -1,12 +1,12 @@
 "use client";
 
 import { CommonDataTable } from "@/components/common/table/common-data-table";
-import TableFilter from "@/components/common/table/table-filter";
 import { ClassTableColumn } from "@/components/page/school-staff/table/class-table/class-table-column";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Locale } from "@/i18n";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
 import type { ClassWithOthers } from "@/lib/schema/class/class-schema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import {
   type ColumnFiltersState,
   getCoreRowModel,
@@ -26,11 +26,13 @@ interface ClassTableProps {
   classes: ClassWithOthers[];
   lang: Locale;
   realtimeEnabled?: boolean;
+  auth: AuthContext;
 }
 // --- React Component ---
 export default function ClassesTable({
   classes,
   lang,
+  auth,
   realtimeEnabled = true,
 }: ClassTableProps) {
   const { data: initialClasses, isConnected } =
@@ -55,7 +57,7 @@ export default function ClassesTable({
   ]);
 
   const [rowSelection, setRowSelection] = useState({}); // Add row selection state
-  const tableColumns = ClassTableColumn(lang);
+  const tableColumns = ClassTableColumn(lang, auth);
   const table = useReactTable({
     data: classes, // Use the new classes data
     columns: tableColumns,
@@ -79,32 +81,10 @@ export default function ClassesTable({
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className=" border-b-0">
         <CardTitle>All Classes</CardTitle>
         {/* Add description or controls here if needed */}
       </CardHeader>
-
-      {/* Filters */}
-      <div className="flex flex-wrap gap-3 px-4">
-        <div className="w-48">
-          <TableFilter column={table.getColumn("name")!} />
-        </div>
-        <div className="w-40">
-          <TableFilter column={table.getColumn("code")!} />
-        </div>
-        <div className="w-36">
-          <TableFilter column={table.getColumn("classType")!} />
-        </div>
-        <div className="w-48">
-          <TableFilter column={table.getColumn("educationLever")!} />
-        </div>
-        <div className="w-40">
-          <TableFilter column={table.getColumn("curriculum")!} />
-        </div>
-        <div className="w-24">
-          <TableFilter column={table.getColumn("studentCount")!} />
-        </div>
-      </div>
 
       <CardContent className="p-0">
         <CommonDataTable

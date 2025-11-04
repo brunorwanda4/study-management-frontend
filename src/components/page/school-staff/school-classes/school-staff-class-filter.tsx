@@ -1,5 +1,5 @@
 import ChangeDisplay from "@/components/display/change-diplay";
-import CreateClassDialog from "@/components/page/school-staff/dialog/create-class-dialog";
+import ClassDialog from "@/components/page/school-staff/dialog/class-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
@@ -34,7 +34,7 @@ const SchoolStaffClassFilter = ({ auth }: props) => {
             </Button>
           </div>
         </div>
-        <CreateClassDialog auth={auth} isSchool />
+        <ClassDialog auth={auth} isSchool />
       </div>
       <Separator />
     </div>

@@ -13,7 +13,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import type { Locale } from "@/i18n";
-import type { Class } from "@/lib/schema/class/class-schema";
+import type { ClassWithOthers } from "@/lib/schema/class/class-schema";
 import { cn } from "@/lib/utils";
 import type { AuthContext } from "@/lib/utils/auth-context";
 import Link from "next/link";
@@ -31,18 +31,15 @@ interface props {
   isOther?: boolean; // others users which are not in class
   isStudent?: boolean;
   isNotes?: boolean;
-  myClass?: Class | null;
   auth: AuthContext;
   isSchoolStaff?: boolean;
+  cls?: ClassWithOthers;
 }
 
-const ClassCard = async ({
+const ClassCard = ({
   lang,
   isClassTeacher,
-  isSchool,
-  isOther,
-  isStudent,
-  myClass,
+  cls,
   isNotes,
   auth,
   isSchoolStaff,
@@ -62,28 +59,26 @@ const ClassCard = async ({
           <Avatar className="size-20 border border-base-content/50 shadow">
             <AvatarImage
               src={
-                myClass?.image
-                  ? myClass.image
+                cls?.image
+                  ? cls.image
                   : "https://img.freepik.com/free-photo/boy-helping-his-friend-with-books_23-2148764069.jpg?t=st=1745210582~exp=1745214182~hmac=e009776674767118dd22fff3a6d02541ae9c89fb290cf7440ac7757cfc6f9123&w=1060"
               }
             />
             <AvatarFallback>LOGO</AvatarFallback>
           </Avatar>
-          <div className="mt-6 space-x-1">
+          <div className="mt-6 space-x-1 overflow-hidden">
             <h3
-              data-tip={myClass?.name ?? "Level 5 Software"}
-              className="line-clamp-1 leading-5 font-medium tooltip"
+              data-tip={cls?.name ?? "Level 5 Software"}
+              className="line-clamp-1 leading-5 font-medium tooltip max-w-52 tooltip-bottom"
             >
-              {myClass?.name ?? "Level 5 Software development"}
+              {cls?.name ?? "Level 5 Software development"}
             </h3>
             <Link
-              className="line-clamp-1 flex space-x-1 text-sm"
-              href={`/${lang}/class/${myClass?.id}`}
+              className="line-clamp-1 flex space-x-1 text-sm max-w-52 overflow-hidden"
+              href={`/${lang}/c/${cls?.username}`}
             >
               <span>@</span>{" "}
-              <span className="line-clamp-1">
-                {myClass?.username ?? "L5SOD"}
-              </span>
+              <span className="line-clamp-1">{cls?.username ?? "L5SOD"}</span>
             </Link>
           </div>
         </div>
@@ -94,14 +89,12 @@ const ClassCard = async ({
             <div className=" flex gap-1 items-center">
               <SiLevelsdotfyi /> <span>Level:</span>
             </div>
-            <span className=" font-medium">Primary</span>
+            <span className=" font-medium">
+              {cls?.trade?.name ?? "Primary"}
+            </span>
           </div>
           <div className=" flex gap-2 items-center">
-            <MyImage
-              role="AVATAR"
-              src={myClass?.image ? myClass.image : "/images/3.jpg"}
-              className=" size-10"
-            />
+            <MyImage role="AVATAR" src={"/images/3.jpg"} className=" size-10" />
             <Tooltip>
               <TooltipTrigger>
                 <span className=" ">teacher name</span>
@@ -130,14 +123,16 @@ const ClassCard = async ({
             </TooltipTrigger>
             <TooltipContent>Subjects</TooltipContent>
           </Tooltip>
-          <Tooltip>
-            <TooltipTrigger>
-              <Badge variant={"outline"} library="daisy">
-                <FaPeopleGroup /> <span>45</span>
-              </Badge>
-            </TooltipTrigger>
-            <TooltipContent>Student capacity</TooltipContent>
-          </Tooltip>
+          {cls?.capacity && (
+            <Tooltip>
+              <TooltipTrigger>
+                <Badge variant={"outline"} library="daisy">
+                  <FaPeopleGroup /> <span>{cls.capacity}</span>
+                </Badge>
+              </TooltipTrigger>
+              <TooltipContent>capacity</TooltipContent>
+            </Tooltip>
+          )}
         </div>
         <CardFooter
           className={cn(
@@ -145,7 +140,7 @@ const ClassCard = async ({
             isSchoolStaff && " flex flex-row justify-end gap-2",
           )}
         >
-          {canModify && <ClassModifySheet />}
+          {canModify && <ClassModifySheet auth={auth} cls={cls} />}
           <Button
             library="daisy"
             variant={isClassTeacher ? "info" : "primary"}
