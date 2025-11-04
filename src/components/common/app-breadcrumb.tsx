@@ -50,14 +50,17 @@ export default function AppBreadcrumb() {
 
         {crumbs.map((crumb, index) => (
           <div key={crumb.href} className="flex items-center">
-            <BreadcrumbSeparator>/</BreadcrumbSeparator>
+            <BreadcrumbSeparator />
             <BreadcrumbItem>
               {index === crumbs.length - 1 ? (
                 <BreadcrumbPage className="capitalize">
                   {formatText(crumb.label)}
                 </BreadcrumbPage>
               ) : (
-                <BreadcrumbLink href={crumb.href} className="capitalize">
+                <BreadcrumbLink
+                  href={crumb.href}
+                  className="capitalize font-medium"
+                >
                   {formatText(crumb.label)}
                 </BreadcrumbLink>
               )}

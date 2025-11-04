@@ -1,4 +1,7 @@
+import DisplaySwitcher from "@/components/display/display-switcher";
 import PermissionPage from "@/components/page/permission-page";
+import AllClassesCards from "@/components/page/school-staff/class-components/all-classes-card";
+import SchoolStaffClassFilter from "@/components/page/school-staff/school-classes/school-staff-class-filter";
 import ClassesSchoolTable from "@/components/page/school-staff/table/class-table/classes-table";
 import type { Locale } from "@/i18n";
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
@@ -52,10 +55,19 @@ const SchoolStaffClassesPage = async (props: props) => {
         },
       ]}
     >
-      <div className="max-w-full space-y-2 p-4">
-        <h2 className="title-page">Classes</h2>
+      <div className="max-w-full space-y-4 p-4">
         <div>
-          <ClassesSchoolTable lang={lang} classes={classes.data ?? []} />
+          <h2 className="title-page">Classes</h2>
+          <p>Manage and view all classes in your school.</p>
+        </div>
+        <SchoolStaffClassFilter />
+        <div>
+          <DisplaySwitcher
+            table={
+              <ClassesSchoolTable lang={lang} classes={classes.data ?? []} />
+            }
+            cards={<AllClassesCards lang={lang} auth={auth} />}
+          />
         </div>
       </div>
     </RealtimeProvider>

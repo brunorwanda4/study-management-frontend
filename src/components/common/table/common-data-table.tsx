@@ -1,5 +1,8 @@
 "use client";
+import LoadingPage from "@/components/common/pages/loading-page";
+import NoItemsPage from "@/components/common/pages/no-items-page";
 import { Button } from "@/components/ui/button";
+import { SIDEBAR_WIDTH, useSidebar } from "@/components/ui/sidebar";
 import {
   Table,
   TableBody,
@@ -44,6 +47,7 @@ export function CommonDataTable<TData, TValue>({
   pageSize = 10,
   loading = false,
 }: DataTableProps<TData, TValue>) {
+  const { open } = useSidebar();
   const internalTable = useReactTable({
     data,
     columns,
@@ -55,8 +59,16 @@ export function CommonDataTable<TData, TValue>({
 
   return (
     <div className="w-full space-y-4">
-      <div className="w-full max-w-full overflow-x-auto rounded-md border">
-        <Table>
+      <div
+        className={cn(
+          "w-full overflow-x-auto rounded-md border transition-all duration-300",
+          open ? "max-w-full" : "max-w-full", // can keep default
+        )}
+        style={{
+          maxWidth: open ? `calc(100% - ${SIDEBAR_WIDTH}px)` : "100%",
+        }}
+      >
+        <Table className="table-auto border-collapse">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="bg-muted/50">
@@ -128,11 +140,21 @@ export function CommonDataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {loading ? (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="text-muted-foreground h-24 text-center text-sm"
+                >
+                  <LoadingPage />
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className={rowClassName ? rowClassName(row) : undefined}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -148,9 +170,9 @@ export function CommonDataTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center"
+                  className="text-muted-foreground h-24 text-center text-sm"
                 >
-                  No results.
+                  <NoItemsPage title="It look no items founds! 😥" />
                 </TableCell>
               </TableRow>
             )}

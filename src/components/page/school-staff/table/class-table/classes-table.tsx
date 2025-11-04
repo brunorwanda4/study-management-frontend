@@ -53,6 +53,7 @@ export default function ClassesTable({
       desc: false,
     },
   ]);
+
   const [rowSelection, setRowSelection] = useState({}); // Add row selection state
   const tableColumns = ClassTableColumn(lang);
   const table = useReactTable({
@@ -84,7 +85,7 @@ export default function ClassesTable({
       </CardHeader>
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-3 border-b px-4 pb-4">
+      <div className="flex flex-wrap gap-3 px-4">
         <div className="w-48">
           <TableFilter column={table.getColumn("name")!} />
         </div>
@@ -100,7 +101,7 @@ export default function ClassesTable({
         <div className="w-40">
           <TableFilter column={table.getColumn("curriculum")!} />
         </div>
-        <div className="w-36">
+        <div className="w-24">
           <TableFilter column={table.getColumn("studentCount")!} />
         </div>
       </div>

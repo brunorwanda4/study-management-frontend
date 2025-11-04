@@ -9,7 +9,7 @@ import Link from "next/link";
 import * as React from "react";
 import { BsTrash3 } from "react-icons/bs";
 import { CiCircleCheck, CiCirclePlus } from "react-icons/ci";
-import { MdBlockFlipped } from "react-icons/md";
+import { MdArrowOutward, MdBlockFlipped } from "react-icons/md";
 
 /* -------------------------------- Variants -------------------------------- */
 
@@ -49,16 +49,16 @@ export const shadcnVariants = cva(
 const daisyVariants = cva("btn", {
   variants: {
     variant: {
-      primary: "btn-primary",
-      secondary: "btn-secondary",
-      accent: "btn-accent",
-      info: "btn-info",
-      ghost: "btn-ghost",
-      link: "btn-link",
-      outline: "btn-outline",
-      error: "btn-error",
-      warning: "btn-warning",
-      success: "btn-success",
+      primary: "btn-primary border-none",
+      secondary: "btn-secondary border-none",
+      accent: "btn-accent border-none",
+      info: "btn-info border-none",
+      ghost: "btn-ghost border-none",
+      link: "btn-link border-none",
+      outline: "btn-outline border border-base-content/50",
+      error: "btn-error border-none",
+      warning: "btn-warning border-none",
+      success: "btn-success border-none",
       default: "",
     },
     size: {
@@ -94,7 +94,8 @@ export type ShadcnButtonProps =
       | "block"
       | "check"
       | "href"
-      | "delete";
+      | "delete"
+      | "page";
   } & VariantProps<typeof shadcnVariants>;
 
 export type DaisyButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -109,7 +110,8 @@ export type DaisyButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
     | "block"
     | "check"
     | "href"
-    | "delete";
+    | "delete"
+    | "page";
 } & VariantProps<typeof daisyVariants>;
 
 type UniversalButtonProps = ShadcnButtonProps | DaisyButtonProps;
@@ -167,6 +169,8 @@ const Button = React.forwardRef<
         return <LoadingIndicator className={iconSizeClass} />;
       case "delete":
         return <BsTrash3 className={iconSizeClass} />;
+      case "page":
+        return <MdArrowOutward className={iconSizeClass} />;
       default:
         return null;
     }
@@ -182,8 +186,9 @@ const Button = React.forwardRef<
         className={cn("cursor-pointer", styles)}
         {...(rest as React.ComponentPropsWithoutRef<typeof Slot>)}
       >
-        {renderIcon()}
+        {role !== "page" && renderIcon()}
         {children}
+        {role === "page" && renderIcon()}
       </Slot>
     );
   }
@@ -221,8 +226,9 @@ const Button = React.forwardRef<
 
     return (
       <Link href={href} {...(anchorProps as any)} ref={forwardedRef as any}>
-        {renderIcon()}
+        {role !== "page" && renderIcon()}
         {children}
+        {role === "page" && renderIcon()}
       </Link>
     );
   }
@@ -235,8 +241,9 @@ const Button = React.forwardRef<
       disabled={isLoading || disabled}
       {...(rest as React.ButtonHTMLAttributes<HTMLButtonElement>)}
     >
-      {renderIcon()}
+      {role !== "page" && renderIcon()}
       {children}
+      {role === "page" && renderIcon()}
     </button>
   );
 });

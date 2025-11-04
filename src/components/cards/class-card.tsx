@@ -1,14 +1,28 @@
 import MyImage from "@/components/common/myImage";
+import ClassModifySheet from "@/components/page/class/class-modify-sheet";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import type { Locale } from "@/i18n";
 import type { Class } from "@/lib/schema/class/class-schema";
 import { cn } from "@/lib/utils";
 import type { AuthContext } from "@/lib/utils/auth-context";
-import { Dot } from "lucide-react";
 import Link from "next/link";
-import { TextTooltip } from "../common/text-tooltip";
+import { BsBook } from "react-icons/bs";
+import { FaPeopleGroup } from "react-icons/fa6";
+import { PiStudentLight } from "react-icons/pi";
+import { SiLevelsdotfyi } from "react-icons/si";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
-import { Separator } from "../ui/separator";
 
 interface props {
   lang: Locale;
@@ -19,6 +33,7 @@ interface props {
   isNotes?: boolean;
   myClass?: Class | null;
   auth: AuthContext;
+  isSchoolStaff?: boolean;
 }
 
 const ClassCard = async ({
@@ -30,18 +45,21 @@ const ClassCard = async ({
   myClass,
   isNotes,
   auth,
+  isSchoolStaff,
 }: props) => {
+  const canModify =
+    (isSchoolStaff && auth.user.role === "SCHOOLSTAFF") ||
+    auth.user.role === "ADMIN";
   return (
-    <div className="basic-card relative h-auto p-0">
-      <div className="relative">
+    <Card className=" relative h-auto p-0">
+      <CardHeader className="relative p-0">
         <MyImage
           src="https://img.freepik.com/free-photo/students-knowing-right-answer_329181-14271.jpg?t=st=1745210505~exp=1745214105~hmac=3f882c695e86b9db87db4ae4830ce8e407e5b44305df6ae24cb07a89942eb99d&w=1380"
-          className="h-28 w-full"
-          classname=" card rounded-b-none"
+          className="h-32 w-full"
+          classname=" card rounded-b-none border-b border-base-content/50"
         />
-        <Separator />
-        <div className="absolute -bottom-20 flex items-center gap-2 p-4">
-          <Avatar className="size-20">
+        <div className="absolute -bottom-18 flex items-center gap-2 p-4">
+          <Avatar className="size-20 border border-base-content/50 shadow">
             <AvatarImage
               src={
                 myClass?.image
@@ -52,7 +70,10 @@ const ClassCard = async ({
             <AvatarFallback>LOGO</AvatarFallback>
           </Avatar>
           <div className="mt-6 space-x-1">
-            <h3 className="line-clamp-3 leading-5 font-medium">
+            <h3
+              data-tip={myClass?.name ?? "Level 5 Software"}
+              className="line-clamp-1 leading-5 font-medium tooltip"
+            >
               {myClass?.name ?? "Level 5 Software development"}
             </h3>
             <Link
@@ -66,148 +87,81 @@ const ClassCard = async ({
             </Link>
           </div>
         </div>
-      </div>
-      <div className="mt-16 p-4">
-        {/* class members */}
-        {!isNotes && (
-          <div className="flex gap-2">
-            <div className="text-myGray flex items-center -space-x-2">
-              <Dot size={24} />
-              <span className="text-xs">
-                32{" "}
-                <TextTooltip
-                  content={"Student"}
-                  trigger={<span className="text-myGray text-xs">ST</span>}
-                />
-              </span>
+      </CardHeader>
+      <CardContent className="mt-12 p-0">
+        <div className=" px-4 space-y-2">
+          <div className=" flex gap-2 items-center">
+            <div className=" flex gap-1 items-center">
+              <SiLevelsdotfyi /> <span>Level:</span>
             </div>
-            <div className="text-myGray flex items-center -space-x-2">
-              <Dot size={24} />
-              <span className="line text-xs">
-                <TextTooltip
-                  content={"Teacher"}
-                  trigger={<span className="text-myGray text-xs">TEA</span>}
-                />
-              </span>
-            </div>
-            <div className="text-myGray flex items-center -space-x-2">
-              <Dot size={24} />
-              <div className="flex items-center space-x-2 text-sm">
-                <Avatar className="size-4">
-                  <AvatarImage
-                    src={auth.user?.image ? auth.user.image : "/images/17.jpg"}
-                  />
-                  <AvatarFallback className="text-sm">LOGO</AvatarFallback>
-                </Avatar>
-                {/* add link of class teacher */}
-                <Link
-                  className={cn(
-                    "link-hover line-clamp-1",
-                    isClassTeacher ? "text-myGray" : "",
-                  )}
-                  href={`/${lang}/p/${
-                    myClass?.username ? myClass.username : 1232
-                  }`}
-                >
-                  <TextTooltip
-                    content={"Class Teacher"}
-                    trigger={
-                      <span>
-                        {auth.user?.username
-                          ? auth.user.username
-                          : auth.user?.name}
-                      </span>
-                    }
-                  />
-                </Link>
-              </div>
-            </div>
+            <span className=" font-medium">Primary</span>
           </div>
-        )}
-      </div>
-      {isNotes && (
-        <div className="px-4">
-          <div className="flex justify-between">
-            <h5 className="text-myGray font-medium capitalize">Lessons</h5>
-          </div>
-          <div className="grid w-full grid-cols-4">
-            <div className="flex items-center -space-x-2">
-              <Dot size={32} />
-              <span className="line text-sm">Math</span>
-            </div>
-            <div className="flex items-center -space-x-2">
-              <Dot size={32} />
-              <span className="line text-sm">Kiny</span>
-            </div>
-            <div className="flex items-center -space-x-2">
-              <Dot size={32} />
-              <span className="line text-sm">Kisw</span>
-            </div>
+          <div className=" flex gap-2 items-center">
+            <MyImage
+              role="AVATAR"
+              src={myClass?.image ? myClass.image : "/images/3.jpg"}
+              className=" size-10"
+            />
+            <Tooltip>
+              <TooltipTrigger>
+                <span className=" ">teacher name</span>
+              </TooltipTrigger>
+              <TooltipContent>Class teacher</TooltipContent>
+            </Tooltip>
           </div>
         </div>
-      )}
-      {!isStudent && (
-        <div className="px-4">
-          <div className="flex justify-between">
-            <h5 className="text-myGray font-medium capitalize">your lessons</h5>
-            {isSchool && (
-              <div className="flex space-x-2 py-2">
-                <Avatar className="size-4">
-                  <AvatarImage src="/images/19.jpg" />
-                  <AvatarFallback className="text-sm">LOGO</AvatarFallback>
-                </Avatar>
-                {/* TODO: add school link */}
-                <Link
-                  href={`/${lang}/school/student`}
-                  className="link-hover line-clamp-1 text-sm font-medium"
-                >
-                  SOSTHS
-                </Link>
-              </div>
-            )}
-          </div>
-          <div className="grid w-full grid-cols-4">
-            <div className="flex items-center -space-x-2">
-              <Dot size={32} />
-              <span className="line text-sm">Math</span>
-            </div>
-            <div className="flex items-center -space-x-2">
-              <Dot size={32} />
-              <span className="line text-sm">Kiny</span>
-            </div>
-            <div className="flex items-center -space-x-2">
-              <Dot size={32} />
-              <span className="line text-sm">Kisw</span>
-            </div>
-          </div>
+        {/* ands and teachers */}
+        <div className=" px-4 flex flex-wrap gap-4">
+          {/* students */}
+          <Tooltip>
+            <TooltipTrigger>
+              <Badge variant={"outline"} library="daisy">
+                <PiStudentLight /> <span>34</span>
+              </Badge>
+            </TooltipTrigger>
+            <TooltipContent>Students</TooltipContent>
+          </Tooltip>
+          {/* subject */}
+          <Tooltip>
+            <TooltipTrigger>
+              <Badge variant={"outline"} library="daisy">
+                <BsBook /> <span>20</span>
+              </Badge>
+            </TooltipTrigger>
+            <TooltipContent>Subjects</TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger>
+              <Badge variant={"outline"} library="daisy">
+                <FaPeopleGroup /> <span>45</span>
+              </Badge>
+            </TooltipTrigger>
+            <TooltipContent>Student capacity</TooltipContent>
+          </Tooltip>
         </div>
-      )}
-      <Separator />
-      <div className="p-4">
-        {/* TODO: add link of class */}
-        {isOther ? (
-          <Link href={`/${lang}/class/student/about`} className="btn w-full">
-            About class
-          </Link>
-        ) : (
-          <Link
-            href={
-              isNotes
-                ? `/${lang}/notes/classes/1234`
-                : `/${lang}/class/${myClass?.id ? myClass.id : "student"}`
-            }
+        <CardFooter
+          className={cn(
+            " border-t border-base-content/50 pb-4",
+            isSchoolStaff && " flex flex-row justify-end gap-2",
+          )}
+        >
+          {canModify && <ClassModifySheet />}
+          <Button
+            library="daisy"
+            variant={isClassTeacher ? "info" : "primary"}
+            className={cn("w-full", isSchoolStaff && "w-fit")}
+            role="page"
+            href="/c/page"
           >
-            <Button
-              library="daisy"
-              variant={isClassTeacher ? "info" : "primary"}
-              className="w-full"
-            >
-              {isNotes ? "See notes" : "Join class"}
-            </Button>
-          </Link>
-        )}
-      </div>
-    </div>
+            {isSchoolStaff
+              ? "Visit class"
+              : isNotes
+                ? "See notes"
+                : "Join class"}
+          </Button>
+        </CardFooter>
+      </CardContent>
+    </Card>
   );
 };
 

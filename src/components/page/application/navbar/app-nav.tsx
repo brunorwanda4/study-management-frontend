@@ -1,4 +1,3 @@
-import AppBreadcrumb from "@/components/common/app-breadcrumb";
 import MyImage from "@/components/common/myImage";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import type { Locale } from "@/i18n";
@@ -26,7 +25,6 @@ const AppNav = async ({ lang, auth }: AppNavProps) => {
           <SidebarTrigger className="btn btn-circle btn-ghost size-12 rounded-full" />
           <AppLogo lang={lang} user={auth.user} />
         </div>
-        <AppBreadcrumb />
       </div>
       <div className="mr-4 flex items-center gap-2">
         {/* <NavMessageDropDown lang={lang}/> */}

@@ -3,18 +3,18 @@
 import MyImage from "@/components/common/myImage";
 import MyLink from "@/components/common/myLink";
 import { Button } from "@/components/ui/button"; // For Actions
-import { Checkbox } from "@/components/ui/checkbox"; // Assuming shadcn/ui
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"; // For Actions
+} from "@/components/ui/dropdown-menu";
 import type { Locale } from "@/i18n";
 import type { ClassWithOthers } from "@/lib/schema/class/class-schema";
 import type { ClassType } from "@/lib/schema/common-details-schema";
-import { cn } from "@/lib/utils"; // Assuming you have this utility
+import { cn } from "@/lib/utils";
 import type { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, ShieldCheckIcon } from "lucide-react";
 

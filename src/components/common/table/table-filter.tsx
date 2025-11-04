@@ -11,17 +11,17 @@ import {
 } from "@/components/ui/select";
 import type { Column } from "@tanstack/react-table";
 import { SearchIcon } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useId, useMemo } from "react";
+import { useId, useMemo } from "react";
 
 type FilterVariant =
   | "text"
   | "range"
-  | "number"
   | "select"
+  | "dateRange"
+  | "number"
   | "multiSelect"
   | "boolean"
-  | "dateRange";
+  | "bytes";
 
 export default function TableFilter({
   column,
@@ -29,129 +29,36 @@ export default function TableFilter({
   column: Column<any, unknown>;
 }) {
   const id = useId();
+  const columnFilterValue = column.getFilterValue();
+  const { filterVariant } = column.columnDef.meta ?? {};
   const columnHeader =
     typeof column.columnDef.header === "string" ? column.columnDef.header : "";
 
-  const key = column.id;
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
-  const filterVariant = column.columnDef.meta?.filterVariant as
-    | FilterVariant
-    | undefined;
-
-  const columnFilterValue = column.getFilterValue();
-
-  // Restore from query params
-  useEffect(() => {
-    const value = searchParams.get(key);
-    if (value !== null) {
-      switch (filterVariant) {
-        case "range":
-        case "dateRange": {
-          const [min, max] = value.split(",");
-          column.setFilterValue([min || undefined, max || undefined]);
-          break;
-        }
-        case "multiSelect":
-          column.setFilterValue(value.split(","));
-          break;
-        case "number":
-          column.setFilterValue(Number(value));
-          break;
-        case "boolean":
-          column.setFilterValue(value === "true");
-          break;
-        default:
-          column.setFilterValue(value);
-      }
-    }
-  }, [searchParams, key, column, filterVariant]);
-
-  // Update URL on filter change
-  useEffect(() => {
-    const params = new URLSearchParams(searchParams.toString());
-
-    if (
-      columnFilterValue === undefined ||
-      columnFilterValue === "" ||
-      (Array.isArray(columnFilterValue) && columnFilterValue.every((v) => !v))
-    ) {
-      params.delete(key);
-    } else {
-      let value = "";
-      switch (filterVariant) {
-        case "range":
-        case "dateRange":
-          value = (
-            columnFilterValue as [string | number, string | number]
-          ).join(",");
-          break;
-        case "multiSelect":
-          value = (columnFilterValue as string[]).join(",");
-          break;
-        default:
-          value = String(columnFilterValue);
-      }
-      params.set(key, value);
-    }
-
-    router.replace(`?${params.toString()}`, { scroll: false });
-  }, [columnFilterValue, filterVariant, key, router, searchParams]);
-
-  const facetedValues = column.getFacetedUniqueValues();
-
+  // Get all unique faceted values for select/multiSelect
   const sortedUniqueValues = useMemo(() => {
-    if (["range", "number", "dateRange"].includes(filterVariant ?? ""))
+    if (
+      filterVariant === "range" ||
+      filterVariant === "number" ||
+      filterVariant === "dateRange"
+    )
       return [];
 
-    const values = Array.from(facetedValues.keys());
-    const flattenedValues = values.reduce((acc: string[], curr) => {
+    const values = Array.from(column.getFacetedUniqueValues().keys());
+
+    const flattened = values.reduce((acc: string[], curr) => {
       if (Array.isArray(curr)) return [...acc, ...curr];
       return [...acc, String(curr)];
     }, []);
 
-    return Array.from(new Set(flattenedValues)).sort();
-  }, [facetedValues, filterVariant]);
+    return Array.from(new Set(flattened)).sort() as string[];
+  }, [column, filterVariant]);
 
-  // --- Filter Renderers ---
-
-  // Select Input
-  if (filterVariant === "select") {
-    return (
-      <div className="*:not-first:mt-2">
-        <Label htmlFor={`${id}-select`}>{columnHeader}</Label>
-        <Select
-          value={columnFilterValue?.toString() ?? "all"}
-          onValueChange={(value) =>
-            column.setFilterValue(value === "all" ? undefined : value)
-          }
-        >
-          <SelectTrigger id={`${id}-select`}>
-            <SelectValue placeholder={`Select ${columnHeader.toLowerCase()}`} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All</SelectItem>
-            {sortedUniqueValues.map((v) => {
-              const val = String(v);
-              return (
-                <SelectItem key={val} value={val} className="capitalize">
-                  {val.toLocaleLowerCase()}
-                </SelectItem>
-              );
-            })}
-          </SelectContent>
-        </Select>
-      </div>
-    );
-  }
-
-  // Range (numbers)
+  // 🟢 Range filter (number)
   if (filterVariant === "range") {
     return (
       <div className="*:not-first:mt-2">
         <Label>{columnHeader}</Label>
-        <div className="flex gap-1">
+        <div className="flex gap-2">
           <Input
             id={`${id}-min`}
             className="flex-1 rounded-e-none w-24"
@@ -183,7 +90,7 @@ export default function TableFilter({
     );
   }
 
-  // Date Range
+  // 🟢 Date range filter
   if (filterVariant === "dateRange") {
     return (
       <div className="*:not-first:mt-2">
@@ -218,7 +125,7 @@ export default function TableFilter({
     );
   }
 
-  // Number (single input)
+  // 🟢 Number filter
   if (filterVariant === "number") {
     return (
       <div className="*:not-first:mt-2">
@@ -243,7 +150,7 @@ export default function TableFilter({
     );
   }
 
-  // Boolean filter
+  // 🟢 Boolean filter
   if (filterVariant === "boolean") {
     return (
       <div className="*:not-first:mt-2">
@@ -255,7 +162,7 @@ export default function TableFilter({
           }
         >
           <SelectTrigger id={`${id}-boolean`}>
-            <SelectValue placeholder={`Select ${columnHeader}`} />
+            <SelectValue />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All</SelectItem>
@@ -267,43 +174,88 @@ export default function TableFilter({
     );
   }
 
-  // MultiSelect
+  // 🟢 Select filter
+  if (filterVariant === "select") {
+    return (
+      <div className="*:not-first:mt-2">
+        <Label htmlFor={`${id}-select`}>{columnHeader}</Label>
+        <Select
+          value={columnFilterValue?.toString() ?? "all"}
+          onValueChange={(value) =>
+            column.setFilterValue(value === "all" ? undefined : value)
+          }
+        >
+          <SelectTrigger id={`${id}-select`}>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All</SelectItem>
+            {sortedUniqueValues.map((v) => (
+              <SelectItem key={v} value={v}>
+                {v}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+    );
+  }
+
+  // 🟢 MultiSelect filter
   if (filterVariant === "multiSelect") {
+    const selected = (columnFilterValue as string[]) ?? [];
     return (
       <div className="*:not-first:mt-2">
         <Label>{columnHeader}</Label>
         <Select
           onValueChange={(val) => {
-            const old = (columnFilterValue as string[]) ?? [];
-            column.setFilterValue(
-              old.includes(val) ? old.filter((v) => v !== val) : [...old, val],
-            );
+            const newValue = selected.includes(val)
+              ? selected.filter((v) => v !== val)
+              : [...selected, val];
+            column.setFilterValue(newValue);
           }}
         >
           <SelectTrigger>
             <SelectValue placeholder={`Select ${columnHeader}`} />
           </SelectTrigger>
           <SelectContent>
-            {sortedUniqueValues.map((v) => {
-              const val = String(v);
-              return (
-                <SelectItem key={val} value={val}>
-                  {val}
-                </SelectItem>
-              );
-            })}
+            {sortedUniqueValues.map((v) => (
+              <SelectItem key={v} value={v}>
+                {v}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
-        {Array.isArray(columnFilterValue) && columnFilterValue.length > 0 && (
-          <div className="text-muted-foreground mt-1 text-sm">
-            Selected: {columnFilterValue.join(", ")}
+        {selected.length > 0 && (
+          <div className="text-sm text-muted-foreground mt-1">
+            Selected: {selected.join(", ")}
           </div>
         )}
       </div>
     );
   }
 
-  // Default: Text
+  // 🟢 Bytes filter (e.g., 10 MB)
+  if (filterVariant === "bytes") {
+    return (
+      <div className="*:not-first:mt-2">
+        <Label htmlFor={`${id}-bytes`}>{columnHeader}</Label>
+        <Input
+          id={`${id}-bytes`}
+          type="number"
+          placeholder="Size in bytes"
+          value={(columnFilterValue as number) ?? ""}
+          onChange={(e) =>
+            column.setFilterValue(
+              e.target.value ? Number(e.target.value) : undefined,
+            )
+          }
+        />
+      </div>
+    );
+  }
+
+  // 🟢 Default text filter
   return (
     <div className="*:not-first:mt-2">
       <Label htmlFor={`${id}-input`}>{columnHeader}</Label>
@@ -316,7 +268,7 @@ export default function TableFilter({
           placeholder={`Search ${columnHeader.toLowerCase()}`}
           type="text"
         />
-        <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3">
+        <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 text-muted-foreground/80 peer-disabled:opacity-50">
           <SearchIcon size={16} />
         </div>
       </div>
