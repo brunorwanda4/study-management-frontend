@@ -1,3 +1,4 @@
+import MyAvatar from "@/components/common/image/my-avatar";
 import MyImage from "@/components/common/myImage";
 import ClassModifySheet from "@/components/page/class/class-modify-sheet";
 import { Badge } from "@/components/ui/badge";
@@ -13,7 +14,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import type { Locale } from "@/i18n";
-import type { ClassWithOthers } from "@/lib/schema/class/class-schema";
+import type { ClassWithOthers } from "@/lib/schema/relations-schema";
 import { cn } from "@/lib/utils";
 import type { AuthContext } from "@/lib/utils/auth-context";
 import Link from "next/link";
@@ -21,7 +22,6 @@ import { BsBook } from "react-icons/bs";
 import { FaPeopleGroup } from "react-icons/fa6";
 import { PiStudentLight } from "react-icons/pi";
 import { SiLevelsdotfyi } from "react-icons/si";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 
 interface props {
@@ -51,21 +51,12 @@ const ClassCard = ({
     <Card className=" relative h-auto p-0">
       <CardHeader className="relative p-0">
         <MyImage
-          src="https://img.freepik.com/free-photo/students-knowing-right-answer_329181-14271.jpg?t=st=1745210505~exp=1745214105~hmac=3f882c695e86b9db87db4ae4830ce8e407e5b44305df6ae24cb07a89942eb99d&w=1380"
+          src="/images/1.jpg"
           className="h-32 w-full"
           classname=" card rounded-b-none border-b border-base-content/50"
         />
         <div className="absolute -bottom-18 flex items-center gap-2 p-4">
-          <Avatar className="size-20 border border-base-content/50 shadow">
-            <AvatarImage
-              src={
-                cls?.image
-                  ? cls.image
-                  : "https://img.freepik.com/free-photo/boy-helping-his-friend-with-books_23-2148764069.jpg?t=st=1745210582~exp=1745214182~hmac=e009776674767118dd22fff3a6d02541ae9c89fb290cf7440ac7757cfc6f9123&w=1060"
-              }
-            />
-            <AvatarFallback>LOGO</AvatarFallback>
-          </Avatar>
+          <MyAvatar size="lg" type="cycle" src={cls?.image} alt={cls?.name} />
           <div className="mt-6 space-x-1 overflow-hidden">
             <h3
               data-tip={cls?.name ?? "Level 5 Software"}
@@ -93,15 +84,22 @@ const ClassCard = ({
               {cls?.trade?.name ?? "Primary"}
             </span>
           </div>
-          <div className=" flex gap-2 items-center">
-            <MyImage role="AVATAR" src={"/images/3.jpg"} className=" size-10" />
-            <Tooltip>
-              <TooltipTrigger>
-                <span className=" ">teacher name</span>
-              </TooltipTrigger>
-              <TooltipContent>Class teacher</TooltipContent>
-            </Tooltip>
-          </div>
+          {cls?.class_teacher && (
+            <div className=" flex gap-2 items-center">
+              <MyAvatar
+                src={cls?.class_teacher?.image}
+                alt={cls.class_teacher.name}
+                type="squircle"
+                size="xs"
+              />
+              <Tooltip>
+                <TooltipTrigger>
+                  <span className=" ">{cls.class_teacher.name}</span>
+                </TooltipTrigger>
+                <TooltipContent>Class teacher</TooltipContent>
+              </Tooltip>
+            </div>
+          )}
         </div>
         {/* ands and teachers */}
         <div className=" px-4 flex flex-wrap gap-4">

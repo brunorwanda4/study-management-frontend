@@ -92,7 +92,7 @@ const ClassForm = ({ auth, trade, cls, isSchool }: Props) => {
       type: cls?.type ?? "Private",
       capacity: cls?.capacity ?? 45,
       grade_level: cls?.grade_level ?? "",
-      image: cls?.image,
+      image: cls?.image ?? undefined,
       school_id:
         cls?.school_id ??
         (isSchool && auth.school ? auth.school.id : undefined),

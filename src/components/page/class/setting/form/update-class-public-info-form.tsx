@@ -25,12 +25,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/lib/context/toast/ToastContext";
-import type { ClassWithOthers } from "@/lib/schema/class/class-schema";
 import { ClassType } from "@/lib/schema/class/create-class.dto";
 import {
   type ClassUpdateDto,
   ClassUpdateSchema,
 } from "@/lib/schema/class/update-class-schema";
+import type { ClassWithOthers } from "@/lib/schema/relations-schema";
 
 interface UpdateClassPublicInfoFormProps {
   classData: ClassWithOthers;
@@ -53,7 +53,7 @@ export default function UpdateClassPublicInfoForm({
       image: classData.image || undefined,
       classType: classData.type || undefined,
       educationLever: undefined,
-      curriculum:  undefined,
+      curriculum: undefined,
       // Omit fields that shouldn't be updated like id, createdAt, etc.
     },
     mode: "onChange",

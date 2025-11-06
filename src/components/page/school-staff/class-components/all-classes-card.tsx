@@ -2,7 +2,7 @@
 import ClassCard from "@/components/cards/class-card";
 import type { Locale } from "@/i18n";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
-import type { ClassWithOthers } from "@/lib/schema/class/class-schema";
+import type { ClassWithOthers } from "@/lib/schema/relations-schema";
 import type { AuthContext } from "@/lib/utils/auth-context";
 import { useEffect, useState } from "react";
 

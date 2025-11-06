@@ -67,8 +67,8 @@ const ClassTeacherForm = ({ auth, teacher, cls }: Props) => {
         );
 
         const [teachersRes, classesRes] = await Promise.all([
-          teacherRequest,
-          classRequest,
+          teacher ? { data: [] } : teacherRequest,
+          cls ? { data: [] } : classRequest,
         ]);
 
         if (teachersRes.data) {
@@ -98,8 +98,8 @@ const ClassTeacherForm = ({ auth, teacher, cls }: Props) => {
   const form = useForm<addOrUpdateClassTeacher>({
     resolver: zodResolver(addOrUpdateClassTeacherSchema),
     defaultValues: {
-      class_id: cls?._id ?? undefined,
-      teacher_id: teacher?._id ?? undefined,
+      class_id: cls ? cls?._id || cls.id : undefined,
+      teacher_id: teacher ? teacher?._id || teacher?.id : undefined,
     },
     mode: "onChange",
   });
@@ -113,9 +113,13 @@ const ClassTeacherForm = ({ auth, teacher, cls }: Props) => {
 
     startTransition(async () => {
       try {
-        const response = await apiRequest<typeof values, TeacherBase>(
+        const api_data: addOrUpdateClassTeacher = {
+          class_id: cls?._id || values.class_id,
+          teacher_id: teacher?._id || values.teacher_id,
+        };
+        const response = await apiRequest<void, TeacherBase>(
           "post",
-          `/school/classes/${values.class_id}/teachers/${values.teacher_id}/assign`,
+          `/school/classes/${api_data.class_id}/teachers/${api_data.teacher_id}/assign`,
           undefined,
           { token: auth.token, schoolToken: auth.schoolToken },
         );
@@ -157,52 +161,56 @@ const ClassTeacherForm = ({ auth, teacher, cls }: Props) => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
         {/* Class Selector */}
-        <FormField
-          name="class_id"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Choose Class</FormLabel>
-              <SelectWithSearch
-                options={classes.map((c) => ({
-                  value: String(c.id ?? c._id),
-                  label: c.name,
-                }))}
-                value={field.value ?? ""}
-                onChange={field.onChange}
-                placeholder={
-                  loadingOptions ? "Loading classes..." : "Select a class"
-                }
-                disabled={isPending || loadingOptions}
-              />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {!cls && (
+          <FormField
+            name="class_id"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Choose Class</FormLabel>
+                <SelectWithSearch
+                  options={classes.map((c) => ({
+                    value: String(c.id ?? c._id),
+                    label: c.name,
+                  }))}
+                  value={field.value ?? ""}
+                  onChange={field.onChange}
+                  placeholder={
+                    loadingOptions ? "Loading classes..." : "Select a class"
+                  }
+                  disabled={isPending || loadingOptions}
+                />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
 
         {/* Teacher Selector */}
-        <FormField
-          name="teacher_id"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Choose Teacher</FormLabel>
-              <SelectWithSearch
-                options={teachers.map((t) => ({
-                  value: String(t.id ?? t._id),
-                  label: t.name,
-                }))}
-                value={field.value ?? ""}
-                onChange={field.onChange}
-                placeholder={
-                  loadingOptions ? "Loading teachers..." : "Select a teacher"
-                }
-                disabled={isPending || loadingOptions}
-              />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {!teacher && (
+          <FormField
+            name="teacher_id"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Choose Teacher</FormLabel>
+                <SelectWithSearch
+                  options={teachers.map((t) => ({
+                    value: String(t.id ?? t._id),
+                    label: t.name,
+                  }))}
+                  value={field.value ?? ""}
+                  onChange={field.onChange}
+                  placeholder={
+                    loadingOptions ? "Loading teachers..." : "Select a teacher"
+                  }
+                  disabled={isPending || loadingOptions}
+                />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
 
         {/* Feedback Messages */}
         <FormError message={error} />
@@ -223,7 +231,7 @@ const ClassTeacherForm = ({ auth, teacher, cls }: Props) => {
             role={isPending ? "loading" : undefined}
             library="daisy"
           >
-            {teacher ? "Update Teacher" : "Assign Teacher"}
+            Add teacher
           </Button>
         </DialogFooter>
       </form>

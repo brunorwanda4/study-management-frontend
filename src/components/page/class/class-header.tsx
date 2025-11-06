@@ -6,7 +6,7 @@ import {
   schoolLogoImage,
   teacherImage,
 } from "@/lib/context/images";
-import type { ClassWithOthers } from "@/lib/schema/class/class-schema";
+import type { ClassWithOthers } from "@/lib/schema/relations-schema";
 import type { School } from "@/lib/schema/school/school-schema";
 import type { AuthContext } from "@/lib/utils/auth-context";
 

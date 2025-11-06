@@ -55,7 +55,7 @@ export default function SchoolTeacherTable({
     },
   ]);
 
-  const tableColumns = TeacherTableColumns(lang);
+  const tableColumns = TeacherTableColumns(lang, auth);
 
   const table = useReactTable({
     data: displayTeachers,

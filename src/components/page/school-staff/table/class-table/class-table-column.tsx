@@ -1,5 +1,6 @@
 "use client";
 
+import MyAvatar from "@/components/common/image/my-avatar";
 import ClassModifySheet from "@/components/page/class/class-modify-sheet";
 import { Button } from "@/components/ui/button"; // For Actions
 import {
@@ -10,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { Locale } from "@/i18n";
-import type { ClassWithOthers } from "@/lib/schema/class/class-schema";
+import type { ClassWithOthers } from "@/lib/schema/relations-schema";
 import type { AuthContext } from "@/lib/utils/auth-context";
 import type { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
@@ -48,20 +49,10 @@ export const ClassTableColumn = (lang: Locale, auth: AuthContext) => {
       },
     },
     {
-      header: "Teacher",
-      accessorKey: "teacherName", // Use the derived field
-      cell: ({ row }) =>
-        row.getValue("teacherName") || (
-          <span className="text-muted-foreground">N/A</span>
-        ),
-      enableSorting: true, // Enable if desired, ensure data is sortable
-      // Filtering is not enabled for this column
-    },
-    {
       header: "Students",
       accessorKey: "studentCount",
       cell: ({ row }) => (
-        <div className="flex items-center justify-end gap-1">32</div>
+        <div className="flex items-center justify-center gap-1">32</div>
       ),
       meta: {
         filterVariant: "range",
@@ -72,6 +63,42 @@ export const ClassTableColumn = (lang: Locale, auth: AuthContext) => {
       // cellProps: { // Example custom prop for alignment
       //     className: "text-right tabular-nums",
       // },
+    },
+    {
+      header: "Subjects",
+      accessorKey: "studentCount",
+      cell: ({ row }) => (
+        <div className="flex items-center justify-center gap-1">9</div>
+      ),
+      meta: {
+        filterVariant: "range",
+      },
+      // headerProps: { // Example custom prop for alignment
+      //   className: "text-right",
+      // },
+      // cellProps: { // Example custom prop for alignment
+      //     className: "text-right tabular-nums",
+      // },
+    },
+    {
+      header: "Teacher",
+      accessorKey: "class_teacher", // Use the derived field
+      cell: ({ row }) => {
+        if (!row.original.class_teacher)
+          return <span className="text-muted-foreground">N/A</span>;
+        return (
+          <div className=" flex gap-2 items-center">
+            <MyAvatar
+              src={row.original.class_teacher.image}
+              alt={row.original.class_teacher.name}
+              size="xs"
+            />
+            {row.original.class_teacher.name}
+          </div>
+        );
+      },
+      enableSorting: true, // Enable if desired, ensure data is sortable
+      // Filtering is not enabled for this column
     },
     {
       id: "actions",

@@ -6,7 +6,7 @@ import SchoolStaffClassFilter from "@/components/page/school-staff/school-classe
 import ClassesSchoolTable from "@/components/page/school-staff/table/class-table/classes-table";
 import type { Locale } from "@/i18n";
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
-import type { ClassWithOthers } from "@/lib/schema/class/class-schema";
+import type { ClassWithOthers } from "@/lib/schema/relations-schema";
 import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import type { Metadata } from "next";

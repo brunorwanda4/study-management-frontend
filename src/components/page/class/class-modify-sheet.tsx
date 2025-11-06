@@ -1,8 +1,8 @@
+import MyAvatar from "@/components/common/image/my-avatar";
 import MyImage from "@/components/common/myImage";
 import MyLink from "@/components/common/myLink";
-import ChangeClassTeacherDialog from "@/components/page/school-staff/dialog/change-class-teacher-dialog";
+import ClassTeacherDialog from "@/components/page/class/dialog/add-class-teacher-dialog";
 import ClassDialog from "@/components/page/school-staff/dialog/class-dialog";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
@@ -13,7 +13,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import type { Locale } from "@/i18n";
-import type { ClassWithOthers } from "@/lib/schema/class/class-schema";
+import type { ClassWithOthers } from "@/lib/schema/relations-schema";
 import { cn } from "@/lib/utils";
 import type { AuthContext } from "@/lib/utils/auth-context";
 import { formatReadableDate } from "@/lib/utils/format-date";
@@ -51,10 +51,12 @@ const ClassModifySheet = ({ cls, auth, isTable, lang }: props) => {
           <div className=" relative">
             <MyImage src="/images/1.jpg" className=" w-full" />
             <div className="absolute -bottom-18 flex items-center gap-2 p-4">
-              <Avatar className="size-20 border border-base-content/50 shadow">
-                <AvatarImage src={cls?.image ?? "/images/2.jpg"} />
-                <AvatarFallback>LOGO</AvatarFallback>
-              </Avatar>
+              <MyAvatar
+                size="lg"
+                type="cycle"
+                src={cls?.image}
+                alt={cls?.name}
+              />
               <div className="mt-6 space-x-1">
                 <h3
                   data-tip={cls?.name ?? "Level 5 Software"}
@@ -150,21 +152,31 @@ const ClassModifySheet = ({ cls, auth, isTable, lang }: props) => {
         <main className="px-4">
           {/* class teacher */}
           <div className=" space-y-4 flex-col flex">
-            <Label className=" ">Class Teacher</Label>
-            <div className=" flex justify-between flex-row items-center">
-              <div className=" flex gap-2 items-center">
-                <MyImage
-                  role="AVATAR"
-                  src={"/images/3.jpg"}
-                  className=" size-14"
-                />
-                <div className=" flex flex-col">
-                  <span className="">teacher name</span>
-                  <span>@ teacher_username</span>
-                </div>
-              </div>
-              <ChangeClassTeacherDialog />
+            <div className=" flex justify-between ">
+              <Label className=" ">Class Teacher</Label>
+              {!cls?.class_teacher && (
+                <ClassTeacherDialog auth={auth} cls={cls} />
+              )}
             </div>
+            {cls?.class_teacher && (
+              <div className=" flex justify-between flex-row items-center">
+                <div className=" flex gap-2 items-center">
+                  <MyAvatar
+                    src={cls.class_teacher.image}
+                    alt={cls.class_teacher.name}
+                    size="sm"
+                  />
+                  <div className=" flex flex-col">
+                    <span className="">{cls.class_teacher.name}</span>
+                  </div>
+                </div>
+                <ClassTeacherDialog
+                  name="Change teacher"
+                  auth={auth}
+                  cls={cls}
+                />
+              </div>
+            )}
           </div>
         </main>
       </SheetContent>

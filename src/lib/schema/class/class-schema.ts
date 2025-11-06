@@ -1,12 +1,9 @@
-import { mainClassSchema } from "@/lib/schema/admin/main-classes-schema";
-import { tradeSchema } from "@/lib/schema/admin/tradeSchema";
 import {
   ClassTypeSchema,
   ImageSchema,
 } from "@/lib/schema/common-details-schema";
 import { SchoolSchema } from "@/lib/schema/school/school-schema";
 // import { TeacherSchema } from "@/lib/schema/school/teacher-schema";
-import { UserModelSchema } from "@/lib/schema/user/user-schema";
 import z from "zod";
 
 // 🧩 Base Class Schema
@@ -47,7 +44,7 @@ export const CreateClassSchema = z.object({
   name: z.string().min(1, "Class name is required"),
   username: z.string().min(1, "Username is required"),
 
-  image: z.string().optional(),
+  image: z.string().optional().nullable(),
   school_id: z.string().optional(),
   creator_id: z.string().optional(),
   class_teacher_id: z.string().optional(),
@@ -100,17 +97,6 @@ export const ClassWithSchoolSchema = z.object({
 });
 export type ClassWithSchool = z.infer<typeof ClassWithSchoolSchema>;
 
-// 🧩 ClassWithOthers Schema
-export const ClassWithOthersSchema = z.object({
-  ...ClassSchema.shape,
-  school: SchoolSchema.optional(), // SchoolSchema if available
-  creator: UserModelSchema.optional(), // UserSchema
-  // class_teacher: TeacherSchema.optional(), // TeacherSchema
-  main_class: mainClassSchema.optional(), // MainClassSchema
-  trade: tradeSchema.optional(),
-});
-export type ClassWithOthers = z.infer<typeof ClassWithOthersSchema>;
-
 // 🧩 BulkClassesRequest Schema
 export const BulkClassesRequestSchema = z.object({
   classes: z.array(ClassSchema),
@@ -141,8 +127,8 @@ export type BulkUpdateRequest = z.infer<typeof BulkUpdateRequestSchema>;
 
 // add class teacher into school
 export const addOrUpdateClassTeacherSchema = z.object({
-  class_id: z.string(),
-  teacher_id: z.string(),
+  class_id: z.string().optional(),
+  teacher_id: z.string().optional(),
 });
 
 export type addOrUpdateClassTeacher = z.infer<

@@ -10,7 +10,7 @@ const ChangeClassTeacherDialog = () => {
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button library="daisy" variant={"secondary"} size={"sm"}>
-          Change Class Teacher
+          Change Teacher
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>change class Teacher</AlertDialogContent>

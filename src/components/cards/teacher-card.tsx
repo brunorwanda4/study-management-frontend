@@ -1,3 +1,4 @@
+"use client";
 import MyImage from "@/components/common/myImage";
 import MyLink from "@/components/common/myLink";
 import SchoolTeacherModifySheet from "@/components/page/school-staff/school-teachers/school-teacher-modify-sheet";
@@ -20,6 +21,14 @@ import { cn } from "@/lib/utils";
 import type { AuthContext } from "@/lib/utils/auth-context";
 import { BsBook } from "react-icons/bs";
 import { MdClass } from "react-icons/md";
+
+// const SchoolTeacherModifySheet = dynamic(
+//   () =>
+//     import(
+//       "@/components/page/school-staff/school-teachers/school-teacher-modify-sheet"
+//     ),
+//   { ssr: false },
+// );
 
 interface props {
   lang: Locale;
@@ -69,7 +78,7 @@ const TeacherCard = ({ auth, isSchoolStaff, teacher, lang }: props) => {
           {teacher?.phone && <span>{teacher.phone}</span>}
         </div>
       </CardHeader>
-      <CardContent className=" p-0 flex flex-col justify-between">
+      <CardContent className=" p-0 pb-4 flex flex-col justify-between">
         <div className=" px-4 flex flex-wrap gap-4">
           {/* students */}
           <Tooltip>

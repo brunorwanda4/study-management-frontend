@@ -1,14 +1,14 @@
-import MyImage from "@/components/common/myImage";
-import MyLink from "@/components/common/myLink";
+import SchoolTeacherModifySheet from "@/components/page/school-staff/school-teachers/school-teacher-modify-sheet";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { Locale } from "@/i18n";
-import { studentImage } from "@/lib/context/images";
 import type { TeacherWithRelations } from "@/lib/schema/school/teacher-schema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import { formatReadableDate } from "@/lib/utils/format-date";
 import type { ColumnDef } from "@tanstack/react-table";
 
 export const TeacherTableColumns = (
   lang: Locale,
+  auth: AuthContext,
 ): ColumnDef<TeacherWithRelations>[] => {
   return [
     // --- 1. Selection Column ---
@@ -22,7 +22,7 @@ export const TeacherTableColumns = (
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
           aria-label="Select all"
-          className="ms-[-4px]" // Adjust alignment if needed
+          className="-ms-1" // Adjust alignment if needed
         />
       ),
       cell: ({ row }) => (
@@ -30,7 +30,7 @@ export const TeacherTableColumns = (
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
           aria-label="Select row"
-          className="ms-[-4px]" // Adjust alignment if needed
+          className="-ms-1" // Adjust alignment if needed
         />
       ),
       enableSorting: false,
@@ -43,41 +43,13 @@ export const TeacherTableColumns = (
       header: "Teacher",
       accessorKey: "name", // Used for sorting/filtering by name
       cell: ({ row }) => (
-        <div className="flex items-center space-x-3">
-          <MyLink
-            loading
-            href={`/${lang}/p/${row.original.user?.username}teacherId=${row.original.id}`}
-            className="flex-shrink-0"
-          >
-            <MyImage
-              role="AVATAR"
-              className="size-10 rounded-full" // Explicitly rounded
-              src={
-                row.original.image || row.original.user?.image || studentImage
-              }
-              alt={row.original.name || "Student Avatar"}
-            />
-          </MyLink>
-          <div className="flex flex-col overflow-hidden">
-            {" "}
-            {/* Prevent text overflow issues */}
-            <MyLink
-              loading
-              className="truncate font-medium hover:underline" // Truncate long names
-              href={`/${lang}/p/${row.original.user?.username}teacherId=${row.original.id}`}
-            >
-              {row.original.name || "N/A"}
-            </MyLink>
-            {row.original.email && (
-              <span
-                className="text-muted-foreground truncate text-sm"
-                title={row.original.email} // Add title attribute
-              >
-                {row.original.email}
-              </span>
-            )}
-          </div>
-        </div>
+        <SchoolTeacherModifySheet
+          auth={auth}
+          lang={lang}
+          teacher={row.original}
+          isSchool
+          isTable
+        />
       ),
       meta: {
         filterVariant: "text", // Enable text filtering on the name
@@ -117,6 +89,43 @@ export const TeacherTableColumns = (
       cell: ({ row }) => (
         <div className="text-sm">
           {row.original.phone || (
+            <span className="text-muted-foreground">-</span>
+          )}
+        </div>
+      ), // Display phone or fallback
+      enableSorting: false, // Sorting by phone number usually not needed
+      meta: {
+        filterVariant: "text",
+      },
+      size: 150, // Suggest a size
+    },
+
+    {
+      header: "Subjects",
+      accessorKey: "subject_ids",
+      cell: ({ row }) => (
+        <div className="text-sm">
+          {row.original.subject_ids ? (
+            <span>{row.original.subject_ids.length}</span>
+          ) : (
+            <span className="text-muted-foreground">-</span>
+          )}
+        </div>
+      ), // Display phone or fallback
+      enableSorting: false, // Sorting by phone number usually not needed
+      meta: {
+        filterVariant: "text",
+      },
+      size: 150, // Suggest a size
+    },
+    {
+      header: "Classes",
+      accessorKey: "class_ids",
+      cell: ({ row }) => (
+        <div className="text-sm">
+          {row.original.class_ids ? (
+            <span>{row.original.class_ids.length}</span>
+          ) : (
             <span className="text-muted-foreground">-</span>
           )}
         </div>

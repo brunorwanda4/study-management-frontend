@@ -8,31 +8,37 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import type { Class } from "@/lib/schema/class/class-schema";
+import type { Teacher } from "@/lib/schema/school/teacher-schema";
 import type { AuthContext } from "@/lib/utils/auth-context";
 
 interface Props {
   auth: AuthContext;
+  cls?: Class;
+  teacher?: Teacher;
+  name?: string;
+  title?: string;
 }
 
-const ClassTeacherDialog = ({ auth }: Props) => {
+const ClassTeacherDialog = ({ auth, cls, name, title, teacher }: Props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button
           type="button"
-          variant={"secondary"}
-          role="create"
-          size={"xs"}
+          variant={name ? "ghost" : "secondary"}
+          role={name ? undefined : "create"}
+          size={"sm"}
           library="daisy"
         >
-          Add
+          {name ?? "Add"}
         </Button>
       </DialogTrigger>
       <DialogContent className=" sm:max-w-xl">
         <DialogHeader>
-          <DialogTitle>Add class teacher</DialogTitle>
+          <DialogTitle>{title ?? "Add class teacher"}</DialogTitle>
         </DialogHeader>
-        <ClassTeacherForm auth={auth} />
+        <ClassTeacherForm teacher={teacher} cls={cls} auth={auth} />
       </DialogContent>
     </Dialog>
   );

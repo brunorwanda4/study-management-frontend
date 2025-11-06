@@ -221,7 +221,7 @@ export const schoolStaffSidebarGroups: sidebarGroupsProps[] = [
       {
         title: "School Settings",
         icon: "/icons/settings.png",
-        url: "/s-t/setting",
+        url: "/s-t/settings",
       },
     ],
   },
