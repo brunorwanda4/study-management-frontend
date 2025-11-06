@@ -1,12 +1,15 @@
+import DisplaySwitcher from "@/components/display/display-switcher";
+import AppPageHeader from "@/components/page/common/app-page-header";
 import NotFoundPage from "@/components/page/not-found";
-import StaffPeople from "@/components/page/school-staff/dashboard/staff-people";
+import AllTeachersCards from "@/components/page/school-staff/school-teachers/all-teachers-card";
+import SchoolStaffTeacherFilter from "@/components/page/school-staff/school-teachers/school-staff-teacher-fiter";
 import SchoolTeacherTable from "@/components/page/school-staff/table/teacher-table/table-teacher";
 import type { Locale } from "@/i18n";
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
-import { TeacherWithRelations } from "@/lib/schema/school/teacher-schema";
+import type { TeacherWithRelations } from "@/lib/schema/school/teacher-schema";
 import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 interface props {
@@ -14,14 +17,9 @@ interface props {
 }
 
 export const generateMetadata = async (): Promise<Metadata> => {
-  const auth = await authContext();
   return {
-    title: auth?.school?.name
-      ? `Teachers in ${auth?.school?.name}`
-      : "School not found",
-    description: auth?.school?.name
-      ? `Teachers in ${auth?.school?.name}`
-      : "school not found",
+    title: "Teachers Management",
+    description: "Manage your classes and their roles",
   };
 };
 
@@ -39,7 +37,7 @@ const SchoolStaffTeacherPage = async (props: props) => {
   const [teachers] = await Promise.all([
     apiRequest<void, TeacherWithRelations[]>(
       "get",
-      `/school/teachers/with-details?limit=10`,
+      `/school/teachers/with-relations?limit=9`,
       undefined,
       { token: auth.token, schoolToken: auth.schoolToken, realtime: "teacher" },
     ),
@@ -55,44 +53,28 @@ const SchoolStaffTeacherPage = async (props: props) => {
       ]}
     >
       <div className="space-y-4 p-4">
-        <h2 className="title-page">Teachers</h2>
-        <div className="flex space-x-4">
-          <StaffPeople
-            icon="/icons/teacher.png"
-            link=""
-            total={762}
-            title="Teacher"
-            Ftotal={60}
-            Mtotal={37}
-            role="Total Teacher"
-          />
-          <StaffPeople
-            icon="/icons/primary.png"
-            link=""
-            total={345}
-            title="Primary"
-            Ftotal={100}
-            Mtotal={233}
-            role="Total Primary Teacher"
-          />
-          <StaffPeople
-            icon="/icons/OLevel.png"
-            link=""
-            total={345}
-            title="Ordinary_level"
-            Ftotal={100}
-            Mtotal={233}
-            role="Total Ordinary_level Teacher"
-          />
-        </div>
-        <div>
-          <SchoolTeacherTable
-            auth={auth}
-            lang={lang}
-            teachers={teachers.data ?? []}
-            realtimeEnabled
-          />
-        </div>
+        <AppPageHeader
+          title="Teachers"
+          description="Manage school teachers, classes, and subjects."
+        />
+        <SchoolStaffTeacherFilter auth={auth} />
+        <DisplaySwitcher
+          table={
+            <SchoolTeacherTable
+              auth={auth}
+              lang={lang}
+              teachers={teachers.data ?? []}
+              realtimeEnabled
+            />
+          }
+          cards={
+            <AllTeachersCards
+              lang={lang}
+              auth={auth}
+              teachers={teachers.data ?? []}
+            />
+          }
+        />
       </div>
     </RealtimeProvider>
   );

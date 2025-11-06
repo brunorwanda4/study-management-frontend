@@ -35,7 +35,6 @@ const JoinSchoolRequestBody = ({
   return (
     <div className="flex flex-row items-center justify-center gap-4">
       {displayRequests.map((item) => {
-        if (item.status !== "Pending") return null;
         return (
           <SchoolJoinRequestCard
             key={item.id}

@@ -2,12 +2,12 @@ import JoinSchoolRequestBody from "@/components/page/application/join-school-req
 import DevelopingPage from "@/components/page/developing-page";
 import PermissionPage from "@/components/page/permission-page";
 import JoinSchoolDialog from "@/components/page/school-staff/dialog/join-school-dialog";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
-import { JoinSchoolRequestWithRelations } from "@/lib/schema/school/school-join-school/join-school-request-schema";
+import type { JoinSchoolRequestWithRelations } from "@/lib/schema/school/school-join-school/join-school-request-schema";
 import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {

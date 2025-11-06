@@ -2,7 +2,7 @@ import MyImage from "@/components/common/myImage";
 import MyLink from "@/components/common/myLink";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { BsGear, BsPlusCircle } from "react-icons/bs";
 
 interface props {

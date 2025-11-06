@@ -108,7 +108,6 @@ const ClassForm = ({ auth, trade, cls, isSchool }: Props) => {
   const handleSubmit = (values: CreateClass) => {
     setError(undefined);
     setSuccess(undefined);
-    console.log("🤣🤣", values);
     startTransition(async () => {
       try {
         const endpoint = cls

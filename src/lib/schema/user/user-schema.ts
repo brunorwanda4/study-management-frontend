@@ -109,16 +109,7 @@ export const UserOnboardingSchema = z.object({
 
   gender: GenderSchema,
 
-  image: z
-    .string()
-    .optional()
-    .refine(
-      (val) =>
-        !val || (val.startsWith("data:image/") && val.length < 2 * 1024 * 1024),
-      {
-        message: "Invalid image format or image too large (max 2MB)",
-      },
-    ),
+  image: z.string().optional().nullable(),
 
   phone: z
     .string()

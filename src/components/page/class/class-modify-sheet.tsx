@@ -1,4 +1,5 @@
 import MyImage from "@/components/common/myImage";
+import MyLink from "@/components/common/myLink";
 import ChangeClassTeacherDialog from "@/components/page/school-staff/dialog/change-class-teacher-dialog";
 import ClassDialog from "@/components/page/school-staff/dialog/class-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -15,7 +16,7 @@ import type { Locale } from "@/i18n";
 import type { ClassWithOthers } from "@/lib/schema/class/class-schema";
 import { cn } from "@/lib/utils";
 import type { AuthContext } from "@/lib/utils/auth-context";
-import Link from "next/link";
+import { formatReadableDate } from "@/lib/utils/format-date";
 import { BsBook } from "react-icons/bs";
 import { FaPeopleGroup } from "react-icons/fa6";
 import { PiStudentLight } from "react-icons/pi";
@@ -57,19 +58,19 @@ const ClassModifySheet = ({ cls, auth, isTable, lang }: props) => {
               <div className="mt-6 space-x-1">
                 <h3
                   data-tip={cls?.name ?? "Level 5 Software"}
-                  className="line-clamp-1 leading-5 font-medium tooltip"
+                  className="line-clamp-1 leading-5 font-medium tooltip text-lg"
                 >
                   {cls?.name ?? "Level 5 Software development"}
                 </h3>
-                <Link
-                  className="line-clamp-1 flex space-x-1 text-sm"
+                <MyLink
+                  className="line-clamp-1 flex space-x-1 link link-hover"
                   href={`/class`}
                 >
                   <span>@</span>{" "}
                   <span className="line-clamp-1">
                     {cls?.username ?? "L5SOD"}
                   </span>
-                </Link>
+                </MyLink>
               </div>
             </div>
           </div>
@@ -110,7 +111,26 @@ const ClassModifySheet = ({ cls, auth, isTable, lang }: props) => {
               )}
             </div>
             <div>{/* Other data which are needed */}</div>
-            {cls?.description && <p className=" text-sm ">{cls.description}</p>}
+            {cls?.description && (
+              <div className=" flex flex-col">
+                <h6 className="">Description:</h6>
+                <p className=" text-sm ml-4">{cls.description}</p>
+              </div>
+            )}
+            <div className=" flex gap-4 justify-end">
+              <div className=" flex gap-2 text-sm">
+                <span>Created on:</span>{" "}
+                <span className=" font-medium">
+                  {formatReadableDate(cls?.created_at)}
+                </span>
+              </div>
+              <div className=" flex gap-2 text-sm">
+                <span>Last update:</span>{" "}
+                <span className=" font-medium">
+                  {formatReadableDate(cls?.updated_at)}
+                </span>
+              </div>
+            </div>
             <div className=" mt-4 flex justify-end flex-wrap gap-2">
               <Button
                 library="daisy"

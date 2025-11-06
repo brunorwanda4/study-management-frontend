@@ -70,13 +70,14 @@ export default function RadioInput({
           return (
             <div
               key={keyId}
-              className="relative flex flex-col gap-4 rounded-md border border-base-content/50 p-2 shadow-xs outline-none data-[state=checked]:border-primary/50"
+              className="relative flex flex-col gap-4 rounded-md border border-base-content/50 p-2 shadow-xs outline-none data-[state=checked]:border-primary/50 disabled:opacity-50"
             >
               <div className="flex justify-between gap-2">
                 <RadioGroupItem
                   id={keyId}
                   value={key}
                   className="order-1 after:absolute after:inset-0 top-2 w-fit"
+                  disabled={disabled}
                 />
                 {showTooltip && item.description && !showDescription ? (
                   <Tooltip>

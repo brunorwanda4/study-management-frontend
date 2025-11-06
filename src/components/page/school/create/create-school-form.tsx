@@ -1,11 +1,11 @@
 "use client";
 
+import type { Locale } from "@/i18n";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTheme } from "next-themes";
 import { useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
-
-import type { Locale } from "@/i18n";
+import { Controller, useForm } from "react-hook-form";
+import * as RPNInput from "react-phone-number-input";
 
 // Import Shadcn UI Components
 import { Button } from "@/components/ui/button";
@@ -33,6 +33,11 @@ import { Textarea } from "@/components/ui/textarea";
 import UploadImage from "@/components/common/cards/form/upload-image";
 import { FormError, FormSuccess } from "@/components/common/form-message";
 import AddressInput from "@/components/common/form/address-input";
+import {
+  CountrySelect,
+  FlagComponent,
+  PhoneInput,
+} from "@/components/common/form/phone-input";
 import MyImage from "@/components/common/myImage";
 import {
   AffiliationTypes,
@@ -522,10 +527,23 @@ const CreateSchoolForm = ({ lang, auth }: Props) => {
                 <FormItem>
                   <FormLabel>Phone Number</FormLabel>
                   <FormControl>
-                    <Input
-                      type="tel"
-                      placeholder="School phone number"
-                      {...field}
+                    <Controller
+                      name={field.name}
+                      control={form.control}
+                      render={({ field }) => (
+                        <RPNInput.default
+                          {...field}
+                          className="flex rounded-lg border-l-0"
+                          international
+                          flagComponent={FlagComponent}
+                          countrySelectComponent={CountrySelect}
+                          inputComponent={PhoneInput}
+                          defaultCountry="RW"
+                          placeholder="Enter phone number"
+                          onChange={(value) => field.onChange(value ?? "")}
+                          disabled={isPending}
+                        />
+                      )}
                     />
                   </FormControl>
                   <FormMessage />

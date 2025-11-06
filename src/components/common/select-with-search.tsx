@@ -100,7 +100,7 @@ export default function SelectWithSearch({
           className="border-input w-full min-w-(--radix-popper-anchor-width) p-0"
           align="start"
         >
-          <Command>
+          <Command shouldFilter={false}>
             <CommandInput
               placeholder="Search..."
               value={search}
@@ -149,29 +149,38 @@ export default function SelectWithSearch({
                       size={16}
                       className="text-muted-foreground mr-2"
                     />
-                    Don’t select
+                    Don't select
                   </CommandItem>
                 </CommandGroup>
               )}
 
               <CommandGroup>
-                {normalizedOptions.map((opt) => (
-                  <CommandItem
-                    key={opt.value}
-                    value={opt.value}
-                    className="cursor-pointer"
-                    onSelect={(currentValue: string) => {
-                      onChange(currentValue);
-                      setOpen(false);
-                      setSearch("");
-                    }}
-                  >
-                    {opt.label}
-                    {value === opt.value && (
-                      <CheckIcon size={16} className="ml-auto" />
-                    )}
-                  </CommandItem>
-                ))}
+                {normalizedOptions
+                  .filter((opt) => {
+                    if (!search) return true;
+                    const searchLower = search.toLowerCase();
+                    return (
+                      opt.value.toLowerCase().includes(searchLower) ||
+                      opt.label.toLowerCase().includes(searchLower)
+                    );
+                  })
+                  .map((opt) => (
+                    <CommandItem
+                      key={opt.value}
+                      value={opt.value}
+                      className="cursor-pointer"
+                      onSelect={(currentValue: string) => {
+                        onChange(currentValue);
+                        setOpen(false);
+                        setSearch("");
+                      }}
+                    >
+                      {opt.label}
+                      {value === opt.value && (
+                        <CheckIcon size={16} className="ml-auto" />
+                      )}
+                    </CommandItem>
+                  ))}
               </CommandGroup>
             </CommandList>
           </Command>

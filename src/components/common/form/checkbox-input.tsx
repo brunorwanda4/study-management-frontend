@@ -77,7 +77,7 @@ export default function CheckboxInput({
             <div
               key={keyId}
               className={cn(
-                "relative flex flex-col gap-4 rounded-md border border-base-content/50 p-2 shadow-xs outline-none",
+                "relative flex flex-col gap-4 rounded-md border border-base-content/50 p-2 shadow-xs outline-none disabled:opacity-50",
                 isChecked && "border-primary/50",
               )}
             >

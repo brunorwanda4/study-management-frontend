@@ -138,3 +138,13 @@ export const BulkUpdateRequestSchema = z.object({
   updates: z.array(BulkUpdateItemSchema),
 });
 export type BulkUpdateRequest = z.infer<typeof BulkUpdateRequestSchema>;
+
+// add class teacher into school
+export const addOrUpdateClassTeacherSchema = z.object({
+  class_id: z.string(),
+  teacher_id: z.string(),
+});
+
+export type addOrUpdateClassTeacher = z.infer<
+  typeof addOrUpdateClassTeacherSchema
+>;

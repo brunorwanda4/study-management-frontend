@@ -1,4 +1,5 @@
 import DisplaySwitcher from "@/components/display/display-switcher";
+import AppPageHeader from "@/components/page/common/app-page-header";
 import PermissionPage from "@/components/page/permission-page";
 import AllClassesCards from "@/components/page/school-staff/class-components/all-classes-card";
 import SchoolStaffClassFilter from "@/components/page/school-staff/school-classes/school-staff-class-filter";
@@ -56,31 +57,29 @@ const SchoolStaffClassesPage = async (props: props) => {
       ]}
     >
       <div className="max-w-full space-y-4 p-4">
-        <div>
-          <h2 className="title-page">Classes</h2>
-          <p>Manage and view all classes in your school.</p>
-        </div>
+        <AppPageHeader
+          title="Classes"
+          description="Manage and view all classes in your school."
+        />
         <SchoolStaffClassFilter auth={auth} />
-        <div>
-          <DisplaySwitcher
-            table={
-              <ClassesSchoolTable
-                lang={lang}
-                realtimeEnabled
-                auth={auth}
-                classes={classes.data ?? []}
-              />
-            }
-            cards={
-              <AllClassesCards
-                classes={classes.data ?? []}
-                lang={lang}
-                realtimeEnabled
-                auth={auth}
-              />
-            }
-          />
-        </div>
+        <DisplaySwitcher
+          table={
+            <ClassesSchoolTable
+              lang={lang}
+              realtimeEnabled
+              auth={auth}
+              classes={classes.data ?? []}
+            />
+          }
+          cards={
+            <AllClassesCards
+              classes={classes.data ?? []}
+              lang={lang}
+              realtimeEnabled
+              auth={auth}
+            />
+          }
+        />
       </div>
     </RealtimeProvider>
   );
