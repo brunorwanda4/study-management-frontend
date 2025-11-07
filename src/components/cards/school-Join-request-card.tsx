@@ -1,5 +1,6 @@
 "use client";
 
+import MyAvatar from "@/components/common/image/my-avatar";
 import {
   Card,
   CardContent,
@@ -8,15 +9,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { useToast } from "@/lib/context/toast/ToastContext";
-import { formatTimeAgo } from "@/lib/functions/change-time";
-import {
+import type {
   JoinSchoolRequest,
   JoinSchoolRequestWithRelations,
 } from "@/lib/schema/school/school-join-school/join-school-request-schema";
 import { cn } from "@/lib/utils";
-import { AuthContext, setAuthCookies } from "@/lib/utils/auth-context";
+import { type AuthContext, setAuthCookies } from "@/lib/utils/auth-context";
+import { formatTimeAgo } from "@/lib/utils/format-date";
 import apiRequest from "@/service/api-client";
 import Link from "next/link";
 import { useState, useTransition } from "react";
@@ -107,22 +108,14 @@ const SchoolJoinRequestCard = ({ lang, request, className, auth }: Props) => {
     >
       <CardHeader>
         <div className="flex items-center gap-3">
-          <Avatar className="size-10">
-            <AvatarImage
-              src={request.invited_user?.image || "/images/default-avatar.jpg"}
-              alt={request.invited_user?.name || "User Avatar"}
-            />
-            <AvatarFallback>
-              {request.invited_user?.name?.charAt(0) || "U"}
-            </AvatarFallback>
-          </Avatar>
+          <MyAvatar src={request.sender?.image} alt={request.sender?.name} />
           <div className="truncate">
             <CardTitle className="text-base font-semibold">
-              {request.invited_user?.name}
+              {request.sender?.name}
             </CardTitle>
-            {request.invited_user?.email && (
+            {request.sender?.email && (
               <CardDescription className="text-muted-foreground truncate text-sm">
-                {request.invited_user.email}
+                {request.sender?.email}
               </CardDescription>
             )}
           </div>

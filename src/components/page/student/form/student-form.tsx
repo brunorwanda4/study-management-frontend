@@ -1,9 +1,5 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useTransition } from "react";
-import { Controller, useForm } from "react-hook-form";
-
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
@@ -16,6 +12,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState, useTransition } from "react";
+import { Controller, useForm } from "react-hook-form";
 
 import UploadImage from "@/components/common/cards/form/upload-image";
 import { FormError, FormSuccess } from "@/components/common/form-message";
@@ -25,47 +24,92 @@ import {
   PhoneInput,
 } from "@/components/common/form/phone-input";
 import RadioInput from "@/components/common/form/radio-input";
+import SelectWithSearch from "@/components/common/select-with-search";
 import {
   GenderDetails,
-  TeacherTypeDetails,
+  StudentStatusDetails,
 } from "@/lib/const/common-details-const";
 import { useToast } from "@/lib/context/toast/ToastContext";
+import type { Class } from "@/lib/schema/class/class-schema";
 import {
-  type Teacher,
-  type TeacherBase,
-  TeacherBaseSchema,
-} from "@/lib/schema/school/teacher-schema";
+  type Student,
+  type StudentBase,
+  StudentBaseSchema,
+} from "@/lib/schema/school/student-schema";
 import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import * as RPNInput from "react-phone-number-input";
+
 interface Props {
   auth: AuthContext;
-  teacher?: Teacher;
+  student?: Student;
   isSchool?: boolean;
+  cls?: Class;
 }
 
-const TeacherForm = ({ auth, teacher, isSchool }: Props) => {
+const StudentForm = ({ auth, student, isSchool, cls }: Props) => {
+  const [classes, setClasses] = useState<Class[]>([]);
+  const [loadingOptions, setLoadingOptions] = useState(true);
+
   const [error, setError] = useState<string>();
   const [success, setSuccess] = useState<string>();
   const [isPending, startTransition] = useTransition();
   const { showToast } = useToast();
 
+  useEffect(() => {
+    const fetchOptions = async () => {
+      try {
+        const classRequest = apiRequest<void, Class[]>(
+          "get",
+          "/school/classes",
+          undefined,
+          {
+            token: auth.token,
+            schoolToken: auth.schoolToken,
+          },
+        );
+
+        const [classesRes] = await Promise.all([
+          cls ? { data: [] } : classRequest,
+        ]);
+
+        if (classesRes.data) {
+          // const activeClasses = classesRes.data.filter((c) => !c.is_active);
+          // setClasses(activeClasses);
+          setClasses(classesRes.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch options:", err);
+      } finally {
+        setLoadingOptions(false);
+      }
+    };
+
+    fetchOptions();
+  }, [auth, cls]);
+
   // -------------------------------------
   // Initialize form
   // -------------------------------------
-  const form = useForm<TeacherBase>({
-    resolver: zodResolver(TeacherBaseSchema),
+  const form = useForm<StudentBase>({
+    resolver: zodResolver(StudentBaseSchema),
     defaultValues: {
-      name: teacher?.name ? teacher?.name : undefined,
-      email: teacher?.email ? teacher?.email : undefined,
-      phone: teacher?.phone ? teacher?.phone : undefined,
-      image: teacher?.image ? teacher?.image : undefined,
-      gender: teacher?.gender ? teacher?.gender : undefined,
-      type: teacher?.type ? teacher?.type : "Regular",
-      class_ids: teacher?.class_ids ? teacher?.class_ids : undefined,
-      subject_ids: teacher?.subject_ids ? teacher?.subject_ids : undefined,
-      is_active: teacher?.is_active ? teacher?.is_active : true,
-      tags: teacher?.tags ?? [],
+      name: student?.name ?? undefined,
+      email: student?.email ?? undefined,
+      phone: student?.phone ?? undefined,
+      image: student?.image ?? undefined,
+      gender: student?.gender ?? undefined,
+      date_of_birth: student?.date_of_birth ?? undefined,
+      class_id: student?.class_id ?? undefined,
+      registration_number: student?.registration_number ?? undefined,
+      admission_year:
+        student?.admission_year !== undefined
+          ? String(student.admission_year)
+          : undefined,
+
+      status: student?.status ?? "Active",
+      is_active: student?.is_active ?? true,
+      tags: student?.tags ?? [],
       creator_id: auth.user.id ?? undefined,
       school_id: isSchool ? auth?.school?.id : undefined,
     },
@@ -75,24 +119,30 @@ const TeacherForm = ({ auth, teacher, isSchool }: Props) => {
   // -------------------------------------
   // Submit handler
   // -------------------------------------
-  const handleSubmit = (values: TeacherBase) => {
+  const handleSubmit = (values: StudentBase) => {
     setError(undefined);
     setSuccess(undefined);
     startTransition(async () => {
       try {
+        const api_data = {
+          ...values,
+          admission_year: Number(values.admission_year),
+          school_id: isSchool ? auth?.school?.id : undefined,
+        };
+        console.log("🤣", api_data);
         const endpoint =
-          teacher && isSchool
-            ? `/school/teachers/${teacher._id || teacher.id}`
+          student && isSchool
+            ? `/school/students/${student._id || student.id}`
             : isSchool
-              ? "/school/teachers"
-              : teacher
-                ? `/teachers/${teacher._id || teacher.id}`
-                : "/teachers";
+              ? "/school/students"
+              : student
+                ? `/students/${student._id || student.id}`
+                : "/students";
 
-        const response = await apiRequest<typeof values, TeacherBase>(
-          teacher ? "put" : "post",
+        const response = await apiRequest<typeof api_data, Student>(
+          student ? "put" : "post",
           endpoint,
-          values,
+          api_data,
           { token: auth.token, schoolToken: auth.schoolToken },
         );
 
@@ -106,17 +156,17 @@ const TeacherForm = ({ auth, teacher, isSchool }: Props) => {
           return;
         }
 
-        const message = teacher
-          ? "Teacher updated successfully!"
-          : "Teacher created successfully!";
+        const message = student
+          ? "Student updated successfully!"
+          : "Student created successfully!";
         setSuccess(message);
         showToast({
-          title: teacher ? "Teacher Updated" : "Teacher Created",
+          title: student ? "Student Updated" : "Student Created",
           description: response.data.name,
           type: "success",
         });
 
-        if (!teacher) form.reset();
+        if (!student) form.reset();
       } catch (err) {
         setError(
           `Unexpected error occurred [${String(err)}]. Please try again.`,
@@ -131,9 +181,10 @@ const TeacherForm = ({ auth, teacher, isSchool }: Props) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-        <div className=" flex flex-col lg:flex-row gap-2">
-          {/* Image Upload */}
-          <div className=" w-full flex flex-col gap-2">
+        <div className="flex flex-col lg:flex-row gap-2">
+          {/* Left Column */}
+          <div className="w-full flex flex-col gap-2">
+            {/* Image Upload */}
             <FormField
               control={form.control}
               name="image"
@@ -145,13 +196,14 @@ const TeacherForm = ({ auth, teacher, isSchool }: Props) => {
                       onChange={field.onChange}
                       value={field.value?.toString() ?? null}
                       disabled={isPending}
-                      description="Drop your profile image here"
+                      description="Drop student's image here"
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
             {/* Name */}
             <FormField
               control={form.control}
@@ -162,7 +214,7 @@ const TeacherForm = ({ auth, teacher, isSchool }: Props) => {
                   <FormControl>
                     <Input
                       {...field}
-                      placeholder="Enter teacher's name"
+                      placeholder="Enter student's full name"
                       disabled={isPending}
                     />
                   </FormControl>
@@ -172,33 +224,31 @@ const TeacherForm = ({ auth, teacher, isSchool }: Props) => {
             />
 
             {/* Email */}
-            {!teacher?.user_id && (
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        placeholder="example@school.com"
-                        disabled={isPending}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      placeholder="example@student.com"
+                      disabled={isPending}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             {/* Phone */}
             <FormField
               name="phone"
               control={form.control}
               render={({ field }) => (
-                <FormItem className=" w-full">
-                  <FormLabel>Phone number</FormLabel>
+                <FormItem className="w-full">
+                  <FormLabel>Phone Number</FormLabel>
                   <FormControl>
                     <Controller
                       name={field.name}
@@ -225,8 +275,9 @@ const TeacherForm = ({ auth, teacher, isSchool }: Props) => {
             />
           </div>
 
-          {/* Gender */}
-          <div className=" w-full flex flex-col gap-2">
+          {/* Right Column */}
+          <div className="w-full flex flex-col gap-2">
+            {/* Gender */}
             <FormField
               control={form.control}
               name="gender"
@@ -238,7 +289,7 @@ const TeacherForm = ({ auth, teacher, isSchool }: Props) => {
                       items={GenderDetails}
                       value={field.value}
                       onChange={field.onChange}
-                      className=" grid-cols-3 gap-2"
+                      className="grid-cols-3 gap-2"
                       disabled={isPending}
                     />
                   </FormControl>
@@ -246,20 +297,18 @@ const TeacherForm = ({ auth, teacher, isSchool }: Props) => {
                 </FormItem>
               )}
             />
-
-            {/* Teacher Type */}
             <FormField
               control={form.control}
-              name="type"
+              name="status"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Teacher Type</FormLabel>
+                  <FormLabel>Status</FormLabel>
                   <FormControl>
                     <RadioInput
-                      items={TeacherTypeDetails}
+                      items={StudentStatusDetails}
                       value={field.value}
                       onChange={field.onChange}
-                      className=" grid-cols-3 gap-2"
+                      className="grid-cols-3 gap-2"
                       disabled={isPending}
                     />
                   </FormControl>
@@ -268,77 +317,69 @@ const TeacherForm = ({ auth, teacher, isSchool }: Props) => {
               )}
             />
 
-            {/* Classes */}
-            {/* <FormField
-            control={form.control}
-            name="class_ids"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Classes</FormLabel>
-                <FormControl>
-                  <SelectWithSearch
-                    multiple
-                    options={classOptions}
-                    value={field.value ?? []}
-                    onChange={field.onChange}
-                    placeholder="Select classes"
-                    disabled={isPending}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          /> */}
-
-            {/* Subjects */}
-            {/* <FormField
-            control={form.control}
-            name="subject_ids"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Subjects</FormLabel>
-                <FormControl>
-                  <SelectWithSearch
-                    multiple
-                    options={subjectOptions}
-                    value={field.value ?? []}
-                    onChange={field.onChange}
-                    placeholder="Select subjects"
-                    disabled={isPending}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          /> */}
-
-            {/* Tags */}
-            {/* <FormField
+            {/* Registration Number */}
+            <FormField
               control={form.control}
-              name="tags"
+              name="registration_number"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Tags</FormLabel>
+                  <FormLabel>Registration Number</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
-                      placeholder="e.g., Senior, Physics, Mentor"
+                      placeholder="Enter registration number"
                       disabled={isPending}
-                      onChange={(e) =>
-                        field.onChange(
-                          e.target.value
-                            .split(",")
-                            .map((tag) => tag.trim())
-                            .filter(Boolean),
-                        )
-                      }
-                      value={field.value?.join(", ") ?? ""}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
-            /> */}
+            />
+
+            {/* Admission Year */}
+            <FormField
+              control={form.control}
+              name="admission_year"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Admission Year</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      {...field}
+                      placeholder="Enter admission year"
+                      disabled={isPending}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {!cls && (
+              <FormField
+                name="class_id"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel> Class</FormLabel>
+                    <SelectWithSearch
+                      options={classes.map((c) => ({
+                        value: String(c.id ?? c._id),
+                        label: c.name,
+                      }))}
+                      value={field.value ?? ""}
+                      onChange={field.onChange}
+                      placeholder={
+                        loadingOptions ? "Loading classes..." : "Select a class"
+                      }
+                      disabled={isPending || loadingOptions}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
             {/* Active */}
             <FormField
@@ -380,7 +421,7 @@ const TeacherForm = ({ auth, teacher, isSchool }: Props) => {
             role={isPending ? "loading" : undefined}
             library="daisy"
           >
-            {teacher ? "Update Teacher" : "Add Teacher"}
+            {student ? "Update Student" : "Add Student"}
           </Button>
         </DialogFooter>
       </form>
@@ -388,4 +429,4 @@ const TeacherForm = ({ auth, teacher, isSchool }: Props) => {
   );
 };
 
-export default TeacherForm;
+export default StudentForm;

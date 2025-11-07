@@ -2,11 +2,11 @@
 
 import { CommonDataTable } from "@/components/common/table/common-data-table";
 import TableFilter from "@/components/common/table/table-filter";
+import EmptyStudents from "@/components/page/school-staff/students-components/empty-students";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Locale } from "@/i18n";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
-import type { Class } from "@/lib/schema/class/class-schema";
-import type { StudentWithRelations } from "@/lib/schema/school/student-schema";
+import type { StudentWithRelations } from "@/lib/schema/relations-schema";
 import type { AuthContext } from "@/lib/utils/auth-context";
 import {
   type ColumnFiltersState,
@@ -25,7 +25,6 @@ import { StudentTableColumns } from "./student-table-columns";
 interface props {
   students: StudentWithRelations[];
   lang: Locale;
-  classes: Class[];
   auth: AuthContext;
   realtimeEnabled?: boolean;
 }
@@ -33,7 +32,6 @@ interface props {
 export default function SchoolStudentTable({
   students,
   lang,
-  classes,
   auth,
   realtimeEnabled = false,
 }: props) {
@@ -49,6 +47,9 @@ export default function SchoolStudentTable({
       setDisplayStudents(initialStudents);
     }
   }, [initialStudents, realtimeEnabled]);
+
+  if (displayStudents.length === 0)
+    return <EmptyStudents isSchool auth={auth} />;
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([
@@ -91,9 +92,6 @@ export default function SchoolStudentTable({
         </div>
         <div className="w-32">
           <TableFilter column={table.getColumn("gender")!} />
-        </div>
-        <div className="w-36">
-          <TableFilter column={table.getColumn("age")!} />
         </div>
         <div className="w-40">
           <TableFilter column={table.getColumn("phone")!} />

@@ -22,14 +22,6 @@ import type { AuthContext } from "@/lib/utils/auth-context";
 import { BsBook } from "react-icons/bs";
 import { MdClass } from "react-icons/md";
 
-// const SchoolTeacherModifySheet = dynamic(
-//   () =>
-//     import(
-//       "@/components/page/school-staff/school-teachers/school-teacher-modify-sheet"
-//     ),
-//   { ssr: false },
-// );
-
 interface props {
   lang: Locale;
   auth: AuthContext;

@@ -2,10 +2,14 @@ import { mainClassSchema } from "@/lib/schema/admin/main-classes-schema";
 import { tradeSchema } from "@/lib/schema/admin/tradeSchema";
 import { ClassSchema } from "@/lib/schema/class/class-schema";
 import { SchoolSchema } from "@/lib/schema/school/school-schema";
+import { StudentSchema } from "@/lib/schema/school/student-schema";
 import { TeacherSchema } from "@/lib/schema/school/teacher-schema";
 import { UserModelSchema } from "@/lib/schema/user/user-schema";
 import { z } from "zod";
 
+// ---------------------------------------------
+// class With Relations
+// ---------------------------------------------
 export const ClassWithOthersSchema = z.object({
   ...ClassSchema.shape,
   school: SchoolSchema.optional(), // SchoolSchema if available
@@ -15,3 +19,16 @@ export const ClassWithOthersSchema = z.object({
   trade: tradeSchema.optional(),
 });
 export type ClassWithOthers = z.infer<typeof ClassWithOthersSchema>;
+
+// ---------------------------------------------
+// Student With Relations
+// ---------------------------------------------
+export const StudentWithRelationsSchema = z.object({
+  ...StudentSchema.shape,
+  user: UserModelSchema.optional(), // Replace with your actual User schema
+  creator: UserModelSchema.optional(), // Replace with your actual User schema
+  school: SchoolSchema.optional(), // Replace with your actual School schema
+  class: ClassSchema.optional(), // Replace with your actual Class schema
+});
+
+export type StudentWithRelations = z.infer<typeof StudentWithRelationsSchema>;

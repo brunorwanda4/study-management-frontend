@@ -1,11 +1,8 @@
-import { ClassSchema } from "@/lib/schema/class/class-schema";
 import {
   AgeSchema,
   GenderSchema,
   StudentStatusSchema,
 } from "@/lib/schema/common-details-schema";
-import { SchoolSchema } from "@/lib/schema/school/school-schema";
-import { UserModelSchema } from "@/lib/schema/user/user-schema";
 import { z } from "zod";
 
 // ---------------------------------------------
@@ -18,6 +15,8 @@ export const StudentSchema = z.object({
   school_id: z.string().optional(),
   class_id: z.string().optional(),
   creator_id: z.string().optional(),
+  image: z.string().optional(),
+  image_id: z.string().optional(),
 
   name: z.string(),
   email: z.string().email(),
@@ -38,35 +37,24 @@ export const StudentSchema = z.object({
 
 export type Student = z.infer<typeof StudentSchema>;
 
-// ---------------------------------------------
-// Update Student Schema
-// ---------------------------------------------
-export const UpdateStudentSchema = z.object({
-  name: z.string().optional(),
-  email: z.string().email().optional(),
+export const StudentBaseSchema = z.object({
+  name: z.string().min(1, { message: "Name is required" }),
+  email: z.string().email({ message: "Invalid email address" }),
   phone: z.string().optional(),
+  image: z.string().optional(),
   gender: GenderSchema.optional(),
   date_of_birth: AgeSchema.optional(),
+  class_id: z.string().optional(),
   registration_number: z.string().optional(),
-  admission_year: z.number().int().optional(),
+  admission_year: z.string().optional(),
   status: StudentStatusSchema.optional(),
   is_active: z.boolean().optional(),
+  creator_id: z.string().optional(),
   tags: z.array(z.string()).optional(),
+  school_id: z.string().optional(),
 });
 
-export type UpdateStudent = z.infer<typeof UpdateStudentSchema>;
-
-// ---------------------------------------------
-// Student With Relations
-// ---------------------------------------------
-export const StudentWithRelationsSchema = z.object({
-  ...StudentSchema.shape,
-  user: UserModelSchema.optional(), // Replace with your actual User schema
-  school: SchoolSchema.optional(), // Replace with your actual School schema
-  class: ClassSchema.optional(), // Replace with your actual Class schema
-});
-
-export type StudentWithRelations = z.infer<typeof StudentWithRelationsSchema>;
+export type StudentBase = z.infer<typeof StudentBaseSchema>;
 
 // ---------------------------------------------
 // Bulk Operations

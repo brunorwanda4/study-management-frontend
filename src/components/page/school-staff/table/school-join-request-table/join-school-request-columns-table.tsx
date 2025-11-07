@@ -15,13 +15,13 @@ import { Separator } from "@/components/ui/separator";
 import type { Locale } from "@/i18n";
 import { studentImage, teacherImage } from "@/lib/context/images";
 import { useToast } from "@/lib/context/toast/ToastContext";
-import { formatTimeAgo } from "@/lib/functions/change-time";
 import type { JoinStatus } from "@/lib/schema/common-details-schema";
 import type {
   JoinSchoolRequest,
   JoinSchoolRequestWithRelations,
 } from "@/lib/schema/school/school-join-school/join-school-request-schema";
 import type { AuthContext } from "@/lib/utils/auth-context";
+import { formatTimeAgo } from "@/lib/utils/format-date";
 import apiRequest from "@/service/api-client";
 import type { ColumnDef } from "@tanstack/react-table";
 import {
