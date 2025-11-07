@@ -1,3 +1,4 @@
+"use client";
 import MyAvatar from "@/components/common/image/my-avatar";
 import MyImage from "@/components/common/myImage";
 import MyLink from "@/components/common/myLink";
@@ -9,14 +10,18 @@ import { Separator } from "@/components/ui/separator";
 import {
   Sheet,
   SheetContent,
+  SheetFooter,
   SheetHeader,
   SheetTrigger,
 } from "@/components/ui/sheet";
 import type { Locale } from "@/i18n";
 import type { ClassWithOthers } from "@/lib/schema/relations-schema";
+import type { Teacher } from "@/lib/schema/school/teacher-schema";
 import { cn } from "@/lib/utils";
 import type { AuthContext } from "@/lib/utils/auth-context";
 import { formatReadableDate } from "@/lib/utils/format-date";
+import apiRequest from "@/service/api-client";
+import { useEffect, useState } from "react";
 import { BsBook } from "react-icons/bs";
 import { FaPeopleGroup } from "react-icons/fa6";
 import { PiStudentLight } from "react-icons/pi";
@@ -27,9 +32,44 @@ interface props {
   auth: AuthContext;
   isTable?: boolean;
   lang?: Locale;
+  isSchool?: boolean;
 }
 
-const ClassModifySheet = ({ cls, auth, isTable, lang }: props) => {
+const ClassModifySheet = ({ cls, auth, isTable, lang, isSchool }: props) => {
+  const [teachers, setTeachers] = useState<Teacher[]>([]);
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!cls?._id && !cls?.id) return;
+
+      try {
+        setLoading(true);
+        setError(null);
+
+        const res = await apiRequest<void, Teacher[]>(
+          "get",
+          isSchool
+            ? `/school/teachers/class/${cls._id || cls.id}`
+            : `/teachers/class/${cls._id || cls.id}`,
+          undefined,
+          { token: auth.token, schoolToken: auth.schoolToken },
+        );
+
+        setTeachers(res?.data || []);
+      } catch (err: any) {
+        console.error("❌ Failed to fetch teacher:", err);
+        setError("Failed to load teacher classes");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [cls?._id, cls?.id, isSchool, auth.token, auth.schoolToken]);
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -178,7 +218,36 @@ const ClassModifySheet = ({ cls, auth, isTable, lang }: props) => {
               </div>
             )}
           </div>
+          {/* teachers */}
+          <div className=" space-y-4 flex-col flex mt-4">
+            <div className=" flex justify-between ">
+              <Label className=" ">Teachers</Label>
+            </div>
+            {teachers.map((teacher) => {
+              return (
+                <div
+                  key={teacher._id || teacher.id}
+                  className=" flex justify-between flex-row items-center"
+                >
+                  <div className=" flex gap-2 items-center">
+                    <MyAvatar
+                      src={teacher.image}
+                      alt={teacher.name}
+                      size="xs"
+                    />
+                    <div className=" flex flex-col">
+                      <span className="">{teacher.name}</span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </main>
+        <SheetFooter className="h-screen">
+          <div className="h-screen" />
+          app footer
+        </SheetFooter>
       </SheetContent>
     </Sheet>
   );

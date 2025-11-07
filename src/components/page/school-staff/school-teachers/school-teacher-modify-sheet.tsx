@@ -102,10 +102,7 @@ const SchoolTeacherModifySheet = ({
         )}
       </SheetTrigger>
 
-      <SheetContent
-        isPublic
-        className="overflow-y-auto max-h-screen flex flex-col gap-4"
-      >
+      <SheetContent isPublic className="gap-4">
         {/* ===== HEADER ===== */}
         <SheetHeader className="p-0 relative">
           <div className="relative">

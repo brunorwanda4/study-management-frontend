@@ -1,3 +1,4 @@
+"use client";
 import MyAvatar from "@/components/common/image/my-avatar";
 import MyImage from "@/components/common/myImage";
 import ClassModifySheet from "@/components/page/class/class-modify-sheet";
@@ -138,7 +139,7 @@ const ClassCard = ({
             isSchoolStaff && " flex flex-row justify-end gap-2",
           )}
         >
-          {canModify && <ClassModifySheet auth={auth} cls={cls} />}
+          {canModify && <ClassModifySheet isSchool auth={auth} cls={cls} />}
           <Button
             library="daisy"
             variant={isClassTeacher ? "info" : "primary"}
