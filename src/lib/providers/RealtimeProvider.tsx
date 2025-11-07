@@ -1,7 +1,7 @@
 "use client";
 
 import { useRealtimeImproved } from "@/lib/hooks/useRealtimeImproved";
-import { WithId } from "@/lib/mode/with-id";
+import type { WithId } from "@/lib/mode/with-id";
 import { cn } from "@/lib/utils";
 import { createContext, useContext, useReducer } from "react";
 

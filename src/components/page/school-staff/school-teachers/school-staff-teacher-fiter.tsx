@@ -1,39 +1,63 @@
+"use client";
+
+import SearchBox from "@/components/common/form/search-box";
 import ChangeDisplay from "@/components/display/change-diplay";
 import TeacherDialog from "@/components/page/teacher/dialog/teacher-dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
+import type { TeacherWithRelations } from "@/lib/schema/school/teacher-schema";
 import type { AuthContext } from "@/lib/utils/auth-context";
-import { BsSearch } from "react-icons/bs";
+import apiRequest from "@/service/api-client";
+import { useState } from "react";
 
-interface props {
+interface Props {
   auth: AuthContext;
 }
 
-const SchoolStaffTeacherFilter = ({ auth }: props) => {
+const SchoolStaffTeacherFilter = ({ auth }: Props) => {
+  const [loading, setLoading] = useState(false);
+  const { data, addItem, deleteItem } =
+    useRealtimeData<TeacherWithRelations>("teacher");
+
+  async function fetchTeachers(filter?: string) {
+    setLoading(true);
+    try {
+      const url = filter
+        ? `/school/teachers/with-relations?filter=${encodeURIComponent(filter)}`
+        : `/school/teachers/with-relations?limit=9`;
+
+      const res = await apiRequest<void, TeacherWithRelations[]>(
+        "get",
+        url,
+        undefined,
+        { token: auth.token, schoolToken: auth.schoolToken },
+      );
+
+      if (res?.data) {
+        data.forEach((t) => deleteItem(t.id || t._id || ""));
+        res.data.forEach((t) => addItem(t));
+      }
+    } catch (err) {
+      console.error("Failed to fetch teachers:", err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div>
-      <div className=" flex justify-between w-full items-center">
-        <div className=" flex gap-4 items-center">
-          {/* choose table or card */}
+      <div className="flex justify-between w-full items-center">
+        <div className="flex gap-4 items-center">
           <ChangeDisplay />
-          <div className=" flex gap-0 flex-row">
-            <Input
-              type="text"
-              placeholder="Search class by name"
-              className=" rounded-r-none "
-            />
-            <Button
-              className=" rounded-l-none h-9 border border-base-content/50"
-              variant={"outline"}
-              library="daisy"
-              size={"sm"}
-            >
-              <BsSearch />
-              <span className=" sr-only">search</span>
-            </Button>
-          </div>
+          {/* Reusable SearchBox */}
+          <SearchBox
+            onSearch={fetchTeachers}
+            placeholder="Search teacher by name, phone, email"
+            loading={loading}
+            live={false} // set true if you want live typing search
+          />
         </div>
+
         <TeacherDialog auth={auth} isSchool />
       </div>
       <Separator />
