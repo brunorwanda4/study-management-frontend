@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import MyAvatar from "@/components/common/image/my-avatar";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { type AuthContext, logout } from "@/lib/utils/auth-context";
-import { generateImageProfile } from "@/lib/utils/generate-profile-image";
 import { LogOut, User } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
@@ -20,23 +19,26 @@ interface props {
 
 const NavProfileDropDown = ({ auth }: props) => {
   const { theme } = useTheme();
-  const image = generateImageProfile(auth.user.name, auth.user.gender);
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button library="daisy" variant="ghost" shape="circle">
-          <Avatar className="size-10">
-            <AvatarImage src={auth.user?.image ? auth.user.image : image} />
-            <AvatarFallback>{auth.user.role}</AvatarFallback>
-          </Avatar>
+          <MyAvatar
+            size="sm"
+            src={auth.user.image}
+            alt={auth.user.name}
+            type="cycle"
+          />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-72" data-theme={theme}>
         <div className="flex items-center gap-2">
-          <Avatar className="size-10">
-            <AvatarImage src={auth.user?.image ? auth.user.image : image} />
-            <AvatarFallback>{auth.user.role}</AvatarFallback>
-          </Avatar>
+          <MyAvatar
+            size="sm"
+            src={auth.user.image}
+            alt={auth.user.name}
+            type="cycle"
+          />
           <div className="flex flex-col">
             <span className="font-medium">{auth.user.name}</span>
             <span> {auth.user.email}</span>

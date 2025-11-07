@@ -17,6 +17,7 @@ import {
 import type { Locale } from "@/i18n";
 import type { ClassWithOthers } from "@/lib/schema/relations-schema";
 import type { Teacher } from "@/lib/schema/school/teacher-schema";
+import type { Subject } from "@/lib/schema/subject/subject-schema";
 import { cn } from "@/lib/utils";
 import type { AuthContext } from "@/lib/utils/auth-context";
 import { formatReadableDate } from "@/lib/utils/format-date";
@@ -37,6 +38,7 @@ interface props {
 
 const ClassModifySheet = ({ cls, auth, isTable, lang, isSchool }: props) => {
   const [teachers, setTeachers] = useState<Teacher[]>([]);
+  const [subjects, setSubjects] = useState<Subject[]>([]);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -49,16 +51,27 @@ const ClassModifySheet = ({ cls, auth, isTable, lang, isSchool }: props) => {
         setLoading(true);
         setError(null);
 
-        const res = await apiRequest<void, Teacher[]>(
-          "get",
-          isSchool
-            ? `/school/teachers/class/${cls._id || cls.id}`
-            : `/teachers/class/${cls._id || cls.id}`,
-          undefined,
-          { token: auth.token, schoolToken: auth.schoolToken },
-        );
+        const [teacher_res, subject_res] = await Promise.all([
+          apiRequest<void, Teacher[]>(
+            "get",
+            isSchool
+              ? `/school/teachers/class/${cls._id || cls.id}`
+              : `/teachers/class/${cls._id || cls.id}`,
+            undefined,
+            { token: auth.token, schoolToken: auth.schoolToken },
+          ),
+          apiRequest<void, Subject[]>(
+            "get",
+            isSchool
+              ? `/school/subjects/class/${cls._id || cls.id}`
+              : `/subjects/class/${cls._id || cls.id}`,
+            undefined,
+            { token: auth.token, schoolToken: auth.schoolToken },
+          ),
+        ]);
 
-        setTeachers(res?.data || []);
+        setTeachers(teacher_res?.data || []);
+        setSubjects(subject_res?.data || []);
       } catch (err: any) {
         console.error("❌ Failed to fetch teacher:", err);
         setError("Failed to load teacher classes");
@@ -242,6 +255,26 @@ const ClassModifySheet = ({ cls, auth, isTable, lang, isSchool }: props) => {
                 </div>
               );
             })}
+          </div>
+          <div className=" space-y-2 flex-col flex mt-4">
+            <div className=" flex justify-between ">
+              <Label className=" ">Subjects</Label>
+            </div>
+            <ul className="list list-outside ">
+              {subjects.map((subject, i) => {
+                return (
+                  <li
+                    key={subject._id || subject.id}
+                    className=" p-2 list-row  flex justify-between flex-row items-center"
+                  >
+                    <div className=" flex gap-2 items-center">
+                      <span className=" font-medium">{i + 1}.</span>
+                      <span className="">{subject.name}</span>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
         </main>
         <SheetFooter className="h-screen">
