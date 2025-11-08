@@ -15,11 +15,13 @@ const ChangeDisplay = () => {
         size="sm"
         className="rounded-r-none border-r-0 border border-base-content/50"
         onClick={() => changeDisplayMode("card")}
+        type="button"
       >
         <BsGrid className="mr-1" /> Card
       </Button>
 
       <Button
+        type="button"
         library="daisy"
         variant={displayMode === "table" ? "primary" : "outline"}
         size="sm"

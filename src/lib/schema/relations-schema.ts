@@ -20,6 +20,29 @@ export const ClassWithOthersSchema = z.object({
 });
 export type ClassWithOthers = z.infer<typeof ClassWithOthersSchema>;
 
+// get with pages paginated
+
+export const PaginatedClassesSchema = z.object({
+  classes: z.array(ClassSchema),
+  total: z.number().int(),
+  total_pages: z.number().int(),
+  current_page: z.number().int(),
+});
+
+export type PaginatedClasses = z.infer<typeof PaginatedClassesSchema>;
+
+// Equivalent to Rust's PaginatedClassesWithOthers
+export const PaginatedClassesWithOthersSchema = z.object({
+  classes: z.array(ClassWithOthersSchema),
+  total: z.number().int(),
+  total_pages: z.number().int(),
+  current_page: z.number().int(),
+});
+
+export type PaginatedClassesWithOthers = z.infer<
+  typeof PaginatedClassesWithOthersSchema
+>;
+
 // ---------------------------------------------
 // Student With Relations
 // ---------------------------------------------

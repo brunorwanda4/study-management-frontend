@@ -1,4 +1,5 @@
 import {
+  ClassLevelSchema,
   ClassTypeSchema,
   ImageSchema,
 } from "@/lib/schema/common-details-schema";
@@ -20,6 +21,10 @@ export const ClassSchema = z.object({
   school_id: z.string().optional(),
   creator_id: z.string().optional(),
   class_teacher_id: z.string().optional(),
+
+  level_type: ClassLevelSchema.optional(),
+  parent_class_id: z.string().optional(),
+  subclass_ids: z.array(z.string()).optional(),
 
   type: ClassTypeSchema.default("Private"),
 
@@ -134,3 +139,17 @@ export const addOrUpdateClassTeacherSchema = z.object({
 export type addOrUpdateClassTeacher = z.infer<
   typeof addOrUpdateClassTeacherSchema
 >;
+
+// sub classes
+export const CreateManSubClassesSchema = z.object({
+  class_id: z.string(),
+  count: z.string().refine(
+    (val) => {
+      const num = Number(val);
+      return !Number.isNaN(num) && num >= 2 && num <= 12;
+    },
+    { message: "Count must be a number between 2 and 12" },
+  ),
+});
+
+export type CreateManSubClasses = z.infer<typeof CreateManSubClassesSchema>;

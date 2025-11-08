@@ -3,6 +3,7 @@ import {
   AgeGroups,
   AttendanceSystems,
   CertificationOrTrainings,
+  ClassLevels,
   ClassTypes,
   CommunicationMethods,
   Departments,
@@ -353,3 +354,7 @@ export type SubjectGradingType = z.infer<typeof SubjectGradingTypeEnum>;
 // trades
 export const TradeTypeSchema = z.enum(TradeTypes);
 export type TradeType = z.infer<typeof TradeTypeSchema>;
+
+// class
+export const ClassLevelSchema = z.enum(ClassLevels);
+export type ClassLevel = z.infer<typeof ClassLevelSchema>;

@@ -3,6 +3,7 @@ import MyAvatar from "@/components/common/image/my-avatar";
 import MyImage from "@/components/common/myImage";
 import MyLink from "@/components/common/myLink";
 import ClassTeacherDialog from "@/components/page/class/dialog/add-class-teacher-dialog";
+import CreateManySubClasses from "@/components/page/class/dialog/create-many-sub-classes-dialog";
 import ClassDialog from "@/components/page/school-staff/dialog/class-dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -20,7 +21,7 @@ import type { Teacher } from "@/lib/schema/school/teacher-schema";
 import type { Subject } from "@/lib/schema/subject/subject-schema";
 import { cn } from "@/lib/utils";
 import type { AuthContext } from "@/lib/utils/auth-context";
-import { formatReadableDate } from "@/lib/utils/format-date";
+import { formatReadableDate, formatTimeAgo } from "@/lib/utils/format-date";
 import apiRequest from "@/service/api-client";
 import { useEffect, useState } from "react";
 import { BsBook } from "react-icons/bs";
@@ -182,7 +183,7 @@ const ClassModifySheet = ({ cls, auth, isTable, lang, isSchool }: props) => {
               <div className=" flex gap-2 text-sm">
                 <span>Last update:</span>{" "}
                 <span className=" font-medium">
-                  {formatReadableDate(cls?.updated_at)}
+                  {formatTimeAgo(cls?.updated_at)}
                 </span>
               </div>
             </div>
@@ -202,10 +203,17 @@ const ClassModifySheet = ({ cls, auth, isTable, lang, isSchool }: props) => {
           </div>
         </SheetHeader>
         <Separator />
-        <main className="px-4">
+        <main className="px-4 space-y-4">
+          {/* sub classes */}
+          <div>
+            <div className=" flex justify-between items-center">
+              <Label className=" ">Sub classes</Label>
+              <CreateManySubClasses auth={auth} cls={cls} />
+            </div>
+          </div>
           {/* class teacher */}
           <div className=" space-y-4 flex-col flex">
-            <div className=" flex justify-between ">
+            <div className=" flex justify-between items-center">
               <Label className=" ">Class Teacher</Label>
               {!cls?.class_teacher && (
                 <ClassTeacherDialog auth={auth} cls={cls} />

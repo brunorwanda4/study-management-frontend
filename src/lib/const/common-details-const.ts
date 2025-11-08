@@ -1158,3 +1158,9 @@ export const SubjectGradingTypeDetails: Record<
     description: "Simple grading system based on pass or fail outcome.",
   },
 };
+
+// classes
+export const ClassLevels = [
+  "MainClass", // e.g., "Primary 1"
+  "SubClass",
+] as const;

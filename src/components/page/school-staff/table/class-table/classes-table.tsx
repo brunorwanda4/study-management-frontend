@@ -41,12 +41,13 @@ export default function ClassesTable({
     useState<ClassWithOthers[]>(classes);
 
   useEffect(() => {
-    if (realtimeEnabled && initialClasses) {
-      setDisplayClasses(initialClasses as ClassWithOthers[]);
-    } else if (!realtimeEnabled) {
-      setDisplayClasses(initialClasses);
-    }
-  }, [initialClasses, realtimeEnabled]);
+    const updated = realtimeEnabled
+      ? initialClasses?.length
+        ? initialClasses
+        : classes
+      : classes;
+    setDisplayClasses(updated as ClassWithOthers[]);
+  }, [initialClasses, realtimeEnabled, classes]);
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([
@@ -59,7 +60,7 @@ export default function ClassesTable({
   const [rowSelection, setRowSelection] = useState({}); // Add row selection state
   const tableColumns = ClassTableColumn(lang, auth);
   const table = useReactTable({
-    data: classes, // Use the new classes data
+    data: displayClasses, // Use the new classes data
     columns: tableColumns,
     state: {
       sorting,

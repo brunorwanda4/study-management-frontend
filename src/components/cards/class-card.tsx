@@ -59,18 +59,20 @@ const ClassCard = ({
         <div className="absolute -bottom-18 flex items-center gap-2 p-4">
           <MyAvatar size="lg" type="cycle" src={cls?.image} alt={cls?.name} />
           <div className="mt-6 space-x-1 overflow-hidden">
-            <h3
+            <span
+              title={cls?.name}
               data-tip={cls?.name ?? "Level 5 Software"}
               className="line-clamp-1 leading-5 font-medium tooltip max-w-52 tooltip-bottom"
             >
               {cls?.name ?? "Level 5 Software development"}
-            </h3>
+            </span>
             <Link
               className="line-clamp-1 flex space-x-1 text-sm max-w-52 overflow-hidden"
               href={`/${lang}/c/${cls?.username}`}
             >
-              <span>@</span>{" "}
-              <span className="line-clamp-1">{cls?.username ?? "L5SOD"}</span>
+              <span title={`@ ${cls?.username}`} className="line-clamp-1">
+                @ {cls?.username ?? "L5SOD"}
+              </span>
             </Link>
           </div>
         </div>

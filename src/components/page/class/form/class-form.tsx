@@ -48,7 +48,7 @@ const ClassForm = ({ auth, trade, cls, isSchool }: Props) => {
   const [loadingTrades, setLoadingTrades] = useState(true);
 
   const { showToast } = useToast();
-
+  // TODO: after user select trade it get all main classes to make connect with main classes
   // -------------------------------
   // Fetch available trades
   // -------------------------------

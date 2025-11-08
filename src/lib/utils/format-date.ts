@@ -34,7 +34,7 @@ export const calculateAge = (
     const birthDate = new Date(Date.UTC(dob.year, dob.month - 1, dob.day)); // month is 0-indexed
     // Check if the date components resulted in a valid date
     if (
-      isNaN(birthDate.getTime()) ||
+      Number.isNaN(birthDate.getTime()) ||
       birthDate.getUTCFullYear() !== dob.year ||
       birthDate.getUTCMonth() !== dob.month - 1 ||
       birthDate.getUTCDate() !== dob.day

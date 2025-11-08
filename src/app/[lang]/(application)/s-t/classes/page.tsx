@@ -6,7 +6,10 @@ import SchoolStaffClassFilter from "@/components/page/school-staff/school-classe
 import ClassesSchoolTable from "@/components/page/school-staff/table/class-table/classes-table";
 import type { Locale } from "@/i18n";
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
-import type { ClassWithOthers } from "@/lib/schema/relations-schema";
+import type {
+  ClassWithOthers,
+  PaginatedClassesWithOthers,
+} from "@/lib/schema/relations-schema";
 import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import type { Metadata } from "next";
@@ -35,7 +38,7 @@ const SchoolStaffClassesPage = async (props: props) => {
     return <PermissionPage lang={lang} role={auth.user.role ?? "STUDENT"} />;
 
   const [classes] = await Promise.all([
-    apiRequest<void, ClassWithOthers[]>(
+    apiRequest<void, PaginatedClassesWithOthers>(
       "get",
       `/school/classes/with-others?limit=9`,
       undefined,
@@ -52,7 +55,7 @@ const SchoolStaffClassesPage = async (props: props) => {
       channels={[
         {
           name: "class",
-          initialData: classes.data ?? [],
+          initialData: classes.data?.classes ?? [],
         },
       ]}
     >
@@ -68,12 +71,12 @@ const SchoolStaffClassesPage = async (props: props) => {
               lang={lang}
               realtimeEnabled
               auth={auth}
-              classes={classes.data ?? []}
+              classes={classes.data?.classes ?? []}
             />
           }
           cards={
             <AllClassesCards
-              classes={classes.data ?? []}
+              classes={classes.data?.classes ?? []}
               lang={lang}
               realtimeEnabled
               auth={auth}

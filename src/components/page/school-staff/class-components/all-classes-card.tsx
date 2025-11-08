@@ -25,12 +25,14 @@ const AllClassesCards = ({
     useState<ClassWithOthers[]>(classes);
 
   useEffect(() => {
-    if (realtimeEnabled && initialClasses) {
-      setDisplayClasses(initialClasses as ClassWithOthers[]);
-    } else if (!realtimeEnabled) {
-      setDisplayClasses(initialClasses);
-    }
-  }, [initialClasses, realtimeEnabled]);
+    const updated = realtimeEnabled
+      ? initialClasses?.length
+        ? initialClasses
+        : classes
+      : classes;
+    setDisplayClasses(updated as ClassWithOthers[]);
+  }, [initialClasses, realtimeEnabled, classes]);
+
   return (
     <div className=" grid grid-cols-2 lg:grid-cols-3 gap-4">
       {displayClasses.map((cls) => {
