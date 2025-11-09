@@ -1,14 +1,15 @@
-import MyImage from "@/components/common/myImage";
 import MyLink from "@/components/common/myLink";
+import StudentModifySheet from "@/components/page/school-staff/students-components/student-modify-sheet";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { Locale } from "@/i18n";
-import { studentImage } from "@/lib/context/images";
-import type { StudentWithRelations } from "@/lib/schema/school/student-schema";
+import type { StudentWithRelations } from "@/lib/schema/relations-schema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import { calculateAge, formatReadableDate } from "@/lib/utils/format-date";
 import type { ColumnDef } from "@tanstack/react-table";
 
 export const StudentTableColumns = (
   lang: Locale,
+  auth: AuthContext,
 ): ColumnDef<StudentWithRelations>[] => {
   return [
     // --- 1. Selection Column ---
@@ -44,40 +45,12 @@ export const StudentTableColumns = (
       accessorKey: "name", // Used for sorting/filtering by name
       cell: ({ row }) => (
         <div className="flex items-center space-x-3">
-          {" "}
-          {/* Increased space */}
-          <MyLink
-            loading
-            href={`/${lang}/p/${row.original.user?.username}?studentId=${row.original.id}`}
-            className="flex-shrink-0" // Prevent avatar shrinking
-          >
-            <MyImage
-              role="AVATAR"
-              className="size-10 rounded-full" // Explicitly rounded
-              src={row.original.user?.image || studentImage} // Use default student image if missing
-              alt={row.original.name || "Student Avatar"} // Add alt text
-            />
-          </MyLink>
-          <div className="flex flex-col overflow-hidden">
-            {" "}
-            {/* Prevent text overflow issues */}
-            <MyLink
-              loading
-              className="truncate font-medium hover:underline" // Truncate long names
-              href={`/${lang}/p/${row.original.user?.username}?studentId=${row.original.id || row.original._id}`}
-            >
-              {row.original.name || "N/A"} {/* Fallback for name */}
-            </MyLink>
-            {/* Conditionally render email if present */}
-            {row.original.email && (
-              <span
-                className="text-muted-foreground truncate text-sm"
-                title={row.original.email} // Add title attribute
-              >
-                {row.original.email}
-              </span>
-            )}
-          </div>
+          <StudentModifySheet
+            isTable
+            isSchool
+            auth={auth}
+            student={row.original}
+          />
         </div>
       ),
       meta: {

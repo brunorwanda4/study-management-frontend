@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { LIMIT } from "@/lib/env";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
 import type {
   ClassWithOthers,
@@ -25,8 +26,6 @@ import { useEffect, useState } from "react";
 interface Props {
   auth: AuthContext;
 }
-
-const LIMIT = 9;
 
 const SchoolStaffClassFilter = ({ auth }: Props) => {
   const [loading, setLoading] = useState(false);

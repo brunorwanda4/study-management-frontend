@@ -20,6 +20,7 @@ import type { Locale } from "@/i18n";
 import type { StudentWithRelations } from "@/lib/schema/relations-schema";
 import { cn } from "@/lib/utils";
 import type { AuthContext } from "@/lib/utils/auth-context";
+import { getInitialsUsername } from "@/lib/utils/generate-username";
 
 interface props {
   lang: Locale;
@@ -79,17 +80,24 @@ const StudentCard = ({ auth, isSchoolStaff, student, lang }: props) => {
           )}
           {/* student class */}
           {student?.class && (
-            <div className=" flex gap-2 mt-2">
+            <MyLink
+              href={`/${lang}/c/${student.class.username}`}
+              className=" flex gap-2 mt-2 items-center"
+            >
               <MyAvatar
                 src={student.class.image}
                 alt={student.class.name}
                 type="square"
                 size="xs"
+                isSubClass
               />
-              <span className=" text-sm line-clamp-1 ">
-                {student.class.name}
+              <span
+                title={student.class.name}
+                className=" text-sm line-clamp-1 "
+              >
+                {getInitialsUsername(student.class.name, true)}
               </span>
-            </div>
+            </MyLink>
           )}
         </div>
       </CardHeader>

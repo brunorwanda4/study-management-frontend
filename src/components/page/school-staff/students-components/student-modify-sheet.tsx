@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/sheet";
 
 import StudentDialog from "@/components/page/student/dialogs/student-dialog";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 import type { Locale } from "@/i18n";
 import { splitCamelCase } from "@/lib/helpers/format-text";
 import type { StudentWithRelations } from "@/lib/schema/relations-schema";
@@ -143,12 +145,16 @@ const StudentModifySheet = ({
               {/* USER INFO */}
               {student?.user && (
                 <div className="flex gap-2 mt-4 items-center">
-                  <MyAvatar src={student.image} alt={student.name} size="sm" />
+                  <MyAvatar
+                    src={student.user.image}
+                    alt={student.user.name}
+                    size="sm"
+                  />
                   <div className="flex flex-col gap-0">
                     <p className="font-medium leading-4">{student.user.name}</p>
                     <MyLink
                       href={`/${lang}/p/${student.user.username}`}
-                      className="link link-hover text-sm leading-4"
+                      className="link link-hover text-sm leading-3"
                     >
                       @{student.user.username}
                     </MyLink>
@@ -195,9 +201,29 @@ const StudentModifySheet = ({
             </div>
           </div>
         </SheetHeader>
-
+        <Separator />
         {/* ===== MAIN CONTENT ===== */}
-        <main className="px-4">main page</main>
+        <main className="px-4">
+          <div className=" space-y-4 flex-col flex">
+            <Label>Class</Label>
+            {student?.class && (
+              <MyLink
+                className=" underline-offset-0"
+                href={`/${lang}/c/${student.class.username}`}
+              >
+                <div className=" flex gap-2 items-center">
+                  <MyAvatar
+                    src={student?.class?.image}
+                    isSubClass
+                    alt={student.class.name}
+                    size={"sm"}
+                  />
+                  <span title={student.class.name}>{student.class.name}</span>
+                </div>
+              </MyLink>
+            )}
+          </div>
+        </main>
 
         <SheetFooter className="h-screen">
           <div className="h-screen" />

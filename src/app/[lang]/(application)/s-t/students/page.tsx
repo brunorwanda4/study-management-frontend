@@ -7,7 +7,10 @@ import SchoolStudentTable from "@/components/page/school-staff/table/student-tab
 import type { Locale } from "@/i18n";
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
 import type { Class } from "@/lib/schema/class/class-schema";
-import type { StudentWithRelations } from "@/lib/schema/relations-schema";
+import type {
+  PaginatedStudentWithRelations,
+  StudentWithRelations,
+} from "@/lib/schema/relations-schema";
 import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import type { Metadata } from "next";
@@ -36,7 +39,7 @@ const SchoolStaffStudentPage = async (props: props) => {
     return <NotFoundPage message="You need to have school to view this page" />;
 
   const [students_res] = await Promise.all([
-    apiRequest<void, StudentWithRelations[]>(
+    apiRequest<void, PaginatedStudentWithRelations>(
       "get",
       "/school/students/with-details?limit=9",
       undefined,
@@ -53,7 +56,7 @@ const SchoolStaffStudentPage = async (props: props) => {
       channels={[
         {
           name: "student",
-          initialData: students_res.data ?? [],
+          initialData: students_res?.data?.students ?? [],
         },
       ]}
     >
@@ -65,7 +68,7 @@ const SchoolStaffStudentPage = async (props: props) => {
             <SchoolStudentTable
               auth={auth}
               lang={lang}
-              students={students_res.data ?? []}
+              students={students_res?.data?.students ?? []}
               realtimeEnabled
             />
           }
@@ -73,7 +76,7 @@ const SchoolStaffStudentPage = async (props: props) => {
             <AllStudentsCards
               lang={lang}
               auth={auth}
-              students={students_res.data ?? []}
+              students={students_res?.data?.students ?? []}
             />
           }
         />

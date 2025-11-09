@@ -55,3 +55,24 @@ export const StudentWithRelationsSchema = z.object({
 });
 
 export type StudentWithRelations = z.infer<typeof StudentWithRelationsSchema>;
+
+export const PaginatedStudentsSchema = z.object({
+  students: z.array(StudentSchema),
+  total: z.number().int(),
+  total_pages: z.number().int(),
+  current_page: z.number().int(),
+});
+
+export type PaginatedStudents = z.infer<typeof PaginatedStudentsSchema>;
+
+// Equivalent to Rust's PaginatedClassesWithOthers
+export const PaginatedStudentWithRelationsSchema = z.object({
+  students: z.array(StudentWithRelationsSchema),
+  total: z.number().int(),
+  total_pages: z.number().int(),
+  current_page: z.number().int(),
+});
+
+export type PaginatedStudentWithRelations = z.infer<
+  typeof PaginatedStudentWithRelationsSchema
+>;

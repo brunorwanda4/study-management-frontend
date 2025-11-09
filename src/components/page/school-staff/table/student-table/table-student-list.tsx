@@ -59,7 +59,7 @@ export default function SchoolStudentTable({
     },
   ]);
 
-  const tableColumns = useMemo(() => StudentTableColumns(lang), [lang]); // Memoize columns
+  const tableColumns = useMemo(() => StudentTableColumns(lang, auth), [lang]); // Memoize columns
 
   const table = useReactTable({
     data: displayStudents,

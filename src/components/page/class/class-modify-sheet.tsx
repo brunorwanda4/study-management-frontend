@@ -18,6 +18,7 @@ import {
 import type { Locale } from "@/i18n";
 import type { Class } from "@/lib/schema/class/class-schema";
 import type { ClassWithOthers } from "@/lib/schema/relations-schema";
+import type { Student } from "@/lib/schema/school/student-schema";
 import type { Teacher } from "@/lib/schema/school/teacher-schema";
 import type { Subject } from "@/lib/schema/subject/subject-schema";
 import { cn } from "@/lib/utils";
@@ -43,6 +44,8 @@ const ClassModifySheet = ({ cls, auth, isTable, lang, isSchool }: props) => {
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [subClasses, setSubClasses] = useState<Class[]>([]);
+  const [students, setStudents] = useState<Student[]>([]);
+
   const [parentClass, setParentClass] = useState<Class | null>(null);
 
   const [loading, setLoading] = useState(false);
