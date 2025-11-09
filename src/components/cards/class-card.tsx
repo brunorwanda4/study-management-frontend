@@ -18,9 +18,11 @@ import type { Locale } from "@/i18n";
 import type { ClassWithOthers } from "@/lib/schema/relations-schema";
 import { cn } from "@/lib/utils";
 import type { AuthContext } from "@/lib/utils/auth-context";
+import { getInitialsUsername } from "@/lib/utils/generate-username";
 import Link from "next/link";
 import { BsBook } from "react-icons/bs";
 import { FaPeopleGroup } from "react-icons/fa6";
+import { MdClass } from "react-icons/md";
 import { PiStudentLight } from "react-icons/pi";
 import { SiLevelsdotfyi } from "react-icons/si";
 import { Button } from "../ui/button";
@@ -57,7 +59,13 @@ const ClassCard = ({
           classname=" card rounded-b-none border-b border-base-content/50"
         />
         <div className="absolute -bottom-18 flex items-center gap-2 p-4">
-          <MyAvatar size="lg" type="cycle" src={cls?.image} alt={cls?.name} />
+          <MyAvatar
+            size="lg"
+            type="cycle"
+            src={cls?.image}
+            isSubClass
+            alt={cls?.name}
+          />
           <div className="mt-6 space-x-1 overflow-hidden">
             <span
               title={cls?.name}
@@ -66,14 +74,16 @@ const ClassCard = ({
             >
               {cls?.name ?? "Level 5 Software development"}
             </span>
-            <Link
-              className="line-clamp-1 flex space-x-1 text-sm max-w-52 overflow-hidden"
-              href={`/${lang}/c/${cls?.username}`}
-            >
-              <span title={`@ ${cls?.username}`} className="line-clamp-1">
-                @ {cls?.username ?? "L5SOD"}
-              </span>
-            </Link>
+            {cls?.username && (
+              <Link
+                className="line-clamp-1 flex space-x-1 text-sm max-w-52 overflow-hidden"
+                href={`/${lang}/c/${cls?.username}`}
+              >
+                <span title={`@ ${cls?.username}`}>
+                  @ {getInitialsUsername(cls?.name, true)}
+                </span>
+              </Link>
+            )}
           </div>
         </div>
       </CardHeader>
@@ -83,9 +93,11 @@ const ClassCard = ({
             <div className=" flex gap-1 items-center">
               <SiLevelsdotfyi /> <span>Level:</span>
             </div>
-            <span className=" font-medium">
-              {cls?.trade?.name ?? "Primary"}
-            </span>
+            {cls?.trade?.name && (
+              <span title={cls.trade.name} className=" font-medium">
+                {getInitialsUsername(cls?.trade?.name)}
+              </span>
+            )}
           </div>
           {cls?.class_teacher && (
             <div className=" flex gap-2 items-center">
@@ -134,6 +146,16 @@ const ClassCard = ({
               <TooltipContent>capacity</TooltipContent>
             </Tooltip>
           )}
+          {cls?.subclass_ids && (
+            <Tooltip>
+              <TooltipTrigger>
+                <Badge variant={"outline"} library="daisy">
+                  <MdClass /> <span>{cls.subclass_ids.length}</span>
+                </Badge>
+              </TooltipTrigger>
+              <TooltipContent>Sub Classes</TooltipContent>
+            </Tooltip>
+          )}
         </div>
         <CardFooter
           className={cn(
@@ -141,7 +163,9 @@ const ClassCard = ({
             isSchoolStaff && " flex flex-row justify-end gap-2",
           )}
         >
-          {canModify && <ClassModifySheet isSchool auth={auth} cls={cls} />}
+          {canModify && (
+            <ClassModifySheet isSchool auth={auth} cls={cls} lang={lang} />
+          )}
           <Button
             library="daisy"
             variant={isClassTeacher ? "info" : "primary"}

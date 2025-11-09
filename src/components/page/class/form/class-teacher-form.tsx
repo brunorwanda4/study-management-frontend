@@ -23,6 +23,7 @@ import {
   type addOrUpdateClassTeacher,
   type Class,
 } from "@/lib/schema/class/class-schema";
+import type { PaginatedClasses } from "@/lib/schema/relations-schema";
 import type { Teacher, TeacherBase } from "@/lib/schema/school/teacher-schema";
 import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
@@ -56,7 +57,7 @@ const ClassTeacherForm = ({ auth, teacher, cls }: Props) => {
               schoolToken: auth.schoolToken,
             });
 
-        const classRequest = apiRequest<void, Class[]>(
+        const classRequest = apiRequest<void, PaginatedClasses>(
           "get",
           "/school/classes",
           undefined,
@@ -68,7 +69,7 @@ const ClassTeacherForm = ({ auth, teacher, cls }: Props) => {
 
         const [teachersRes, classesRes] = await Promise.all([
           teacher ? { data: [] } : teacherRequest,
-          cls ? { data: [] } : classRequest,
+          cls ? { data: { classes: [] } } : classRequest,
         ]);
 
         if (teachersRes.data) {
@@ -80,7 +81,7 @@ const ClassTeacherForm = ({ auth, teacher, cls }: Props) => {
         if (classesRes.data) {
           // const activeClasses = classesRes.data.filter((c) => !c.is_active);
           // setClasses(activeClasses);
-          setClasses(classesRes.data);
+          setClasses(classesRes.data.classes);
         }
       } catch (err) {
         console.error("Failed to fetch options:", err);

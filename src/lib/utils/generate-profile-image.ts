@@ -1,4 +1,4 @@
-import { Gender } from "@/lib/schema/common-details-schema";
+import type { Gender } from "@/lib/schema/common-details-schema";
 
 /**
  * Generate a deterministic profile image URL based on name and gender.

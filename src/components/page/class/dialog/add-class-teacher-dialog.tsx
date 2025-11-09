@@ -36,7 +36,13 @@ const ClassTeacherDialog = ({ auth, cls, name, title, teacher }: Props) => {
       </DialogTrigger>
       <DialogContent className=" sm:max-w-xl">
         <DialogHeader>
-          <DialogTitle>{title ?? "Add class teacher"}</DialogTitle>
+          <DialogTitle>
+            {cls?.class_teacher_id
+              ? `change class teacher in ${cls.name}`
+              : cls
+                ? `Add class teacher ${cls.name}`
+                : (title ?? "Add class teacher")}
+          </DialogTitle>
         </DialogHeader>
         <ClassTeacherForm teacher={teacher} cls={cls} auth={auth} />
       </DialogContent>

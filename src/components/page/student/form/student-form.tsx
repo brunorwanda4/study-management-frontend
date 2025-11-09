@@ -31,6 +31,7 @@ import {
 } from "@/lib/const/common-details-const";
 import { useToast } from "@/lib/context/toast/ToastContext";
 import type { Class } from "@/lib/schema/class/class-schema";
+import type { PaginatedClasses } from "@/lib/schema/relations-schema";
 import {
   type Student,
   type StudentBase,
@@ -59,7 +60,7 @@ const StudentForm = ({ auth, student, isSchool, cls }: Props) => {
   useEffect(() => {
     const fetchOptions = async () => {
       try {
-        const classRequest = apiRequest<void, Class[]>(
+        const classRequest = apiRequest<void, PaginatedClasses>(
           "get",
           "/school/classes",
           undefined,
@@ -70,13 +71,13 @@ const StudentForm = ({ auth, student, isSchool, cls }: Props) => {
         );
 
         const [classesRes] = await Promise.all([
-          cls ? { data: [] } : classRequest,
+          cls ? { data: { classes: [] } } : classRequest,
         ]);
 
         if (classesRes.data) {
           // const activeClasses = classesRes.data.filter((c) => !c.is_active);
           // setClasses(activeClasses);
-          setClasses(classesRes.data);
+          setClasses(classesRes.data.classes);
         }
       } catch (err) {
         console.error("Failed to fetch options:", err);

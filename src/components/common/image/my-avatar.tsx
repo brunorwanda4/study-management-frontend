@@ -1,6 +1,7 @@
 import MyImage from "@/components/common/myImage";
 import type { Gender, userRole } from "@/lib/schema/common-details-schema";
 import { cn } from "@/lib/utils";
+import { getInitialsUsername } from "@/lib/utils/generate-username";
 
 interface Props {
   role?: { role?: userRole | null; gender?: Gender | null };
@@ -10,6 +11,7 @@ interface Props {
   alt?: string | null;
   className?: string;
   classname?: string;
+  isSubClass?: boolean;
 }
 
 const MyAvatar = ({
@@ -20,6 +22,7 @@ const MyAvatar = ({
   size = "default",
   src,
   alt,
+  isSubClass,
 }: Props) => {
   // ✅ size classes
   const class_size =
@@ -43,15 +46,7 @@ const MyAvatar = ({
         ? "card"
         : "rounded-full";
 
-  // ✅ initials (first 2 uppercase letters)
-  const getInitials = (text: string) => {
-    const cleaned = (text || "").trim();
-    if (!cleaned) return "";
-    const parts = cleaned.split(/\s+/);
-    const initials =
-      parts.length >= 2 ? `${parts[0][0]}${parts[1][0]}` : cleaned.slice(0, 2);
-    return initials.toUpperCase();
-  };
+  // ✅ initials (2 or 3 uppercase letters depending on isSubClass)
 
   // ✅ deterministic HSL color from text (so “Bukara” ≠ “Baraksa”)
   const getHslFromText = (text: string) => {
@@ -94,7 +89,7 @@ const MyAvatar = ({
 
   // ✅ CASE 1: When alt (name) exists but no src/role
   if (!src && !role && alt) {
-    const initials = getInitials(alt);
+    const initials = getInitialsUsername(alt, isSubClass);
     const bg = getHslFromText(alt);
 
     return (

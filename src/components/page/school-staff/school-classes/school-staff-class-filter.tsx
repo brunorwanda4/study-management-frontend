@@ -26,11 +26,12 @@ interface Props {
   auth: AuthContext;
 }
 
-const LIMIT = 9; // per-page limit
+const LIMIT = 9;
 
 const SchoolStaffClassFilter = ({ auth }: Props) => {
   const [loading, setLoading] = useState(false);
   const [classType, setClassType] = useState<"all" | "main" | "sub">("all");
+  const [filter, setFilter] = useState<string>(""); // ✅ track current search filter
   const [pagination, setPagination] = useState({
     total_pages: 1,
     current_page: 1,
@@ -39,12 +40,15 @@ const SchoolStaffClassFilter = ({ auth }: Props) => {
   const { data, addItem, deleteItem } =
     useRealtimeData<ClassWithOthers>("class");
 
-  async function fetchClasses(page = 1, filter?: string, type = classType) {
+  async function fetchClasses(
+    page = 1,
+    filterValue = filter,
+    type = classType,
+  ) {
     setLoading(true);
     try {
       const skip = (page - 1) * LIMIT;
 
-      // Determine endpoint based on class type
       let endpoint = "";
       switch (type) {
         case "main":
@@ -57,13 +61,16 @@ const SchoolStaffClassFilter = ({ auth }: Props) => {
           endpoint = `/school/classes/with-others`;
       }
 
-      const url = filter
-        ? `${endpoint}?filter=${encodeURIComponent(filter)}`
-        : `${endpoint}?limit=${LIMIT}&skip=${skip}`;
+      const params = new URLSearchParams({
+        limit: LIMIT.toString(),
+        skip: skip.toString(),
+      });
+
+      if (filterValue) params.set("filter", filterValue);
 
       const res = await apiRequest<void, PaginatedClassesWithOthers>(
         "get",
-        url,
+        `${endpoint}?${params.toString()}`,
         undefined,
         {
           token: auth.token,
@@ -90,18 +97,19 @@ const SchoolStaffClassFilter = ({ auth }: Props) => {
     }
   }
 
-  // Refetch when class type changes
+  // ✅ Refetch whenever classType or filter changes
   useEffect(() => {
     fetchClasses(1);
-  }, [classType]);
+  }, [classType, filter]);
 
   return (
     <div>
       <div className="flex justify-between w-full items-center">
         <div className="flex gap-4 items-center">
           <ChangeDisplay />
+
           <SearchBox
-            onSearch={(value) => fetchClasses(1, value)}
+            onSearch={(value) => setFilter(value)} // ✅ update filter state only
             placeholder="Search class..."
             loading={loading}
             live={false}
@@ -110,9 +118,9 @@ const SchoolStaffClassFilter = ({ auth }: Props) => {
           <div>
             <Select
               value={classType}
-              onValueChange={(value: "all" | "main" | "sub") => {
-                setClassType(value);
-              }}
+              onValueChange={(value: "all" | "main" | "sub") =>
+                setClassType(value)
+              }
             >
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select class type" />

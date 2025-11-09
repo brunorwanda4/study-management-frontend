@@ -133,7 +133,7 @@ const CreateManySubClasses = ({ auth, cls, name, title }: Props) => {
           type="button"
           variant={name ? "ghost" : "secondary"}
           role={name ? undefined : "create"}
-          size={"sm"}
+          size={"xs"}
           library="daisy"
         >
           {name ?? "Add sub class"}

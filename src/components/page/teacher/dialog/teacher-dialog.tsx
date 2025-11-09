@@ -33,7 +33,6 @@ const TeacherDialog = ({ auth, isSchool, teacher }: props) => {
         <DialogHeader>
           <DialogTitle>
             {teacher ? `update ${teacher.name}` : "Create teacher"}
-            <span>{teacher?._id}</span>
           </DialogTitle>
         </DialogHeader>
         <TeacherForm auth={auth} isSchool={isSchool} teacher={teacher} />
