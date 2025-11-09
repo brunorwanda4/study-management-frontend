@@ -5,15 +5,15 @@ import NotFoundPage from "@/components/page/not-found";
 import PermissionPage from "@/components/page/permission-page";
 import JoinSchoolDialog from "@/components/page/school-staff/dialog/join-school-dialog";
 import SchoolHeader from "@/components/page/school/school-header";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
-import { JoinSchoolRequestWithRelations } from "@/lib/schema/school/school-join-school/join-school-request-schema";
-import { School } from "@/lib/schema/school/school-schema";
-import { Student } from "@/lib/schema/school/student-schema";
-import { TeacherWithRelations } from "@/lib/schema/school/teacher-schema";
+import type { JoinSchoolRequestWithRelations } from "@/lib/schema/school/school-join-school/join-school-request-schema";
+import type { School } from "@/lib/schema/school/school-schema";
+import type { Student } from "@/lib/schema/school/student-schema";
+import type { TeacherWithRelations } from "@/lib/schema/school/teacher-schema";
 import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 interface props {

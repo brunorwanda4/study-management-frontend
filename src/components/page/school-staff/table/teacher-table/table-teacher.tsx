@@ -2,6 +2,7 @@
 
 import { CommonDataTable } from "@/components/common/table/common-data-table";
 import TableFilter from "@/components/common/table/table-filter";
+import EmptyTeachers from "@/components/page/school-staff/school-teachers/empty-teachers";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import type { Locale } from "@/i18n";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
@@ -46,6 +47,10 @@ export default function SchoolTeacherTable({
       setDisplayTeachers(initialTeachers);
     }
   }, [initialTeachers, realtimeEnabled]);
+
+
+      if (displayTeachers.length === 0 && teachers.length === 0)
+      return <EmptyTeachers isSchool auth={auth} />;
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([

@@ -1,11 +1,8 @@
 // import { Metadata } from "next";
+import DevelopingPage from "@/components/page/developing-page";
 import NotFoundPage from "@/components/page/not-found";
-import SchoolStaffTable from "@/components/page/school-staff/table/staff-table/table-staff";
 import type { Locale } from "@/i18n";
-import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
-import { SchoolStaffWithRelations } from "@/lib/schema/school/school-staff-schema";
 import { authContext } from "@/lib/utils/auth-context";
-import apiRequest from "@/service/api-client";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
@@ -34,39 +31,9 @@ const SchoolStaffStaffPage = async (props: props) => {
   }
   if (!auth.school)
     return <NotFoundPage message="You need to have school to view this page" />;
-  const [school_staffs_res] = await Promise.all([
-    apiRequest<void, SchoolStaffWithRelations[]>(
-      "get",
-      `/school/staff/with-details?limit=10`,
-      undefined,
-      {
-        token: auth.token,
-        schoolToken: auth.schoolToken,
-        realtime: "school_staff",
-      },
-    ),
-  ]);
 
-  return (
-    <RealtimeProvider<SchoolStaffWithRelations>
-      channels={[
-        {
-          name: "school_staff",
-          initialData: school_staffs_res.data ? school_staffs_res.data : [],
-        },
-      ]}
-    >
-      <div className="space-y-4 p-4">
-        <div>
-          <SchoolStaffTable
-            realtimeEnabled
-            auth={auth}
-            lang={lang}
-            staffs={school_staffs_res.data ?? []}
-          />
-        </div>
-      </div>
-    </RealtimeProvider>
-  );
+
+    return <DevelopingPage lang={lang} role={auth.user.role} />;
+
 };
 export default SchoolStaffStaffPage;

@@ -12,6 +12,7 @@ import { type AuthContext, logout } from "@/lib/utils/auth-context";
 import { LogOut, User } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
+import { HiOutlineCog6Tooth } from "react-icons/hi2";
 
 interface props {
   auth: AuthContext;
@@ -31,7 +32,7 @@ const NavProfileDropDown = ({ auth }: props) => {
           />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-72" data-theme={theme}>
+      <PopoverContent className="w-80 bg-base-100" data-theme={theme}>
         <div className="flex items-center gap-2">
           <MyAvatar
             size="sm"
@@ -45,10 +46,16 @@ const NavProfileDropDown = ({ auth }: props) => {
           </div>
         </div>
         <Separator />
-        <Link href={`/p`}>
+        <Link href={`/p/${auth.user.username}`}>
           <Button variant="ghost" size="sm" className="w-full justify-start">
             <User />
             <span>Your Profile</span>
+          </Button>
+        </Link>
+        <Link href={`/setting`}>
+          <Button variant="ghost" size="sm" className="w-full justify-start">
+            <HiOutlineCog6Tooth />
+            <span>Settings</span>
           </Button>
         </Link>
         <Separator />
@@ -57,7 +64,7 @@ const NavProfileDropDown = ({ auth }: props) => {
           type="button"
           variant="ghost"
           size="sm"
-          className="text-error w-full cursor-pointer justify-start"
+          className="hover:text-error w-full cursor-pointer justify-start"
         >
           <LogOut />
           <span>Logout</span>

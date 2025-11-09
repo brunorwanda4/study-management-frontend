@@ -143,7 +143,7 @@ export const schoolStaffSidebarGroups: sidebarGroupsProps[] = [
       {
         title: "School Overview",
         icon: "/icons/school.png",
-        url: "/s-t/school",
+        url: "/school",
       },
       {
         title: "Calendar",

@@ -1,12 +1,8 @@
+import MyAvatar from "@/components/common/image/my-avatar";
 import MyImage from "@/components/common/myImage";
 import MyLink from "@/components/common/myLink";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { Locale } from "@/i18n";
-import {
-  schoolBackground,
-  schoolImage,
-  schoolLogoImage,
-} from "@/lib/context/images";
+import { schoolBackground, schoolImage } from "@/lib/context/images";
 import type { School } from "@/lib/schema/school/school-schema";
 import type { AuthContext } from "@/lib/utils/auth-context";
 import Link from "next/link";
@@ -32,10 +28,7 @@ const SchoolHeader = ({ school, auth, lang, onThePage }: props) => {
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <MyLink loading href={`/${lang}/school`}>
-            <Avatar className="size-32">
-              <AvatarImage src={school?.logo ? school.logo : schoolLogoImage} />
-              <AvatarFallback>{school?.name}</AvatarFallback>
-            </Avatar>
+            <MyAvatar src={school?.logo} alt={school?.name} size="lg" type="square" classname="  object-contain" />
           </MyLink>
           <div className="space-y-1">
             <MyLink

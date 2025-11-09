@@ -3,6 +3,7 @@ import JoinSchoolPage from "@/components/page/join-school-page";
 import SchoolHomeBody from "@/components/page/school/school-home-body";
 import type { Locale } from "@/i18n";
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
+import { PaginatedStudents } from "@/lib/schema/relations-schema";
 import type { School } from "@/lib/schema/school/school-schema";
 import type { SchoolStaff } from "@/lib/schema/school/school-staff-schema";
 import type { Student } from "@/lib/schema/school/student-schema";
@@ -63,7 +64,7 @@ const SchoolPage = async (props: props) => {
           schoolToken: auth.schoolToken,
         },
       ),
-      apiRequest<void, Student[]>(
+      apiRequest<void, PaginatedStudents>(
         "get",
         "/school/students?limit=5",
         undefined,
@@ -75,24 +76,15 @@ const SchoolPage = async (props: props) => {
     ]);
 
   if (
-    !schoolRes.data ||
-    !school_staff_res.data ||
-    !teachers_res.data ||
-    !students_res.data
+    !schoolRes.data
   ) {
     return (
       <ErrorPage
         message={
-          schoolRes.message ||
-          school_staff_res.message ||
-          teachers_res.message ||
-          students_res.message
+          schoolRes.message
         }
         error={
-          schoolRes.error ||
-          school_staff_res.error ||
-          teachers_res.error ||
-          students_res.error
+          schoolRes.error
         }
       />
     );
@@ -102,16 +94,16 @@ const SchoolPage = async (props: props) => {
     <RealtimeProvider<School | Student | Teacher | SchoolStaff>
       channels={[
         { name: "school", initialData: [schoolRes.data] },
-        { name: "student", initialData: students_res.data },
-        { name: "teacher", initialData: teachers_res.data },
-        { name: "school_staff", initialData: school_staff_res.data },
+        { name: "student", initialData: students_res?.data?.students ?? [] },
+        { name: "teacher", initialData: teachers_res.data ?? [] },
+        { name: "school_staff", initialData: school_staff_res.data ?? [] },
       ]}
     >
       <div className="space-y-4 px-4">
         <SchoolHomeBody
-          students={students_res.data}
-          teachers={teachers_res.data}
-          school_staffs={school_staff_res.data}
+          students={students_res.data?.students ?? []}
+          teachers={teachers_res.data ?? []}
+          school_staffs={school_staff_res.data ?? []}
           auth={auth}
           school={schoolRes.data}
           lang={lang}

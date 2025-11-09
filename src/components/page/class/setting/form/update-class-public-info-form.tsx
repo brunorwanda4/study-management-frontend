@@ -24,8 +24,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ClassTypes } from "@/lib/const/common-details-const";
 import { useToast } from "@/lib/context/toast/ToastContext";
-import { ClassType } from "@/lib/schema/class/create-class.dto";
 import {
   type ClassUpdateDto,
   ClassUpdateSchema,
@@ -193,7 +193,7 @@ export default function UpdateClassPublicInfoForm({
                 "Select class type",
                 false,
                 true,
-                Object.values(ClassType).map((type) => ({
+                Object.values(ClassTypes).map((type) => ({
                   value: type,
                   label: type,
                 })),

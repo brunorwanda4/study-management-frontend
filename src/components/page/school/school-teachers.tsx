@@ -53,7 +53,7 @@ const SchoolTeachers = ({ lang, onThePage, auth, teachers }: props) => {
             userRole="TEACHER"
             name={item.name}
             image={item.image}
-            userId={item.user_id}
+            userId={item.user_id || ""}
           />
         );
       })}

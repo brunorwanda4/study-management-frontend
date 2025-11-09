@@ -2,9 +2,9 @@ import MyImage from "@/components/common/myImage";
 import MyLink from "@/components/common/myLink";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { studentImage } from "@/lib/context/images";
-import { StudentWithRelations } from "@/lib/schema/school/student-schema";
+import type { StudentWithRelations } from "@/lib/schema/relations-schema";
 import { BsGear, BsPlusCircle } from "react-icons/bs";
 
 interface props {

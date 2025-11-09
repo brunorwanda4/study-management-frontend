@@ -1,5 +1,6 @@
 "use client";
 import TeacherCard from "@/components/cards/teacher-card";
+import EmptyTeachers from "@/components/page/school-staff/school-teachers/empty-teachers";
 import type { Locale } from "@/i18n";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
 import type { TeacherWithRelations } from "@/lib/schema/school/teacher-schema";
@@ -31,6 +32,9 @@ const AllTeachersCards = ({
       setDisplayTeachers(initialTeachers);
     }
   }, [initialTeachers, realtimeEnabled]);
+
+    if (displayTeachers.length === 0 && teachers.length === 0)
+    return <EmptyTeachers isSchool auth={auth} />;
   return (
     <div className=" grid grid-cols-2 lg:grid-cols-3 gap-4">
       {displayTeachers.map((teacher) => {

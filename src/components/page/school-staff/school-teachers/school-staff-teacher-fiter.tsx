@@ -52,7 +52,7 @@ const SchoolStaffTeacherFilter = ({ auth }: Props) => {
           {/* Reusable SearchBox */}
           <SearchBox
             onSearch={fetchTeachers}
-            placeholder="Search teacher by name, phone, email"
+            placeholder="Search teacher..."
             loading={loading}
             live={false} // set true if you want live typing search
           />
