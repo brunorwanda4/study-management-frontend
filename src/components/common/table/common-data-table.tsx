@@ -43,7 +43,7 @@ export function CommonDataTable<TData, TValue>({
   serverMode,
   pageIndex,
   setPageIndex,
-  noFooter = false,
+  noFooter = true,
   pageSize = 10,
   loading = false,
 }: DataTableProps<TData, TValue>) {

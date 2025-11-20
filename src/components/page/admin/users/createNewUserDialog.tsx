@@ -19,7 +19,7 @@ const CreateNewUserDialog = ({ auth }: props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="info" size="sm" library="daisy">
+        <Button variant="primary" size="sm" library="daisy">
           <BsPlus /> Create new user
         </Button>
       </DialogTrigger>

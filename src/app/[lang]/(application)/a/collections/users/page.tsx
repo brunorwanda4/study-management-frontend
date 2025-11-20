@@ -1,12 +1,14 @@
+import DisplaySwitcher from "@/components/display/display-switcher";
 import UserCollectionDetails from "@/components/page/admin/users/user-collection-details";
+import UsersFilter from "@/components/page/admin/users/users-filter";
 import UsersTableCollection from "@/components/page/admin/users/usersTableCollection";
-import ErrorPage from "@/components/page/error-page";
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
-import { UserModel } from "@/lib/schema/user/user-schema";
-import { UserStats } from "@/lib/types/User-stats";
+import type { PaginatedUsers } from "@/lib/schema/relations-schema";
+import type { UserModel } from "@/lib/schema/user/user-schema";
+import type { UserStats } from "@/lib/types/User-stats";
 import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
@@ -20,7 +22,7 @@ const UserPageCollection = async () => {
 
   // Run requests in parallel
   const [usersRequest, statsRequest] = await Promise.all([
-    apiRequest<void, UserModel[]>("get", "/users?limit=10", undefined, {
+    apiRequest<void, PaginatedUsers>("get", "/users?limit=9", undefined, {
       token: auth.token,
       realtime: "user",
     }),
@@ -30,22 +32,26 @@ const UserPageCollection = async () => {
     }),
   ]);
 
-  if (!usersRequest.data || !statsRequest.data) {
-    return (
-      <ErrorPage
-        message={usersRequest.message || statsRequest.message}
-        error={usersRequest.error || statsRequest.error}
-      />
-    );
-  }
-
   return (
     <RealtimeProvider<UserModel>
-      channels={[{ name: "user", initialData: usersRequest.data }]}
+      channels={[
+        { name: "user", initialData: usersRequest?.data?.users ?? [] },
+      ]}
     >
       <div className="happy-page space-y-4">
-        <UserCollectionDetails stats={statsRequest.data} />
-        <UsersTableCollection auth={auth} users={usersRequest.data} />
+        {statsRequest.data && (
+          <UserCollectionDetails stats={statsRequest.data} />
+        )}
+        <UsersFilter auth={auth} />
+        <DisplaySwitcher
+          table={
+            <UsersTableCollection
+              auth={auth}
+              users={usersRequest.data?.users ?? []}
+            />
+          }
+          cards={<div>Hello Bruno</div>}
+        />
       </div>
     </RealtimeProvider>
   );

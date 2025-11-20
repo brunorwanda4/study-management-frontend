@@ -1,9 +1,9 @@
 "use client";
 
-import MyImage from "@/components/common/myImage";
+import MyAvatar from "@/components/common/image/my-avatar";
 import type { UserModel } from "@/lib/schema/user/user-schema";
 import { cn } from "@/lib/utils";
-import { generateImageProfile } from "@/lib/utils/generate-profile-image";
+import { formatTimeAgo } from "@/lib/utils/format-date";
 import type { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 
@@ -22,17 +22,22 @@ export const getUsersTableCollectionColumns = (): ColumnDef<UserModel>[] => [
           )}
           data-tip={cn(row.original.disable && "Disabled user")}
         >
-          <MyImage
-            role="AVATAR"
-            className="size-12"
-            src={
-              row.original.image ||
-              generateImageProfile(row.original.name, row.original.gender)
-            }
+          <MyAvatar
+            src={row.original.image}
+            alt={row.original.name}
+            type="squircle"
+            size="sm"
           />
           <div className="flex flex-col gap-1">
-            <span className="font-medium">{row.original.name}</span>
-            <span className="text-sm">{row.original.gender}</span>
+            <span
+              className="font-medium line-clamp-1"
+              title={row.original.name}
+            >
+              {row.original.name}
+            </span>
+            <span className="text-sm" title={row.original.name}>
+              {row.original.gender}
+            </span>
           </div>
         </Link>
       );
@@ -81,13 +86,6 @@ export const getUsersTableCollectionColumns = (): ColumnDef<UserModel>[] => [
     meta: { filterVariant: "text" },
   },
   {
-    header: "School",
-    accessorFn: (user) =>
-      user.current_school_id ? "Assigned" : "Not Assigned",
-    id: "school",
-    meta: { filterVariant: "select" },
-  },
-  {
     header: "Created At",
     accessorKey: "created_at",
     meta: { filterVariant: "dateRange" },
@@ -95,18 +93,28 @@ export const getUsersTableCollectionColumns = (): ColumnDef<UserModel>[] => [
       return (
         <div className="space-y-2">
           <div className="flex flex-row gap-1">
-            <span>Created on:</span>
-            <span>
+            <span title="Created on" className=" text-xs line-clamp-1">
+              Created on:
+            </span>
+            <span
+              title={row.original.created_at}
+              className=" text-xs line-clamp-1"
+            >
               {row.original.created_at
-                ? new Date(row.original.created_at).toLocaleDateString()
+                ? formatTimeAgo(row.original.created_at)
                 : "-"}
             </span>
           </div>
           <div className="flex flex-row gap-1">
-            <span>update on:</span>
-            <span>
+            <span title="update on" className=" text-xs line-clamp-1">
+              update on:
+            </span>
+            <span
+              title={row.original.updated_at}
+              className=" text-xs line-clamp-1"
+            >
               {row.original.updated_at
-                ? new Date(row.original.updated_at).toLocaleDateString()
+                ? formatTimeAgo(row.original.updated_at)
                 : "-"}
             </span>
           </div>

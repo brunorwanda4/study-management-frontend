@@ -76,3 +76,16 @@ export const PaginatedStudentWithRelationsSchema = z.object({
 export type PaginatedStudentWithRelations = z.infer<
   typeof PaginatedStudentWithRelationsSchema
 >;
+
+// ---------------------------------------------
+// user With Relations
+// ---------------------------------------------
+
+export const PaginatedUsersSchema = z.object({
+  users: z.array(UserModelSchema),
+  total: z.number().int(),
+  total_pages: z.number().int(),
+  current_page: z.number().int(),
+});
+
+export type PaginatedUsers = z.infer<typeof PaginatedUsersSchema>;
