@@ -2,81 +2,41 @@
 import MyLink from "@/components/common/myLink";
 import type { Locale } from "@/i18n";
 import { usePathname } from "next/navigation";
-import { BsGear } from "react-icons/bs";
-import { FaPeopleGroup } from "react-icons/fa6";
-import { MdClass } from "react-icons/md";
-import { RxActivityLog } from "react-icons/rx";
 
 interface props {
   lang: Locale;
-  classId: string;
+  classUsername: string;
 }
 
-const ClassNavbar = ({ lang, classId }: props) => {
+const ClassNavbar = ({ lang, classUsername }: props) => {
   const pathname = usePathname();
+  const pages = [
+    "overview",
+    "subjects",
+    "discussion",
+    "classwork",
+    "people",
+    "timetable",
+    "settings",
+  ] as const;
   return (
-    <nav className="basic-card w-full">
-      <div className="flex space-x-2">
-        <MyLink
-          loading
-          type="button"
-          button={{
-            size: "sm",
-            variant: pathname === `/${lang}/c/${classId}` ? "info" : "default",
-            library: "daisy",
-          }}
-          href={`/${lang}/c/${classId}`}
-        >
-          <RxActivityLog />
-          Home
-        </MyLink>
-        <MyLink
-          loading
-          type="button"
-          button={{
-            size: "sm",
-            variant:
-              pathname === `/${lang}/c/${classId}/people` ? "info" : "default",
-            library: "daisy",
-          }}
-          href={`/${lang}/c/${classId}/people`}
-        >
-          <FaPeopleGroup />
-          People
-        </MyLink>
-        <MyLink
-          loading
-          type="button"
-          button={{
-            size: "sm",
-            variant:
-              pathname === `/${lang}/c/${classId}/subjects`
-                ? "info"
-                : "default",
-            library: "daisy",
-          }}
-          href={`/${lang}/c/${classId}/subjects`}
-        >
-          <MdClass />
-          Subjects
-        </MyLink>
-        <MyLink
-          loading
-          type="button"
-          button={{
-            size: "sm",
-            variant:
-              pathname === `/${lang}/c/${classId}/settings`
-                ? "info"
-                : "default",
-            library: "daisy",
-          }}
-          href={`/${lang}/c/${classId}/settings`}
-        >
-          <BsGear />
-          Settings
-        </MyLink>
-      </div>
+    <nav className="w-full gap-8 flex flex-row border-b border-base-content/50">
+      {pages.map((page) => {
+        const isActive = () => {
+          if (page === "overview" && `/${lang}/c/${classUsername}`) return true;
+          return pathname === `/${lang}/c/${classUsername}/${page}`;
+        };
+        return (
+          <MyLink
+            key={page}
+            className={`capitalize py-1 ${isActive() && "border-b-3 border-b-primary"}`}
+            href={`/${lang}/c/${classUsername}/${page === "overview" ? "" : page}`}
+            button={{ variant: "ghost" }}
+          >
+            {page}
+          </MyLink>
+        );
+      })}
     </nav>
   );
 };

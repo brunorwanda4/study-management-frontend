@@ -1,7 +1,7 @@
 import DevelopingPage from "@/components/page/developing-page";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { authContext } from "@/lib/utils/auth-context";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 export const metadata: Metadata = {
   title: "School Join Requests",

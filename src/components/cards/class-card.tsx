@@ -171,7 +171,7 @@ const ClassCard = ({
             variant={isClassTeacher ? "info" : "primary"}
             className={cn("w-full", isSchoolStaff && "w-fit")}
             role="page"
-            href="/c/page"
+            href={`/${lang}/c/${cls?.username}`}
           >
             {isSchoolStaff
               ? "Visit class"

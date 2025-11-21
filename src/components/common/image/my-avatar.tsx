@@ -6,7 +6,7 @@ import { getInitialsUsername } from "@/lib/utils/generate-username";
 interface Props {
   role?: { role?: userRole | null; gender?: Gender | null };
   type?: "squircle" | "square" | "cycle";
-  size?: "default" | "lg" | "sm" | "xl" | "xs";
+  size?: "default" | "lg" | "sm" | "xl" | "xs" | "2xl";
   src?: string | null;
   alt?: string | null;
   className?: string;
@@ -31,12 +31,14 @@ const MyAvatar = ({
       : size === "lg"
         ? "size-20 text-xl min-h-20 min-w-20"
         : size === "xl"
-          ? "size-24 text-2xl min-h-xl min-w-xl"
-          : size === "sm"
-            ? "size-10 text-sm min-h-10 min-w-10"
-            : size === "xs"
-              ? "size-8 text-xs min-h-8 min-w-8"
-              : "size-12 text-sm min-h-12 min-w-12";
+          ? "size-24 text-2xl min-h-24 min-w-24"
+          : size === "2xl"
+            ? "size-32 text-3xl min-h-32 min-w-32"
+            : size === "sm"
+              ? "size-10 text-sm min-h-10 min-w-10"
+              : size === "xs"
+                ? "size-8 text-xs min-h-8 min-w-8"
+                : "size-12 text-sm min-h-12 min-w-12";
 
   // ✅ type shape classes
   const class_type =

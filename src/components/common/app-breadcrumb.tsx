@@ -31,6 +31,10 @@ export default function AppBreadcrumb() {
   const locale = segments[0];
   const paths = segments.slice(1); // everything after locale
 
+  // const classPages = `${locale}/c`;
+
+  // if (pathname === classPages.startsWith("/")) return null
+
   // Build cumulative paths
   const crumbs = paths.map((seg, index) => {
     const href = `/${locale}/${paths.slice(0, index + 1).join("/")}`;

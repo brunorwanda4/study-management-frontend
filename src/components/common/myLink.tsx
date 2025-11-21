@@ -2,7 +2,11 @@
 
 import { cn } from "@/lib/utils";
 import Link, { useLinkStatus } from "next/link";
-import { Button, DaisyButtonProps, ShadcnButtonProps } from "../ui/button";
+import {
+  Button,
+  type DaisyButtonProps,
+  type ShadcnButtonProps,
+} from "../ui/button";
 
 interface props {
   className?: string;
@@ -27,6 +31,7 @@ type Props = {
   button?: ShadcnButtonProps | DaisyButtonProps;
   loading?: boolean;
   classname?: string;
+  roleTag?: string; // "cls", "s", "su", etc
 };
 
 const MyLink = ({
@@ -37,11 +42,13 @@ const MyLink = ({
   button,
   classname,
   loading = false,
+  roleTag,
 }: Props) => {
   if (type === "button") {
     return (
       <Link href={href} className={className}>
         <Button {...button} className={cn("", classname)}>
+          {roleTag && <span className={"text-muted text-sm"}>{roleTag}/ </span>}
           {children}
           {loading && <LoadingIndicator />}
         </Button>
@@ -50,7 +57,8 @@ const MyLink = ({
   }
 
   return (
-    <Link href={href} className={className || "underline"}>
+    <Link href={href} className={className || ""}>
+      {roleTag && <span className={"text-muted text-sm"}>{roleTag}/ </span>}
       {children} {loading && <LoadingIndicator />}
     </Link>
   );

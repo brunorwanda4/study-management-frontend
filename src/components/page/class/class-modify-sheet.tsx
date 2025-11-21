@@ -238,7 +238,7 @@ const ClassModifySheet = ({ cls, auth, isTable, lang, isSchool }: props) => {
                 className={cn("w-fit")}
                 role="page"
                 size={"sm"}
-                href={`${lang}/c/`}
+                href={`/${lang}/c/${cls?.username}`}
               >
                 {"Visit class"}
               </Button>
