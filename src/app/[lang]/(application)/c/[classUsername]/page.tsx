@@ -1,5 +1,6 @@
 import AddAnnouncementDialog from "@/components/common/dialog/add-announcement-dialog";
 import ClassHero from "@/components/page/class/class-hero";
+import TeacherSubjectCard from "@/components/page/class/teacher-sujects-card";
 import { Separator } from "@/components/ui/separator";
 import type { Locale } from "@/i18n";
 import { authContext } from "@/lib/utils/auth-context";
@@ -32,10 +33,11 @@ const ClassUsernamePage = async (props: Props) => {
   return (
     <div className=" w-full">
       <ClassHero />
-      <Separator />
+      <Separator className=" mt-4 mb-4" />
       <main className=" flex gap-4 w-full">
-        <div className=" w-2/3">
+        <div className=" w-2/3 flex flex-col gap-4">
           <AddAnnouncementDialog />
+          <TeacherSubjectCard />
         </div>
         <div className=" w-1/3">time table here</div>
       </main>

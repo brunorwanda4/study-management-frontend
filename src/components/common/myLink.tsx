@@ -44,11 +44,13 @@ const MyLink = ({
   loading = false,
   roleTag,
 }: Props) => {
-  if (type === "button") {
+  if (type === "button" || button) {
     return (
       <Link href={href} className={className}>
         <Button {...button} className={cn("", classname)}>
-          {roleTag && <span className={"text-neutral text-sm"}>{roleTag}/ </span>}
+          {roleTag && (
+            <span className={"text-neutral text-sm"}>{roleTag}/ </span>
+          )}
           {children}
           {loading && <LoadingIndicator />}
         </Button>

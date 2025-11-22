@@ -38,6 +38,7 @@ const itemVariants = cva(
         default: "bg-transparent",
         outline: "border-base-300",
         muted: "bg-base-200",
+        ghost: "hover:bg-base-200  duration-100",
       },
       size: {
         default: "p-4 gap-4 ",
@@ -186,6 +187,5 @@ export {
   ItemHeader,
   ItemMedia,
   ItemSeparator,
-  ItemTitle
+  ItemTitle,
 };
-

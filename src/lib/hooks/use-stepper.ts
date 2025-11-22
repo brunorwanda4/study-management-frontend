@@ -112,7 +112,7 @@ export function useStepper<T extends string = string>(
       else params.delete("id");
 
       const qs = params.toString();
-      router.replace(`${pathname}${qs ? `?${qs}` : ""}`);
+      router.replace(`${pathname}${qs ? `?${qs}` : ""}` as any);
     },
     [router, pathname],
   );
