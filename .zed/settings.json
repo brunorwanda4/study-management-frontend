@@ -1,50 +1,16 @@
 {
-  // -----------------------------
-  // CSpell custom dictionary
-  // -----------------------------
-  "cspell.words": ["cmdk", "intereset", "Loadingclass", "SCHOOLSTAFF", "TVET"],
-
-  // -----------------------------
-  // Tailwindcss
-  // -----------------------------
-  "lsp": {
-      "tailwindcss-language-server": {
-        "settings": {
-          "classFunctions": ["cva", "cx"],
-          "experimental": {
-            "classRegex": ["[cls|className]\\s\\:\\=\\s\"([^\"]*)"]
-          }
-        }
+  "languages": {
+    "JavaScript": { "formatter": { "language_server": { "name": "biome" } } },
+    "TypeScript": { "formatter": { "language_server": { "name": "biome" } } },
+    "TSX": {
+      "formatter": { "language_server": { "name": "biome" } },
+      "code_actions_on_format": {
+        "source.fixAll.biome": true,
+        "source.organizeImports.biome": true
       }
     },
-  // -----------------------------
-  // Biome formatter + LSP
-  // -----------------------------
-  "format_on_save": true,
-  "format_on_paste": true,
-
-  // Tell Zed to use biome for formatting
-  "language_overrides": {
-    "javascript": { "formatter": "biome" },
-    "typescript": { "formatter": "biome" },
-    "javascriptreact": { "formatter": "biome" },
-    "typescriptreact": { "formatter": "biome" },
-    "json": { "formatter": "biome" },
-    "html": { "formatter": "biome" },
-    "css": { "formatter": "biome" }
-  },
-
-  // -----------------------------
-  // Code Actions on Save
-  // (similar to source.fixAll, organizeImports)
-  // -----------------------------
-  "code_actions_on_save": {
-    "source.organizeImports": true,
-    "source.fixAll": true
-  },
-
-  // -----------------------------
-  // Custom TypeScript SDK
-  // -----------------------------
-  "typescript.tsdk": "node_modules/typescript/lib"
+    "JSON": { "formatter": { "language_server": { "name": "biome" } } },
+    "JSONC": { "formatter": { "language_server": { "name": "biome" } } },
+    "CSS": { "formatter": { "language_server": { "name": "biome" } } }
+  }
 }

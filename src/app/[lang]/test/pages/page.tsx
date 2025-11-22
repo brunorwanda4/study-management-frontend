@@ -96,6 +96,7 @@ const ChatDemoPage = () => {
           <MessageInput
             value={inputValue}
             onChange={setInputValue}
+            // enabledTools={[]}
             onSend={handleSendMessage}
             // className="w-full  rounded-xl"
             placeholder="Type a message..."

@@ -3,7 +3,7 @@ import type { Gender, userRole } from "@/lib/schema/common-details-schema";
 import { cn } from "@/lib/utils";
 import { getInitialsUsername } from "@/lib/utils/generate-username";
 
-interface Props {
+export interface MyAvatarProps {
   role?: { role?: userRole | null; gender?: Gender | null };
   type?: "squircle" | "square" | "cycle";
   size?: "default" | "lg" | "sm" | "xl" | "xs" | "2xl";
@@ -116,7 +116,7 @@ const MyAvatar = ({
       <MyImage
         src={src || getDefaultImage()}
         alt={alt || "User avatar"}
-        className={cn(class_size, className)}
+        className={cn(class_size, class_type, className)}
         classname={cn(class_type, classname)}
       />
     );

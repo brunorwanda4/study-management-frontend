@@ -21,7 +21,7 @@ const AddAnnouncementDialog = () => {
          </Button>
         </div>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-2xl">
         <DialogTitle>
           New announcement in Class name
         </DialogTitle>

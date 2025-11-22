@@ -1,11 +1,5 @@
-// MessageInput (cleaned + fixes)
-// - fixes duplicate handlers
-// - ensures selection/range cloning when saving/restoring
-// - makes Dialog/Popover controlled via onOpenChange
-// - executes handleInput after programmatic inserts
-// - single click-outside effect
-// - small ARIA/accessibility tweaks
 
+"use client"
 import { cn } from "@/lib/utils";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
@@ -46,13 +40,11 @@ import {
 } from "lucide-react";
 
 export type EditorTool =
-  | "bold"
-  | "italic"
-  | "underline"
-  | "strike"
-  | "link"
-  | "list"
-  | "orderedList";
+  | "emoji"
+  | "toolbar"
+  | "metion"
+  | "files"
+  | "send";
 
 interface MessageInputProps {
   value?: string;
@@ -83,10 +75,11 @@ const ToolbarButton = ({
       e.preventDefault();
       onClick();
     }}
+    type="button"
     className={cn(
       "h-8 w-8",
       isActive
-        ? "bg-accent text-accent-foreground"
+        ? "bg-base-content/10"
         : "text-muted-foreground hover:text-foreground",
     )}
     title={label}
@@ -104,13 +97,11 @@ export default function MessageInput({
   className,
   placeholder = "Message #general",
   enabledTools = [
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "link",
-    "list",
-    "orderedList",
+    "toolbar",
+    "emoji",
+    "files",
+    "metion",
+    "send"
   ],
   mentionableUsers = [
     { id: "1", name: "Alice", status: "online" },
@@ -123,7 +114,6 @@ export default function MessageInput({
   const [showToolbar, setShowToolbar] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [showUserPicker, setShowUserPicker] = useState(false);
-  const [pickerReady, setPickerReady] = useState(false);
 
   const [showLinkDialog, setShowLinkDialog] = useState(false);
   const [linkUrl, setLinkUrl] = useState("");
@@ -136,28 +126,6 @@ export default function MessageInput({
   const emojiTriggerRef = useRef<HTMLDivElement>(null);
   const userTriggerRef = useRef<HTMLDivElement>(null);
   const pickerContainerRef = useRef<HTMLDivElement>(null);
-
-  // --- Load CDN emoji-mart preview (optional) ---
-  useEffect(() => {
-    const scriptId = "emoji-mart-script";
-    if (!document.getElementById(scriptId)) {
-      const script = document.createElement("script");
-      script.id = scriptId;
-      script.src =
-        "https://cdn.jsdelivr.net/npm/emoji-mart@latest/dist/browser.js";
-      script.async = true;
-      script.onload = () => {
-        customElements.whenDefined("em-emoji-picker").then(() => {
-          setPickerReady(true);
-        });
-      };
-      document.body.appendChild(script);
-    } else {
-      customElements.whenDefined("em-emoji-picker").then(() => {
-        setPickerReady(true);
-      });
-    }
-  }, []);
 
   // Single click-outside handler for both popups
   useEffect(() => {
@@ -384,43 +352,32 @@ export default function MessageInput({
     >
       {showToolbar && (
         <div className="flex flex-wrap items-center gap-1 border-b border-base-content/50 p-2 bg-muted/30 animate-in slide-in-from-top-1 fade-in duration-200">
-          {enabledTools?.includes("bold") && (
             <ToolbarButton
               icon={Bold}
               isActive={activeStyles.includes("bold")}
               onClick={() => executeCommand("bold")}
               label="Bold"
             />
-          )}
-          {enabledTools?.includes("italic") && (
             <ToolbarButton
               icon={Italic}
               isActive={activeStyles.includes("italic")}
               onClick={() => executeCommand("italic")}
               label="Italic"
             />
-          )}
-          {enabledTools?.includes("underline") && (
             <ToolbarButton
               icon={UnderlineIcon}
               isActive={activeStyles.includes("underline")}
               onClick={() => executeCommand("underline")}
               label="Underline"
             />
-          )}
-          {enabledTools?.includes("strike") && (
             <ToolbarButton
               icon={Strikethrough}
               isActive={activeStyles.includes("strike")}
               onClick={() => executeCommand("strikeThrough")}
               label="Strikethrough"
             />
-          )}
 
           <div className="mx-1 h-4 w-px bg-border" />
-
-          {enabledTools?.includes("link") && (
-            <>
               <ToolbarButton
                 icon={LinkIcon}
                 isActive={false}
@@ -478,8 +435,6 @@ export default function MessageInput({
                   </div>
                 </DialogContent>
               </Dialog>
-            </>
-          )}
 
           {enabledTools?.includes("list") && (
             <ToolbarButton
@@ -528,15 +483,17 @@ export default function MessageInput({
 
       <div className="flex items-center justify-between p-2 bg-transparent mt-auto relative border-t border-transparent">
         <div className="flex items-center gap-1">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 rounded-full bg-muted/40 hover:bg-muted text-muted-foreground hover:text-foreground"
-          >
-            <Plus size={18} />
-          </Button>
+          {enabledTools.includes("files") && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 rounded-full bg-muted/40 hover:bg-muted text-muted-foreground hover:text-foreground"
+            >
+              <Plus size={18} />
+            </Button>
+          )}
 
-          <div className="relative" ref={emojiTriggerRef}>
+          {enabledTools.includes("emoji") && <div className="relative" ref={emojiTriggerRef}>
             <Button
               variant="ghost"
               size="icon"
@@ -560,17 +517,17 @@ export default function MessageInput({
                 <Picker
                   data={data}
                   onEmojiSelect={insertEmoji}
-                  theme="light"
+                  theme="auto"
                   previewPosition="none"
-                  skinTonePosition="none"
+                  skinTonePosition="preview"
                   searchPosition="static"
                   // do not style the picker aggressively; let it inherit
                 />
               </div>
             )}
-          </div>
+          </div>}
 
-          <Button
+         {enabledTools.includes("toolbar") && <Button
             variant="ghost"
             size="sm"
             className={cn(
@@ -581,9 +538,9 @@ export default function MessageInput({
           >
             <Type size={16} className="mr-1" />
             <span className="text-xs font-bold">Aa</span>
-          </Button>
+          </Button>}
 
-          <div className="relative" ref={userTriggerRef}>
+         {enabledTools.includes("metion") && <div className="relative" ref={userTriggerRef}>
             <Popover open={showUserPicker} onOpenChange={setShowUserPicker}>
               <PopoverTrigger asChild>
                 <Button
@@ -636,12 +593,12 @@ export default function MessageInput({
                 </div>
               </PopoverContent>
             </Popover>
-          </div>
+         </div>}
         </div>
 
-        <Button onClick={onSend} variant="ghost" aria-label="Send message">
+      {enabledTools.includes("send") && <Button onClick={onSend} variant={value ? "primary" :"ghost"} aria-label="Send message" library="daisy">
           <SendHorizontal size={18} />
-        </Button>
+      </Button>}
       </div>
     </div>
   );
