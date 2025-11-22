@@ -17,6 +17,12 @@ importers:
       '@dnd-kit/utilities':
         specifier: ^3.2.2
         version: 3.2.2(react@19.2.0)
+      '@emoji-mart/data':
+        specifier: ^1.2.1
+        version: 1.2.1
+      '@emoji-mart/react':
+        specifier: ^1.1.1
+        version: 1.1.1(emoji-mart@5.6.0)(react@19.2.0)
       '@formatjs/intl-localematcher':
         specifier: ^0.6.1
         version: 0.6.2
@@ -91,7 +97,7 @@ importers:
         version: 8.21.3(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@tiptap/react':
         specifier: ^3.4.4
-        version: 3.8.0(@floating-ui/dom@1.7.4)(@tiptap/core@3.8.0(@tiptap/pm@3.8.0))(@tiptap/pm@3.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 3.8.0(@floating-ui/dom@1.7.4)(@tiptap/core@3.11.0(@tiptap/pm@3.11.0))(@tiptap/pm@3.11.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       axios:
         specifier: ^1.8.4
         version: 1.12.2
@@ -110,6 +116,9 @@ importers:
       emblor:
         specifier: ^1.4.8
         version: 1.4.8(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      emoji-mart:
+        specifier: ^5.6.0
+        version: 5.6.0
       framer-motion:
         specifier: ^12.23.24
         version: 12.23.24(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -126,14 +135,14 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       next:
-        specifier: 16.0.2-canary.12
-        version: 16.0.2-canary.12(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        specifier: 16.0.3
+        version: 16.0.3(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       next13-progressbar:
         specifier: ^1.2.2
-        version: 1.2.2(next@16.0.2-canary.12(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)
+        version: 1.2.2(next@16.0.3(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)
       radix-ui:
         specifier: ^1.4.3
         version: 1.4.3(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -323,8 +332,17 @@ packages:
     peerDependencies:
       react: '>=16.8.0'
 
-  '@emnapi/runtime@1.6.0':
-    resolution: {integrity: sha512-obtUmAHTMjll499P+D9A3axeJFlhdjOWdKUNs/U6QIGT7V5RjcUW1xToAzjvmgTSQhDbYn/NwfTRoJcQ2rNBxA==}
+  '@emnapi/runtime@1.7.1':
+    resolution: {integrity: sha512-PVtJr5CmLwYAU9PZDMITZoR5iAOShYREoR45EyyLrbntV50mdePTgUn4AmOw90Ifcj+x2kRjdzr1HP3RrNiHGA==}
+
+  '@emoji-mart/data@1.2.1':
+    resolution: {integrity: sha512-no2pQMWiBy6gpBEiqGeU77/bFejDqUTRY7KX+0+iur13op3bqUsXdnwoZs6Xb1zbv0gAj5VvS1PWoUUckSr5Dw==}
+
+  '@emoji-mart/react@1.1.1':
+    resolution: {integrity: sha512-NMlFNeWgv1//uPsvLxvGQoIerPuVdXwK/EUek8OOkJ6wVOWPUizRBJU0hDqWZCOROVpfBgCemaC3m6jDOXi03g==}
+    peerDependencies:
+      emoji-mart: ^5.2
+      react: ^16.8 || ^17 || ^18
 
   '@floating-ui/core@1.7.3':
     resolution: {integrity: sha512-sGnvb5dmrJaKEZ+LDIpguvdX3bDlEllmv4/ClQ9awcmCZrlx5jQyyMWFM5kBI+EyNOCDDiKk8il0zeuX3Zlg/w==}
@@ -515,53 +533,53 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@next/env@16.0.2-canary.12':
-    resolution: {integrity: sha512-Jdj+z39D1dCfClfhsQAkXfcehRTYQDlvUzJ3mdCmaw2c7N+5IQyGFAF4ZRmhuqSz44QIOvao5hllpX2T8iWA4Q==}
+  '@next/env@16.0.3':
+    resolution: {integrity: sha512-IqgtY5Vwsm14mm/nmQaRMmywCU+yyMIYfk3/MHZ2ZTJvwVbBn3usZnjMi1GacrMVzVcAxJShTCpZlPs26EdEjQ==}
 
-  '@next/swc-darwin-arm64@16.0.2-canary.12':
-    resolution: {integrity: sha512-hY7nnFSOXv2lmR6wQeVfQ7bRWKi2IlGceifJfnxOMsRbg+6lrTf+zBUWYSbcz4WeDjBtKAAShk/Iw/AQFGOf4g==}
+  '@next/swc-darwin-arm64@16.0.3':
+    resolution: {integrity: sha512-MOnbd92+OByu0p6QBAzq1ahVWzF6nyfiH07dQDez4/Nku7G249NjxDVyEfVhz8WkLiOEU+KFVnqtgcsfP2nLXg==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [darwin]
 
-  '@next/swc-darwin-x64@16.0.2-canary.12':
-    resolution: {integrity: sha512-jjmlMP0J567e4fXR7t7vAR8lz6eC7TAzwSA5DVk4fwvwtRkp1KbCR0xEBjosK5TFXsLB8vFRVfNG/v+JB8af3Q==}
+  '@next/swc-darwin-x64@16.0.3':
+    resolution: {integrity: sha512-i70C4O1VmbTivYdRlk+5lj9xRc2BlK3oUikt3yJeHT1unL4LsNtN7UiOhVanFdc7vDAgZn1tV/9mQwMkWOJvHg==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [darwin]
 
-  '@next/swc-linux-arm64-gnu@16.0.2-canary.12':
-    resolution: {integrity: sha512-oFvMDc3rk/5LvQRqFbT8AAOrBus+nl7VDr92eL3rJRwNqB3RtFGCfffz8Rm0ezpR6VOZyNmtmqF8k0LfTRUspQ==}
+  '@next/swc-linux-arm64-gnu@16.0.3':
+    resolution: {integrity: sha512-O88gCZ95sScwD00mn/AtalyCoykhhlokxH/wi1huFK+rmiP5LAYVs/i2ruk7xST6SuXN4NI5y4Xf5vepb2jf6A==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
 
-  '@next/swc-linux-arm64-musl@16.0.2-canary.12':
-    resolution: {integrity: sha512-+6UtOMEljm1l0RTpkgQagYKjK8y/WmK/U+oHbotF3cM0tW/ooXkyPQj8zplIaNcbT2y9vT3K2hNq0g7DXsdvPw==}
+  '@next/swc-linux-arm64-musl@16.0.3':
+    resolution: {integrity: sha512-CEErFt78S/zYXzFIiv18iQCbRbLgBluS8z1TNDQoyPi8/Jr5qhR3e8XHAIxVxPBjDbEMITprqELVc5KTfFj0gg==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
 
-  '@next/swc-linux-x64-gnu@16.0.2-canary.12':
-    resolution: {integrity: sha512-cDvu6SXCS1KcH1WH5WgY7wY4M5KCMDqnHmmxGmWMTSGykcbOKH+YhtpZSOYiCJQoGNHOW4nbao8B0f4w+tWozQ==}
+  '@next/swc-linux-x64-gnu@16.0.3':
+    resolution: {integrity: sha512-Tc3i+nwt6mQ+Dwzcri/WNDj56iWdycGVh5YwwklleClzPzz7UpfaMw1ci7bLl6GRYMXhWDBfe707EXNjKtiswQ==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
 
-  '@next/swc-linux-x64-musl@16.0.2-canary.12':
-    resolution: {integrity: sha512-QANQda9XFsXE48eeqQlVFnXsQyWKqkiFGYWkKseoKH2XHNeQOE7svht4zSoYkfZSxAb+rDJnc9aIFoe8iZJrfg==}
+  '@next/swc-linux-x64-musl@16.0.3':
+    resolution: {integrity: sha512-zTh03Z/5PBBPdTurgEtr6nY0vI9KR9Ifp/jZCcHlODzwVOEKcKRBtQIGrkc7izFgOMuXDEJBmirwpGqdM/ZixA==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
 
-  '@next/swc-win32-arm64-msvc@16.0.2-canary.12':
-    resolution: {integrity: sha512-L11n23i22w0ihvNvGd9LkyDEp7dc7/kLvJFcMP82NGgQDE/vX9ZSaQm7TTWJt/5m/z0WBrjGn52jMVXdxXwMtg==}
+  '@next/swc-win32-arm64-msvc@16.0.3':
+    resolution: {integrity: sha512-Jc1EHxtZovcJcg5zU43X3tuqzl/sS+CmLgjRP28ZT4vk869Ncm2NoF8qSTaL99gh6uOzgM99Shct06pSO6kA6g==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [win32]
 
-  '@next/swc-win32-x64-msvc@16.0.2-canary.12':
-    resolution: {integrity: sha512-mmuzIXZFqOZaBxoeGk66m69CFFSXId3OuYaCOD/NV9DgO+fO9juBfuGwQXxHDhZIP7ImCuSHwmVttD/TYQizPA==}
+  '@next/swc-win32-x64-msvc@16.0.3':
+    resolution: {integrity: sha512-N7EJ6zbxgIYpI/sWNzpVKRMbfEGgsWuOIvzkML7wxAAZhPk1Msxuo/JDu1PKjWGrAoOLaZcIX5s+/pF5LIbBBg==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
@@ -2232,10 +2250,10 @@ packages:
     resolution: {integrity: sha512-ldZXEhOBb8Is7xLs01fR3YEc3DERiz5silj8tnGkFZytt1abEvl/GhUmCE0PMLaMPTa3Jk4HbKmRlHmu+gCftg==}
     engines: {node: '>=12'}
 
-  '@tiptap/core@3.8.0':
-    resolution: {integrity: sha512-AfVCpS+nFLrVkcbIzO8d4VSdwX31Og5GuZ5qsJzx6pfvPam+fz7Icf7pyuys8TDvHb5LszWAAHset015Ouex3Q==}
+  '@tiptap/core@3.11.0':
+    resolution: {integrity: sha512-kmS7ZVpHm1EMnW1Wmft9H5ZLM7E0G0NGBx+aGEHGDcNxZBXD2ZUa76CuWjIhOGpwsPbELp684ZdpF2JWoNi4Dg==}
     peerDependencies:
-      '@tiptap/pm': ^3.8.0
+      '@tiptap/pm': ^3.11.0
 
   '@tiptap/extension-bubble-menu@3.8.0':
     resolution: {integrity: sha512-PmZZSAlR9o1zFwz2s/eF9DDI5iS1xsR3S4A47shExQmpF/+T8mTmK/ybnfyVL+Hkf9XxIuQ2Cga6VBhJ0mUc9g==}
@@ -2250,8 +2268,8 @@ packages:
       '@tiptap/core': ^3.8.0
       '@tiptap/pm': ^3.8.0
 
-  '@tiptap/pm@3.8.0':
-    resolution: {integrity: sha512-+HjQTpgz9OZMWpg1DRw5j7KXDc+Ea9FQjFKo8cu+HgwfQMmqmJQEMVFO+bwxZrAU7qfaB2Tc4RNHDI8a+8CBAQ==}
+  '@tiptap/pm@3.11.0':
+    resolution: {integrity: sha512-plCQDLCZIOc92cizB8NNhBRN0szvYR3cx9i5IXo6v9Xsgcun8KHNcJkesc2AyeqdIs0BtOJZaqQ9adHThz8UDw==}
 
   '@tiptap/react@3.8.0':
     resolution: {integrity: sha512-ABEdqimvAdFJ9NY6waFu6z+vybs8EIALkOK7z2b+SrT+imPk+IXzLPmDj3n+PAkrdgGJRuSwXxpQbU/H+NR/4w==}
@@ -2479,6 +2497,9 @@ packages:
     peerDependencies:
       react: ^18.0.0
       react-dom: ^18.0.0
+
+  emoji-mart@5.6.0:
+    resolution: {integrity: sha512-eJp3QRe79pjwa+duv+n7+5YsNhRcMl812EcFVwrnRvYKoNPoQb5qxU8DG6Bgwji0akHdp6D4Ln6tYLG58MFSow==}
 
   enhanced-resolve@5.18.3:
     resolution: {integrity: sha512-d4lC8xfavMeBjzGr2vECC3fsGXziXZQyJxD868h2M/mBI3PwAuODxAkLkq5HYuvrPYcUtiLzsTo8U3PgX3Ocww==}
@@ -2755,8 +2776,8 @@ packages:
       next: '>= 13.0.0'
       react: '>= 18.0.0'
 
-  next@16.0.2-canary.12:
-    resolution: {integrity: sha512-i7ThSJYuJ2deFYuExoOiUiqX1zLkTnyZGBzBBKgcbiZii6kbPqasrQqN9gkYwcGCHv9iG3iPcjvsZqYpvbdi0w==}
+  next@16.0.3:
+    resolution: {integrity: sha512-Ka0/iNBblPFcIubTA1Jjh6gvwqfjrGq1Y2MTI5lbjeLIAfmC+p5bQmojpRZqgHHVu5cG4+qdIiwXiBSm/8lZ3w==}
     engines: {node: '>=20.9.0'}
     hasBin: true
     peerDependencies:
@@ -3064,6 +3085,9 @@ packages:
   tailwind-merge@3.3.1:
     resolution: {integrity: sha512-gBXpgUm/3rp1lMZZrM/w7D8GKqshif0zAymAhbCyIt8KMe+0v9DQ7cdYLR4FHH/cKpdTXb+A/tKKU3eolfsI+g==}
 
+  tailwind-merge@3.4.0:
+    resolution: {integrity: sha512-uSaO4gnW+b3Y2aWoWfFpX62vn2sR3skfhbjsEnaBI81WD1wBLlHZe5sWf0AqjksNdYTbGBEd0UasQMT3SNV15g==}
+
   tailwindcss@4.1.16:
     resolution: {integrity: sha512-pONL5awpaQX4LN5eiv7moSiSPd/DLDzKVRJz8Q9PgzmAdd1R4307GQS2ZpfiN7ZmekdQrfhZZiSE5jkLR4WNaA==}
 
@@ -3210,10 +3234,17 @@ snapshots:
       react: 19.2.0
       tslib: 2.8.1
 
-  '@emnapi/runtime@1.6.0':
+  '@emnapi/runtime@1.7.1':
     dependencies:
       tslib: 2.8.1
     optional: true
+
+  '@emoji-mart/data@1.2.1': {}
+
+  '@emoji-mart/react@1.1.1(emoji-mart@5.6.0)(react@19.2.0)':
+    dependencies:
+      emoji-mart: 5.6.0
+      react: 19.2.0
 
   '@floating-ui/core@1.7.3':
     dependencies:
@@ -3340,7 +3371,7 @@ snapshots:
 
   '@img/sharp-wasm32@0.34.4':
     dependencies:
-      '@emnapi/runtime': 1.6.0
+      '@emnapi/runtime': 1.7.1
     optional: true
 
   '@img/sharp-win32-arm64@0.34.4':
@@ -3388,30 +3419,30 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@next/env@16.0.2-canary.12': {}
+  '@next/env@16.0.3': {}
 
-  '@next/swc-darwin-arm64@16.0.2-canary.12':
+  '@next/swc-darwin-arm64@16.0.3':
     optional: true
 
-  '@next/swc-darwin-x64@16.0.2-canary.12':
+  '@next/swc-darwin-x64@16.0.3':
     optional: true
 
-  '@next/swc-linux-arm64-gnu@16.0.2-canary.12':
+  '@next/swc-linux-arm64-gnu@16.0.3':
     optional: true
 
-  '@next/swc-linux-arm64-musl@16.0.2-canary.12':
+  '@next/swc-linux-arm64-musl@16.0.3':
     optional: true
 
-  '@next/swc-linux-x64-gnu@16.0.2-canary.12':
+  '@next/swc-linux-x64-gnu@16.0.3':
     optional: true
 
-  '@next/swc-linux-x64-musl@16.0.2-canary.12':
+  '@next/swc-linux-x64-musl@16.0.3':
     optional: true
 
-  '@next/swc-win32-arm64-msvc@16.0.2-canary.12':
+  '@next/swc-win32-arm64-msvc@16.0.3':
     optional: true
 
-  '@next/swc-win32-x64-msvc@16.0.2-canary.12':
+  '@next/swc-win32-x64-msvc@16.0.3':
     optional: true
 
   '@radix-ui/number@1.1.1': {}
@@ -5575,25 +5606,25 @@ snapshots:
 
   '@tanstack/table-core@8.21.3': {}
 
-  '@tiptap/core@3.8.0(@tiptap/pm@3.8.0)':
+  '@tiptap/core@3.11.0(@tiptap/pm@3.11.0)':
     dependencies:
-      '@tiptap/pm': 3.8.0
+      '@tiptap/pm': 3.11.0
 
-  '@tiptap/extension-bubble-menu@3.8.0(@tiptap/core@3.8.0(@tiptap/pm@3.8.0))(@tiptap/pm@3.8.0)':
-    dependencies:
-      '@floating-ui/dom': 1.7.4
-      '@tiptap/core': 3.8.0(@tiptap/pm@3.8.0)
-      '@tiptap/pm': 3.8.0
-    optional: true
-
-  '@tiptap/extension-floating-menu@3.8.0(@floating-ui/dom@1.7.4)(@tiptap/core@3.8.0(@tiptap/pm@3.8.0))(@tiptap/pm@3.8.0)':
+  '@tiptap/extension-bubble-menu@3.8.0(@tiptap/core@3.11.0(@tiptap/pm@3.11.0))(@tiptap/pm@3.11.0)':
     dependencies:
       '@floating-ui/dom': 1.7.4
-      '@tiptap/core': 3.8.0(@tiptap/pm@3.8.0)
-      '@tiptap/pm': 3.8.0
+      '@tiptap/core': 3.11.0(@tiptap/pm@3.11.0)
+      '@tiptap/pm': 3.11.0
     optional: true
 
-  '@tiptap/pm@3.8.0':
+  '@tiptap/extension-floating-menu@3.8.0(@floating-ui/dom@1.7.4)(@tiptap/core@3.11.0(@tiptap/pm@3.11.0))(@tiptap/pm@3.11.0)':
+    dependencies:
+      '@floating-ui/dom': 1.7.4
+      '@tiptap/core': 3.11.0(@tiptap/pm@3.11.0)
+      '@tiptap/pm': 3.11.0
+    optional: true
+
+  '@tiptap/pm@3.11.0':
     dependencies:
       prosemirror-changeset: 2.3.1
       prosemirror-collab: 1.3.1
@@ -5614,10 +5645,10 @@ snapshots:
       prosemirror-transform: 1.10.4
       prosemirror-view: 1.41.3
 
-  '@tiptap/react@3.8.0(@floating-ui/dom@1.7.4)(@tiptap/core@3.8.0(@tiptap/pm@3.8.0))(@tiptap/pm@3.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
+  '@tiptap/react@3.8.0(@floating-ui/dom@1.7.4)(@tiptap/core@3.11.0(@tiptap/pm@3.11.0))(@tiptap/pm@3.11.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
     dependencies:
-      '@tiptap/core': 3.8.0(@tiptap/pm@3.8.0)
-      '@tiptap/pm': 3.8.0
+      '@tiptap/core': 3.11.0(@tiptap/pm@3.11.0)
+      '@tiptap/pm': 3.11.0
       '@types/react': 19.2.2
       '@types/react-dom': 19.2.2(@types/react@19.2.2)
       '@types/use-sync-external-store': 0.0.6
@@ -5626,8 +5657,8 @@ snapshots:
       react-dom: 19.2.0(react@19.2.0)
       use-sync-external-store: 1.6.0(react@19.2.0)
     optionalDependencies:
-      '@tiptap/extension-bubble-menu': 3.8.0(@tiptap/core@3.8.0(@tiptap/pm@3.8.0))(@tiptap/pm@3.8.0)
-      '@tiptap/extension-floating-menu': 3.8.0(@floating-ui/dom@1.7.4)(@tiptap/core@3.8.0(@tiptap/pm@3.8.0))(@tiptap/pm@3.8.0)
+      '@tiptap/extension-bubble-menu': 3.8.0(@tiptap/core@3.11.0(@tiptap/pm@3.11.0))(@tiptap/pm@3.11.0)
+      '@tiptap/extension-floating-menu': 3.8.0(@floating-ui/dom@1.7.4)(@tiptap/core@3.11.0(@tiptap/pm@3.11.0))(@tiptap/pm@3.11.0)
     transitivePeerDependencies:
       - '@floating-ui/dom'
 
@@ -5838,10 +5869,12 @@ snapshots:
       react: 19.2.0
       react-dom: 19.2.0(react@19.2.0)
       react-easy-sort: 1.8.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      tailwind-merge: 3.3.1
+      tailwind-merge: 3.4.0
     transitivePeerDependencies:
       - '@types/react'
       - '@types/react-dom'
+
+  emoji-mart@5.6.0: {}
 
   enhanced-resolve@5.18.3:
     dependencies:
@@ -6062,17 +6095,17 @@ snapshots:
       react: 19.2.0
       react-dom: 19.2.0(react@19.2.0)
 
-  next13-progressbar@1.2.2(next@16.0.2-canary.12(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0):
+  next13-progressbar@1.2.2(next@16.0.3(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0):
     dependencies:
       '@types/nprogress': 0.2.3
-      next: 16.0.2-canary.12(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      next: 16.0.3(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       nprogress: 0.2.0
       prop-types: 15.8.1
       react: 19.2.0
 
-  next@16.0.2-canary.12(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0):
+  next@16.0.3(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0):
     dependencies:
-      '@next/env': 16.0.2-canary.12
+      '@next/env': 16.0.3
       '@swc/helpers': 0.5.15
       caniuse-lite: 1.0.30001751
       postcss: 8.4.31
@@ -6080,14 +6113,14 @@ snapshots:
       react-dom: 19.2.0(react@19.2.0)
       styled-jsx: 5.1.6(react@19.2.0)
     optionalDependencies:
-      '@next/swc-darwin-arm64': 16.0.2-canary.12
-      '@next/swc-darwin-x64': 16.0.2-canary.12
-      '@next/swc-linux-arm64-gnu': 16.0.2-canary.12
-      '@next/swc-linux-arm64-musl': 16.0.2-canary.12
-      '@next/swc-linux-x64-gnu': 16.0.2-canary.12
-      '@next/swc-linux-x64-musl': 16.0.2-canary.12
-      '@next/swc-win32-arm64-msvc': 16.0.2-canary.12
-      '@next/swc-win32-x64-msvc': 16.0.2-canary.12
+      '@next/swc-darwin-arm64': 16.0.3
+      '@next/swc-darwin-x64': 16.0.3
+      '@next/swc-linux-arm64-gnu': 16.0.3
+      '@next/swc-linux-arm64-musl': 16.0.3
+      '@next/swc-linux-x64-gnu': 16.0.3
+      '@next/swc-linux-x64-musl': 16.0.3
+      '@next/swc-win32-arm64-msvc': 16.0.3
+      '@next/swc-win32-x64-msvc': 16.0.3
       babel-plugin-react-compiler: 1.0.0
       sharp: 0.34.4
     transitivePeerDependencies:
@@ -6589,6 +6622,8 @@ snapshots:
       use-sync-external-store: 1.6.0(react@19.2.0)
 
   tailwind-merge@3.3.1: {}
+
+  tailwind-merge@3.4.0: {}
 
   tailwindcss@4.1.16: {}
 

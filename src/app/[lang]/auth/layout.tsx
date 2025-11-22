@@ -13,10 +13,15 @@ const AuthLayout = async (props: Props) => {
   const diction = await getDictionary(lang as Locale);
   return (
     <main className=" flex  w-full">
-       <div className=" items-center justify-between flex min-h-screen  w-full">
-        <AuthLayoutImage diction={diction.auth.leftSide} lang={lang as Locale} />
+      <div className=" items-center justify-between flex min-h-screen  w-full">
+        <AuthLayoutImage
+          diction={diction.auth.leftSide}
+          lang={lang as Locale}
+        />
       </div>
-      <AuthLayoutContent diction={diction.auth.setting} lang={lang as Locale}>{children}</AuthLayoutContent>
+      <AuthLayoutContent diction={diction.auth.setting} lang={lang as Locale}>
+        {children}
+      </AuthLayoutContent>
     </main>
   );
 };

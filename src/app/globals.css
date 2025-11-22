@@ -211,3 +211,7 @@
 .h3 {
   @apply font-semibold text-3xl
 }
+
+.border-sm {
+  @apply border-base-content/10 border
+}

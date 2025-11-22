@@ -1,40 +1,109 @@
 "use client";
 
-import SmartPagination from "@/components/common/smart-pagination";
-import { useState } from "react";
+import MessageInput from "@/components/common/form/message-input/message-input";
+import { useEffect, useRef, useState } from "react";
 
-const TestingPages = () => {
-  const [currentPage, setCurrentPage] = useState(5); // initial page
-  const totalPages = 100;
+export const dynamic = "force-dynamic";
 
-  const handlePageChange = (page: number) => {
-    console.log("Switched to page:", page);
-    setCurrentPage(page);
+interface Message {
+  id: string;
+  text: string;
+  sender: "me" | "them";
+  timestamp: Date;
+}
+
+const ChatDemoPage = () => {
+  const [inputValue, setInputValue] = useState("");
+
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: "1",
+      text: `Hello! Try sending a message with <b>bold</b> text or an emoji 😄.`,
+      sender: "them",
+      timestamp: new Date(Date.now() - 60000),
+    },
+  ]);
+
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const handleSendMessage = () => {
+    const plainText = inputValue.replace(/<[^>]*>/g, "").trim();
+    if (!plainText && !inputValue.includes("img")) return;
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: Date.now().toString(),
+        text: inputValue,
+        sender: "me",
+        timestamp: new Date(),
+      },
+    ]);
+
+    setInputValue("");
   };
 
   return (
-    <div className="grid place-content-center min-h-screen bg-base-200">
-      <div className="p-6 bg-base-100 rounded-xl shadow-md space-y-4">
-        <h2 className="text-center text-lg font-semibold">
-          📄 Smart Pagination Demo
-        </h2>
+    <div className="flex flex-col h-screen bg-base-200">
+      {/* Header */}
+      <header className="flex-none p-4 border-b border-base-300 bg-base-100 shadow">
+        <h1 className="font-bold text-lg">Rich Chat Message Demo</h1>
+      </header>
 
-        <SmartPagination
-          totalPages={totalPages}
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
-          maxVisible={10}
-          showNextPrev
-          variant="outline"
-          size="sm"
-        />
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        {messages.map((msg) => (
+          <div
+            key={msg.id}
+            className={`chat ${msg.sender === "me" ? "chat-end" : "chat-start"}`}
+          >
+            <div
+              className={`chat-bubble max-w-[75%] prose prose-sm dark:prose-invert break-words ${
+                msg.sender === "me"
+                  ? "chat-bubble-primary"
+                  : "chat-bubble-secondary"
+              }`}
+            >
+              <div
+                className=" "
+                dangerouslySetInnerHTML={{ __html: msg.text }}
+              />
+            </div>
 
-        <p className="text-center text-sm text-muted-foreground">
-          Current page: <span className="font-bold">{currentPage}</span>
-        </p>
+            <div className="chat-footer opacity-70 text-xs">
+              {msg.timestamp.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </div>
+          </div>
+        ))}
+
+        <div ref={bottomRef} />
+      </div>
+
+      {/* Input area */}
+      <div className="flex-none p-4">
+        <div className="max-w-4xl mx-auto">
+          <MessageInput
+            value={inputValue}
+            onChange={setInputValue}
+            onSend={handleSendMessage}
+            // className="w-full  rounded-xl"
+            placeholder="Type a message..."
+          />
+        </div>
       </div>
     </div>
   );
 };
 
-export default TestingPages;
+export default ChatDemoPage;

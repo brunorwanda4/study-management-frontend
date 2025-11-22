@@ -25,7 +25,11 @@ const WelcomePage = async (props: props) => {
           <AuthSetting lang={lang as Locale} diction={diction.auth.setting} />
         </div>
         <div className="flex flex-col items-center justify-center space-y-6">
-          <MyImage className="size-16" src="/logo.png" />
+          <MyImage
+            className="size-16"
+            src="/logo.svg"
+            classname="  object-contain"
+          />
         </div>
         <div className="mt-10 flex flex-col items-center justify-center space-y-1">
           <h1 className="text-2xl">

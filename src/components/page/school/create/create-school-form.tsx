@@ -46,15 +46,15 @@ import {
   schoolTypes,
 } from "@/lib/const/common-details-const";
 import {
-  schoolLabs,
   SchoolSportsExtracurricular,
+  schoolLabs,
 } from "@/lib/context/school.context";
 import { useToast } from "@/lib/context/toast/ToastContext";
 import {
-  type CreateSchool,
   CreateSchoolSchema,
+  type CreateSchool,
 } from "@/lib/schema/school/create-school-schema";
-import { type AuthContext, setAuthCookies } from "@/lib/utils/auth-context";
+import { setAuthCookies, type AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { useRouter } from "next/navigation";
 import MultipleSelector from "../../../ui/multiselect";
@@ -191,7 +191,12 @@ const CreateSchoolForm = ({ lang, auth }: Props) => {
           type: "success",
           title: (
             <div className="flex space-x-2">
-              <MyImage src={"/logo.png"} className="size-10" priority />
+              <MyImage
+                src={"/logo.svg"}
+                className="size-10"
+                priority
+                classname="  object-contain"
+              />
               <h3>space-together</h3>
             </div>
           ),

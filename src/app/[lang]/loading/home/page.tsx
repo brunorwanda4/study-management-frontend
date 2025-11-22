@@ -10,7 +10,7 @@ const LoadingPage = () => {
         </div>
         <div className="grid place-content-center">
           <div className="flex flex-col items-center justify-center space-y-6">
-            <MyImage className="size-16" src="/logo.png" />
+            <MyImage className="size-16" src="/logo.svg" />
           </div>
         </div>
         <div className="flex flex-col space-y-4">

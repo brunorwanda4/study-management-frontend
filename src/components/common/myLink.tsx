@@ -48,7 +48,7 @@ const MyLink = ({
     return (
       <Link href={href} className={className}>
         <Button {...button} className={cn("", classname)}>
-          {roleTag && <span className={"text-muted text-sm"}>{roleTag}/ </span>}
+          {roleTag && <span className={"text-neutral text-sm"}>{roleTag}/ </span>}
           {children}
           {loading && <LoadingIndicator />}
         </Button>
@@ -58,7 +58,7 @@ const MyLink = ({
 
   return (
     <Link href={href} className={className || ""}>
-      {roleTag && <span className={"text-muted text-sm"}>{roleTag}/ </span>}
+      {roleTag && <span className={"text-neutral text-sm"}>{roleTag}/ </span>}
       {children} {loading && <LoadingIndicator />}
     </Link>
   );
