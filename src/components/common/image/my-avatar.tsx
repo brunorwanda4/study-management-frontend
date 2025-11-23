@@ -6,7 +6,7 @@ import { getInitialsUsername } from "@/lib/utils/generate-username";
 export interface MyAvatarProps {
   role?: { role?: userRole | null; gender?: Gender | null };
   type?: "squircle" | "square" | "cycle";
-  size?: "default" | "lg" | "sm" | "xl" | "xs" | "2xl";
+  size?: "default" | "lg" | "sm" | "xl" | "xs" | "2xl" | "2xs";
   src?: string | null;
   alt?: string | null;
   className?: string;
@@ -38,7 +38,9 @@ const MyAvatar = ({
               ? "size-10 text-sm min-h-10 min-w-10"
               : size === "xs"
                 ? "size-8 text-xs min-h-8 min-w-8"
-                : "size-12 text-sm min-h-12 min-w-12";
+                : size === "2xs"
+                  ? "size-6 text-xs min-h-6 min-w-6"
+                  : "size-12 text-sm min-h-12 min-w-12";
 
   // ✅ type shape classes
   const class_type =

@@ -17,17 +17,23 @@ import { Separator } from "@/components/ui/separator";
 import AddAnnouncementDialog from "../dialog/add-announcement-dialog";
 import DeleteAnnouncementDialog from "../dialog/delete-announcement-dialog";
 import PostCardFooter from "@/components/cards/post-card-footer";
+import { cn } from "@/lib/utils";
 
 interface AnnouncementCardProps {
-  sender: Pick<
+  sender?: Pick<
     UserModel,
     "_id" | "name" | "username" | "email" | "id" | "role"
   >;
+  isCommentOpen?: boolean;
 }
 
-const AnnouncementCard = ({ sender }: AnnouncementCardProps) => {
+const AnnouncementCard = ({ sender, isCommentOpen }: AnnouncementCardProps) => {
   return (
-    <Card>
+    <Card
+      className={cn(
+        isCommentOpen && "border-none border-0 shadow-none p-0 pt-0 pb-0",
+      )}
+    >
       <CardHeader className="  flex flex-row items-center justify-between">
         <UserSmCard role="Teacher" name="Sender name" />
         <div className=" flex items-center gap-1">
@@ -38,8 +44,8 @@ const AnnouncementCard = ({ sender }: AnnouncementCardProps) => {
                 <FaEllipsisVertical className="text-base-content/50" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent>
-              <div className="flex flex-col gap-2">
+            <PopoverContent className=" p-2 gap-0 space-y-0">
+              <div className="flex flex-col gap-1">
                 <Button
                   library="daisy"
                   variant="ghost"
@@ -76,7 +82,7 @@ const AnnouncementCard = ({ sender }: AnnouncementCardProps) => {
         occaecat cupidatat non proident, sunt in culpa qui officia deserunt
         mollit anim id est laborum.
       </CardContent>
-      <PostCardFooter />
+      <PostCardFooter isCommentOpen={isCommentOpen} />
     </Card>
   );
 };

@@ -24,7 +24,7 @@ const DeleteAnnouncementDialog = ({
           size={"sm"}
           type="button"
           variant={"ghost"}
-          className=" hover:text-error justify-start flex"
+          className=" hover:text-error justify-start flex w-full"
           library="daisy"
         >
           Delete
@@ -36,19 +36,19 @@ const DeleteAnnouncementDialog = ({
           <DialogDescription>
             Are you sure you want to delete this announcement?
           </DialogDescription>
-          <DialogFooter>
-            <DialogClose>
-              <Button type="button" variant={"outline"} library="daisy">
-                Cancel
-              </Button>
-            </DialogClose>
-            <DialogClose>
-              <Button type="button" variant={"error"} library="daisy">
-                Delete
-              </Button>
-            </DialogClose>
-          </DialogFooter>
         </DialogHeader>
+        <DialogFooter>
+          <DialogClose>
+            <Button type="button" variant={"outline"} library="daisy">
+              Cancel
+            </Button>
+          </DialogClose>
+          <DialogClose>
+            <Button type="button" variant={"error"} library="daisy">
+              Delete
+            </Button>
+          </DialogClose>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

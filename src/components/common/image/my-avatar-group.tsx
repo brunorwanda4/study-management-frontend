@@ -8,7 +8,7 @@ import MyAvatar, { type MyAvatarProps } from "./my-avatar";
 interface AvatarGroupProps {
   items: Pick<MyAvatarProps, "alt" | "src" | "role">[];
   limit?: number;
-  size?: "default" | "lg" | "sm" | "xl" | "xs" | "2xl";
+  size?: "default" | "lg" | "sm" | "xl" | "xs" | "2xl" | "2xs";
   type?: "squircle" | "square" | "cycle";
   className?: string;
 }
@@ -38,7 +38,9 @@ const MyAvatarGroup = ({
               ? "size-10 text-sm min-h-10 min-w-10"
               : size === "xs"
                 ? "size-8 text-xs min-h-8 min-w-8"
-                : "size-12 text-sm min-h-12 min-w-12";
+                : size === "2xs"
+                  ? "size-6 text-xs min-h-6 min-w-6"
+                  : "size-12 text-sm min-h-12 min-w-12";
 
   // 3. Shape classes (Replicated for consistency)
   const shapeClasses =
@@ -52,6 +54,7 @@ const MyAvatarGroup = ({
     <div
       className={cn(
         "flex items-center -space-x-4 rtl:space-x-reverse", // -space-x-4 creates the overlap
+        size === "2xs" && " -space-x-2",
         className,
       )}
     >
