@@ -5,6 +5,7 @@ import { IoMdShare } from "react-icons/io";
 import MyAvatar from "../common/image/my-avatar";
 import CommentsDialog from "../common/dialog/comments-dialog";
 import LikesDialog from "../common/dialog/likes-dialog";
+import ReadDialog from "../common/dialog/read-dialog";
 
 type components = "like" | "comment" | "save" | "share" | "read";
 
@@ -18,7 +19,7 @@ const PostCardFooter = ({
   isCommentOpen,
 }: propsPostCardFooter) => {
   return (
-    <CardFooter className=" flex flex-col justify-start items-start">
+    <CardFooter className=" flex flex-col justify-start items-start [.border-t]:pt-2">
       <div className="flex justify-between py-2 w-full">
         <div className=" flex items-center">
           {enabledComponents.includes("like") && (
@@ -27,12 +28,7 @@ const PostCardFooter = ({
               <span className=" sr-only">43 Likes</span>
             </Button>
           )}
-          {enabledComponents.includes("read") && (
-            <Button title="Read" library="daisy" variant="ghost" size="md">
-              <FaReadme size={28} />
-              <span className=" sr-only">43 Reads</span>
-            </Button>
-          )}
+          {enabledComponents.includes("read") && <ReadDialog />}
           {!isCommentOpen && enabledComponents.includes("comment") && (
             <CommentsDialog dialogTriggerType="icon" />
           )}
@@ -47,8 +43,10 @@ const PostCardFooter = ({
         </div>
       </div>
       <div className="   space-y-2">
-        <LikesDialog dialogTriggerType="groupUsers" />
-        {!isCommentOpen && (
+        {enabledComponents.includes("like") && (
+          <LikesDialog dialogTriggerType="groupUsers" />
+        )}
+        {!isCommentOpen && enabledComponents.includes("comment") && (
           <div className=" flex gap-2">
             <MyAvatar size="xs" />
             <div>
@@ -63,7 +61,9 @@ const PostCardFooter = ({
             </div>
           </div>
         )}
-        {!isCommentOpen && <CommentsDialog dialogTriggerType="button" />}
+        {!isCommentOpen && enabledComponents.includes("comment") && (
+          <CommentsDialog dialogTriggerType="button" />
+        )}
       </div>
     </CardFooter>
   );

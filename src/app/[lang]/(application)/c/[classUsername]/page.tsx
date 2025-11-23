@@ -1,4 +1,5 @@
 import AnnouncementCard from "@/components/common/cards/announcement-card";
+import NoteCard from "@/components/common/cards/note-card";
 import AddAnnouncementDialog from "@/components/common/dialog/add-announcement-dialog";
 import ClassHero from "@/components/page/class/class-hero";
 import TeacherSubjectCard from "@/components/page/class/teacher-sujects-card";
@@ -40,6 +41,7 @@ const ClassUsernamePage = async (props: Props) => {
           <AddAnnouncementDialog />
           <TeacherSubjectCard />
           <AnnouncementCard />
+          <NoteCard />
         </div>
         <div className=" w-1/3">time table here</div>
       </main>
