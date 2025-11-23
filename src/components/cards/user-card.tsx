@@ -9,6 +9,7 @@ export interface UserSmCardProps {
   link?: string;
   gender?: Gender;
   role?: string;
+  date?: string;
 }
 
 export const UserSmCard = ({
@@ -17,6 +18,7 @@ export const UserSmCard = ({
   gender,
   link,
   role,
+  date,
 }: UserSmCardProps) => {
   const Image = <MyAvatar src={image} size="sm" alt={name} />;
   return (
@@ -27,6 +29,9 @@ export const UserSmCard = ({
           <p className=" gap-2 leading-4">{name} </p>
           {gender && (
             <span className=" text-sm text-base-content/50">{gender}</span>
+          )}
+          {date && (
+            <span className=" text-sm text-base-content/50">{date}</span>
           )}
         </div>
         <div className="flex flex-row gap-2 items-center">

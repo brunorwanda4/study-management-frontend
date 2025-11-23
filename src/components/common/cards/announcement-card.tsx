@@ -35,9 +35,9 @@ const AnnouncementCard = ({ sender, isCommentOpen }: AnnouncementCardProps) => {
       )}
     >
       <CardHeader className="  flex flex-row items-center justify-between">
-        <UserSmCard role="Teacher" name="Sender name" />
+        <UserSmCard role="Teacher" name="Sender name" date="2hrs ago" />
         <div className=" flex items-center gap-1">
-          <span className="text-sm text-base-content/50">2 hrs ago</span>
+          <span className="text-sm text-base-content/50">Announcement</span>
           <Popover>
             <PopoverTrigger asChild>
               <Button library="daisy" variant="ghost" size={"sm"} type="button">

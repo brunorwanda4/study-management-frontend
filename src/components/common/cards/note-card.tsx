@@ -1,10 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
-import type { UserModel } from "@/lib/schema/user/user-schema";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { UserSmCard } from "@/components/cards/user-card";
 import {
   Popover,
@@ -34,9 +28,9 @@ const NoteCard = ({ note, isCommentOpen }: NoteCardProps) => {
       )}
     >
       <CardHeader className="  flex flex-row items-center justify-between">
-        <UserSmCard role="Teacher" name="Teacher name" />
+        <UserSmCard role="Teacher" name="Teacher name" date="2hrs ago" />
         <div className=" flex items-center gap-1">
-          <span className="text-sm text-base-content/50">2 hrs ago</span>
+          <span className="text-sm text-base-content/50">Notes</span>
           <Popover>
             <PopoverTrigger asChild>
               <Button library="daisy" variant="ghost" size={"sm"} type="button">
