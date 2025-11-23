@@ -1,23 +1,18 @@
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
-import type { UserModel } from "@/lib/schema/user/user-schema";
+import PostCardFooter from "@/components/cards/post-card-footer";
 import { UserSmCard } from "@/components/cards/user-card";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { FaEllipsisVertical } from "react-icons/fa6";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import type { UserModel } from "@/lib/schema/user/user-schema";
+import { cn } from "@/lib/utils";
+import { FaEllipsisVertical } from "react-icons/fa6";
 import AddAnnouncementDialog from "../dialog/add-announcement-dialog";
 import DeleteAnnouncementDialog from "../dialog/delete-announcement-dialog";
-import PostCardFooter from "@/components/cards/post-card-footer";
-import { cn } from "@/lib/utils";
 
 interface AnnouncementCardProps {
   sender?: Pick<
@@ -83,7 +78,7 @@ const AnnouncementCard = ({ sender, isCommentOpen }: AnnouncementCardProps) => {
         mollit anim id est laborum.
       </CardContent>
       <PostCardFooter
-        enabledComponents={["comment", "save", "share"]}
+        enabledComponents={["comment", "like", "save", "share"]}
         isCommentOpen={isCommentOpen}
       />
     </Card>

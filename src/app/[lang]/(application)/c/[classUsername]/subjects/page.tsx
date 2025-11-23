@@ -1,5 +1,6 @@
 import SubjectCard from "@/components/cards/subject-card";
-import NotFoundPage from "@/components/page/not-found";
+import SubjectDialog from "@/components/page/class/dialog/subject-dialog";
+import { Separator } from "@/components/ui/separator";
 import type { Locale } from "@/i18n";
 import { authContext } from "@/lib/utils/auth-context";
 import { redirect } from "next/navigation";
@@ -16,13 +17,18 @@ const ClassSubjectPage = async (props: Props) => {
     return redirect(`/${lang}/auth/login`);
   }
 
-  const classModules = { data: [] };
-  if (!classModules.data) return <NotFoundPage />;
   return (
-    <div className="grid grid-cols-3 gap-4">
-      {classModules.data.map((item, i) => {
-        return <SubjectCard key={i} module={item} lang={lang} />;
-      })}
+    <div className=" flex  flex-col">
+      <div className=" flex flex-row justify-between w-full mt-2">
+        <h3 className=" h3">12 Subjects</h3>
+        <SubjectDialog />
+      </div>
+      <Separator />
+      <main className=" space-y-4">
+        {[...Array(12).keys()].map((index) => (
+          <SubjectCard key={index} />
+        ))}
+      </main>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 "use client";
 import MyLink from "@/components/common/myLink";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Item, ItemContent, ItemHeader, ItemTitle } from "@/components/ui/item";
 import { Label } from "@/components/ui/label";

@@ -19,11 +19,13 @@ const ClassNavbar = ({ lang, classUsername }: props) => {
     "timetable",
     "settings",
   ] as const;
+
   return (
     <nav className="w-full gap-8 flex flex-row border-b border-base-content/50">
       {pages.map((page) => {
         const isActive = () => {
-          if (page === "overview" && `/${lang}/c/${classUsername}`) return true;
+          if (page === "overview" && pathname === `/${lang}/c/${classUsername}`)
+            return true;
           return pathname === `/${lang}/c/${classUsername}/${page}`;
         };
         return (
