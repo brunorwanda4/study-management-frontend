@@ -1,53 +1,45 @@
 import { Button } from "../ui/button";
-import { FaComment, FaReadme, FaRegBookmark, FaShare } from "react-icons/fa6";
-import { AiOutlineLike } from "react-icons/ai";
+import { FaRegHeart, FaReadme, FaRegBookmark } from "react-icons/fa6";
 import { CardFooter } from "../ui/card";
+import { IoMdShare } from "react-icons/io";
+import { MdOutlineInsertComment } from "react-icons/md";
 
-// interface props {
-//   postRole?:
-//     | "IMAGE"
-//     | "NOTES"
-//     | "VIDEO"
-//     | "AUDIO"
-//     | "BOOK"
-//     | "LINK"
-//     | "CODE"
-//     | "OTHER";
-// }
+type components = "like" | "comment" | "save" | "share" | "read";
 
-interface props {
-  postRole?:
-    | "NOTES"
-    | "IMAGE"
-    | "VIDEO"
-    | "POST"
-    | "ACTIVITY"
-    | "BOOK"
-    | "TEXT";
+interface propsPostCardFooter {
+  enabledComponents?: components[];
 }
 
-const PostCardFooter = ({ postRole }: props) => {
+const PostCardFooter = ({
+  enabledComponents = ["save", "comment", "like", "share", "read"],
+}: propsPostCardFooter) => {
   return (
     <CardFooter className=" flex justify-between px-4 py-2">
       <div className=" flex items-center">
-        <Button library="daisy" variant="ghost" size="md">
-          {postRole === "NOTES" || postRole === "BOOK" ? (
+        {enabledComponents.includes("like") && (
+          <Button title="Like" library="daisy" variant="ghost" size="md">
+            <FaRegHeart size={28} />
+            <span>43</span>
+          </Button>
+        )}
+        {enabledComponents.includes("read") && (
+          <Button title="Read" library="daisy" variant="ghost" size="md">
             <FaReadme size={28} />
-          ) : (
-            <AiOutlineLike size={28} />
-          )}
-          <span>43</span>
-        </Button>
-        <Button library="daisy" variant="ghost" size="md">
-          <FaComment size={28} />
-          <span>32</span>
-        </Button>
+            <span>43</span>
+          </Button>
+        )}
+        {enabledComponents.includes("comment") && (
+          <Button title="comments" library="daisy" variant="ghost" size="md">
+            <MdOutlineInsertComment size={28} />
+            <span>32</span>
+          </Button>
+        )}
       </div>
       <div className=" flex items-center">
-        <Button library="daisy" variant="ghost" size="md">
-          <FaShare size={28} />
+        <Button title="Share" library="daisy" variant="ghost" size="md">
+          <IoMdShare size={28} />
         </Button>
-        <Button library="daisy" variant="ghost" size="md">
+        <Button title="Save" library="daisy" variant="ghost" size="md">
           <FaRegBookmark size={28} />
         </Button>
       </div>
