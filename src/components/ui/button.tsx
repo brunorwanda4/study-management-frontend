@@ -137,7 +137,7 @@ const Button = React.forwardRef<
   const {
     className,
     asChild = false,
-    library = "shadcn",
+    library = "daisy",
     role,
     children,
     disabled,
