@@ -2,11 +2,29 @@
 
 import { cn } from "@/lib/utils";
 import Link, { useLinkStatus } from "next/link";
+import type { UrlObject } from "node:url";
 import {
   Button,
   type DaisyButtonProps,
   type ShadcnButtonProps,
 } from "../ui/button";
+
+interface LoadingIndicatorTextProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+export const LoadingIndicatorText = ({
+  children,
+  className,
+}: LoadingIndicatorTextProps) => {
+  const { pending } = useLinkStatus();
+  return (
+    <div className={cn(className, pending && "skeleton skeleton-text")}>
+      {children}
+    </div>
+  );
+};
 
 interface props {
   className?: string;
@@ -24,7 +42,7 @@ export function LoadingIndicator({ className }: props) {
 }
 
 type Props = {
-  href: string;
+  href: UrlObject | __next_route_internal_types__.RouteImpl<string>;
   type?: "button" | "link";
   className?: string;
   children: React.ReactNode;
@@ -47,21 +65,47 @@ const MyLink = ({
   if (type === "button" || button) {
     return (
       <Link href={href} className={className}>
-        <Button {...button} className={cn("", classname)}>
-          {roleTag && (
-            <span className={"text-neutral text-sm"}>{roleTag}/ </span>
+        <Button {...button} className={cn(classname)}>
+          {loading ? (
+            <LoadingIndicatorText className=" flex flex-row items-center gap-2">
+              {roleTag && (
+                <span className={"text-neutral text-sm"}>{roleTag}/ </span>
+              )}
+              {children}
+            </LoadingIndicatorText>
+          ) : (
+            <div className=" flex flex-row items-center gap-2">
+              {roleTag && (
+                <span className={"text-neutral text-sm"}>{roleTag}/ </span>
+              )}
+              {children}
+            </div>
           )}
-          {children}
-          {loading && <LoadingIndicator />}
         </Button>
       </Link>
     );
   }
 
   return (
-    <Link href={href} className={className || ""}>
-      {roleTag && <span className={"text-neutral text-sm"}>{roleTag}/ </span>}
-      {children} {loading && <LoadingIndicator />}
+    <Link
+      href={href}
+      className={cn(loading && "skeleton skeleton-text", className || "")}
+    >
+      {loading ? (
+        <LoadingIndicatorText className=" flex flex-row items-center gap-2">
+          {roleTag && (
+            <span className={"text-neutral text-sm"}>{roleTag}/ </span>
+          )}
+          {children} {loading}
+        </LoadingIndicatorText>
+      ) : (
+        <div className=" flex flex-row items-center gap-2">
+          {roleTag && (
+            <span className={"text-neutral text-sm"}>{roleTag}/ </span>
+          )}
+          {children} {loading}
+        </div>
+      )}
     </Link>
   );
 };

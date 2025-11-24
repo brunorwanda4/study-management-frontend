@@ -226,8 +226,8 @@ importers:
         specifier: 1.0.0
         version: 1.0.0
       daisyui:
-        specifier: ^5.3.9
-        version: 5.3.9
+        specifier: ^5.5.5
+        version: 5.5.5
       tailwindcss:
         specifier: ^4
         version: 4.1.16
@@ -2461,8 +2461,8 @@ packages:
     resolution: {integrity: sha512-ndfJ/JxxMd3nw31uyKoY2naivF+r29V+Lc0svZxe1JvvIRmi8hUsrMvdOwgS1o6uBHmiz91geQ0ylPP0aj1VUA==}
     engines: {node: '>=12'}
 
-  daisyui@5.3.9:
-    resolution: {integrity: sha512-741x1pGGSGHcrBYtdE7iKbqW1OoiijYdAZ8oJPZR9MhSKLcMBlHjKfN3YlM2/K7t5jd7O0sg4SqkVNPylalRFw==}
+  daisyui@5.5.5:
+    resolution: {integrity: sha512-ekvI93ZkWIJoCOtDl0D2QMxnWvTejk9V5nWBqRv+7t0xjiBXqAK5U6o6JE2RPvlIC3EqwNyUoIZSdHX9MZK3nw==}
 
   date-fns-jalali@4.1.0-0:
     resolution: {integrity: sha512-hTIP/z+t+qKwBDcmmsnmjWTduxCg+5KfdqWQvb2X/8C9+knYY6epN/pfxdDuyVlSVeFz0sM5eEfwIUQ70U4ckg==}
@@ -5839,7 +5839,7 @@ snapshots:
 
   d3-timer@3.0.1: {}
 
-  daisyui@5.3.9: {}
+  daisyui@5.5.5: {}
 
   date-fns-jalali@4.1.0-0: {}
 

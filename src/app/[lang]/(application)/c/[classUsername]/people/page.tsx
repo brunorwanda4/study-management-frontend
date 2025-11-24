@@ -1,6 +1,5 @@
-import ClassStudentCard from "@/components/page/class/cards/class-students-card";
-import ClassTeacherCard from "@/components/page/class/cards/class-teachers-card";
-import NotFoundPage from "@/components/page/not-found";
+import { UserSmCard } from "@/components/cards/user-card";
+import PeoplePageFilter from "@/components/page/class/people/people-page-filter";
 import type { Locale } from "@/i18n";
 import { authContext } from "@/lib/utils/auth-context";
 import { redirect } from "next/navigation";
@@ -17,18 +16,57 @@ const ClassIdPeoplePage = async (props: Props) => {
     return redirect(`/${lang}/auth/login`);
   }
 
-  const student = { data: [] };
-  if (!student.data) {
-    return <NotFoundPage />;
-  }
-
   return (
-    <div className="flex w-full space-x-4">
-      <div className="w-1/2">
-        <ClassStudentCard student={student.data || []} lang={lang} />
+    <div className="flex flex-col w-full space-y-4">
+      <div className=" flex flex-col gap-2 w-full mt-2">
+        <h3 className=" h3">42 People</h3>
+        <PeoplePageFilter auth={auth} />
       </div>
-      <div className="w-1/2">
-        <ClassTeacherCard lang={lang} clsId={classId} />
+      <div className=" flex flex-col gap-2">
+        <div className=" flex flex-row justify-between  w-full mt-2">
+          <h3 className=" h5">9 Teachers</h3>
+          <div className=" flex gap-2">
+            <span>5 Male</span>
+            <span>4 Female</span>
+          </div>
+        </div>
+        {/*Teachers*/}
+        <div className=" flex flex-col gap-2">
+          {[...Array(6)].map((_, t) => {
+            return (
+              <UserSmCard
+                key={t}
+                showMessage
+                subjects={["Kinyarwanda", "English"]}
+                name="Rwanda Bruno"
+                gender="MALE"
+              />
+            );
+          })}
+        </div>
+      </div>
+      {/*Students*/}
+      <div className=" flex flex-col gap-2">
+        <div className=" flex flex-row justify-between  w-full mt-2">
+          <h3 className=" h5">32 Students</h3>
+          <div className=" flex gap-2">
+            <span>5 Male</span>
+            <span>4 Female</span>
+          </div>
+        </div>
+        {/*Teachers*/}
+        <div className=" flex flex-col gap-2">
+          {[...Array(6)].map((_, t) => {
+            return (
+              <UserSmCard
+                key={t}
+                showMessage
+                name="Rwanda Bruno"
+                gender="MALE"
+              />
+            );
+          })}
+        </div>
       </div>
     </div>
   );

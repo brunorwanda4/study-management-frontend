@@ -1,6 +1,8 @@
 "use client";
 
-import MessageInput from "@/components/common/form/message-input/message-input";
+import MyLink, { LoadingIndicator } from "@/components/common/myLink";
+import { cn } from "@/lib/utils";
+import { useLinkStatus } from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 export const dynamic = "force-dynamic";
@@ -11,6 +13,17 @@ interface Message {
   sender: "me" | "them";
   timestamp: Date;
 }
+
+interface TestProps {
+  children: React.ReactNode;
+}
+
+const TestLoading = ({ children }: TestProps) => {
+  const { pending } = useLinkStatus();
+  return (
+    <span className={cn(pending && "skeleton skeleton-text")}>{children}</span>
+  );
+};
 
 const ChatDemoPage = () => {
   const [inputValue, setInputValue] = useState("");
@@ -51,16 +64,43 @@ const ChatDemoPage = () => {
     setInputValue("");
   };
 
+  const { pending } = useLinkStatus();
+
   return (
     <div className="min-h-screen bg-base-200 grid place-content-center">
-      <div className="  bg-base-100 corner-notch border-error size-60 border-2 rounded-[100px] justify-center items-center flex">
-        Hello bruno
+      <div>
+        <MyLink
+          href={"/test/pages/slow"}
+          button={{ variant: "info", library: "daisy" }}
+        >
+          <TestLoading>Test Pending</TestLoading>
+        </MyLink>
+
+        <MyLink href="/test/pages/slow">
+          <div>
+            <LoadingIndicator />
+
+            <div
+              className={cn(
+                "size-52 rounded-2xl",
+                pending ? "bg-success" : "bg-error",
+              )}
+            />
+          </div>
+        </MyLink>
       </div>
+
+      <div ref={bottomRef} />
     </div>
   );
 };
 
 export default ChatDemoPage;
+
+///shapes
+// <div className="  bg-base-100 corner-notch border-error size-60 border-2 rounded-[100px] justify-center items-center flex">
+//   Hello bruno
+// </div>
 
 // return (
 //   <div className="flex flex-col h-screen bg-base-200">

@@ -1,17 +1,17 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import PostCardFooter from "@/components/cards/post-card-footer";
 import { UserSmCard } from "@/components/cards/user-card";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { FaEllipsisVertical } from "react-icons/fa6";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
+import { FaEllipsisVertical } from "react-icons/fa6";
 import AddAnnouncementDialog from "../dialog/add-announcement-dialog";
 import DeleteAnnouncementDialog from "../dialog/delete-announcement-dialog";
-import PostCardFooter from "@/components/cards/post-card-footer";
-import { cn } from "@/lib/utils";
 import MyLink from "../myLink";
 import FileCard from "./file-card";
 
@@ -78,7 +78,7 @@ const NoteCard = ({ note, isCommentOpen }: NoteCardProps) => {
         </div>
         <div className=" flex flex-col gap-2">
           <h5 className=" h5 text-center">Notes Title</h5>
-          <p>
+          <p className="line-clamp-3">
             lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
             ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
@@ -91,7 +91,7 @@ const NoteCard = ({ note, isCommentOpen }: NoteCardProps) => {
         <FileCard />
       </CardContent>
       <PostCardFooter
-        enabledComponents={["comment", "save", "share", "read"]}
+        enabledComponents={["comment", "like", "save", "share", "read"]}
         isCommentOpen={isCommentOpen}
       />
     </Card>

@@ -26,11 +26,12 @@ const ClassNavbar = ({ lang, classUsername }: props) => {
         const isActive = () => {
           if (page === "overview" && pathname === `/${lang}/c/${classUsername}`)
             return true;
-          return pathname === `/${lang}/c/${classUsername}/${page}`;
+          return pathname.startsWith(`/${lang}/c/${classUsername}/${page}`);
         };
         return (
           <MyLink
             key={page}
+            loading
             className={`capitalize py-1 ${isActive() && "border-b-3 border-b-primary"}`}
             href={`/${lang}/c/${classUsername}/${page === "overview" ? "" : page}`}
             button={{ variant: "ghost" }}

@@ -26,7 +26,7 @@ export default async function ApplicationLayout(props: Props) {
   const auth = await authContext();
 
   if (!auth) {
-    redirect(`/auth/login`);
+    redirect(`/${lang}/auth/login`);
   }
 
   const role = auth.user.role;
