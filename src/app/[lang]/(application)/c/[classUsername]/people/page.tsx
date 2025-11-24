@@ -22,50 +22,52 @@ const ClassIdPeoplePage = async (props: Props) => {
         <h3 className=" h3">42 People</h3>
         <PeoplePageFilter auth={auth} />
       </div>
-      <div className=" flex flex-col gap-2">
-        <div className=" flex flex-row justify-between  w-full mt-2">
-          <h3 className=" h5">9 Teachers</h3>
-          <div className=" flex gap-2">
-            <span>5 Male</span>
-            <span>4 Female</span>
+      <div className=" flex flex-col lg:flex-row-reverse gap-4 lg:gap-8 justify-between ">
+        <div className=" flex flex-col gap-2 lg:w-1/2">
+          <div className=" flex flex-row justify-between  w-full mt-2">
+            <h3 className=" h5">9 Teachers</h3>
+            <div className=" flex gap-2">
+              <span>5 Male</span>
+              <span>4 Female</span>
+            </div>
+          </div>
+          {/*Teachers*/}
+          <div className=" flex flex-col gap-2">
+            {[...Array(6)].map((_, t) => {
+              return (
+                <UserSmCard
+                  key={t}
+                  showMessage
+                  subjects={["Kinyarwanda", "English"]}
+                  name="Rwanda Bruno"
+                  gender="MALE"
+                />
+              );
+            })}
           </div>
         </div>
-        {/*Teachers*/}
-        <div className=" flex flex-col gap-2">
-          {[...Array(6)].map((_, t) => {
-            return (
-              <UserSmCard
-                key={t}
-                showMessage
-                subjects={["Kinyarwanda", "English"]}
-                name="Rwanda Bruno"
-                gender="MALE"
-              />
-            );
-          })}
-        </div>
-      </div>
-      {/*Students*/}
-      <div className=" flex flex-col gap-2">
-        <div className=" flex flex-row justify-between  w-full mt-2">
-          <h3 className=" h5">32 Students</h3>
-          <div className=" flex gap-2">
-            <span>5 Male</span>
-            <span>4 Female</span>
+        {/*Students*/}
+        <div className=" flex flex-col gap-2 lg:w-1/2">
+          <div className=" flex flex-row justify-between  w-full mt-2">
+            <h3 className=" h5">32 Students</h3>
+            <div className=" flex gap-2">
+              <span>5 Male</span>
+              <span>4 Female</span>
+            </div>
           </div>
-        </div>
-        {/*Teachers*/}
-        <div className=" flex flex-col gap-2">
-          {[...Array(6)].map((_, t) => {
-            return (
-              <UserSmCard
-                key={t}
-                showMessage
-                name="Rwanda Bruno"
-                gender="MALE"
-              />
-            );
-          })}
+          {/*Teachers*/}
+          <div className=" flex flex-col gap-2">
+            {[...Array(6)].map((_, t) => {
+              return (
+                <UserSmCard
+                  key={t}
+                  showMessage
+                  name="Student name"
+                  gender="MALE"
+                />
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>

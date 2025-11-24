@@ -21,7 +21,7 @@ const ClassNavbar = ({ lang, classUsername }: props) => {
   ] as const;
 
   return (
-    <nav className="w-full gap-8 flex flex-row border-b border-base-content/50">
+    <nav className="w-full gap-8 flex flex-row flex-wrap border-b border-base-content/50">
       {pages.map((page) => {
         const isActive = () => {
           if (page === "overview" && pathname === `/${lang}/c/${classUsername}`)
@@ -36,7 +36,7 @@ const ClassNavbar = ({ lang, classUsername }: props) => {
             href={`/${lang}/c/${classUsername}/${page === "overview" ? "" : page}`}
             button={{ variant: "ghost" }}
           >
-            {page}
+            <span className="capitalize">{page}</span>
           </MyLink>
         );
       })}

@@ -62,48 +62,6 @@ export default function UpdateClassPublicInfoForm({
   const handleSubmit = async (data: ClassUpdateDto) => {
     setError(undefined);
     setSuccess(undefined);
-
-    // startTransition(async () => {
-    //   try {
-    //     const result = await apiRequest<ClassUpdateDto, Class>("put", );
-
-    //     if (result.data) {
-    //       setSuccess("Class information updated successfully!");
-    //       showToast({
-    //         type: "success",
-    //         title: "Class update successful 🌻",
-    //         description: `${result.data.name} update class successful`,
-    //         duration: 4000,
-    //       });
-    //       // Reset form to new values
-    //       form.reset({
-    //         ...data,
-    //         // Ensure we don't reset to undefined values
-    //         name: result.data.name,
-    //         code: result.data.code,
-    //         username: result.data.username,
-    //         image: result.data.image || undefined,
-    //         classType: result.data.classType || undefined,
-    //         educationLever: result.data.educationLever || undefined,
-    //         curriculum: result.data.curriculum || undefined,
-    //       });
-    //     } else {
-    //       throw new Error(
-    //         result.message || "Failed to update class information",
-    //       );
-    //     }
-    //   } catch (error) {
-    //     const errorMessage =
-    //       error instanceof Error ? error.message : "An unknown error occurred";
-    //     showToast({
-    //       type: "error",
-    //       title: "Something went wrong to update class 🌋",
-    //       description: errorMessage,
-    //       duration: 3000,
-    //     });
-    //     setError(errorMessage);
-    //   }
-    // });
   };
 
   const renderFormField = (
