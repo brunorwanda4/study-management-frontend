@@ -218,6 +218,10 @@
     @apply text-xl font-medium;
 }
 
+.h6 {
+    @apply text-lg;
+}
+
 .border-sm {
   @apply border-base-content/10 border
 }

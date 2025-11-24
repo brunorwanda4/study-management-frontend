@@ -11,18 +11,6 @@ import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import type React from "react";
 
-// NOTE: Mock components and utils for demonstration if not available
-// (These would be in your actual project)
-// const Button = ({ className, ...props }: any) => <button className={cn(className)} {...props} />;
-// const Tooltip = ({ children }: any) => <div>{children}</div>;
-// const TooltipContent = ({ children }: any) => <div>{children}</div>;
-// const TooltipProvider = ({ children }: any) => <div>{children}</div>;
-// const TooltipTrigger = ({ children }: any) => <div>{children}</div>;
-// const ChevronLeft = () => <svg ... />
-// const ChevronRight = () => <svg ... />
-// const Loader2 = () => <svg ... />
-// const cn = (...inputs: any[]) => inputs.filter(Boolean).join(' ');
-
 interface SmartPaginationProps {
   totalPages: number;
   currentPage: number;

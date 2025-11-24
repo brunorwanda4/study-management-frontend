@@ -1,4 +1,4 @@
-import { Item, ItemContent, ItemHeader, ItemTitle } from "@/components/ui/item";
+import { Item, ItemHeader, ItemTitle } from "@/components/ui/item";
 import { LuFileText } from "react-icons/lu";
 interface FileCardProps {
   file?: any;
@@ -6,7 +6,7 @@ interface FileCardProps {
 
 const FileCard = ({ file }: FileCardProps) => {
   return (
-    <Item variant={"muted"} className="">
+    <Item variant={"muted"} className=" p-2">
       <ItemHeader className="  ">
         <div className="flex items-center gap-2 justify-start ">
           <LuFileText size={28} />

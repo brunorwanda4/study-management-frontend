@@ -26,10 +26,13 @@ const TeacherSubjectsCard = () => {
             >
               <ItemContent className=" flex flex-row  w-full justify-between items-center p-0">
                 <ItemHeader>
-                  <div className="flex flex-row items-center gap-2">
+                  <MyLink
+                    href="/en/c/classname/subjects/subjectname"
+                    className="flex flex-row items-center gap-2 w-fit"
+                  >
                     <FaBook />
                     <ItemTitle>Subject Name</ItemTitle>
-                  </div>
+                  </MyLink>
                 </ItemHeader>
                 <ItemFooter className=" w-fit justify-end">
                   <MyLink

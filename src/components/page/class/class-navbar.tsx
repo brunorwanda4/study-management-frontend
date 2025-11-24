@@ -26,7 +26,7 @@ const ClassNavbar = ({ lang, classUsername }: props) => {
         const isActive = () => {
           if (page === "overview" && pathname === `/${lang}/c/${classUsername}`)
             return true;
-          return pathname === `/${lang}/c/${classUsername}/${page}`;
+          return pathname.startsWith(`/${lang}/c/${classUsername}/${page}`);
         };
         return (
           <MyLink
