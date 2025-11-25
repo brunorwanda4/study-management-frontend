@@ -1,5 +1,6 @@
 "use client";
 
+import { FormError, FormSuccess } from "@/components/common/form-message";
 import { CommonFormField } from "@/components/common/form/common-form-field";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
@@ -71,6 +72,13 @@ const ClassStudentPermissionForm = () => {
             control={form.control}
           />
         </div>
+        {error ||
+          (success && (
+            <div className=" flex flex-col">
+              <FormError message={error} />
+              <FormSuccess message={success} />
+            </div>
+          ))}
         <Button
           variant={"info"}
           disabled={isPending}

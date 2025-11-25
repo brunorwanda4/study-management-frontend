@@ -25,7 +25,7 @@ export const ClassStudentSettingsSchema = z.object({
   }),
   classwork_rules: z.object({
     allow_resubmission: z.boolean(),
-    max_late_days: z.number(),
+    max_late_days: z.string(),
   }),
 });
 

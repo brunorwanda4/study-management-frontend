@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import {
+  Calendar,
   ChevronDownIcon,
   ChevronUpIcon,
   Clock,
@@ -18,7 +19,13 @@ import {
   type NumberFieldProps,
 } from "react-aria-components";
 
-type NumberInputMode = "currency" | "hours" | "percent" | "default" | "level";
+type NumberInputMode =
+  | "currency"
+  | "hours"
+  | "percent"
+  | "default"
+  | "level"
+  | "day";
 
 export type inputProps = Omit<React.ComponentProps<"input">, "step"> & {
   type?: string;
@@ -33,6 +40,7 @@ const modeIcons: Record<NumberInputMode, React.ReactNode> = {
   hours: <Clock size={16} />,
   percent: <Percent size={16} />,
   level: <Star size={16} />,
+  day: <Calendar size={16} />,
   default: null,
 };
 
