@@ -1,5 +1,6 @@
 "use client";
 
+import { FormError, FormSuccess } from "@/components/common/form-message";
 import { CommonFormField } from "@/components/common/form/common-form-field";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
@@ -40,12 +41,17 @@ const UpdateClassPublicInfo = ({ cls }: UpdateClassPublicInfoProps) => {
   });
 
   const handleSubmit = (data: UpdateClassPublicInfo) => {
+    setError("");
+    setSuccess("");
     console.log(data);
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)}>
+      <form
+        onSubmit={form.handleSubmit(handleSubmit)}
+        className=" flex flex-col gap-4"
+      >
         <div className="flex flex-col lg:flex-row gap-4">
           <div className=" flex flex-col gap-4">
             <CommonFormField
@@ -77,6 +83,7 @@ const UpdateClassPublicInfo = ({ cls }: UpdateClassPublicInfoProps) => {
               type="number"
               description="This is the maximum number of students that can be enrolled in the class."
               disabled={isPending}
+              avatarProps={{ avatarProps: { alt: "Class username" } }}
             />
           </div>
           <div>
@@ -92,12 +99,17 @@ const UpdateClassPublicInfo = ({ cls }: UpdateClassPublicInfoProps) => {
             />
           </div>
         </div>
+        <div className=" flex flex-col">
+          <FormError message={error} />
+          <FormSuccess message={success} />
+        </div>
         <Button
           library="daisy"
           type="submit"
           role={isPending ? "loading" : undefined}
           variant={"info"}
           disabled={isPending}
+          className=" w-fit"
         >
           Update Class
         </Button>
