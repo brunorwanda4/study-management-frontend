@@ -55,9 +55,9 @@ const ClassIdPeoplePage = async (props: Props) => {
               <span>4 Female</span>
             </div>
           </div>
-          {/*Teachers*/}
+          {/*students*/}
           <div className=" flex flex-col gap-2">
-            {[...Array(6)].map((_, t) => {
+            {[...Array(12)].map((_, t) => {
               return (
                 <UserSmCard
                   key={t}

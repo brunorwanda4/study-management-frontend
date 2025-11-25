@@ -49,12 +49,12 @@ const SubjectIdClassPage = async (props: Props) => {
           <MyLink
             href=""
             button={{ variant: "ghost", library: "daisy", role: "page" }}
-            className=" flex w-full justify-center items-center"
+            className=" flex w-full justify-center items-center mt-2"
+            classname=" w-full"
           >
             View all classwork
           </MyLink>
         </div>
-        <Separator />
       </main>
       {/*left*/}
       <div className=" w-2/5">
@@ -82,7 +82,8 @@ const SubjectIdClassPage = async (props: Props) => {
           <MyLink
             href=""
             button={{ variant: "ghost", library: "daisy", role: "page" }}
-            className=" flex w-full justify-center items-center"
+            className=" flex w-full justify-center items-center mt-2"
+            classname=" w-full"
           >
             View all notes
           </MyLink>

@@ -12,6 +12,8 @@ export interface UserSmCardProps {
   date?: string;
   subjects?: string[];
   showMessage?: boolean;
+  showModify?: boolean;
+  className?: string;
 }
 
 export const UserSmCard = ({
@@ -23,12 +25,15 @@ export const UserSmCard = ({
   date,
   subjects,
   showMessage,
+  showModify,
+  className,
 }: UserSmCardProps) => {
   const Image = <MyAvatar src={image} size="sm" alt={name} />;
   return (
     <div
       className={cn(
         showMessage && " flex flex-row justify-between items-center",
+        className,
       )}
     >
       <div className="flex space-x-2 items-center">
@@ -56,7 +61,18 @@ export const UserSmCard = ({
         </div>
       </div>
       {showMessage && (
-        <div>
+        <div className=" flex flex-row gap-2 ">
+          <MyLink
+            href={""}
+            loading
+            button={{
+              variant: "outline",
+              library: "daisy",
+              size: "sm",
+            }}
+          >
+            Modify
+          </MyLink>
           <MyLink
             href={""}
             loading
