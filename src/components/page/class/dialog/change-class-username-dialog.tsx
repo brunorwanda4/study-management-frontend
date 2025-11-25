@@ -93,6 +93,7 @@ const ChangeClassUsernameDialog = ({ cls }: ChangeClassUsernameDialogProps) => {
                 role={isPending ? "loading" : undefined}
                 library="daisy"
                 className="w-fit"
+                variant="info"
               >
                 Change Username
               </Button>
