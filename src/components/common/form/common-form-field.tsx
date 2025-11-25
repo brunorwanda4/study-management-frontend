@@ -2,12 +2,13 @@
 
 import {
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Input, type inputProps } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -15,7 +16,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+
 import type { Control, FieldPath, FieldValues } from "react-hook-form";
+import UploadImage, { type updateImageProps } from "../cards/form/upload-image";
+import { UploadAvatar, type UploadAvatarProps } from "./avatar-upload";
 
 interface CommonFormFieldProps<T extends FieldValues> {
   control: Control<T>;
@@ -25,11 +30,16 @@ interface CommonFormFieldProps<T extends FieldValues> {
   description?: string;
   disabled?: boolean;
   required?: boolean;
-  type?: string; // HTML input type (text, password, number, etc.)
+  type?: string;
+  className?: string;
 
-  // Specific to Select fields
-  fieldType?: "input" | "select" | "textarea";
+  fieldType?: "input" | "select" | "textarea" | "image" | "avatar";
   selectOptions?: { value: string; label: string }[];
+
+  // components props
+  imageProps?: updateImageProps;
+  inputProps?: inputProps;
+  avatarProps?: Pick<UploadAvatarProps, "avatarProps">;
 }
 
 export function CommonFormField<T extends FieldValues>({
@@ -42,29 +52,64 @@ export function CommonFormField<T extends FieldValues>({
   type = "text",
   fieldType = "input",
   selectOptions = [],
+  description,
+  className,
+  imageProps,
+  inputProps,
+  avatarProps = { avatarProps: { size: "3xl" } },
 }: CommonFormFieldProps<T>) {
   return (
     <FormField
       control={control}
       name={name}
       render={({ field }) => {
-        // Safe value handling for Select components to avoid uncontrolled/controlled warnings
         const stringValue = field.value?.toString() ?? "";
 
-        return (
-          <FormItem className="flex flex-col space-y-2">
-            <FormLabel>
-              {label} {required && <span className="text-error">*</span>}
-            </FormLabel>
-            <FormControl>
-              {fieldType === "select" ? (
+        // Decide what to render based on fieldType
+        const renderField = () => {
+          switch (fieldType) {
+            case "textarea":
+              return (
+                <Textarea
+                  {...field}
+                  disabled={disabled}
+                  placeholder={placeholder}
+                  value={stringValue}
+                  className={className}
+                />
+              );
+
+            case "image":
+              return (
+                <UploadImage
+                  value={stringValue}
+                  disabled={disabled}
+                  onChange={field.onChange}
+                  description={imageProps?.description}
+                  {...imageProps}
+                />
+              );
+
+            case "avatar":
+              return (
+                <UploadAvatar
+                  value={stringValue}
+                  disabled={disabled}
+                  onChange={field.onChange}
+                  description={description}
+                  {...avatarProps}
+                />
+              );
+
+            case "select":
+              return (
                 <Select
                   onValueChange={field.onChange}
                   value={stringValue}
                   disabled={disabled}
                 >
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger className={className}>
                       <SelectValue
                         placeholder={
                           placeholder || `Select ${label.toLowerCase()}`
@@ -72,6 +117,7 @@ export function CommonFormField<T extends FieldValues>({
                       />
                     </SelectTrigger>
                   </FormControl>
+
                   <SelectContent>
                     {selectOptions.map((item) => (
                       <SelectItem key={item.value} value={item.value}>
@@ -80,17 +126,32 @@ export function CommonFormField<T extends FieldValues>({
                     ))}
                   </SelectContent>
                 </Select>
-              ) : (
+              );
+
+            default:
+              return (
                 <Input
                   {...field}
                   type={type}
                   disabled={disabled}
                   placeholder={placeholder}
                   value={stringValue}
+                  className={className}
+                  {...inputProps}
                 />
-              )}
-            </FormControl>
+              );
+          }
+        };
+
+        return (
+          <FormItem className="flex flex-col ">
+            <FormLabel>
+              {label} {required && <span className="text-error">*</span>}
+            </FormLabel>
+
+            <FormControl>{renderField()}</FormControl>
             <FormMessage />
+            {description && <FormDescription>{description}</FormDescription>}
           </FormItem>
         );
       }}

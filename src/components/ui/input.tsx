@@ -20,7 +20,7 @@ import {
 
 type NumberInputMode = "currency" | "hours" | "percent" | "default" | "level";
 
-type BaseInputProps = Omit<React.ComponentProps<"input">, "step"> & {
+export type inputProps = Omit<React.ComponentProps<"input">, "step"> & {
   type?: string;
   numberProps?: Partial<NumberFieldProps>;
   numberMode?: NumberInputMode;
@@ -44,7 +44,7 @@ function Input({
   incrementIcon,
   decrementIcon,
   ...props
-}: BaseInputProps) {
+}: inputProps) {
   if (type === "number") {
     // Default increment/decrement icons
     const incIcon = incrementIcon ?? <ChevronUpIcon size={12} />;

@@ -15,7 +15,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { FaRegImage } from "react-icons/fa";
 
-interface Props {
+export interface updateImageProps {
   value: string | null;
   className?: string;
   disabled?: boolean;
@@ -35,7 +35,7 @@ export default function UploadImage({
   classname,
   Classname,
   description,
-}: Props) {
+}: updateImageProps) {
   const maxSize = maxSizeMB * 1024 * 1024;
 
   const [

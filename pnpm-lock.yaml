@@ -152,6 +152,9 @@ importers:
       react:
         specifier: 19.2.0
         version: 19.2.0
+      react-advanced-cropper:
+        specifier: ^0.20.1
+        version: 0.20.1(react@19.2.0)
       react-aria-components:
         specifier: ^1.8.0
         version: 1.13.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -2352,6 +2355,10 @@ packages:
   '@types/validator@13.15.3':
     resolution: {integrity: sha512-7bcUmDyS6PN3EuD9SlGGOxM77F8WLVsrwkxyWxKnxzmXoequ6c7741QBrANq6htVRGOITJ7z72mTP6Z4XyuG+Q==}
 
+  advanced-cropper@0.17.1:
+    resolution: {integrity: sha512-Z1P0sYOXa2tqZjeY742QtNERofXh1AuOa27LEurO9rbx3IfzLrGQlzy7sWEc5VN9hRg+J/qCiMmnB6tUDLb1TA==}
+    engines: {node: '>=8', npm: '>=5'}
+
   argparse@2.0.1:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
 
@@ -2904,6 +2911,12 @@ packages:
         optional: true
       '@types/react-dom':
         optional: true
+
+  react-advanced-cropper@0.20.1:
+    resolution: {integrity: sha512-Pcmkv0xQMpig6+LkM+zLbEuqBbYG3+CwXvIfYU+LDNn9l8t91Jm0fp9MSTNW0pjIvT6frAGTfmlnvnZW4PEs7Q==}
+    engines: {node: '>=8', npm: '>=5'}
+    peerDependencies:
+      react: '>=16.8.0'
 
   react-aria-components@1.13.0:
     resolution: {integrity: sha512-t1mm3AVy/MjUJBZ7zrb+sFC5iya8Vvw3go3mGKtTm269bXGZho7BLA4IgT+0nOS3j+ku6ChVi8NEoQVFoYzJJA==}
@@ -5732,6 +5745,10 @@ snapshots:
 
   '@types/validator@13.15.3': {}
 
+  advanced-cropper@0.17.1:
+    dependencies:
+      tslib: 2.8.1
+
   argparse@2.0.1: {}
 
   aria-hidden@1.2.6:
@@ -6332,6 +6349,13 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.2
       '@types/react-dom': 19.2.2(@types/react@19.2.2)
+
+  react-advanced-cropper@0.20.1(react@19.2.0):
+    dependencies:
+      advanced-cropper: 0.17.1
+      classnames: 2.5.1
+      react: 19.2.0
+      tslib: 2.8.1
 
   react-aria-components@1.13.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0):
     dependencies:

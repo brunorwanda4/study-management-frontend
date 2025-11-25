@@ -1,213 +1,109 @@
 "use client";
 
+import { CommonFormField } from "@/components/common/form/common-form-field";
+import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
+import { ClassSchema } from "@/lib/schema/class/class-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
-// Components
-import { FormError, FormSuccess } from "@/components/common/form-message";
-import { ImageUpload } from "@/components/common/image-upload";
-import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { ClassTypes } from "@/lib/const/common-details-const";
-import { useToast } from "@/lib/context/toast/ToastContext";
-import {
-  type ClassUpdateDto,
-  ClassUpdateSchema,
-} from "@/lib/schema/class/update-class-schema";
-import type { ClassWithOthers } from "@/lib/schema/relations-schema";
+import type { z } from "zod";
 
-interface UpdateClassPublicInfoFormProps {
-  classData: ClassWithOthers;
+export const UpdateClassPublicInfoSchema = ClassSchema.pick({
+  name: true,
+  description: true,
+  capacity: true,
+  image: true,
+}).partial();
+
+export type UpdateClassPublicInfo = z.infer<typeof UpdateClassPublicInfoSchema>;
+
+interface UpdateClassPublicInfoProps {
+  cls?: any;
 }
 
-export default function UpdateClassPublicInfoForm({
-  classData,
-}: UpdateClassPublicInfoFormProps) {
-  const [error, setError] = useState<string | undefined>();
-  const [success, setSuccess] = useState<string | undefined>();
+const UpdateClassPublicInfo = ({ cls }: UpdateClassPublicInfoProps) => {
+  const [error, setError] = useState<string>();
+  const [success, setSuccess] = useState<string>();
   const [isPending, startTransition] = useTransition();
-  const { showToast } = useToast();
 
-  const form = useForm<ClassUpdateDto>({
-    resolver: zodResolver(ClassUpdateSchema),
+  const form = useForm<UpdateClassPublicInfo>({
+    resolver: zodResolver(UpdateClassPublicInfoSchema),
     defaultValues: {
-      name: classData.name || undefined,
-      code: classData.code || undefined,
-      username: classData.username || undefined,
-      image: classData.image || undefined,
-      classType: classData.type || undefined,
-      educationLever: undefined,
-      curriculum: undefined,
-      // Omit fields that shouldn't be updated like id, createdAt, etc.
+      name: cls?.name,
+      description: cls?.description,
+      capacity: cls?.capacity,
+      image: cls?.image,
     },
     mode: "onChange",
+    reValidateMode: "onChange",
   });
 
-  const handleSubmit = async (data: ClassUpdateDto) => {
-    setError(undefined);
-    setSuccess(undefined);
+  const handleSubmit = (data: UpdateClassPublicInfo) => {
+    console.log(data);
   };
 
-  const renderFormField = (
-    name: keyof ClassUpdateDto,
-    label: string,
-    placeholder: string,
-    isRequired = false,
-    isSelect = false,
-    selectItems?: { value: string; label: string }[],
-  ) => (
-    <FormField
-      control={form.control}
-      name={name}
-      render={({ field }) => {
-        // Convert field value to string if it's a Date or other non-string type
-        const stringValue = field.value?.toString() ?? "";
-
-        return (
-          <FormItem className="flex flex-col space-y-2">
-            <FormLabel>
-              {label} {isRequired && "*"}
-            </FormLabel>
-            <FormControl>
-              {isSelect ? (
-                <Select
-                  onValueChange={field.onChange}
-                  value={stringValue}
-                  disabled={isPending}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue
-                        placeholder={`Select ${label.toLowerCase()}`}
-                      />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {selectItems?.map((item) => (
-                      <SelectItem key={item.value} value={item.value}>
-                        {item.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              ) : (
-                <Input
-                  disabled={isPending}
-                  placeholder={placeholder}
-                  {...field}
-                  value={stringValue}
-                />
-              )}
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        );
-      }}
-    />
-  );
-
   return (
-    <Card className="p-4">
-      <CardHeader className="border-b-0">
-        <CardTitle>Class public information</CardTitle>
-      </CardHeader>
-
-      <Form {...form}>
-        <form
-          className="w-full space-y-4"
-          onSubmit={form.handleSubmit(handleSubmit)}
-        >
-          <div className="space-y-4 md:flex md:space-y-0 md:space-x-4">
-            {/* Left Column */}
-            <div className="space-y-4 md:w-1/2">
-              {renderFormField("name", "Class Name", "Enter class name", true)}
-              {renderFormField("code", "Class Code", "Enter class code", true)}
-              {renderFormField(
-                "username",
-                "Class Username",
-                "Enter class username",
-                true,
-              )}
-
-              {renderFormField(
-                "classType",
-                "Class Type",
-                "Select class type",
-                false,
-                true,
-                Object.values(ClassTypes).map((type) => ({
-                  value: type,
-                  label: type,
-                })),
-              )}
-            </div>
-
-            {/* Right Column */}
-            <div className="space-y-4 md:w-1/2">
-              <FormField
-                control={form.control}
-                name="image"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col space-y-2">
-                    <FormLabel>Class Image</FormLabel>
-                    <FormControl>
-                      <ImageUpload
-                        value={field.value?.toString() ?? ""}
-                        onChange={field.onChange}
-                        disabled={isPending}
-                        className="w-full"
-                        imageClassName="h-32 w-32 rounded-lg border-2"
-                        maxSize={3 * 1024 * 1024}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {renderFormField(
-                "educationLever",
-                "Education Level",
-                "Enter education level",
-              )}
-              {renderFormField("curriculum", "Curriculum", "Enter curriculum")}
-            </div>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleSubmit)}>
+        <div className="flex flex-col lg:flex-row gap-4">
+          <div className=" flex flex-col gap-4">
+            <CommonFormField
+              control={form.control}
+              name="name"
+              label="Class Name"
+              placeholder="Enter class name"
+              type="input"
+              required
+              disabled={isPending}
+              description="Class name may appear around School where you contribute or are mentioned. You can remove it at
+              any time."
+            />
+            <CommonFormField
+              control={form.control}
+              name="description"
+              label="Description"
+              placeholder="class description..."
+              required
+              disabled={isPending}
+              fieldType="textarea"
+            />
+            <CommonFormField
+              control={form.control}
+              name="capacity"
+              label="Capacity"
+              placeholder="class description..."
+              required
+              type="number"
+              description="This is the maximum number of students that can be enrolled in the class."
+              disabled={isPending}
+            />
           </div>
-
           <div>
-            <FormError message={error} />
-            <FormSuccess message={success} />
+            <CommonFormField
+              control={form.control}
+              name="image"
+              label="Image"
+              placeholder="Upload class image"
+              required
+              disabled={isPending}
+              fieldType="avatar"
+              description="Upload a class image"
+            />
           </div>
-
-          <Button
-            disabled={
-              isPending ||
-              (!form.formState.isDirty && !form.formState.isSubmitSuccessful)
-            }
-            library="daisy"
-            variant="info"
-            type="submit"
-          >
-            {isPending ? "Updating..." : "Update Class Information"}
-          </Button>
-        </form>
-      </Form>
-    </Card>
+        </div>
+        <Button
+          library="daisy"
+          type="submit"
+          role={isPending ? "loading" : undefined}
+          variant={"info"}
+          disabled={isPending}
+        >
+          Update Class
+        </Button>
+      </form>
+    </Form>
   );
-}
+};
+
+export default UpdateClassPublicInfo;

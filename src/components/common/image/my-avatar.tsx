@@ -6,7 +6,7 @@ import { getInitialsUsername } from "@/lib/utils/generate-username";
 export interface MyAvatarProps {
   role?: { role?: userRole | null; gender?: Gender | null };
   type?: "squircle" | "square" | "cycle";
-  size?: "default" | "lg" | "sm" | "xl" | "xs" | "2xl" | "2xs";
+  size?: "default" | "lg" | "sm" | "xl" | "xs" | "2xl" | "2xs" | "3xl";
   src?: string | null;
   alt?: string | null;
   className?: string;
@@ -24,7 +24,6 @@ const MyAvatar = ({
   alt,
   isSubClass,
 }: Props) => {
-  // ✅ size classes
   const class_size =
     size === "default"
       ? "size-14 text-base min-h-14 min-w-14"
@@ -34,15 +33,16 @@ const MyAvatar = ({
           ? "size-24 text-2xl min-h-24 min-w-24"
           : size === "2xl"
             ? "size-32 text-3xl min-h-32 min-w-32"
-            : size === "sm"
-              ? "size-10 text-sm min-h-10 min-w-10"
-              : size === "xs"
-                ? "size-8 text-xs min-h-8 min-w-8"
-                : size === "2xs"
-                  ? "size-6 text-xs min-h-6 min-w-6"
-                  : "size-12 text-sm min-h-12 min-w-12";
+            : size === "3xl"
+              ? "size-44 text-4xl min-h-44 min-w-44"
+              : size === "sm"
+                ? "size-10 text-sm min-h-10 min-w-10"
+                : size === "xs"
+                  ? "size-8 text-xs min-h-8 min-w-8"
+                  : size === "2xs"
+                    ? "size-6 text-xs min-h-6 min-w-6"
+                    : "size-12 text-sm min-h-12 min-w-12";
 
-  // ✅ type shape classes
   const class_type =
     type === "squircle"
       ? "mask mask-squircle"
@@ -50,9 +50,6 @@ const MyAvatar = ({
         ? "card"
         : "rounded-full";
 
-  // ✅ initials (2 or 3 uppercase letters depending on isSubClass)
-
-  // ✅ deterministic HSL color from text (so “Bukara” ≠ “Baraksa”)
   const getHslFromText = (text: string) => {
     if (!text) return "hsl(210 16% 24%)";
     let hash = 0;
@@ -66,7 +63,6 @@ const MyAvatar = ({
     return `hsl(${hue} ${sat}% ${light}%)`;
   };
 
-  // ✅ fallback images for known roles
   const getDefaultImage = () => {
     if (!role?.role) return "/images/k.jpg";
     switch (role.role) {
@@ -91,7 +87,6 @@ const MyAvatar = ({
     }
   };
 
-  // ✅ CASE 1: When alt (name) exists but no src/role
   if (!src && !role && alt) {
     const initials = getInitialsUsername(alt, isSubClass);
     const bg = getHslFromText(alt);
@@ -112,7 +107,6 @@ const MyAvatar = ({
     );
   }
 
-  // ✅ CASE 2: When image or role is available
   if (role || src) {
     return (
       <MyImage
@@ -124,7 +118,6 @@ const MyAvatar = ({
     );
   }
 
-  // ✅ CASE 3: When nothing is provided (generate random avatar)
   const randomLetters = Array.from({ length: 2 }, () =>
     String.fromCharCode(65 + Math.floor(Math.random() * 26)),
   ).join("");

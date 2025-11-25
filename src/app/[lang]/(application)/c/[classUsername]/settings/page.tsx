@@ -1,3 +1,12 @@
+import UpdateClassPublicInfo from "@/components/page/class/setting/form/update-class-public-info-form";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import type { Locale } from "@/i18n";
 import { authContext } from "@/lib/utils/auth-context";
 import { redirect } from "next/navigation";
@@ -15,8 +24,25 @@ const ClassSettingPage = async (props: Props) => {
   }
 
   return (
-    <div>
-      <span className=" capitalize"> test hello</span>
+    <div className=" w-full flex flex-col">
+      <div>
+        <h3 className=" h3">General Settings</h3>
+        <p className=" text-base-content/50">
+          These control the identity and appearance of the class
+        </p>
+      </div>
+      <Separator />
+      <div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Class public info</CardTitle>
+            <CardDescription>Manage class public information</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <UpdateClassPublicInfo />
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 

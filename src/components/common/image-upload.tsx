@@ -1,10 +1,10 @@
 "use client";
 
-import { ChangeEvent, useState } from "react";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
+import { type ChangeEvent, useState } from "react";
 
 interface ImageUploadProps {
   value: string;

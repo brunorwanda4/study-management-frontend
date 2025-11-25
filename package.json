@@ -59,6 +59,7 @@
     "next13-progressbar": "^1.2.2",
     "radix-ui": "^1.4.3",
     "react": "19.2.0",
+    "react-advanced-cropper": "^0.20.1",
     "react-aria-components": "^1.8.0",
     "react-day-picker": "^9.6.7",
     "react-dom": "19.2.0",

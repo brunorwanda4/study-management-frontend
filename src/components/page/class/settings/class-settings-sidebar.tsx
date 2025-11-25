@@ -57,11 +57,8 @@ const ClassSettingsSidebar = ({
               size: "md",
             }}
             href={getPageHref(page.name)}
-            className={cn(
-              "w-full flex justify-start flex-row items-start",
-              isActive && "bg-base-300",
-            )}
-            classname=" justify-start w-full"
+            className={cn("w-full flex justify-start flex-row items-start")}
+            classname={cn(" justify-start w-full", isActive && "bg-base-300")}
           >
             <MyImage src={page.icon} role="ICON" />
             <span className="capitalize">{page.name.replace(/-/g, " ")}</span>
