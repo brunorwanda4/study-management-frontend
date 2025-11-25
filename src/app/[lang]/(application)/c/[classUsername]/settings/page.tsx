@@ -46,14 +46,6 @@ const ClassSettingPage = async (props: Props) => {
       </div>
     </div>
   );
-
-  // return (
-  //   <div className="space-y-4">
-  //     <h2 className="title-page">Class Setting</h2>
-  //     {/* TODO: make school management where to add class subjects and class teacher management */}
-  //     <UpdateClassPublicInfoForm classData={cls.data} />
-  //   </div>
-  // );
 };
 
 export default ClassSettingPage;

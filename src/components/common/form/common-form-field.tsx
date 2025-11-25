@@ -18,6 +18,8 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
+import { Checkbox } from "@/components/ui/checkbox";
+import { cn } from "@/lib/utils";
 import type { Control, FieldPath, FieldValues } from "react-hook-form";
 import UploadImage, { type updateImageProps } from "../cards/form/upload-image";
 import { UploadAvatar, type UploadAvatarProps } from "./avatar-upload";
@@ -32,8 +34,9 @@ interface CommonFormFieldProps<T extends FieldValues> {
   required?: boolean;
   type?: string;
   className?: string;
+  classname?: string;
 
-  fieldType?: "input" | "select" | "textarea" | "image" | "avatar";
+  fieldType?: "input" | "select" | "textarea" | "image" | "avatar" | "checkbox";
   selectOptions?: { value: string; label: string }[];
 
   // components props
@@ -54,6 +57,7 @@ export function CommonFormField<T extends FieldValues>({
   selectOptions = [],
   description,
   className,
+  classname,
   imageProps,
   inputProps,
   avatarProps = { avatarProps: { size: "3xl" } },
@@ -128,6 +132,16 @@ export function CommonFormField<T extends FieldValues>({
                 </Select>
               );
 
+            case "checkbox":
+              return (
+                <Checkbox
+                  {...field}
+                  disabled={disabled}
+                  value={stringValue}
+                  className={className}
+                />
+              );
+
             default:
               return (
                 <Input
@@ -144,7 +158,13 @@ export function CommonFormField<T extends FieldValues>({
         };
 
         return (
-          <FormItem className="flex flex-col ">
+          <FormItem
+            className={cn(
+              "flex flex-col ",
+              fieldType === "checkbox" && " flex flex-row-reverse w-fit",
+              classname,
+            )}
+          >
             <FormLabel>
               {label} {required && <span className="text-error">*</span>}
             </FormLabel>

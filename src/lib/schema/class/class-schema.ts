@@ -4,8 +4,133 @@ import {
   ImageSchema,
 } from "@/lib/schema/common-details-schema";
 import { SchoolSchema } from "@/lib/schema/school/school-schema";
-// import { TeacherSchema } from "@/lib/schema/school/teacher-schema";
 import z from "zod";
+
+/* --------------------------------------------------------
+   CLASS SETTINGS
+-------------------------------------------------------- */
+
+export const ClassStudentSettingsSchema = z.object({
+  auto_enroll_subclasses: z.boolean(),
+  student_visibility: z.enum(["all", "limited", "none"]),
+  permissions: z.object({
+    can_chat: z.boolean(),
+    can_upload_homework: z.boolean(),
+    can_comment: z.boolean(),
+    can_view_all_students: z.boolean(),
+  }),
+  attendance_rules: z.object({
+    late_after_minutes: z.number(),
+    required_attendance_percentage: z.number(),
+  }),
+  classwork_rules: z.object({
+    allow_resubmission: z.boolean(),
+    max_late_days: z.number(),
+  }),
+});
+
+export type ClassStudentSettings = z.infer<typeof ClassStudentSettingsSchema>;
+
+export const ClassTeachersSettingsSchema = z.object({
+  permissions: z.object({
+    can_edit_marks: z.boolean(),
+    can_upload_materials: z.boolean(),
+    can_take_attendance: z.boolean(),
+    can_manage_assignments: z.boolean(),
+    can_remove_students: z.boolean(),
+  }),
+  visibility: z.boolean(),
+});
+
+export type ClassTeacherSettings = z.infer<typeof ClassTeachersSettingsSchema>;
+
+export const ClassClassTeacherSettingsSchema = z.object({
+  allowed_actions: z.object({
+    can_edit_class_info: z.boolean(),
+    can_add_students: z.boolean(),
+    can_remove_students: z.boolean(),
+    can_manage_subjects: z.boolean(),
+    can_manage_timetable: z.boolean(),
+    can_assign_roles: z.boolean(),
+    can_edit_results: z.boolean(),
+    can_send_parent_notifications: z.boolean(),
+    can_add_teachers: z.boolean(),
+  }),
+  security: z.object({
+    require_two_person_approval_for_results: z.boolean(),
+    log_all_teacher_changes: z.boolean(),
+  }),
+});
+
+export type ClassClassTeacherSettings = z.infer<
+  typeof ClassClassTeacherSettingsSchema
+>;
+
+export const ClassSubjectSettingsSchema = z.object({
+  subjects: z.array(
+    z.object({
+      subject_id: z.string(),
+      name: z.string(),
+      code: z.string().nullable().optional(),
+      type: z.enum(["core", "elective"]).default("core"),
+      credit: z.number().default(1),
+      teacher_id: z.string().nullable().optional(),
+    }),
+  ),
+  grading: z.object({
+    max_score: z.number().default(100),
+    pass_mark: z.number().default(40),
+    grade_boundaries: z.object({
+      A: z.number().default(80),
+      B: z.number().default(70),
+      C: z.number().default(60),
+      D: z.number().default(50),
+      E: z.number().default(40),
+      F: z.number().default(0),
+    }),
+  }),
+});
+
+export type ClassSubjectSettings = z.infer<typeof ClassSubjectSettingsSchema>;
+
+export const ClassTimetableSettingsSchema = z.object({
+  period_length_minutes: z.number(),
+  periods_per_day: z.number(),
+  weekly_timetable: z.record(
+    z.array(
+      z.object({
+        period: z.number(),
+        subject: z.string(),
+        teacher_id: z.string().nullable(),
+      }),
+    ),
+  ),
+  break_times: z.array(
+    z.object({
+      start: z.string(),
+      end: z.string(),
+      label: z.string(),
+    }),
+  ),
+  clash_prevention: z.object({
+    prevent_double_teacher_booking: z.boolean(),
+    prevent_duplicate_subject_same_day: z.boolean(),
+  }),
+});
+
+export type ClassTimetableSettings = z.infer<
+  typeof ClassTimetableSettingsSchema
+>;
+
+export const ClassSettingsSchema = z.object({
+  students: ClassStudentSettingsSchema,
+  teachers: ClassTeachersSettingsSchema,
+  class_teacher: ClassClassTeacherSettingsSchema,
+  subjects: ClassSubjectSettingsSchema,
+  timetable: ClassTimetableSettingsSchema,
+});
+
+export type ClassSettings = z.infer<typeof ClassSettingsSchema>;
 
 // 🧩 Base Class Schema
 export const ClassSchema = z.object({
@@ -38,8 +163,9 @@ export const ClassSchema = z.object({
   subject: z.string().nullable().optional(),
   grade_level: z.string().nullable().optional(),
 
-  tags: z.array(z.string()).default([]),
+  tags: z.array(z.string()),
 
+  settings: ClassSettingsSchema,
   created_at: z.coerce.date().optional(),
   updated_at: z.coerce.date().optional(),
 });
@@ -54,7 +180,6 @@ export const CreateClassSchema = z.object({
   creator_id: z.string().optional(),
   class_teacher_id: z.string().optional(),
   trade_id: z.string().optional(),
-  // ✅ Remove `.optional()` and use `.default()` directly
   type: ClassTypeSchema,
 
   main_class_id: z.string().optional(),
