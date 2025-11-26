@@ -4,7 +4,7 @@ export default function SchoolCalendar() {
 
   return (
     <div className=" px-4 py-4 space-y-4">
-      <h1 className=" title-page">School Calendar</h1>
+      <h1 className=" title-page">Class Time table</h1>
       <TestCalendar />
     </div>
   );

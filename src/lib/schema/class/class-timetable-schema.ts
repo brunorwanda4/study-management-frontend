@@ -4,6 +4,8 @@ import { TeacherSchema } from "@/lib/schema/school/teacher-schema";
 import { SubjectSchema } from "@/lib/schema/subject/subject-schema";
 import { z } from "zod";
 
+const PeriodTypeEnum = z.enum(["subject", "break", "lunch"]);
+
 export const ClassTimetableSchema = z.object({
   _id: z.string(),
   class_id: z.string(),
@@ -12,27 +14,26 @@ export const ClassTimetableSchema = z.object({
   weekly_schedule: z.array(
     z.object({
       day: WeekDaySchema,
-
       is_holiday: z.boolean(),
 
       periods: z.array(
         z.object({
           period_id: z.string(),
-          type: z.enum(["subject", "break", "lunch"]),
+          type: PeriodTypeEnum,
 
           title: z.string(),
           subject_id: z.string().optional(),
           teacher_id: z.string().optional(),
 
-          // required canonical fields
-          start_time: z.string(), // "HH:MM"
-          end_time: z.string(),   // "HH:MM"
+          // SAFE TIME MODEL
+          start_offset: z.number().int().nonnegative(),  // minutes from day start (e.g., 9:00 = 0)
+          duration_minutes: z.number().int().positive(), // length of the session
 
           // UI helpers
           color_code: z.string().optional(),
           enabled: z.boolean().optional(),
         })
-      ),
+      )
     })
   ),
 
@@ -42,21 +43,32 @@ export const ClassTimetableSchema = z.object({
 
 export type ClassTimetable = z.infer<typeof ClassTimetableSchema>;
 
-
 export const PopulatedPeriodSchema = z.object({
   period_id: z.string(),
-  type: z.enum(["subject", "break", "lunch"]),
+  type: PeriodTypeEnum,
 
   title: z.string(),
-  start_time: z.string(),
-  end_time: z.string(),
+
+  start_offset: z.number().int().nonnegative(),
+  duration_minutes: z.number().int().positive(),
 
   color_code: z.string().optional(),
   enabled: z.boolean().optional(),
 
-  // Extra data
-  teacher: TeacherSchema.pick({ id: true, name: true, _id: true, image: true, user_id: true }).optional(),
-  subject: SubjectSchema.pick({id: true, _id: true, name: true, code: true}).optional(),
+  teacher: TeacherSchema.pick({
+    id: true,
+    name: true,
+    _id: true,
+    image: true,
+    user_id: true
+  }).optional(),
+
+  subject: SubjectSchema.pick({
+    id: true,
+    _id: true,
+    name: true,
+    code: true
+  }).optional(),
 });
 
 export const PopulatedClassTimetableSchema = z.object({
@@ -67,14 +79,19 @@ export const PopulatedClassTimetableSchema = z.object({
   weekly_schedule: z.array(
     z.object({
       day: WeekDaySchema,
-
       is_holiday: z.boolean(),
-
       periods: z.array(PopulatedPeriodSchema),
     })
   ),
 
-  class: ClassSchema.pick({id: true, _id: true, name: true, username: true, image: true,}), // optional expanded class info
+  class: ClassSchema.pick({
+    id: true,
+    _id: true,
+    name: true,
+    username: true,
+    image: true,
+  }),
+
   created_at: z.string(),
   updated_at: z.string(),
 });
