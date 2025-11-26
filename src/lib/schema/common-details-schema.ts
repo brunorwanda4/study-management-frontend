@@ -117,6 +117,20 @@ export type CommonDetails = z.infer<typeof commonDetailsSchema>;
 export const GenderSchema = z.enum(genders);
 export type Gender = z.infer<typeof GenderSchema>;
 
+// weekdays
+export const WeekdayDetailsSchema = z.enum(Weekdays);
+export type WeekdayDetails = z.infer<typeof WeekdayDetailsSchema>;
+
+export const WeekDaySchema = z.enum([
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ]);
+
 export const StudentStatusSchema = z.enum(StudentStatuses);
 export type StudentStatus = z.infer<typeof StudentStatusSchema>;
 
