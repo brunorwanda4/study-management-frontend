@@ -12,9 +12,14 @@ import { UserSmCard } from "./user-card";
 interface SubjectCardProps {
   subject?: any;
   isOnSubjectPage?: boolean;
+  showModify?: boolean;
 }
 
-const SubjectCard = ({ subject, isOnSubjectPage }: SubjectCardProps) => {
+const SubjectCard = ({
+  subject,
+  isOnSubjectPage,
+  showModify,
+}: SubjectCardProps) => {
   return (
     <Card>
       <CardHeader className=" flex flex-row justify-between w-full">
@@ -69,6 +74,14 @@ const SubjectCard = ({ subject, isOnSubjectPage }: SubjectCardProps) => {
       </CardContent>
       <CardFooter className=" flex flex-col space-y-4 items-start [.border-t]:pt-2">
         <div className=" flex flex-row gap-2 ">
+          {showModify && (
+            <MyLink
+              href="/en/c/classname/subjects/subjectname"
+              button={{ size: "sm", variant: "outline" }}
+            >
+              Modify
+            </MyLink>
+          )}
           {!isOnSubjectPage && (
             <MyLink
               href="/en/c/classname/subjects/subjectname"
@@ -77,18 +90,23 @@ const SubjectCard = ({ subject, isOnSubjectPage }: SubjectCardProps) => {
               View subject
             </MyLink>
           )}
-          <MyLink
-            href="/en/c/classname/subjects/subjectname"
-            button={{ role: "page", size: "sm" }}
-          >
-            Notes
-          </MyLink>
-          <MyLink
-            href="/en/c/classname/subjects/subjectname"
-            button={{ role: "page", size: "sm" }}
-          >
-            Classworks
-          </MyLink>
+
+          {!showModify && (
+            <MyLink
+              href="/en/c/classname/subjects/subjectname"
+              button={{ role: "page", size: "sm" }}
+            >
+              Notes
+            </MyLink>
+          )}
+          {!showModify && (
+            <MyLink
+              href="/en/c/classname/subjects/subjectname"
+              button={{ role: "page", size: "sm" }}
+            >
+              Classworks
+            </MyLink>
+          )}
         </div>
         {isOnSubjectPage && (
           <div>

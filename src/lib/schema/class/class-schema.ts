@@ -49,6 +49,7 @@ export const ClassClassTeacherSettingsSchema = z.object({
     can_remove_students: z.boolean(),
     can_manage_subjects: z.boolean(),
     can_manage_timetable: z.boolean(),
+    can_approve_requests: z.boolean(),
     can_assign_roles: z.boolean(),
     can_send_parent_notifications: z.boolean(),
     can_add_teachers: z.boolean(),

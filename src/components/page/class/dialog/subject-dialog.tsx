@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 interface SubjectDialogProps {
   subject?: any;
@@ -13,6 +13,7 @@ const SubjectDialog = ({ subject }: SubjectDialogProps) => {
           Add subject
         </Button>
       </DialogTrigger>
+      <DialogContent>Subject card </DialogContent>
     </Dialog>
   );
 };

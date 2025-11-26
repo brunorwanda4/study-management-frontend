@@ -32,6 +32,7 @@ const ClassClassTeacherPermissionForm = () => {
       can_assign_roles: true,
       can_send_parent_notifications: true,
       can_add_teachers: true,
+      can_approve_requests: true,
     },
     mode: "onChange",
     reValidateMode: "onChange",
@@ -64,8 +65,15 @@ const ClassClassTeacherPermissionForm = () => {
             control={form.control}
           />
           <CommonFormField
-            label="can remove students"
+            label="Can remove students"
             name="can_remove_students"
+            type="checkbox"
+            fieldType="checkbox"
+            control={form.control}
+          />
+          <CommonFormField
+            label="Can approve requests"
+            name="can_approve_requests"
             type="checkbox"
             fieldType="checkbox"
             control={form.control}

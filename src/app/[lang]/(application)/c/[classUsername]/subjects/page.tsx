@@ -25,7 +25,7 @@ const ClassSubjectPage = async (props: Props) => {
       </div>
       <Separator />
       <main className=" grid grid-cols-1 gap-4 lg:grid-cols-2">
-        {[...Array(12).keys()].map((index) => (
+        {[...Array(9).keys()].map((index) => (
           <SubjectCard key={index} />
         ))}
       </main>
