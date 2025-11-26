@@ -55,6 +55,7 @@ export interface EventCalendarProps {
   onEventDelete?: (eventId: string) => void;
   className?: string;
   initialView?: CalendarView;
+  isClassTimetable?: boolean;
 }
 
 export function EventCalendar({
@@ -64,6 +65,7 @@ export function EventCalendar({
   onEventDelete,
   className,
   initialView = "month",
+  isClassTimetable = false,
 }: EventCalendarProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState<CalendarView>(initialView);
@@ -264,7 +266,7 @@ export function EventCalendar({
 
   return (
     <div
-      className="flex flex-col rounded-lg border has-data-[slot=month-view]:flex-1"
+      className="flex flex-col border has-data-[slot=month-view]:flex-1 bg-base-100 card"
       style={
         {
           "--event-gap": `${EventGap}px`,
@@ -382,6 +384,7 @@ export function EventCalendar({
               events={events}
               onEventCreate={handleEventCreate}
               onEventSelect={handleEventSelect}
+              isClassTimetable={isClassTimetable}
             />
           )}
           {view === "day" && (

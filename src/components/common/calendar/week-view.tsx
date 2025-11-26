@@ -37,6 +37,7 @@ interface WeekViewProps {
   events: CalendarEvent[];
   onEventSelect: (event: CalendarEvent) => void;
   onEventCreate: (startTime: Date) => void;
+  isClassTimetable ?: boolean;
 }
 
 interface PositionedEvent {
@@ -53,6 +54,7 @@ export function WeekView({
   events,
   onEventSelect,
   onEventCreate,
+  isClassTimetable = false,
 }: WeekViewProps) {
   const days = useMemo(() => {
     const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 });
@@ -313,7 +315,7 @@ export function WeekView({
               key={hour.toString()}
             >
               {index > 0 && (
-                <span className="-top-3 absolute left-0 flex h-6 w-16 max-w-full items-center justify-end bg-background pe-2 text-[10px] text-muted-foreground/70 sm:pe-4 sm:text-xs">
+                <span className="-top-3 absolute left-0 flex h-6 w-16 max-w-full items-center justify-end pe-2 text-[10px] sm:pe-4 sm:text-xs  bg-base-100">
                   {format(hour, "h a")}
                 </span>
               )}
