@@ -1,6 +1,6 @@
 import type { Gender } from "@/lib/schema/common-details-schema";
 import { cn } from "@/lib/utils";
-import MyAvatar from "../common/image/my-avatar";
+import MyAvatar, { MyAvatarProps } from "../common/image/my-avatar";
 import MyLink from "../common/myLink";
 
 export interface UserSmCardProps {
@@ -14,6 +14,9 @@ export interface UserSmCardProps {
   showMessage?: boolean;
   showModify?: boolean;
   className?: string;
+  classname?: string;
+  onlyImage ?: boolean;
+  avatarProps ?: MyAvatarProps;
 }
 
 export const UserSmCard = ({
@@ -27,8 +30,21 @@ export const UserSmCard = ({
   showMessage,
   showModify,
   className,
+  classname,
+  onlyImage,
+  avatarProps = {
+    size: "sm",
+  },
 }: UserSmCardProps) => {
-  const Image = <MyAvatar src={image} size="sm" alt={name} />;
+  const Image = <MyAvatar {...avatarProps} src={image} alt={name} />;
+
+  if(onlyImage){
+    return (
+      <div className={cn(className)}>
+        {Image}
+         </div>
+      )}
+
   return (
     <div
       className={cn(
@@ -36,7 +52,7 @@ export const UserSmCard = ({
         className,
       )}
     >
-      <div className="flex space-x-2 items-center">
+      <div className={cn("flex gap-2 items-center", classname)}>
         {link ? <MyLink href={link}>{Image}</MyLink> : Image}
         <div className=" flex flex-col">
           <div className="flex flex-row gap-2 items-center">
@@ -62,7 +78,7 @@ export const UserSmCard = ({
       </div>
       {showMessage && (
         <div className=" flex flex-row gap-2 ">
-          <MyLink
+         {showModify && <MyLink
             href={""}
             loading
             button={{
@@ -72,7 +88,7 @@ export const UserSmCard = ({
             }}
           >
             Modify
-          </MyLink>
+          </MyLink>}
           <MyLink
             href={""}
             loading
