@@ -4,34 +4,33 @@ import { FormError, FormSuccess } from "@/components/common/form-message";
 import { CommonFormField } from "@/components/common/form/common-form-field";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { ClassStudentSettingsSchema } from "@/lib/schema/class/class-schema";
+import { ClassTeachersSettingsSchema } from "@/lib/schema/class/class-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 
-const ClassStudentPermissionsSchema =
-  ClassStudentSettingsSchema.shape.permissions;
-type ClassStudentPermissions = z.infer<typeof ClassStudentPermissionsSchema>;
+const ClassTeacherPermissionsSchema =
+  ClassTeachersSettingsSchema.shape.permissions;
+type ClassTeacherPermissions = z.infer<typeof ClassTeacherPermissionsSchema>;
 
-const ClassStudentPermissionForm = () => {
+const ClassTeacherPermissionForm = () => {
   const [error, setError] = useState<string>();
   const [success, setSuccess] = useState<string>();
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<ClassStudentPermissions>({
-    resolver: zodResolver(ClassStudentPermissionsSchema),
+  const form = useForm<ClassTeacherPermissions>({
+    resolver: zodResolver(ClassTeacherPermissionsSchema),
     defaultValues: {
-      can_chat: false,
-      can_upload_homework: true,
-      can_comment: true,
-      can_view_all_students: true,
+      can_edit_marks: true,
+      can_take_attendance: true,
+      can_remove_students: true,
     },
     mode: "onChange",
     reValidateMode: "onChange",
   });
 
-  const onSubmit = (values: ClassStudentPermissions) => {
+  const onSubmit = (values: ClassTeacherPermissions) => {
     setError("");
     setSuccess("");
     console.log(values);
@@ -44,29 +43,22 @@ const ClassStudentPermissionForm = () => {
       >
         <div className=" flex flex-col gap-4">
           <CommonFormField
-            label="Can chat in class group"
-            name="can_chat"
+            label="Can edit marks"
+            name="can_edit_marks"
             type="checkbox"
             fieldType="checkbox"
             control={form.control}
           />
           <CommonFormField
-            label="Can comment"
-            name="can_comment"
+            label="Can take attendance"
+            name="can_take_attendance"
             type="checkbox"
             fieldType="checkbox"
             control={form.control}
           />
           <CommonFormField
-            label="Can upload class work"
-            name="can_upload_homework"
-            type="checkbox"
-            fieldType="checkbox"
-            control={form.control}
-          />
-          <CommonFormField
-            label="Can view all students"
-            name="can_view_all_students"
+            label="can remove students"
+            name="can_remove_students"
             type="checkbox"
             fieldType="checkbox"
             control={form.control}
@@ -92,4 +84,4 @@ const ClassStudentPermissionForm = () => {
   );
 };
 
-export default ClassStudentPermissionForm;
+export default ClassTeacherPermissionForm;

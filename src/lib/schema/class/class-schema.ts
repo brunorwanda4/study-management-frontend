@@ -34,9 +34,7 @@ export type ClassStudentSettings = z.infer<typeof ClassStudentSettingsSchema>;
 export const ClassTeachersSettingsSchema = z.object({
   permissions: z.object({
     can_edit_marks: z.boolean(),
-    can_upload_materials: z.boolean(),
     can_take_attendance: z.boolean(),
-    can_manage_assignments: z.boolean(),
     can_remove_students: z.boolean(),
   }),
   visibility: z.boolean(),
