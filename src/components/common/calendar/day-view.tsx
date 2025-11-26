@@ -18,14 +18,14 @@ import {
   EndHour,
   StartHour,
   WeekCellsHeight,
-} from "@/components/page/calendar/calendar/constants";
+} from "@/components/common/calendar/constants";
+import { DraggableEvent } from "@/components/common/calendar/draggable-event";
+import { DroppableCell } from "@/components/common/calendar/droppable-cell";
+import { EventItem } from "@/components/common/calendar/event-item";
+import type { CalendarEvent } from "@/components/common/calendar/types";
+import { useCurrentTimeIndicator } from "@/components/common/calendar/use-current-time-indicator";
+import { isMultiDayEvent } from "@/components/common/calendar/utils";
 import { cn } from "@/lib/utils";
-import { DraggableEvent } from "./draggable-event";
-import { DroppableCell } from "./droppable-cell";
-import { EventItem } from "./event-item";
-import type { CalendarEvent } from "./types";
-import { useCurrentTimeIndicator } from "./use-current-time-indicator";
-import { isMultiDayEvent } from "./utils";
 
 interface DayViewProps {
   currentDate: Date;
@@ -52,8 +52,8 @@ export function DayView({
   const hours = useMemo(() => {
     const dayStart = startOfDay(currentDate);
     return eachHourOfInterval({
-      start: addHours(dayStart, StartHour),
       end: addHours(dayStart, EndHour - 1),
+      start: addHours(dayStart, StartHour),
     });
   }, [currentDate]);
 
@@ -114,7 +114,7 @@ export function DayView({
     // Track columns for overlapping events
     const columns: { event: CalendarEvent; end: Date }[][] = [];
 
-    sortedEvents.forEach((event) => {
+    for (const event of sortedEvents) {
       const eventStart = new Date(event.start);
       const eventEnd = new Date(event.end);
 
@@ -130,6 +130,7 @@ export function DayView({
       const startHour =
         getHours(adjustedStart) + getMinutes(adjustedStart) / 60;
       const endHour = getHours(adjustedEnd) + getMinutes(adjustedEnd) / 60;
+
       const top = (startHour - StartHour) * WeekCellsHeight;
       const height = (endHour - startHour) * WeekCellsHeight;
 
@@ -145,10 +146,11 @@ export function DayView({
         } else {
           const overlaps = col.some((c) =>
             areIntervalsOverlapping(
-              { start: adjustedStart, end: adjustedEnd },
-              { start: new Date(c.event.start), end: new Date(c.event.end) },
+              { end: adjustedEnd, start: adjustedStart },
+              { end: new Date(c.event.end), start: new Date(c.event.start) },
             ),
           );
+
           if (!overlaps) {
             placed = true;
           } else {
@@ -160,7 +162,7 @@ export function DayView({
       // Ensure column is initialized before pushing
       const currentColumn = columns[columnIndex] || [];
       columns[columnIndex] = currentColumn;
-      currentColumn.push({ event, end: adjustedEnd });
+      currentColumn.push({ end: adjustedEnd, event });
 
       // First column takes full width, others are indented by 10% and take 90% width
       const width = columnIndex === 0 ? 1 : 0.9;
@@ -168,13 +170,13 @@ export function DayView({
 
       result.push({
         event,
-        top,
         height,
         left,
+        top,
         width,
-        zIndex: 10 + columnIndex, // Higher columns get higher z-index
+        zIndex: 10 + columnIndex,
       });
-    });
+    }
 
     return result;
   }, [currentDate, timeEvents]);
@@ -191,16 +193,16 @@ export function DayView({
   );
 
   return (
-    <div data-slot="day-view" className="contents">
+    <div className="contents" data-slot="day-view">
       {showAllDaySection && (
-        <div className="border-border/70 bg-muted/50 border-t">
+        <div className="border-border/70 border-t bg-muted/50">
           <div className="grid grid-cols-[3rem_1fr] sm:grid-cols-[4rem_1fr]">
             <div className="relative">
-              <span className="text-muted-foreground/70 absolute bottom-0 left-0 h-6 w-16 max-w-full pe-2 text-right text-[10px] sm:pe-4 sm:text-xs">
+              <span className="absolute bottom-0 left-0 h-6 w-16 max-w-full pe-2 text-right text-[10px] text-muted-foreground/70 sm:pe-4 sm:text-xs">
                 All day
               </span>
             </div>
-            <div className="border-border/70 relative border-r p-1 last:border-r-0">
+            <div className="relative border-border/70 border-r p-1 last:border-r-0">
               {allDayEvents.map((event) => {
                 const eventStart = new Date(event.start);
                 const eventEnd = new Date(event.end);
@@ -209,12 +211,12 @@ export function DayView({
 
                 return (
                   <EventItem
-                    key={`spanning-${event.id}`}
-                    onClick={(e) => handleEventClick(event, e)}
                     event={event}
-                    view="month"
                     isFirstDay={isFirstDay}
                     isLastDay={isLastDay}
+                    key={`spanning-${event.id}`}
+                    onClick={(e) => handleEventClick(event, e)}
+                    view="month"
                   >
                     {/* Always show the title in day view for better usability */}
                     <div>{event.title}</div>
@@ -226,15 +228,15 @@ export function DayView({
         </div>
       )}
 
-      <div className="border-border/70 grid flex-1 grid-cols-[3rem_1fr] overflow-hidden border-t sm:grid-cols-[4rem_1fr]">
+      <div className="grid flex-1 grid-cols-[3rem_1fr] overflow-hidden border-border/70 border-t sm:grid-cols-[4rem_1fr]">
         <div>
           {hours.map((hour, index) => (
             <div
+              className="relative h-(--week-cells-height) border-border/70 border-b last:border-b-0"
               key={hour.toString()}
-              className="border-border/70 relative h-[var(--week-cells-height)] border-b last:border-b-0"
             >
               {index > 0 && (
-                <span className="bg-background text-muted-foreground/70 absolute -top-3 left-0 flex h-6 w-16 max-w-full items-center justify-end pe-2 text-[10px] sm:pe-4 sm:text-xs">
+                <span className="-top-3 absolute left-0 flex h-6 w-16 max-w-full items-center justify-end bg-background pe-2 text-[10px] text-muted-foreground/70 sm:pe-4 sm:text-xs">
                   {format(hour, "h a")}
                 </span>
               )}
@@ -246,12 +248,12 @@ export function DayView({
           {/* Positioned events */}
           {positionedEvents.map((positionedEvent) => (
             <div
-              key={positionedEvent.event.id}
               className="absolute z-10 px-0.5"
+              key={positionedEvent.event.id}
               style={{
-                top: `${positionedEvent.top}px`,
                 height: `${positionedEvent.height}px`,
                 left: `${positionedEvent.left * 100}%`,
+                top: `${positionedEvent.top}px`,
                 width: `${positionedEvent.width * 100}%`,
                 zIndex: positionedEvent.zIndex,
               }}
@@ -259,10 +261,10 @@ export function DayView({
               <div className="size-full">
                 <DraggableEvent
                   event={positionedEvent.event}
-                  view="day"
+                  height={positionedEvent.height}
                   onClick={(e) => handleEventClick(positionedEvent.event, e)}
                   showTime
-                  height={positionedEvent.height}
+                  view="day"
                 />
               </div>
             </div>
@@ -275,8 +277,8 @@ export function DayView({
               style={{ top: `${currentTimePosition}%` }}
             >
               <div className="relative flex items-center">
-                <div className="bg-primary absolute -left-1 h-2 w-2 rounded-full"></div>
-                <div className="bg-primary h-[2px] w-full"></div>
+                <div className="-left-1 absolute h-2 w-2 rounded-full bg-primary" />
+                <div className="h-0.5 w-full bg-primary" />
               </div>
             </div>
           )}
@@ -286,18 +288,14 @@ export function DayView({
             const hourValue = getHours(hour);
             return (
               <div
+                className="relative h-(--week-cells-height) border-border/70 border-b last:border-b-0"
                 key={hour.toString()}
-                className="border-border/70 relative h-[var(--week-cells-height)] border-b last:border-b-0"
               >
                 {/* Quarter-hour intervals */}
                 {[0, 1, 2, 3].map((quarter) => {
                   const quarterHourTime = hourValue + quarter * 0.25;
                   return (
                     <DroppableCell
-                      key={`${hour.toString()}-${quarter}`}
-                      id={`day-cell-${currentDate.toISOString()}-${quarterHourTime}`}
-                      date={currentDate}
-                      time={quarterHourTime}
                       className={cn(
                         "absolute h-[calc(var(--week-cells-height)/4)] w-full",
                         quarter === 0 && "top-0",
@@ -308,12 +306,16 @@ export function DayView({
                         quarter === 3 &&
                           "top-[calc(var(--week-cells-height)/4*3)]",
                       )}
+                      date={currentDate}
+                      id={`day-cell-${currentDate.toISOString()}-${quarterHourTime}`}
+                      key={`${hour.toString()}-${quarter}`}
                       onClick={() => {
                         const startTime = new Date(currentDate);
                         startTime.setHours(hourValue);
                         startTime.setMinutes(quarter * 15);
                         onEventCreate(startTime);
                       }}
+                      time={quarterHourTime}
                     />
                   );
                 })}

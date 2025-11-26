@@ -2,8 +2,8 @@
 
 import { useDroppable } from "@dnd-kit/core";
 
+import { useCalendarDnd } from "@/components/common/calendar/calendar-dnd-context";
 import { cn } from "@/lib/utils";
-import { useCalendarDnd } from "./calendar-dnd-context";
 
 interface DroppableCellProps {
   id: string;
@@ -25,11 +25,11 @@ export function DroppableCell({
   const { activeEvent } = useCalendarDnd();
 
   const { setNodeRef, isOver } = useDroppable({
-    id,
     data: {
       date,
       time,
     },
+    id,
   });
 
   // Format time for display in tooltip (only for debugging)
@@ -41,25 +41,15 @@ export function DroppableCell({
       : null;
 
   return (
-    // biome-ignore lint/a11y/useSemanticElements: <explanation>
-<div
-      ref={setNodeRef}
-      onClick={onClick}
-      onKeyDown={(e) => {
-        if (!onClick) return;
-        if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
-          e.preventDefault();
-          onClick();
-        }
-      }}
-      role="button"
-      tabIndex={0}
+    <div
       className={cn(
-        "data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1",
+        "flex h-full flex-col overflow-hidden px-0.5 py-1 data-dragging:bg-accent sm:px-1",
         className,
       )}
-      title={formattedTime ? `${formattedTime}` : undefined}
       data-dragging={isOver && activeEvent ? true : undefined}
+      onClick={onClick}
+      ref={setNodeRef}
+      title={formattedTime ? `${formattedTime}` : undefined}
     >
       {children}
     </div>

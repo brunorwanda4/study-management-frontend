@@ -1,14 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuShortcut,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
 import { RiCalendarCheckLine } from "@remixicon/react";
 import {
   addDays,
@@ -29,20 +20,33 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { AgendaView } from "./agenda-view";
-import { CalendarDndProvider } from "./calendar-dnd-context";
+
+import { AgendaView } from "@/components/common/calendar/agenda-view";
+import { CalendarDndProvider } from "@/components/common/calendar/calendar-dnd-context";
 import {
   AgendaDaysToShow,
   EventGap,
   EventHeight,
   WeekCellsHeight,
-} from "./constants";
-import { DayView } from "./day-view";
-import { EventDialog } from "./event-dialog";
-import { MonthView } from "./month-view";
-import type { CalendarEvent, CalendarView } from "./types";
-import { addHoursToDate } from "./utils";
-import { WeekView } from "./week-view";
+} from "@/components/common/calendar/constants";
+import { DayView } from "@/components/common/calendar/day-view";
+import { EventDialog } from "@/components/common/calendar/event-dialog";
+import { MonthView } from "@/components/common/calendar/month-view";
+import type {
+  CalendarEvent,
+  CalendarView,
+} from "@/components/common/calendar/types";
+import { addHoursToDate } from "@/components/common/calendar/utils";
+import { WeekView } from "@/components/common/calendar/week-view";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 
 export interface EventCalendarProps {
   events?: CalendarEvent[];
@@ -160,11 +164,11 @@ export function EventCalendar({
     }
 
     const newEvent: CalendarEvent = {
-      id: "",
-      title: "",
-      start: startTime,
-      end: addHoursToDate(startTime, 1),
       allDay: false,
+      end: addHoursToDate(startTime, 1),
+      id: "",
+      start: startTime,
+      title: "",
     };
     setSelectedEvent(newEvent);
     setIsEventDialogOpen(true);
@@ -221,21 +225,22 @@ export function EventCalendar({
   const viewTitle = useMemo(() => {
     if (view === "month") {
       return format(currentDate, "MMMM yyyy");
-    } else if (view === "week") {
+    }
+    if (view === "week") {
       const start = startOfWeek(currentDate, { weekStartsOn: 0 });
       const end = endOfWeek(currentDate, { weekStartsOn: 0 });
       if (isSameMonth(start, end)) {
         return format(start, "MMMM yyyy");
-      } else {
-        return `${format(start, "MMM")} - ${format(end, "MMM yyyy")}`;
       }
-    } else if (view === "day") {
+      return `${format(start, "MMM")} - ${format(end, "MMM yyyy")}`;
+    }
+    if (view === "day") {
       return (
         <>
-          <span className="min-[480px]:hidden" aria-hidden="true">
+          <span aria-hidden="true" className="min-[480px]:hidden">
             {format(currentDate, "MMM d, yyyy")}
           </span>
-          <span className="max-[479px]:hidden md:hidden" aria-hidden="true">
+          <span aria-hidden="true" className="max-[479px]:hidden md:hidden">
             {format(currentDate, "MMMM d, yyyy")}
           </span>
           <span className="max-md:hidden">
@@ -243,28 +248,27 @@ export function EventCalendar({
           </span>
         </>
       );
-    } else if (view === "agenda") {
+    }
+    if (view === "agenda") {
       // Show the month range for agenda view
       const start = currentDate;
       const end = addDays(currentDate, AgendaDaysToShow - 1);
 
       if (isSameMonth(start, end)) {
         return format(start, "MMMM yyyy");
-      } else {
-        return `${format(start, "MMM")} - ${format(end, "MMM yyyy")}`;
       }
-    } else {
-      return format(currentDate, "MMMM yyyy");
+      return `${format(start, "MMM")} - ${format(end, "MMM yyyy")}`;
     }
+    return format(currentDate, "MMMM yyyy");
   }, [currentDate, view]);
 
   return (
     <div
-      className="flex flex-col rounded-lg border has-data-[slot=month-view]:flex-1 bg-base-100"
+      className="flex flex-col rounded-lg border has-data-[slot=month-view]:flex-1"
       style={
         {
-          "--event-height": `${EventHeight}px`,
           "--event-gap": `${EventGap}px`,
+          "--event-height": `${EventHeight}px`,
           "--week-cells-height": `${WeekCellsHeight}px`,
         } as React.CSSProperties
       }
@@ -278,52 +282,45 @@ export function EventCalendar({
         >
           <div className="flex items-center gap-1 sm:gap-4">
             <Button
-              library={"daisy"}
-              variant="outline"
-              className="aspect-square max-[479px]:p-0!"
+              className="max-[479px]:aspect-square max-[479px]:p-0!"
               onClick={handleToday}
+              variant="outline"
             >
               <RiCalendarCheckLine
+                aria-hidden="true"
                 className="min-[480px]:hidden"
                 size={16}
-                aria-hidden="true"
               />
               <span className="max-[479px]:sr-only">Today</span>
             </Button>
             <div className="flex items-center sm:gap-2">
               <Button
-                library={"daisy"}
-                variant="ghost"
-                size="sm"
-                onClick={handlePrevious}
                 aria-label="Previous"
+                onClick={handlePrevious}
+                size="icon"
+                variant="ghost"
               >
-                <ChevronLeftIcon size={16} aria-hidden="true" />
+                <ChevronLeftIcon aria-hidden="true" size={16} />
               </Button>
               <Button
-                variant="ghost"
-                library={"daisy"}
-                size="sm"
-                onClick={handleNext}
                 aria-label="Next"
+                onClick={handleNext}
+                size="icon"
+                variant="ghost"
               >
-                <ChevronRightIcon size={16} aria-hidden="true" />
+                <ChevronRightIcon aria-hidden="true" size={16} />
               </Button>
             </div>
-            <h2 className="text-sm font-semibold sm:text-lg md:text-xl">
+            <h2 className="font-semibold text-sm sm:text-lg md:text-xl">
               {viewTitle}
             </h2>
           </div>
           <div className="flex items-center gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button
-                  library={"daisy"}
-                  variant="outline"
-                  className="gap-1.5 max-[479px]:h-8"
-                >
+                <Button className="gap-1.5 max-[479px]:h-8" variant="outline">
                   <span>
-                    <span className="min-[480px]:hidden" aria-hidden="true">
+                    <span aria-hidden="true" className="min-[480px]:hidden">
                       {view.charAt(0).toUpperCase()}
                     </span>
                     <span className="max-[479px]:sr-only">
@@ -331,9 +328,9 @@ export function EventCalendar({
                     </span>
                   </span>
                   <ChevronDownIcon
+                    aria-hidden="true"
                     className="-me-1 opacity-60"
                     size={16}
-                    aria-hidden="true"
                   />
                 </Button>
               </DropdownMenuTrigger>
@@ -353,17 +350,17 @@ export function EventCalendar({
               </DropdownMenuContent>
             </DropdownMenu>
             <Button
-              library={"daisy"}
-              variant={"info"}
+              className="max-[479px]:aspect-square max-[479px]:p-0!"
               onClick={() => {
                 setSelectedEvent(null); // Ensure we're creating a new event
                 setIsEventDialogOpen(true);
               }}
+              size="sm"
             >
               <PlusIcon
-                className="opacity-60 sm:-ms-1"
-                size={16}
                 aria-hidden="true"
+                className="sm:-ms-1 opacity-60"
+                size={16}
               />
               <span className="max-sm:sr-only">New event</span>
             </Button>
@@ -375,24 +372,24 @@ export function EventCalendar({
             <MonthView
               currentDate={currentDate}
               events={events}
-              onEventSelect={handleEventSelect}
               onEventCreate={handleEventCreate}
+              onEventSelect={handleEventSelect}
             />
           )}
           {view === "week" && (
             <WeekView
               currentDate={currentDate}
               events={events}
-              onEventSelect={handleEventSelect}
               onEventCreate={handleEventCreate}
+              onEventSelect={handleEventSelect}
             />
           )}
           {view === "day" && (
             <DayView
               currentDate={currentDate}
               events={events}
-              onEventSelect={handleEventSelect}
               onEventCreate={handleEventCreate}
+              onEventSelect={handleEventSelect}
             />
           )}
           {view === "agenda" && (
@@ -411,8 +408,8 @@ export function EventCalendar({
             setIsEventDialogOpen(false);
             setSelectedEvent(null);
           }}
-          onSave={handleEventSave}
           onDelete={handleEventDelete}
+          onSave={handleEventSave}
         />
       </CalendarDndProvider>
     </div>

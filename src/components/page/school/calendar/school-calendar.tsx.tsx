@@ -3,130 +3,130 @@
 import { addDays, setHours, setMinutes, subDays } from "date-fns";
 import { useState } from "react";
 
-import { EventCalendar } from "@/components/page/calendar/calendar/event-calendar";
-import type { CalendarEvent } from "./calendar/types";
+import { EventCalendar } from "@/components/common/calendar/event-calendar";
+import type { CalendarEvent } from "@/components/common/calendar/types";
 
 // Sample events data with hardcoded times
 const sampleEvents: CalendarEvent[] = [
   {
-    id: "1",
-    title: "Annual Planning",
-    description: "Strategic planning for next year",
-    start: subDays(new Date(), 24), // 24 days before today
-    end: subDays(new Date(), 23), // 23 days before today
     allDay: true,
     color: "sky",
-    location: "Main Conference Hall",
-  },
-  {
-    id: "2",
-    title: "Project Deadline",
-    description: "Submit final deliverables",
-    start: setMinutes(setHours(subDays(new Date(), 9), 13), 0), // 1:00 PM, 9 days before
-    end: setMinutes(setHours(subDays(new Date(), 9), 15), 30), // 3:30 PM, 9 days before
-    color: "amber",
-    location: "Office",
-  },
-  {
-    id: "3",
-    title: "Quarterly Budget Review",
     description: "Strategic planning for next year",
-    start: subDays(new Date(), 13), // 13 days before today
-    end: subDays(new Date(), 13), // 13 days before today
+    end: subDays(new Date(), 23), // 23 days before today
+    id: "1",
+    location: "Main Conference Hall",
+    start: subDays(new Date(), 24), // 24 days before today
+    title: "Annual Planning",
+  },
+  {
+    color: "amber",
+    description: "Submit final deliverables",
+    end: setMinutes(setHours(subDays(new Date(), 9), 15), 30), // 3:30 PM, 9 days before
+    id: "2",
+    location: "Office",
+    start: setMinutes(setHours(subDays(new Date(), 9), 13), 0), // 1:00 PM, 9 days before
+    title: "Project Deadline",
+  },
+  {
     allDay: true,
     color: "orange",
+    description: "Strategic planning for next year",
+    end: subDays(new Date(), 13), // 13 days before today
+    id: "3",
     location: "Main Conference Hall",
+    start: subDays(new Date(), 13), // 13 days before today
+    title: "Quarterly Budget Review",
   },
   {
-    id: "4",
-    title: "Team Meeting",
-    description: "Weekly team sync",
-    start: setMinutes(setHours(new Date(), 10), 0), // 10:00 AM today
-    end: setMinutes(setHours(new Date(), 11), 0), // 11:00 AM today
     color: "sky",
+    description: "Weekly team sync",
+    end: setMinutes(setHours(new Date(), 11), 0), // 11:00 AM today
+    id: "4",
     location: "Conference Room A",
+    start: setMinutes(setHours(new Date(), 10), 0), // 10:00 AM today
+    title: "Team Meeting",
   },
   {
-    id: "5",
-    title: "Lunch with Client",
-    description: "Discuss new project requirements",
-    start: setMinutes(setHours(addDays(new Date(), 1), 12), 0), // 12:00 PM, 1 day from now
-    end: setMinutes(setHours(addDays(new Date(), 1), 13), 15), // 1:15 PM, 1 day from now
     color: "emerald",
+    description: "Discuss new project requirements",
+    end: setMinutes(setHours(addDays(new Date(), 1), 13), 15), // 1:15 PM, 1 day from now
+    id: "5",
     location: "Downtown Cafe",
+    start: setMinutes(setHours(addDays(new Date(), 1), 12), 0), // 12:00 PM, 1 day from now
+    title: "Lunch with Client",
   },
   {
-    id: "6",
-    title: "Product Launch",
-    description: "New product release",
-    start: addDays(new Date(), 3), // 3 days from now
-    end: addDays(new Date(), 6), // 6 days from now
     allDay: true,
     color: "violet",
+    description: "New product release",
+    end: addDays(new Date(), 6), // 6 days from now
+    id: "6",
+    start: addDays(new Date(), 3), // 3 days from now
+    title: "Product Launch",
   },
   {
-    id: "7",
-    title: "Sales Conference",
-    description: "Discuss about new clients",
-    start: setMinutes(setHours(addDays(new Date(), 4), 14), 30), // 2:30 PM, 4 days from now
-    end: setMinutes(setHours(addDays(new Date(), 5), 14), 45), // 2:45 PM, 5 days from now
     color: "rose",
+    description: "Discuss about new clients",
+    end: setMinutes(setHours(addDays(new Date(), 5), 14), 45), // 2:45 PM, 5 days from now
+    id: "7",
     location: "Downtown Cafe",
+    start: setMinutes(setHours(addDays(new Date(), 4), 14), 30), // 2:30 PM, 4 days from now
+    title: "Sales Conference",
   },
   {
-    id: "8",
-    title: "Team Meeting",
-    description: "Weekly team sync",
-    start: setMinutes(setHours(addDays(new Date(), 5), 9), 0), // 9:00 AM, 5 days from now
-    end: setMinutes(setHours(addDays(new Date(), 5), 10), 30), // 10:30 AM, 5 days from now
     color: "orange",
-    location: "Conference Room A",
-  },
-  {
-    id: "9",
-    title: "Review contracts",
     description: "Weekly team sync",
-    start: setMinutes(setHours(addDays(new Date(), 5), 14), 0), // 2:00 PM, 5 days from now
-    end: setMinutes(setHours(addDays(new Date(), 5), 15), 30), // 3:30 PM, 5 days from now
-    color: "sky",
+    end: setMinutes(setHours(addDays(new Date(), 5), 10), 30), // 10:30 AM, 5 days from now
+    id: "8",
     location: "Conference Room A",
-  },
-  {
-    id: "10",
+    start: setMinutes(setHours(addDays(new Date(), 5), 9), 0), // 9:00 AM, 5 days from now
     title: "Team Meeting",
+  },
+  {
+    color: "sky",
     description: "Weekly team sync",
-    start: setMinutes(setHours(addDays(new Date(), 5), 9), 45), // 9:45 AM, 5 days from now
-    end: setMinutes(setHours(addDays(new Date(), 5), 11), 0), // 11:00 AM, 5 days from now
-    color: "amber",
+    end: setMinutes(setHours(addDays(new Date(), 5), 15), 30), // 3:30 PM, 5 days from now
+    id: "9",
     location: "Conference Room A",
+    start: setMinutes(setHours(addDays(new Date(), 5), 14), 0), // 2:00 PM, 5 days from now
+    title: "Review contracts",
   },
   {
-    id: "11",
-    title: "Marketing Strategy Session",
-    description: "Quarterly marketing planning",
-    start: setMinutes(setHours(addDays(new Date(), 9), 10), 0), // 10:00 AM, 9 days from now
-    end: setMinutes(setHours(addDays(new Date(), 9), 15), 30), // 3:30 PM, 9 days from now
+    color: "amber",
+    description: "Weekly team sync",
+    end: setMinutes(setHours(addDays(new Date(), 5), 11), 0), // 11:00 AM, 5 days from now
+    id: "10",
+    location: "Conference Room A",
+    start: setMinutes(setHours(addDays(new Date(), 5), 9), 45), // 9:45 AM, 5 days from now
+    title: "Team Meeting",
+  },
+  {
     color: "emerald",
+    description: "Quarterly marketing planning",
+    end: setMinutes(setHours(addDays(new Date(), 9), 15), 30), // 3:30 PM, 9 days from now
+    id: "11",
     location: "Marketing Department",
+    start: setMinutes(setHours(addDays(new Date(), 9), 10), 0), // 10:00 AM, 9 days from now
+    title: "Marketing Strategy Session",
   },
   {
-    id: "12",
-    title: "Annual Shareholders Meeting",
-    description: "Presentation of yearly results",
-    start: addDays(new Date(), 17), // 17 days from now
-    end: addDays(new Date(), 17), // 17 days from now
     allDay: true,
     color: "sky",
+    description: "Presentation of yearly results",
+    end: addDays(new Date(), 17), // 17 days from now
+    id: "12",
     location: "Grand Conference Center",
+    start: addDays(new Date(), 17), // 17 days from now
+    title: "Annual Shareholders Meeting",
   },
   {
-    id: "13",
-    title: "Product Development Workshop",
-    description: "Brainstorming for new features",
-    start: setMinutes(setHours(addDays(new Date(), 26), 9), 0), // 9:00 AM, 26 days from now
-    end: setMinutes(setHours(addDays(new Date(), 27), 17), 0), // 5:00 PM, 27 days from now
     color: "rose",
+    description: "Brainstorming for new features",
+    end: setMinutes(setHours(addDays(new Date(), 27), 17), 0), // 5:00 PM, 27 days from now
+    id: "13",
     location: "Innovation Lab",
+    start: setMinutes(setHours(addDays(new Date(), 26), 9), 0), // 9:00 AM, 26 days from now
+    title: "Product Development Workshop",
   },
 ];
 
@@ -153,8 +153,8 @@ export default function SchoolCalendar() {
     <EventCalendar
       events={events}
       onEventAdd={handleEventAdd}
-      onEventUpdate={handleEventUpdate}
       onEventDelete={handleEventDelete}
+      onEventUpdate={handleEventUpdate}
     />
   );
 }

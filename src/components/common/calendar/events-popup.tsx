@@ -1,11 +1,10 @@
 "use client";
 
+import { EventItem } from "@/components/common/calendar/event-item";
+import type { CalendarEvent } from "@/components/common/calendar/types";
 import { format, isSameDay } from "date-fns";
 import { XIcon } from "lucide-react";
 import { useEffect, useMemo, useRef } from "react";
-import { Button } from "react-aria-components";
-import { EventItem } from "./event-item";
-import type { CalendarEvent } from "./types";
 
 interface EventsPopupProps {
   date: Date;
@@ -86,27 +85,28 @@ export function EventsPopup({
 
   return (
     <div
+      className="absolute z-50 max-h-96 w-80 overflow-auto rounded-md border bg-background shadow-lg"
       ref={popupRef}
-      className="bg-background absolute z-50 max-h-96 w-80 overflow-auto rounded-md border shadow-lg"
       style={{
-        top: `${adjustedPosition.top}px`,
         left: `${adjustedPosition.left}px`,
+        top: `${adjustedPosition.top}px`,
       }}
     >
-      <div className="bg-background sticky top-0 flex items-center justify-between border-b p-3">
+      <div className="sticky top-0 flex items-center justify-between border-b bg-background p-3">
         <h3 className="font-medium">{format(date, "d MMMM yyyy")}</h3>
-        <Button
-          onClick={onClose}
-          className="hover:bg-muted rounded-full p-1"
+        <button
           aria-label="Close"
+          className="rounded-full p-1 hover:bg-muted"
+          onClick={onClose}
+          type="button"
         >
           <XIcon className="h-4 w-4" />
-        </Button>
+        </button>
       </div>
 
       <div className="space-y-2 p-3">
         {events.length === 0 ? (
-          <div className="text-muted-foreground py-2 text-sm">No events</div>
+          <div className="py-2 text-muted-foreground text-sm">No events</div>
         ) : (
           events.map((event) => {
             const eventStart = new Date(event.start);
@@ -115,23 +115,18 @@ export function EventsPopup({
             const isLastDay = isSameDay(date, eventEnd);
 
             return (
-              <Button
+              <div
+                className="cursor-pointer"
                 key={event.id}
-                className="w-full text-left"
                 onClick={() => handleEventClick(event)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    handleEventClick(event);
-                  }
-                }}
               >
                 <EventItem
                   event={event}
-                  view="agenda"
                   isFirstDay={isFirstDay}
                   isLastDay={isLastDay}
+                  view="agenda"
                 />
-              </Button>
+              </div>
             );
           })
         )}

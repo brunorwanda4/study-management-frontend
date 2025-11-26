@@ -1,4 +1,4 @@
-import SchoolCalendar from "@/components/page/calendar/school-calendar";
+import SchoolCalendar from "@/components/page/school/calendar/school-calendar.tsx";
 
 const CalendarPage = () => {
   return (

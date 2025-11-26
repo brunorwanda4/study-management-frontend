@@ -23,14 +23,14 @@ import {
   EndHour,
   StartHour,
   WeekCellsHeight,
-} from "@/components/page/calendar/calendar/constants";
+} from "@/components/common/calendar/constants";
+import { DraggableEvent } from "@/components/common/calendar/draggable-event";
+import { DroppableCell } from "@/components/common/calendar/droppable-cell";
+import { EventItem } from "@/components/common/calendar/event-item";
+import type { CalendarEvent } from "@/components/common/calendar/types";
+import { useCurrentTimeIndicator } from "@/components/common/calendar/use-current-time-indicator";
+import { isMultiDayEvent } from "@/components/common/calendar/utils";
 import { cn } from "@/lib/utils";
-import { DraggableEvent } from "./draggable-event";
-import { DroppableCell } from "./droppable-cell";
-import { EventItem } from "./event-item";
-import type { CalendarEvent } from "./types";
-import { useCurrentTimeIndicator } from "./use-current-time-indicator";
-import { isMultiDayEvent } from "./utils";
 
 interface WeekViewProps {
   currentDate: Date;
@@ -57,7 +57,7 @@ export function WeekView({
   const days = useMemo(() => {
     const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 });
     const weekEnd = endOfWeek(currentDate, { weekStartsOn: 0 });
-    return eachDayOfInterval({ start: weekStart, end: weekEnd });
+    return eachDayOfInterval({ end: weekEnd, start: weekStart });
   }, [currentDate]);
 
   const weekStart = useMemo(
@@ -68,8 +68,8 @@ export function WeekView({
   const hours = useMemo(() => {
     const dayStart = startOfDay(currentDate);
     return eachHourOfInterval({
-      start: addHours(dayStart, StartHour),
       end: addHours(dayStart, EndHour - 1),
+      start: addHours(dayStart, StartHour),
     });
   }, [currentDate]);
 
@@ -135,7 +135,7 @@ export function WeekView({
       // Track columns for overlapping events
       const columns: { event: CalendarEvent; end: Date }[][] = [];
 
-      sortedEvents.forEach((event) => {
+      for (const event of sortedEvents) {
         const eventStart = new Date(event.start);
         const eventEnd = new Date(event.end);
 
@@ -168,13 +168,14 @@ export function WeekView({
           } else {
             const overlaps = col.some((c) =>
               areIntervalsOverlapping(
-                { start: adjustedStart, end: adjustedEnd },
+                { end: adjustedEnd, start: adjustedStart },
                 {
-                  start: new Date(c.event.start),
                   end: new Date(c.event.end),
+                  start: new Date(c.event.start),
                 },
               ),
             );
+
             if (!overlaps) {
               placed = true;
             } else {
@@ -186,7 +187,7 @@ export function WeekView({
         // Ensure column is initialized before pushing
         const currentColumn = columns[columnIndex] || [];
         columns[columnIndex] = currentColumn;
-        currentColumn.push({ event, end: adjustedEnd });
+        currentColumn.push({ end: adjustedEnd, event });
 
         // Calculate width and left position based on number of columns
         const width = columnIndex === 0 ? 1 : 0.9;
@@ -194,13 +195,13 @@ export function WeekView({
 
         positionedEvents.push({
           event,
-          top,
           height,
           left,
+          top,
           width,
           zIndex: 10 + columnIndex, // Higher columns get higher z-index
         });
-      });
+      }
 
       return positionedEvents;
     });
@@ -220,18 +221,18 @@ export function WeekView({
   );
 
   return (
-    <div data-slot="week-view" className="flex h-full flex-col">
-      <div className="bg-background/80 border-border/70 sticky top-0 z-30 grid grid-cols-8 border-b backdrop-blur-md">
-        <div className="text-muted-foreground/70 py-2 text-center text-sm">
+    <div className="flex h-full flex-col" data-slot="week-view">
+      <div className="sticky top-0 z-30 grid grid-cols-8 border-border/70 border-b bg-background/80 backdrop-blur-md">
+        <div className="py-2 text-center text-muted-foreground/70 text-sm">
           <span className="max-[479px]:sr-only">{format(new Date(), "O")}</span>
         </div>
         {days.map((day) => (
           <div
-            key={day.toString()}
-            className="data-today:text-foreground text-muted-foreground/70 py-2 text-center text-sm data-today:font-medium"
+            className="py-2 text-center text-muted-foreground/70 text-sm data-today:font-medium data-today:text-foreground"
             data-today={isToday(day) || undefined}
+            key={day.toString()}
           >
-            <span className="sm:hidden" aria-hidden="true">
+            <span aria-hidden="true" className="sm:hidden">
               {format(day, "E")[0]} {format(day, "d")}
             </span>
             <span className="max-sm:hidden">{format(day, "EEE dd")}</span>
@@ -240,10 +241,10 @@ export function WeekView({
       </div>
 
       {showAllDaySection && (
-        <div className="border-border/70 bg-muted/50 border-b">
+        <div className="border-border/70 border-b bg-muted/50">
           <div className="grid grid-cols-8">
-            <div className="border-border/70 relative border-r">
-              <span className="text-muted-foreground/70 absolute bottom-0 left-0 h-6 w-16 max-w-full pe-2 text-right text-[10px] sm:pe-4 sm:text-xs">
+            <div className="relative border-border/70 border-r">
+              <span className="absolute bottom-0 left-0 h-6 w-16 max-w-full pe-2 text-right text-[10px] text-muted-foreground/70 sm:pe-4 sm:text-xs">
                 All day
               </span>
             </div>
@@ -260,9 +261,9 @@ export function WeekView({
 
               return (
                 <div
-                  key={day.toString()}
-                  className="border-border/70 relative border-r p-1 last:border-r-0"
+                  className="relative border-border/70 border-r p-1 last:border-r-0"
                   data-today={isToday(day) || undefined}
+                  key={day.toString()}
                 >
                   {dayAllDayEvents.map((event) => {
                     const eventStart = new Date(event.start);
@@ -277,20 +278,20 @@ export function WeekView({
 
                     return (
                       <EventItem
-                        key={`spanning-${event.id}`}
-                        onClick={(e) => handleEventClick(event, e)}
                         event={event}
-                        view="month"
                         isFirstDay={isFirstDay}
                         isLastDay={isLastDay}
+                        key={`spanning-${event.id}`}
+                        onClick={(e) => handleEventClick(event, e)}
+                        view="month"
                       >
                         {/* Show title if it's the first day of the event or the first visible day in the week */}
                         <div
+                          aria-hidden={!shouldShowTitle}
                           className={cn(
                             "truncate",
                             !shouldShowTitle && "invisible",
                           )}
-                          aria-hidden={!shouldShowTitle}
                         >
                           {event.title}
                         </div>
@@ -305,14 +306,14 @@ export function WeekView({
       )}
 
       <div className="grid flex-1 grid-cols-8 overflow-hidden">
-        <div className="border-border/70 grid auto-cols-fr border-r">
+        <div className="grid auto-cols-fr border-border/70 border-r">
           {hours.map((hour, index) => (
             <div
+              className="relative min-h-(--week-cells-height) border-border/70 border-b last:border-b-0"
               key={hour.toString()}
-              className="border-border/70 relative min-h-(--week-cells-height) border-b last:border-b-0"
             >
               {index > 0 && (
-                <span className="bg-background text-muted-foreground/70 absolute -top-3 left-0 flex h-6 w-16 max-w-full items-center justify-end pe-2 text-[10px] sm:pe-4 sm:text-xs">
+                <span className="-top-3 absolute left-0 flex h-6 w-16 max-w-full items-center justify-end bg-background pe-2 text-[10px] text-muted-foreground/70 sm:pe-4 sm:text-xs">
                   {format(hour, "h a")}
                 </span>
               )}
@@ -322,40 +323,34 @@ export function WeekView({
 
         {days.map((day, dayIndex) => (
           <div
-            key={day.toString()}
-            className="border-border/70 relative grid auto-cols-fr border-r last:border-r-0"
+            className="relative grid auto-cols-fr border-border/70 border-r last:border-r-0"
             data-today={isToday(day) || undefined}
+            key={day.toString()}
           >
             {/* Positioned events */}
             {(processedDayEvents[dayIndex] ?? []).map((positionedEvent) => (
-              <button
-                type="button"
-                key={positionedEvent.event.id}
+              <div
                 className="absolute z-10 px-0.5"
+                key={positionedEvent.event.id}
+                onClick={(e) => e.stopPropagation()}
                 style={{
-                  top: `${positionedEvent.top}px`,
                   height: `${positionedEvent.height}px`,
                   left: `${positionedEvent.left * 100}%`,
+                  top: `${positionedEvent.top}px`,
                   width: `${positionedEvent.width * 100}%`,
                   zIndex: positionedEvent.zIndex,
-                }}
-                onClick={(e) => e.stopPropagation()}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.stopPropagation();
-                  }
                 }}
               >
                 <div className="size-full">
                   <DraggableEvent
                     event={positionedEvent.event}
-                    view="week"
+                    height={positionedEvent.height}
                     onClick={(e) => handleEventClick(positionedEvent.event, e)}
                     showTime
-                    height={positionedEvent.height}
+                    view="week"
                   />
                 </div>
-              </button>
+              </div>
             ))}
 
             {/* Current time indicator - only show for today's column */}
@@ -365,8 +360,8 @@ export function WeekView({
                 style={{ top: `${currentTimePosition}%` }}
               >
                 <div className="relative flex items-center">
-                  <div className="bg-primary absolute -left-1 h-2 w-2 rounded-full"></div>
-                  <div className="bg-primary h-0.5 w-full"></div>
+                  <div className="-left-1 absolute h-2 w-2 rounded-full bg-primary" />
+                  <div className="h-0.5 w-full bg-primary" />
                 </div>
               </div>
             )}
@@ -374,18 +369,14 @@ export function WeekView({
               const hourValue = getHours(hour);
               return (
                 <div
+                  className="relative min-h-(--week-cells-height) border-border/70 border-b last:border-b-0"
                   key={hour.toString()}
-                  className="border-border/70 relative min-h-(--week-cells-height) border-b last:border-b-0"
                 >
                   {/* Quarter-hour intervals */}
                   {[0, 1, 2, 3].map((quarter) => {
                     const quarterHourTime = hourValue + quarter * 0.25;
                     return (
                       <DroppableCell
-                        key={`${hour.toString()}-${quarter}`}
-                        id={`week-cell-${day.toISOString()}-${quarterHourTime}`}
-                        date={day}
-                        time={quarterHourTime}
                         className={cn(
                           "absolute h-[calc(var(--week-cells-height)/4)] w-full",
                           quarter === 0 && "top-0",
@@ -396,12 +387,16 @@ export function WeekView({
                           quarter === 3 &&
                             "top-[calc(var(--week-cells-height)/4*3)]",
                         )}
+                        date={day}
+                        id={`week-cell-${day.toISOString()}-${quarterHourTime}`}
+                        key={`${hour.toString()}-${quarter}`}
                         onClick={() => {
                           const startTime = new Date(day);
                           startTime.setHours(hourValue);
                           startTime.setMinutes(quarter * 15);
                           onEventCreate(startTime);
                         }}
+                        time={quarterHourTime}
                       />
                     );
                   })}

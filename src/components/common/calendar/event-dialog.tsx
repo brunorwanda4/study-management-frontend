@@ -1,11 +1,19 @@
 "use client";
 
+import { RiCalendarLine, RiDeleteBinLine } from "@remixicon/react";
+import { format, isBefore } from "date-fns";
+import { useCallback, useEffect, useMemo, useState } from "react";
+
 import {
   DefaultEndHour,
   DefaultStartHour,
   EndHour,
   StartHour,
-} from "@/components/page/calendar/calendar/constants";
+} from "@/components/common/calendar/constants";
+import type {
+  CalendarEvent,
+  EventColor,
+} from "@/components/common/calendar/types";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -34,10 +42,6 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { RiCalendarLine, RiDeleteBinLine } from "@remixicon/react";
-import { format, isBefore } from "date-fns";
-import { useEffect, useMemo, useState } from "react";
-import type { CalendarEvent, EventColor } from "./types";
 
 interface EventDialogProps {
   event: CalendarEvent | null;
@@ -67,7 +71,12 @@ export function EventDialog({
   const [startDateOpen, setStartDateOpen] = useState(false);
   const [endDateOpen, setEndDateOpen] = useState(false);
 
-  const resetForm = () => {
+  // Debug log to check what event is being passed
+  useEffect(() => {
+    console.log("EventDialog received event:", event);
+  }, [event]);
+
+  const resetForm = useCallback(() => {
     setTitle("");
     setDescription("");
     setStartDate(new Date());
@@ -78,17 +87,13 @@ export function EventDialog({
     setLocation("");
     setColor("sky");
     setError(null);
-  };
+  }, []);
 
-  const formatTimeForInput = (date: Date) => {
+  const formatTimeForInput = useCallback((date: Date) => {
     const hours = date.getHours().toString().padStart(2, "0");
     const minutes = Math.floor(date.getMinutes() / 15) * 15;
     return `${hours}:${minutes.toString().padStart(2, "0")}`;
-  };
-  // Debug log to check what event is being passed
-  useEffect(() => {
-    console.log("EventDialog received event:", event);
-  }, [event]);
+  }, []);
 
   useEffect(() => {
     if (event) {
@@ -109,7 +114,6 @@ export function EventDialog({
     } else {
       resetForm();
     }
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   }, [event, formatTimeForInput, resetForm]);
 
   // Memoize time options so they're only calculated once
@@ -123,7 +127,7 @@ export function EventDialog({
         // Use a fixed date to avoid unnecessary date object creations
         const date = new Date(2000, 0, 1, hour, minute);
         const label = format(date, "h:mm a");
-        options.push({ value, label });
+        options.push({ label, value });
       }
     }
     return options;
@@ -168,14 +172,14 @@ export function EventDialog({
     const eventTitle = title.trim() ? title : "(no title)";
 
     onSave({
-      id: event?.id || "",
-      title: eventTitle,
-      description,
-      start,
-      end,
       allDay,
-      location,
       color,
+      description,
+      end,
+      id: event?.id || "",
+      location,
+      start,
+      title: eventTitle,
     });
   };
 
@@ -193,45 +197,45 @@ export function EventDialog({
     borderClass: string;
   }> = [
     {
-      value: "sky",
-      label: "Sky",
       bgClass: "bg-sky-400 data-[state=checked]:bg-sky-400",
       borderClass: "border-sky-400 data-[state=checked]:border-sky-400",
+      label: "Sky",
+      value: "sky",
     },
     {
-      value: "amber",
-      label: "Amber",
       bgClass: "bg-amber-400 data-[state=checked]:bg-amber-400",
       borderClass: "border-amber-400 data-[state=checked]:border-amber-400",
+      label: "Amber",
+      value: "amber",
     },
     {
-      value: "violet",
-      label: "Violet",
       bgClass: "bg-violet-400 data-[state=checked]:bg-violet-400",
       borderClass: "border-violet-400 data-[state=checked]:border-violet-400",
+      label: "Violet",
+      value: "violet",
     },
     {
-      value: "rose",
-      label: "Rose",
       bgClass: "bg-rose-400 data-[state=checked]:bg-rose-400",
       borderClass: "border-rose-400 data-[state=checked]:border-rose-400",
+      label: "Rose",
+      value: "rose",
     },
     {
-      value: "emerald",
-      label: "Emerald",
       bgClass: "bg-emerald-400 data-[state=checked]:bg-emerald-400",
       borderClass: "border-emerald-400 data-[state=checked]:border-emerald-400",
+      label: "Emerald",
+      value: "emerald",
     },
     {
-      value: "orange",
-      label: "Orange",
       bgClass: "bg-orange-400 data-[state=checked]:bg-orange-400",
       borderClass: "border-orange-400 data-[state=checked]:border-orange-400",
+      label: "Orange",
+      value: "orange",
     },
   ];
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+    <Dialog onOpenChange={(open) => !open && onClose()} open={isOpen}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{event?.id ? "Edit Event" : "Create Event"}</DialogTitle>
@@ -242,7 +246,7 @@ export function EventDialog({
           </DialogDescription>
         </DialogHeader>
         {error && (
-          <div className="bg-destructive/15 text-destructive rounded-md px-3 py-2 text-sm">
+          <div className="rounded-md bg-destructive/15 px-3 py-2 text-destructive text-sm">
             {error}
           </div>
         )}
@@ -251,8 +255,8 @@ export function EventDialog({
             <Label htmlFor="title">Title</Label>
             <Input
               id="title"
-              value={title}
               onChange={(e) => setTitle(e.target.value)}
+              value={title}
             />
           </div>
 
@@ -260,24 +264,24 @@ export function EventDialog({
             <Label htmlFor="description">Description</Label>
             <Textarea
               id="description"
-              value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
+              value={description}
             />
           </div>
 
           <div className="flex gap-4">
             <div className="flex-1 *:not-first:mt-1.5">
               <Label htmlFor="start-date">Start Date</Label>
-              <Popover open={startDateOpen} onOpenChange={setStartDateOpen}>
+              <Popover onOpenChange={setStartDateOpen} open={startDateOpen}>
                 <PopoverTrigger asChild>
                   <Button
-                    id="start-date"
-                    variant={"outline"}
                     className={cn(
-                      "group bg-background hover:bg-background border-input w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]",
+                      "group w-full justify-between border-input bg-background px-3 font-normal outline-none outline-offset-0 hover:bg-background focus-visible:outline-[3px]",
                       !startDate && "text-muted-foreground",
                     )}
+                    id="start-date"
+                    variant={"outline"}
                   >
                     <span
                       className={cn(
@@ -288,17 +292,16 @@ export function EventDialog({
                       {startDate ? format(startDate, "PPP") : "Pick a date"}
                     </span>
                     <RiCalendarLine
-                      size={16}
-                      className="text-muted-foreground/80 shrink-0"
                       aria-hidden="true"
+                      className="shrink-0 text-muted-foreground/80"
+                      size={16}
                     />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-2" align="start">
+                <PopoverContent align="start" className="w-auto p-2">
                   <Calendar
-                    mode="single"
-                    selected={startDate}
                     defaultMonth={startDate}
+                    mode="single"
                     onSelect={(date) => {
                       if (date) {
                         setStartDate(date);
@@ -310,6 +313,7 @@ export function EventDialog({
                         setStartDateOpen(false);
                       }
                     }}
+                    selected={startDate}
                   />
                 </PopoverContent>
               </Popover>
@@ -318,7 +322,7 @@ export function EventDialog({
             {!allDay && (
               <div className="min-w-28 *:not-first:mt-1.5">
                 <Label htmlFor="start-time">Start Time</Label>
-                <Select value={startTime} onValueChange={setStartTime}>
+                <Select onValueChange={setStartTime} value={startTime}>
                   <SelectTrigger id="start-time">
                     <SelectValue placeholder="Select time" />
                   </SelectTrigger>
@@ -337,15 +341,15 @@ export function EventDialog({
           <div className="flex gap-4">
             <div className="flex-1 *:not-first:mt-1.5">
               <Label htmlFor="end-date">End Date</Label>
-              <Popover open={endDateOpen} onOpenChange={setEndDateOpen}>
+              <Popover onOpenChange={setEndDateOpen} open={endDateOpen}>
                 <PopoverTrigger asChild>
                   <Button
-                    id="end-date"
-                    variant={"outline"}
                     className={cn(
-                      "group bg-background hover:bg-background border-input w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]",
+                      "group w-full justify-between border-input bg-background px-3 font-normal outline-none outline-offset-0 hover:bg-background focus-visible:outline-[3px]",
                       !endDate && "text-muted-foreground",
                     )}
+                    id="end-date"
+                    variant={"outline"}
                   >
                     <span
                       className={cn(
@@ -356,18 +360,17 @@ export function EventDialog({
                       {endDate ? format(endDate, "PPP") : "Pick a date"}
                     </span>
                     <RiCalendarLine
-                      size={16}
-                      className="text-muted-foreground/80 shrink-0"
                       aria-hidden="true"
+                      className="shrink-0 text-muted-foreground/80"
+                      size={16}
                     />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-2" align="start">
+                <PopoverContent align="start" className="w-auto p-2">
                   <Calendar
-                    mode="single"
-                    selected={endDate}
                     defaultMonth={endDate}
                     disabled={{ before: startDate }}
+                    mode="single"
                     onSelect={(date) => {
                       if (date) {
                         setEndDate(date);
@@ -375,6 +378,7 @@ export function EventDialog({
                         setEndDateOpen(false);
                       }
                     }}
+                    selected={endDate}
                   />
                 </PopoverContent>
               </Popover>
@@ -383,7 +387,7 @@ export function EventDialog({
             {!allDay && (
               <div className="min-w-28 *:not-first:mt-1.5">
                 <Label htmlFor="end-time">End Time</Label>
-                <Select value={endTime} onValueChange={setEndTime}>
+                <Select onValueChange={setEndTime} value={endTime}>
                   <SelectTrigger id="end-time">
                     <SelectValue placeholder="Select time" />
                   </SelectTrigger>
@@ -401,8 +405,8 @@ export function EventDialog({
 
           <div className="flex items-center gap-2">
             <Checkbox
-              id="all-day"
               checked={allDay}
+              id="all-day"
               onCheckedChange={(checked) => setAllDay(checked === true)}
             />
             <Label htmlFor="all-day">All day</Label>
@@ -412,31 +416,31 @@ export function EventDialog({
             <Label htmlFor="location">Location</Label>
             <Input
               id="location"
-              value={location}
               onChange={(e) => setLocation(e.target.value)}
+              value={location}
             />
           </div>
           <fieldset className="space-y-4">
-            <legend className="text-foreground text-sm leading-none font-medium">
+            <legend className="font-medium text-foreground text-sm leading-none">
               Etiquette
             </legend>
             <RadioGroup
               className="flex gap-1.5"
               defaultValue={colorOptions[0]?.value}
-              value={color}
               onValueChange={(value: EventColor) => setColor(value)}
+              value={color}
             >
               {colorOptions.map((colorOption) => (
                 <RadioGroupItem
-                  key={colorOption.value}
-                  id={`color-${colorOption.value}`}
-                  value={colorOption.value}
                   aria-label={colorOption.label}
                   className={cn(
                     "size-6 shadow-none",
                     colorOption.bgClass,
                     colorOption.borderClass,
                   )}
+                  id={`color-${colorOption.value}`}
+                  key={colorOption.value}
+                  value={colorOption.value}
                 />
               ))}
             </RadioGroup>
@@ -445,16 +449,16 @@ export function EventDialog({
         <DialogFooter className="flex-row sm:justify-between">
           {event?.id && (
             <Button
-              variant="outline"
-              size="icon"
-              onClick={handleDelete}
               aria-label="Delete event"
+              onClick={handleDelete}
+              size="icon"
+              variant="outline"
             >
-              <RiDeleteBinLine size={16} aria-hidden="true" />
+              <RiDeleteBinLine aria-hidden="true" size={16} />
             </Button>
           )}
           <div className="flex flex-1 justify-end gap-2">
-            <Button variant="outline" onClick={onClose}>
+            <Button onClick={onClose} variant="outline">
               Cancel
             </Button>
             <Button onClick={handleSave}>Save</Button>

@@ -1,12 +1,12 @@
 "use client";
 
+import { useCalendarDnd } from "@/components/common/calendar/calendar-dnd-context";
+import { EventItem } from "@/components/common/calendar/event-item";
+import type { CalendarEvent } from "@/components/common/calendar/types";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import { differenceInDays } from "date-fns";
 import { useRef, useState } from "react";
-import { useCalendarDnd } from "./calendar-dnd-context";
-import { EventItem } from "./event-item";
-import type { CalendarEvent } from "./types";
 
 interface DraggableEventProps {
   event: CalendarEvent;
@@ -48,17 +48,17 @@ export function DraggableEvent({
 
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
-      id: `${event.id}-${view}`,
       data: {
-        event,
-        view,
-        height: height || elementRef.current?.offsetHeight || null,
-        isMultiDay: isMultiDayEvent,
-        multiDayWidth: multiDayWidth,
         dragHandlePosition,
+        event,
+        height: height || elementRef.current?.offsetHeight || null,
         isFirstDay,
         isLastDay,
+        isMultiDay: isMultiDayEvent,
+        multiDayWidth: multiDayWidth,
+        view,
       },
+      id: `${event.id}-${view}`,
     });
 
   // Handle mouse down to track where on the event the user clicked
@@ -76,8 +76,8 @@ export function DraggableEvent({
   if (isDragging || activeId === `${event.id}-${view}`) {
     return (
       <div
-        ref={setNodeRef}
         className="opacity-0"
+        ref={setNodeRef}
         style={{ height: height || "auto" }}
       />
     );
@@ -85,8 +85,8 @@ export function DraggableEvent({
 
   const style = transform
     ? {
-        transform: CSS.Translate.toString(transform),
         height: height || "auto",
+        transform: CSS.Translate.toString(transform),
         width:
           isMultiDayEvent && multiDayWidth ? `${multiDayWidth}%` : undefined,
       }
@@ -112,26 +112,26 @@ export function DraggableEvent({
 
   return (
     <div
+      className="touch-none"
       ref={(node) => {
         setNodeRef(node);
         if (elementRef) elementRef.current = node;
       }}
       style={style}
-      className="touch-none"
     >
       <EventItem
+        aria-hidden={ariaHidden}
+        dndAttributes={attributes}
+        dndListeners={listeners}
         event={event}
-        view={view}
-        showTime={showTime}
+        isDragging={isDragging}
         isFirstDay={isFirstDay}
         isLastDay={isLastDay}
-        isDragging={isDragging}
         onClick={onClick}
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
-        dndListeners={listeners}
-        dndAttributes={attributes}
-        aria-hidden={ariaHidden}
+        showTime={showTime}
+        view={view}
       />
     </div>
   );

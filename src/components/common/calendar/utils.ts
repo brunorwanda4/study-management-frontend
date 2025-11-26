@@ -1,5 +1,8 @@
+import type {
+  CalendarEvent,
+  EventColor,
+} from "@/components/common/calendar/types";
 import { isSameDay } from "date-fns";
-import type { CalendarEvent, EventColor } from "./types";
 
 /**
  * Get CSS classes for event colors
@@ -34,13 +37,14 @@ export function getBorderRadiusClasses(
 ): string {
   if (isFirstDay && isLastDay) {
     return "rounded"; // Both ends rounded
-  } else if (isFirstDay) {
-    return "rounded-l rounded-r-none"; // Only left end rounded
-  } else if (isLastDay) {
-    return "rounded-r rounded-l-none"; // Only right end rounded
-  } else {
-    return "rounded-none"; // No rounded corners
   }
+  if (isFirstDay) {
+    return "rounded-l rounded-r-none"; // Only left end rounded
+  }
+  if (isLastDay) {
+    return "rounded-r rounded-l-none"; // Only right end rounded
+  }
+  return "rounded-none"; // No rounded corners
 }
 
 /**

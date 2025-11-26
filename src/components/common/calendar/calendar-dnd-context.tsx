@@ -1,5 +1,7 @@
 "use client";
 
+import { EventItem } from "@/components/common/calendar/event-item";
+import type { CalendarEvent } from "@/components/common/calendar/types";
 import {
   DndContext,
   type DragEndEvent,
@@ -22,10 +24,6 @@ import {
   useRef,
   useState,
 } from "react";
-
-import { EventItem } from "./event-item";
-import type { CalendarEvent } from "./types";
-
 // Define the context type
 type CalendarDndContextType = {
   activeEvent: CalendarEvent | null;
@@ -51,10 +49,10 @@ const CalendarDndContext = createContext<CalendarDndContextType>({
   activeId: null,
   activeView: null,
   currentTime: null,
+  dragHandlePosition: null,
   eventHeight: null,
   isMultiDay: false,
   multiDayWidth: null,
-  dragHandlePosition: null,
 });
 
 // Hook to use the context
@@ -305,8 +303,8 @@ export function CalendarDndProvider({
         // Update the event only if the time has changed
         onEventUpdate({
           ...calendarEvent,
-          start: newStart,
           end: newEnd,
+          start: newStart,
         });
       }
     } catch (error) {
@@ -327,10 +325,10 @@ export function CalendarDndProvider({
   return (
     <DndContext
       id={dndContextId}
-      sensors={sensors}
-      onDragStart={handleDragStart}
-      onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
+      onDragOver={handleDragOver}
+      onDragStart={handleDragStart}
+      sensors={sensors}
     >
       <CalendarDndContext.Provider
         value={{
@@ -338,10 +336,10 @@ export function CalendarDndProvider({
           activeId,
           activeView,
           currentTime,
+          dragHandlePosition,
           eventHeight,
           isMultiDay,
           multiDayWidth,
-          dragHandlePosition,
         }}
       >
         {children}
@@ -357,13 +355,13 @@ export function CalendarDndProvider({
               }}
             >
               <EventItem
-                event={activeEvent}
-                view={activeView}
-                isDragging={true}
-                showTime={activeView !== "month"}
                 currentTime={currentTime || undefined}
+                event={activeEvent}
+                isDragging={true}
                 isFirstDay={dragHandlePosition?.data?.isFirstDay !== false}
                 isLastDay={dragHandlePosition?.data?.isLastDay !== false}
+                showTime={activeView !== "month"}
+                view={activeView}
               />
             </div>
           )}
