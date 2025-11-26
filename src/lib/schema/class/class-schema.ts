@@ -50,7 +50,6 @@ export const ClassClassTeacherSettingsSchema = z.object({
     can_manage_subjects: z.boolean(),
     can_manage_timetable: z.boolean(),
     can_assign_roles: z.boolean(),
-    can_edit_results: z.boolean(),
     can_send_parent_notifications: z.boolean(),
     can_add_teachers: z.boolean(),
   }),
