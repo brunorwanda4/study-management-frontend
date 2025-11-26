@@ -1,13 +1,13 @@
 import { Separator } from "@/components/ui/separator";
 
-const ClassSettingsTimetablePage = async (
-  props: PageProps<"/[lang]/c/[classUsername]/settings/timetable">,
+const ClassDiscussionPage = async (
+  props: PageProps<"/[lang]/c/[classUsername]/discussion">,
 ) => {
   const params = await props.params;
   return (
     <div className=" flex  flex-col">
       <div>
-        <h3 className=" h3">Class Timetable Settings</h3>
+        <h3 className=" h3">discussion </h3>
         <p className=" text-base-content/50">
           Manage weekly schedule, lessons, and classroom structure.
         </p>
@@ -17,4 +17,4 @@ const ClassSettingsTimetablePage = async (
   );
 };
 
-export default ClassSettingsTimetablePage;
+export default ClassDiscussionPage;
