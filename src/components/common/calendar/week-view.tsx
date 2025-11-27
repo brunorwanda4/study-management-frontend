@@ -37,7 +37,6 @@ interface WeekViewProps {
   events: CalendarEvent[];
   onEventSelect: (event: CalendarEvent) => void;
   onEventCreate: (startTime: Date) => void;
-  isClassTimetable ?: boolean;
 }
 
 interface PositionedEvent {
@@ -54,7 +53,6 @@ export function WeekView({
   events,
   onEventSelect,
   onEventCreate,
-  isClassTimetable = false,
 }: WeekViewProps) {
   const days = useMemo(() => {
     const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 });

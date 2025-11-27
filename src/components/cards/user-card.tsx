@@ -1,6 +1,6 @@
 import type { Gender } from "@/lib/schema/common-details-schema";
 import { cn } from "@/lib/utils";
-import MyAvatar, { MyAvatarProps } from "../common/image/my-avatar";
+import MyAvatar, { type MyAvatarProps } from "../common/image/my-avatar";
 import MyLink from "../common/myLink";
 
 export interface UserSmCardProps {
@@ -15,8 +15,9 @@ export interface UserSmCardProps {
   showModify?: boolean;
   className?: string;
   classname?: string;
-  onlyImage ?: boolean;
-  avatarProps ?: MyAvatarProps;
+  onlyImage?: boolean;
+  onlyName?: boolean;
+  avatarProps?: MyAvatarProps;
 }
 
 export const UserSmCard = ({
@@ -32,18 +33,24 @@ export const UserSmCard = ({
   className,
   classname,
   onlyImage,
+  onlyName,
   avatarProps = {
     size: "sm",
   },
 }: UserSmCardProps) => {
   const Image = <MyAvatar {...avatarProps} src={image} alt={name} />;
 
-  if(onlyImage){
+  if (onlyName) {
     return (
       <div className={cn(className)}>
-        {Image}
-         </div>
-      )}
+        <p className=" gap-2 leading-4">{name} </p>
+      </div>
+    );
+  }
+
+  if (onlyImage) {
+    return <div className={cn(className)}>{Image}</div>;
+  }
 
   return (
     <div
@@ -78,17 +85,19 @@ export const UserSmCard = ({
       </div>
       {showMessage && (
         <div className=" flex flex-row gap-2 ">
-         {showModify && <MyLink
-            href={""}
-            loading
-            button={{
-              variant: "outline",
-              library: "daisy",
-              size: "sm",
-            }}
-          >
-            Modify
-          </MyLink>}
+          {showModify && (
+            <MyLink
+              href={""}
+              loading
+              button={{
+                variant: "outline",
+                library: "daisy",
+                size: "sm",
+              }}
+            >
+              Modify
+            </MyLink>
+          )}
           <MyLink
             href={""}
             loading
