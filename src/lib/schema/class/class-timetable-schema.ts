@@ -142,3 +142,13 @@ export const PopulatedClassTimetableSchema = z.object({
 export type PopulatedClassTimetable = z.infer<
   typeof PopulatedClassTimetableSchema
 >;
+
+// TODO: Expand as needed
+// const PopulatedClassTimetableCalendarItemSchema = z.object({
+//   subject_name: z.string(),
+
+// });
+
+// export const PopulatedClassTimetableCalendarSchema = z.object({
+
+// })

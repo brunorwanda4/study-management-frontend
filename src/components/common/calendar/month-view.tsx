@@ -45,7 +45,7 @@ interface MonthViewProps {
   onEventCreate: (startTime: Date) => void;
 }
 
-export function MonthView({
+cexport function MonthView({
   currentDate,
   events,
   onEventSelect,

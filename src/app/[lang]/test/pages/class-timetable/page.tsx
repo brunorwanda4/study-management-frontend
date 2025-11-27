@@ -1,197 +1,50 @@
-"use client";
-
-import { UserSmCard } from "@/components/cards/user-card";
-import { examplePopulatedTimetable } from "@/components/test/class-timetable-example";
 import { weekDays } from "@/lib/const/common-details-const";
-import type { PopulatedClassTimetable } from "@/lib/schema/class/class-timetable-schema";
-import { minutesToTimeString } from "@/lib/utils/format-date";
-import {
-  eachDayOfInterval,
-  endOfWeek,
-  format,
-  isToday,
-  startOfWeek,
-} from "date-fns";
-import { useMemo } from "react";
 
-/* Example record */
-const timetable: PopulatedClassTimetable = examplePopulatedTimetable;
-
-/* -------------------------------------------------------------------------- */
-/*                                TIME HELPERS                                */
-/* -------------------------------------------------------------------------- */
-
-const START_TIME = "9:00 AM";
-
-/* -------------------------------------------------------------------------- */
-/*                                MAIN VIEW                                   */
-/* -------------------------------------------------------------------------- */
-
-export default function ClassTimetable() {
-  const currentDate = new Date();
-
-  /* Convert weekly_schedule to a shape easy for rendering */
-  const normalizedDays = useMemo(() => {
-    const map: Record<
-      string,
-      PopulatedClassTimetable["weekly_schedule"][number]
-    > = {};
-    timetable.weekly_schedule.forEach((d) => {
-      map[d.day.toLowerCase()] = d;
-    });
-    return map;
-  }, []);
-
-  const maxPeriods = Math.max(
-    ...timetable.weekly_schedule.map((d) => d.periods.length),
-  );
-
-  /* ---------------------------------------------------------------------- */
-  /*                          Cell Renderer (NEW)                           */
-  /* ---------------------------------------------------------------------- */
-
-  function renderCell(day: string, index: number) {
-    const dayData = normalizedDays[day.toLowerCase()];
-    if (!dayData || dayData.is_holiday) {
-      return (
-        <div className="border border-base-content/50 h-32 flex items-center justify-center text-muted-foreground">
-          Holiday
-        </div>
-      );
-    }
-
-    const entry = dayData.periods[index];
-
-    if (!entry) {
-      return (
-        <div className="border border-base-content/50 h-32 flex items-center justify-center text-muted-foreground/60">
-          Empty
-        </div>
-      );
-    }
-
-    /* SUBJECT */
-    if (entry.type === "subject") {
-      return (
-        <div className="border border-base-content/50 h-32 flex flex-col gap-1 px-2 py-1">
-          <p
-            title={entry.subject?.name}
-            className="text-base font-medium line-clamp-1"
-          >
-            {entry.subject?.name ?? "Unknown Subject"}
-          </p>
-
-          {entry.teacher && (
-            <UserSmCard
-              name={entry.teacher.name}
-              avatarProps={{ size: "2xs", src: entry.teacher.image }}
-              className="text-sm "
-              nameClassname=" line-clamp-1"
-            />
-          )}
-
-          <div className="mt-auto flex flex-col gap-1 pb-1">
-            <div className="flex bg-warning/20 p-1 justify-between text-sm">
-              <span className="font-medium">{entry.subject?.code ?? "-"}</span>
-              <span>{entry.duration_minutes} min</span>
-            </div>
-
-            <div className="flex bg-info/20 p-1 text-center text-sm justify-center">
-              View details
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    /* FREE */
-    if (entry.type === "free") {
-      return (
-        <div className="border border-base-content/50 bg-base-content/10 h-32 flex flex-col items-center justify-center p-2">
-          Free period
-          {entry.description && (
-            <p className="text-sm text-center line-clamp-2">
-              {entry.description}
-            </p>
-          )}
-        </div>
-      );
-    }
-
-    /* BREAK */
-    if (entry.type === "break") {
-      return (
-        <div className="border border-base-content/50 bg-base-content/20 h-32 flex items-center justify-center">
-          Break
-        </div>
-      );
-    }
-
-    /* LUNCH */
-    if (entry.type === "lunch") {
-      return (
-        <div className="border border-base-content/50 bg-primary/20 h-32 flex items-center justify-center">
-          Lunch
-        </div>
-      );
-    }
-
-    return null;
-  }
-
-  const days = useMemo(() => {
-    const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 });
-    const weekEnd = endOfWeek(currentDate, { weekStartsOn: 0 });
-    return eachDayOfInterval({ start: weekStart, end: weekEnd });
-  }, [currentDate]);
-  /* ---------------------------------------------------------------------- */
-  /*                               RENDER UI                                */
-  /* ---------------------------------------------------------------------- */
-
+const ClassMonthTimetablePage = () => {
   return (
-    <div className="min-h-screen p-8">
-      <div className="bg-base-100 p-8">
-        {/* Sticky Header */}
-        <div className="sticky border-b border-b-base-content/50 top-0 z-30 grid grid-cols-8  bg-background/80 backdrop-blur-md">
-          <div className="py-2 text-center text-sm text-muted-foreground/70">
-            <span className="max-[479px]:sr-only">
-              {format(new Date(), "O")}
-            </span>
-          </div>
-
-          {days.map((day) => (
+    <div className="p-8 min-h-screen">
+      <div className=" p-8 bg-base-100 w-full">
+        <div className="grid grid-cols-7 border-border/70 border-b">
+          {weekDays.map((day) => (
             <div
-              key={day.toString()}
-              data-today={isToday(day) || undefined}
-              className="py-2 text-center text-sm text-muted-foreground/70 data-today:font-medium data-today:text-foreground"
+              className="py-2 text-center text-muted-foreground/70 text-sm"
+              key={day}
             >
-              <span aria-hidden className="sm:hidden">
-                {format(day, "E")[0]} {format(day, "d")}
-              </span>
-              <span className="max-sm:hidden">{format(day, "EEE dd")}</span>
+              {day}
             </div>
           ))}
         </div>
-
-        {/* GRID */}
-        <div className="grid grid-cols-8">
-          {Array.from({ length: maxPeriods }).map((_, i) => {
-            const timeLabel = minutesToTimeString(START_TIME, i * 40);
-
-            return (
-              <div key={i} className="contents">
-                <div className="border border-base-content/50 h-32 flex items-end p-2">
-                  {timeLabel}
-                </div>
-
-                {weekDays.map((day) => (
-                  <div key={day + i}>{renderCell(day, i)}</div>
-                ))}
+        {/* main month timetable */}
+        <div className="grid flex-1 auto-rows-fr">
+          <div className=" size-32 border border-base-content/50 p-2 flex flex-col">
+            <span>1</span>
+            <div className=" flex flex-col gap-1">
+              <div className="flex flex-row justify-between px-1 bg-success/20 w-full">
+                <span title="subject name" className=" text-sm line-clamp-1">
+                  Subject name{" "}
+                </span>
+                <span title="Home work" className=" text-sm">
+                  HM
+                </span>
               </div>
-            );
-          })}
+              <div className="flex flex-row  justify-between bg-error/20 px-1 w-full">
+                <span title="subject name" className=" text-sm line-clamp-1">
+                  Subject name{" "}
+                </span>
+                <span className=" text-sm">TEST</span>
+              </div>
+              <div className="flex flex-row  justify-between bg-error/20 px-1 w-full">
+                <span title="subject name" className=" text-sm line-clamp-1">
+                  Subject name{" "}
+                </span>
+                <span className=" text-sm">TEST</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default ClassMonthTimetablePage;
