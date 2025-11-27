@@ -1,3 +1,5 @@
+import type { PopulatedPeriod } from "@/lib/schema/class/class-timetable-schema";
+
 export type CalendarView = "month" | "week" | "day" | "agenda";
 
 export interface CalendarEvent {
@@ -9,6 +11,8 @@ export interface CalendarEvent {
   allDay?: boolean;
   color?: EventColor;
   location?: string;
+  /** Optional field to store the original timetable period data */
+  originalPeriod?: PopulatedPeriod;
 }
 
 export type EventColor =
@@ -17,4 +21,5 @@ export type EventColor =
   | "violet"
   | "rose"
   | "emerald"
-  | "orange";
+  | "orange"
+  | string; // Allow any string for custom colors

@@ -35,6 +35,7 @@ import {
   TeachingStyles,
   TradeTypes,
   userRoles,
+  weekDays,
   Weekdays,
 } from "@/lib/const/common-details-const";
 import { MIN_YEAR } from "@/lib/env";
@@ -121,16 +122,8 @@ export type Gender = z.infer<typeof GenderSchema>;
 export const WeekdayDetailsSchema = z.enum(Weekdays);
 export type WeekdayDetails = z.infer<typeof WeekdayDetailsSchema>;
 
-export const WeekDaySchema = z.enum([
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-        "Sunday",
-      ]);
-
+export const WeekDaySchema = z.enum(weekDays);
+export type WeekDay = z.infer<typeof WeekDaySchema>;
 export const StudentStatusSchema = z.enum(StudentStatuses);
 export type StudentStatus = z.infer<typeof StudentStatusSchema>;
 

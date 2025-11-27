@@ -873,6 +873,16 @@ export const Weekdays = [
   "Sun",
 ] as const;
 
+export const weekDays = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+] as const;
+
 export const WeekdayDetails: Record<Weekday, CommonDetails> = {
   Mon: {
     name: "Monday",

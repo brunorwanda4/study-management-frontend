@@ -21,10 +21,9 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
-import { AgendaView } from "@/components/page/class/class-timetable/agenda-view";
 import { CalendarDndProvider } from "@/components/page/class/class-timetable/calendar-dnd-context";
+import { ClassTimetableWeekView } from "@/components/page/class/class-timetable/class-timetable-week-view.tsx";
 import {
-  AgendaDaysToShow,
   EventGap,
   EventHeight,
   WeekCellsHeight,
@@ -37,7 +36,7 @@ import type {
   CalendarView,
 } from "@/components/page/class/class-timetable/types";
 import { addHoursToDate } from "@/components/page/class/class-timetable/utils";
-import { WeekView } from "@/components/page/class/class-timetable/week-view";
+import { examplePopulatedTimetable } from "@/components/test/class-timetable-example";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -48,7 +47,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 
-export interface EventCalendarProps {
+export interface ClassTimetableProps {
   events?: CalendarEvent[];
   onEventAdd?: (event: CalendarEvent) => void;
   onEventUpdate?: (event: CalendarEvent) => void;
@@ -57,14 +56,14 @@ export interface EventCalendarProps {
   initialView?: CalendarView;
 }
 
-export function EventCalendar({
+export function ClassTimetable({
   events = [],
   onEventAdd,
   onEventUpdate,
   onEventDelete,
   className,
-  initialView = "month",
-}: EventCalendarProps) {
+  initialView = "week",
+}: ClassTimetableProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState<CalendarView>(initialView);
   const [isEventDialogOpen, setIsEventDialogOpen] = useState(false);
@@ -116,9 +115,6 @@ export function EventCalendar({
       setCurrentDate(subWeeks(currentDate, 1));
     } else if (view === "day") {
       setCurrentDate(addDays(currentDate, -1));
-    } else if (view === "agenda") {
-      // For agenda view, go back 30 days (a full month)
-      setCurrentDate(addDays(currentDate, -AgendaDaysToShow));
     }
   };
 
@@ -129,9 +125,6 @@ export function EventCalendar({
       setCurrentDate(addWeeks(currentDate, 1));
     } else if (view === "day") {
       setCurrentDate(addDays(currentDate, 1));
-    } else if (view === "agenda") {
-      // For agenda view, go forward 30 days (a full month)
-      setCurrentDate(addDays(currentDate, AgendaDaysToShow));
     }
   };
 
@@ -249,16 +242,7 @@ export function EventCalendar({
         </>
       );
     }
-    if (view === "agenda") {
-      // Show the month range for agenda view
-      const start = currentDate;
-      const end = addDays(currentDate, AgendaDaysToShow - 1);
 
-      if (isSameMonth(start, end)) {
-        return format(start, "MMMM yyyy");
-      }
-      return `${format(start, "MMM")} - ${format(end, "MMM yyyy")}`;
-    }
     return format(currentDate, "MMMM yyyy");
   }, [currentDate, view]);
 
@@ -344,9 +328,6 @@ export function EventCalendar({
                 <DropdownMenuItem onClick={() => setView("day")}>
                   Day <DropdownMenuShortcut>D</DropdownMenuShortcut>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setView("agenda")}>
-                  Agenda <DropdownMenuShortcut>A</DropdownMenuShortcut>
-                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
             <Button
@@ -377,11 +358,12 @@ export function EventCalendar({
             />
           )}
           {view === "week" && (
-            <WeekView
+            <ClassTimetableWeekView
               currentDate={currentDate}
-              events={events}
-              onEventCreate={handleEventCreate}
-              onEventSelect={handleEventSelect}
+              timetable={examplePopulatedTimetable}
+              onPeriodSelect={() => {}}
+              // onEventCreate={handleEventCreate}
+              // onEventSelect={handleEventSelect}
             />
           )}
           {view === "day" && (
@@ -389,13 +371,6 @@ export function EventCalendar({
               currentDate={currentDate}
               events={events}
               onEventCreate={handleEventCreate}
-              onEventSelect={handleEventSelect}
-            />
-          )}
-          {view === "agenda" && (
-            <AgendaView
-              currentDate={currentDate}
-              events={events}
               onEventSelect={handleEventSelect}
             />
           )}

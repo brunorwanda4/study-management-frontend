@@ -5,12 +5,47 @@ import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 import { differenceInMinutes, format, getMinutes, isPast } from "date-fns";
 import { useMemo } from "react";
 
-import type { CalendarEvent } from "@/components/page/class/class-timetable/types";
-import {
-  getBorderRadiusClasses,
-  getEventColorClasses,
-} from "@/components/page/class/class-timetable/utils";
-import { cn } from "@/lib/utils";
+import type { CalendarEvent } from "./types";
+// Assuming these utils are available
+// import {
+//   getBorderRadiusClasses,
+//   getEventColorClasses,
+// } from "@/components/page/class/class-timetable/utils";
+// import { cn } from "@/lib/utils";
+
+// Mock implementations if utils are not available
+function cn(...inputs: any[]): string {
+  return inputs.filter(Boolean).join(" ");
+}
+
+function getEventColorClasses(color?: string): string {
+  switch (color) {
+    case "sky":
+      return "bg-sky-100 text-sky-800 border-sky-300 border focus-visible:border-sky-500 dark:bg-sky-900/50 dark:text-sky-100 dark:border-sky-700";
+    case "amber":
+      return "bg-amber-100 text-amber-800 border-amber-300 border focus-visible:border-amber-500 dark:bg-amber-900/50 dark:text-amber-100 dark:border-amber-700";
+    case "violet":
+      return "bg-violet-100 text-violet-800 border-violet-300 border focus-visible:border-violet-500 dark:bg-violet-900/50 dark:text-violet-100 dark:border-violet-700";
+    case "rose":
+      return "bg-rose-100 text-rose-800 border-rose-300 border focus-visible:border-rose-500 dark:bg-rose-900/50 dark:text-rose-100 dark:border-rose-700";
+    case "emerald":
+      return "bg-emerald-100 text-emerald-800 border-emerald-300 border focus-visible:border-emerald-500 dark:bg-emerald-900/50 dark:text-emerald-100 dark:border-emerald-700";
+    case "orange":
+      return "bg-orange-100 text-orange-800 border-orange-300 border focus-visible:border-orange-500 dark:bg-orange-900/50 dark:text-orange-100 dark:border-orange-700";
+    default:
+      return "bg-gray-100 text-gray-800 border-gray-300 border focus-visible:border-gray-500 dark:bg-gray-900/50 dark:text-gray-100 dark:border-gray-700";
+  }
+}
+
+function getBorderRadiusClasses(
+  isFirstDay: boolean,
+  isLastDay: boolean,
+): string {
+  if (isFirstDay && isLastDay) return "rounded-md";
+  if (isFirstDay) return "rounded-l-md";
+  if (isLastDay) return "rounded-r-md";
+  return "";
+}
 
 // Using date-fns format with custom formatting:
 // 'h' - hours (1-12)
@@ -145,14 +180,16 @@ export function EventItem({
     }
 
     // For longer events, show both start and end time
-    return `${formatTimeWithOptionalMinutes(displayStart)} - ${formatTimeWithOptionalMinutes(displayEnd)}`;
+    return `${formatTimeWithOptionalMinutes(
+      displayStart,
+    )} - ${formatTimeWithOptionalMinutes(displayEnd)}`;
   };
 
   if (view === "month") {
     return (
       <EventWrapper
         className={cn(
-          "mt-(--event-gap) h-(--event-height) items-center text-[10px] sm:text-xs",
+          "mt-[--event-gap] h-[--event-height] items-center text-[10px] sm:text-xs",
           className,
         )}
         currentTime={currentTime}
@@ -200,6 +237,9 @@ export function EventItem({
         onMouseDown={onMouseDown}
         onTouchStart={onTouchStart}
       >
+        {/*
+         * UPDATED to show event.description (teacher name)
+         */}
         {durationMinutes < 45 ? (
           <div className="truncate">
             {event.title}{" "}
@@ -208,10 +248,21 @@ export function EventItem({
                 {formatTimeWithOptionalMinutes(displayStart)}
               </span>
             )}
+            {event.description && (
+              <span className="opacity-80 block truncate">
+                {event.description}
+              </span>
+            )}
           </div>
         ) : (
           <>
             <div className="truncate font-medium">{event.title}</div>
+            {/* Show teacher name (from event.description) */}
+            {event.description && (
+              <div className="truncate font-normal opacity-80 sm:text-[11px]">
+                {event.description}
+              </div>
+            )}
             {showTime && (
               <div className="truncate font-normal opacity-70 sm:text-[11px]">
                 {getEventTime()}

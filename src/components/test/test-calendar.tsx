@@ -4,7 +4,7 @@ import { addDays, setHours, setMinutes, subDays } from "date-fns";
 import { useState } from "react";
 
 import type { CalendarEvent } from "@/components/common/calendar/types";
-import { EventCalendar } from "@/components/page/class/class-timetable";
+import { ClassTimetable } from "@/components/page/class/class-timetable";
 
 // Sample events data with hardcoded times
 const sampleEvents: CalendarEvent[] = [
@@ -151,7 +151,7 @@ export default function TestCalendar() {
 
   return (
     <div className=" px-4 py-4 space-y-4">
-      <EventCalendar
+      <ClassTimetable
         events={events}
         onEventAdd={handleEventAdd}
         onEventDelete={handleEventDelete}
