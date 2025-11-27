@@ -2,6 +2,9 @@
 
 import { UserSmCard } from "@/components/cards/user-card";
 import { examplePopulatedTimetable } from "@/components/test/class-timetable-example";
+import { weekDays } from "@/lib/const/common-details-const";
+import type { PopulatedClassTimetable } from "@/lib/schema/class/class-timetable-schema";
+import { minutesToTimeString } from "@/lib/utils/format-date";
 import {
   eachDayOfInterval,
   endOfWeek,
@@ -11,80 +14,12 @@ import {
 } from "date-fns";
 import { useMemo } from "react";
 
-/* -------------------------------------------------------------------------- */
-/*                               YOUR REAL DATA                               */
-/* -------------------------------------------------------------------------- */
-
-interface Timetable {
-  _id: string;
-  created_at: string;
-  updated_at: string;
-  class_id: string;
-  academic_year: string;
-  weekly_schedule: {
-    day:
-      | "Monday"
-      | "Tuesday"
-      | "Wednesday"
-      | "Thursday"
-      | "Friday"
-      | "Saturday"
-      | "Sunday";
-    is_holiday: boolean;
-    periods: {
-      period_id: string;
-      type: "subject" | "free" | "break" | "lunch";
-      order: number;
-      start_offset: number;
-      duration_minutes: number;
-      subject?: {
-        name: string;
-        id?: string;
-        _id?: string;
-        code?: string | null;
-      };
-      description?: string;
-      teacher?: {
-        name: string;
-        image?: string;
-        id?: string;
-        _id?: string;
-        user_id?: string;
-      };
-      subject_id?: string;
-    }[];
-    start_on?: string;
-  }[];
-  class: any;
-}
-
 /* Example record */
-const timetable: Timetable = examplePopulatedTimetable;
+const timetable: PopulatedClassTimetable = examplePopulatedTimetable;
 
 /* -------------------------------------------------------------------------- */
 /*                                TIME HELPERS                                */
 /* -------------------------------------------------------------------------- */
-
-function minutesToTimeString(start: string, offset: number) {
-  const [t, modifier] = start.split(" ");
-  let [hours, mins] = t.split(":").map(Number);
-
-  if (modifier === "PM" && hours !== 12) hours += 12;
-  if (modifier === "AM" && hours === 12) hours = 0;
-
-  const date = new Date();
-  date.setHours(hours);
-  date.setMinutes(mins + offset);
-
-  let h = date.getHours();
-  const ampm = h >= 12 ? "PM" : "AM";
-
-  h = h % 12;
-  if (h === 0) h = 12;
-
-  const m = date.getMinutes().toString().padStart(2, "0");
-  return `${h}:${m} ${ampm}`;
-}
 
 const START_TIME = "9:00 AM";
 
@@ -97,22 +32,15 @@ export default function ClassTimetable() {
 
   /* Convert weekly_schedule to a shape easy for rendering */
   const normalizedDays = useMemo(() => {
-    const map: Record<string, Timetable["weekly_schedule"][number]> = {};
+    const map: Record<
+      string,
+      PopulatedClassTimetable["weekly_schedule"][number]
+    > = {};
     timetable.weekly_schedule.forEach((d) => {
       map[d.day.toLowerCase()] = d;
     });
     return map;
   }, []);
-
-  const daysOfWeek = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-  ];
 
   const maxPeriods = Math.max(
     ...timetable.weekly_schedule.map((d) => d.periods.length),
@@ -146,7 +74,10 @@ export default function ClassTimetable() {
     if (entry.type === "subject") {
       return (
         <div className="border border-base-content/50 h-32 flex flex-col gap-1 px-2 py-1">
-          <p className="text-base font-medium line-clamp-1">
+          <p
+            title={entry.subject?.name}
+            className="text-base font-medium line-clamp-1"
+          >
             {entry.subject?.name ?? "Unknown Subject"}
           </p>
 
@@ -154,7 +85,8 @@ export default function ClassTimetable() {
             <UserSmCard
               name={entry.teacher.name}
               avatarProps={{ size: "2xs", src: entry.teacher.image }}
-              className="text-sm"
+              className="text-sm "
+              nameClassname=" line-clamp-1"
             />
           )}
 
@@ -220,7 +152,7 @@ export default function ClassTimetable() {
     <div className="min-h-screen p-8">
       <div className="bg-base-100 p-8">
         {/* Sticky Header */}
-        <div className="sticky top-0 z-30 grid grid-cols-8  bg-background/80 backdrop-blur-md">
+        <div className="sticky border-b border-b-base-content/50 top-0 z-30 grid grid-cols-8  bg-background/80 backdrop-blur-md">
           <div className="py-2 text-center text-sm text-muted-foreground/70">
             <span className="max-[479px]:sr-only">
               {format(new Date(), "O")}
@@ -252,7 +184,7 @@ export default function ClassTimetable() {
                   {timeLabel}
                 </div>
 
-                {daysOfWeek.map((day) => (
+                {weekDays.map((day) => (
                   <div key={day + i}>{renderCell(day, i)}</div>
                 ))}
               </div>

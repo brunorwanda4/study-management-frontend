@@ -22,7 +22,7 @@ import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import { CalendarDndProvider } from "@/components/page/class/class-timetable/calendar-dnd-context";
-import { ClassTimetableWeekView } from "@/components/page/class/class-timetable/class-timetable-week-view.tsx";
+import ClassTimetableWeekView from "@/components/page/class/class-timetable/class-timetable-week-view.tsx";
 import {
   EventGap,
   EventHeight,
@@ -361,7 +361,7 @@ export function ClassTimetable({
             <ClassTimetableWeekView
               currentDate={currentDate}
               timetable={examplePopulatedTimetable}
-              onPeriodSelect={() => {}}
+              // onPeriodSelect={() => {}}
               // onEventCreate={handleEventCreate}
               // onEventSelect={handleEventSelect}
             />

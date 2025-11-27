@@ -18,6 +18,7 @@ export interface UserSmCardProps {
   onlyImage?: boolean;
   onlyName?: boolean;
   avatarProps?: MyAvatarProps;
+  nameClassname?: string;
 }
 
 export const UserSmCard = ({
@@ -34,6 +35,7 @@ export const UserSmCard = ({
   classname,
   onlyImage,
   onlyName,
+  nameClassname,
   avatarProps = {
     size: "sm",
   },
@@ -43,7 +45,9 @@ export const UserSmCard = ({
   if (onlyName) {
     return (
       <div className={cn(className)}>
-        <p className=" gap-2 leading-4">{name} </p>
+        <p title={name} className={cn(" gap-2 leading-4", nameClassname)}>
+          {name}
+        </p>
       </div>
     );
   }
@@ -63,7 +67,9 @@ export const UserSmCard = ({
         {link ? <MyLink href={link}>{Image}</MyLink> : Image}
         <div className=" flex flex-col">
           <div className="flex flex-row gap-2 items-center">
-            <p className=" gap-2 leading-4">{name} </p>
+            <p title={name} className={cn(" gap-2 leading-4", nameClassname)}>
+              {name}{" "}
+            </p>
             {gender && (
               <span className=" text-sm text-base-content/50">{gender}</span>
             )}

@@ -77,3 +77,24 @@ export const formatTimeAgo = (dateInput: string | Date | undefined) => {
   const diffDay = Math.floor(diffHr / 24);
   return `${diffDay} day${diffDay > 1 ? "s" : ""} ago`;
 };
+
+export function minutesToTimeString(start: string, offset: number) {
+  const [t, modifier] = start.split(" ");
+  let [hours, mins] = t.split(":").map(Number);
+
+  if (modifier === "PM" && hours !== 12) hours += 12;
+  if (modifier === "AM" && hours === 12) hours = 0;
+
+  const date = new Date();
+  date.setHours(hours);
+  date.setMinutes(mins + offset);
+
+  let h = date.getHours();
+  const ampm = h >= 12 ? "PM" : "AM";
+
+  h = h % 12;
+  if (h === 0) h = 12;
+
+  const m = date.getMinutes().toString().padStart(2, "0");
+  return `${h}:${m} ${ampm}`;
+}
