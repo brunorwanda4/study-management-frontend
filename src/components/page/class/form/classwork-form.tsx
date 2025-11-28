@@ -162,6 +162,25 @@ function ClassWorkForm() {
               control={form.control}
               dateProps={{ inputType: "date-time" }}
             />
+            <CommonFormField
+              label="All student can submit after due date"
+              name="allow_close_submissions"
+              fieldType="checkbox"
+              placeholder="Description..."
+              control={form.control}
+            />
+            <CommonFormField
+              label="Topic"
+              name="topic_id"
+              fieldType="select"
+              required
+              placeholder="Select topic"
+              control={form.control}
+              selectOptions={ClassworkTypes.map((t) => ({
+                label: t,
+                value: t,
+              }))}
+            />
           </div>
         </div>
         <FormError message={error} />
