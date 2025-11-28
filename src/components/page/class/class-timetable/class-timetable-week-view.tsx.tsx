@@ -133,10 +133,10 @@ export default function ClassTimetableWeekView({
   }
 
   const days = useMemo(() => {
-    const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 });
-    const weekEnd = endOfWeek(currentDate, { weekStartsOn: 0 });
-    return eachDayOfInterval({ start: weekStart, end: weekEnd });
-  }, [currentDate]);
+  const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 }); // Monday
+  const weekEnd = endOfWeek(currentDate, { weekStartsOn: 1 });     // Monday start
+  return eachDayOfInterval({ start: weekStart, end: weekEnd });
+}, [currentDate]);
   /* ---------------------------------------------------------------------- */
   /*                               RENDER UI                                */
   /* ---------------------------------------------------------------------- */
