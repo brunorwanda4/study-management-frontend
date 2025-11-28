@@ -9,6 +9,7 @@ import Link from "next/link";
 import * as React from "react";
 import { BsTrash3 } from "react-icons/bs";
 import { CiCircleCheck, CiCirclePlus } from "react-icons/ci";
+import { LuFileText } from "react-icons/lu";
 import { MdArrowOutward, MdBlockFlipped } from "react-icons/md";
 import { TbMessageCircle } from "react-icons/tb";
 
@@ -97,6 +98,7 @@ export type ShadcnButtonProps =
       | "href"
       | "delete"
       | "message"
+      | "file"
       | "page";
   } & VariantProps<typeof shadcnVariants>;
 
@@ -114,6 +116,7 @@ export type DaisyButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
     | "href"
     | "delete"
     | "message"
+    | "file"
     | "page";
 } & VariantProps<typeof daisyVariants>;
 
@@ -176,6 +179,8 @@ const Button = React.forwardRef<
         return <MdArrowOutward className={iconSizeClass} />;
       case "message":
         return <TbMessageCircle className={iconSizeClass} />;
+      case "file":
+        return <LuFileText className={iconSizeClass} />;
       default:
         return null;
     }

@@ -23,7 +23,7 @@ const MyAvatar = ({
   src,
   alt,
   isSubClass,
-}: Props) => {
+}: MyAvatarProps) => {
   const class_size =
     size === "default"
       ? "size-14 text-base min-h-14 min-w-14"

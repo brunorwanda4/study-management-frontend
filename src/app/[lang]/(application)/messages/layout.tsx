@@ -22,7 +22,7 @@ export default async function MessageLayout({
   return (
     <section className="w-full flex">
       <MessagesAside lang={lang as Locale} />
-      <div className="flex-1 pr-80">{children}</div>
+      <div className="flex-1">{children}</div>
     </section>
   );
 }

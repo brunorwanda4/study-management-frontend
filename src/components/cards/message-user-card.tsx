@@ -1,42 +1,61 @@
 "use client";
-import { Locale } from "@/i18n";
+import MyAvatar from "@/components/common/image/my-avatar";
+import MyAvatarGroup from "@/components/common/image/my-avatar-group";
+import MyLink from "@/components/common/myLink";
+import type { Locale } from "@/i18n";
 import { cn } from "@/lib/utils";
-import { generateImageProfile } from "@/lib/utils/generate-profile-image";
 import { useTheme } from "next-themes";
 import Link from "next/link";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 interface props {
   lang: Locale;
+  messageCardType?: "group" | "direct";
 }
 
-const MessageUserCard = ({ lang }: props) => {
+const MessageUserCard = ({ lang, messageCardType = "direct" }: props) => {
   const { theme } = useTheme();
   return (
     <div
       className={cn(
-        "card flex w-full flex-row space-x-2 p-2 duration-200",
-        theme === "dark" ? "hover:bg-white/10" : "hover:bg-black/10",
+        "card flex w-full items-center flex-row space-x-1 p-1.5 px-2 duration-200",
+        messageCardType === "group" && "items-center",
       )}
     >
-      <Avatar className="size-12">
-        <AvatarImage src={generateImageProfile("bruno", "MALE")} />
-        <AvatarFallback>PR</AvatarFallback>
-      </Avatar>
-      <div className="w-full">
+      <MyLink href={`/${lang}/messages/student`}>
+        {messageCardType === "direct" ? (
+          <MyAvatar size="sm" />
+        ) : (
+          <div>
+            <MyAvatarGroup
+              items={[
+                { src: "", alt: "Bruno" },
+                { src: "", alt: "Bruno" },
+                { src: "", alt: "Bruno" },
+              ]}
+              limit={1}
+              size="xs"
+            />
+          </div>
+        )}
+      </MyLink>
+      <div className="w-full gap-0 flex -space-y-0.5 flex-col">
         <Link
           href={`/${lang}/messages/student`}
           className="flex w-full items-center justify-between"
         >
-          <h4 className="line-clamp-1"> Bahabe Like</h4>
-          <span className="text-myGray text-xs font-medium">2min ago</span>
+          <h6 className="line-clamp-1 leading-6"> Bahabe Like</h6>
+          <span className="text-base-content/50 text-xs font-medium">
+            2min ago
+          </span>
         </Link>
-        <p className="text-myGray line-clamp-1 text-sm">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam,
-          cupiditate suscipit, iste fugit, quos doloribus quis voluptatibus
-          explicabo a distinctio magni nostrum vel. Hic tempore repellendus
-          magni distinctio vel? Beatae.
-        </p>
+        <MyLink href={`/${lang}/messages/student`}>
+          <p
+            title="Lorem ipsum dolor sit amet consectetur adipisicing elit."
+            className="text-base-content/80 line-clamp-1 text-sm leading-4"
+          >
+            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+          </p>
+        </MyLink>
       </div>
     </div>
   );
