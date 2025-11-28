@@ -1,7 +1,7 @@
 import ConversationBody from "@/components/page/messages/conversation-body";
 import ConversationNavbar from "@/components/page/messages/conversation-navbar";
 import MessageFooter from "@/components/page/messages/message-footer";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { authContext } from "@/lib/utils/auth-context";
 import { redirect } from "next/navigation";
 interface props {

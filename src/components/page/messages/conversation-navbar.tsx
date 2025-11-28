@@ -18,7 +18,7 @@ const ConversationNavbar = ({ lang }: props) => {
           <Link href={`/${lang}/profile/student`}>
             <h3 className=" font-medium"> Bruno Happy heart</h3>
           </Link>
-          <span className=" font-medium text-myGray text-sm">STUDENT</span>
+          <span className=" text-base-content/50 text-sm">STUDENT</span>
         </div>
       </div>
     </nav>

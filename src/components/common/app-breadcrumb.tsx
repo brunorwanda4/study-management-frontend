@@ -31,9 +31,11 @@ export default function AppBreadcrumb() {
   const locale = segments[0];
   const paths = segments.slice(1); // everything after locale
 
-  const classPages = `/${locale}/c`;
-
-  if (pathname.startsWith(classPages)) return null;
+  if (
+    pathname.startsWith(`/${locale}/c`) ||
+    pathname.startsWith(`/${locale}/messages`)
+  )
+    return null;
 
   // Build cumulative paths
   const crumbs = paths.map((seg, index) => {
@@ -43,7 +45,7 @@ export default function AppBreadcrumb() {
   });
 
   return (
-    <Breadcrumb>
+    <Breadcrumb className=" mt-4">
       <BreadcrumbList>
         <BreadcrumbItem>
           {/* <BreadcrumbLink href={`/${locale}`}>

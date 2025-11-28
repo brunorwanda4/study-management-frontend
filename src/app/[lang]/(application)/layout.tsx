@@ -48,7 +48,7 @@ export default async function ApplicationLayout(props: Props) {
       />
       <div className="bg-base-200 flex w-full flex-col space-y-4">
         <main className="min-h-screen w-full pt-14">
-          <div className=" relative mt-4 px-4">
+          <div className=" relative px-4">
             <AppBreadcrumb />
           </div>
           {children}
