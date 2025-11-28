@@ -1174,3 +1174,17 @@ export const ClassLevels = [
   "MainClass", // e.g., "Primary 1"
   "SubClass",
 ] as const;
+
+// classwork types
+export const ClassworkTypes = [
+  "Exercise",
+  "Classwork",
+  "Homework",
+  "Quiz",
+  "Assignment",
+  "Project",
+  "Test",
+  "Practical",
+  "Presentation",
+  // "Reading",
+] as const;

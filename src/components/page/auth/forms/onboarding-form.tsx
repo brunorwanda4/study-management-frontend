@@ -1,7 +1,7 @@
 "use client";
 
-import UploadImage from "@/components/common/cards/form/upload-image";
 import { FormError, FormSuccess } from "@/components/common/form-message";
+import { UploadAvatar } from "@/components/common/form/avatar-upload";
 import {
   CountrySelect,
   FlagComponent,
@@ -120,14 +120,20 @@ const OnboardingForm = ({ lang, auth, dictionary }: Props) => {
             <FormItem className="row-span-3 flex flex-col space-y-2">
               <FormLabel>Your profile image</FormLabel>
               <FormControl>
-                <UploadImage
+                <UploadAvatar
+                  onChange={field.onChange}
+                  disabled={isPending}
+                  value={field.value?.toString() ?? null}
+                  avatarProps={{ size: "2xl", alt: auth.user.name }}
+                />
+                {/* <UploadImage
                   onChange={field.onChange}
                   disabled={isPending}
                   value={field.value?.toString() ?? null}
                   Classname=" h-54 "
                   className="h-54 "
                   description="Drop your profile image here"
-                />
+                /> */}
               </FormControl>
               <FormMessage />
             </FormItem>

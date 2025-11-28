@@ -1,5 +1,4 @@
-
-"use client"
+"use client";
 import { cn } from "@/lib/utils";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
@@ -39,12 +38,7 @@ import {
   Underline as UnderlineIcon,
 } from "lucide-react";
 
-export type EditorTool =
-  | "emoji"
-  | "toolbar"
-  | "metion"
-  | "files"
-  | "send";
+export type EditorTool = "emoji" | "toolbar" | "metion" | "files" | "send";
 
 interface MessageInputProps {
   value?: string;
@@ -70,14 +64,14 @@ const ToolbarButton = ({
 }) => (
   <Button
     variant="ghost"
-    size="icon"
+    size="sm"
+    library="daisy"
     onMouseDown={(e) => {
       e.preventDefault();
       onClick();
     }}
     type="button"
     className={cn(
-      "h-8 w-8",
       isActive
         ? "bg-base-content/10"
         : "text-muted-foreground hover:text-foreground",
@@ -96,13 +90,7 @@ export default function MessageInput({
   disabled = false,
   className,
   placeholder = "Message #general",
-  enabledTools = [
-    "toolbar",
-    "emoji",
-    "files",
-    "metion",
-    "send"
-  ],
+  enabledTools = ["toolbar", "emoji", "files", "metion", "send"],
   mentionableUsers = [
     { id: "1", name: "Alice", status: "online" },
     { id: "2", name: "Bob", status: "away" },
@@ -352,106 +340,102 @@ export default function MessageInput({
     >
       {showToolbar && (
         <div className="flex flex-wrap items-center gap-1 border-b border-base-content/50 p-2 bg-muted/30 animate-in slide-in-from-top-1 fade-in duration-200">
-            <ToolbarButton
-              icon={Bold}
-              isActive={activeStyles.includes("bold")}
-              onClick={() => executeCommand("bold")}
-              label="Bold"
-            />
-            <ToolbarButton
-              icon={Italic}
-              isActive={activeStyles.includes("italic")}
-              onClick={() => executeCommand("italic")}
-              label="Italic"
-            />
-            <ToolbarButton
-              icon={UnderlineIcon}
-              isActive={activeStyles.includes("underline")}
-              onClick={() => executeCommand("underline")}
-              label="Underline"
-            />
-            <ToolbarButton
-              icon={Strikethrough}
-              isActive={activeStyles.includes("strike")}
-              onClick={() => executeCommand("strikeThrough")}
-              label="Strikethrough"
-            />
+          <ToolbarButton
+            icon={Bold}
+            isActive={activeStyles.includes("bold")}
+            onClick={() => executeCommand("bold")}
+            label="Bold"
+          />
+          <ToolbarButton
+            icon={Italic}
+            isActive={activeStyles.includes("italic")}
+            onClick={() => executeCommand("italic")}
+            label="Italic"
+          />
+          <ToolbarButton
+            icon={UnderlineIcon}
+            isActive={activeStyles.includes("underline")}
+            onClick={() => executeCommand("underline")}
+            label="Underline"
+          />
+          <ToolbarButton
+            icon={Strikethrough}
+            isActive={activeStyles.includes("strike")}
+            onClick={() => executeCommand("strikeThrough")}
+            label="Strikethrough"
+          />
 
           <div className="mx-1 h-4 w-px bg-border" />
-              <ToolbarButton
-                icon={LinkIcon}
-                isActive={false}
-                onClick={openLinkDialog}
-                label="Link"
-              />
-              <Dialog open={showLinkDialog} onOpenChange={setShowLinkDialog}>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Create Link</DialogTitle>
-                    <DialogDescription>
-                      Create a link to a web page or file.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="grid gap-3">
-                    <div className="grid w-full items-center gap-1.5">
-                      <Label htmlFor="link-text" className="text-xs">
-                        Text (Optional)
-                      </Label>
-                      <Input
-                        id="link-text"
-                        value={linkText}
-                        onChange={(e) => setLinkText(e.target.value)}
-                        className="h-8 text-sm"
-                        placeholder="Clickable text"
-                      />
-                    </div>
-                    <div className="grid w-full items-center gap-1.5">
-                      <Label htmlFor="link-url" className="text-xs">
-                        URL
-                      </Label>
-                      <Input
-                        id="link-url"
-                        value={linkUrl}
-                        onChange={(e) => setLinkUrl(e.target.value)}
-                        className="h-8 text-sm"
-                        placeholder="https://example.com"
-                        autoFocus
-                      />
-                    </div>
-                    <DialogFooter className="flex justify-end gap-2">
-                      <DialogClose>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setShowLinkDialog(false)}
-                        >
-                          Cancel
-                        </Button>
-                      </DialogClose>
-                      <Button size="sm" onClick={confirmLink}>
-                        Insert
-                      </Button>
-                    </DialogFooter>
-                  </div>
-                </DialogContent>
-              </Dialog>
+          <ToolbarButton
+            icon={LinkIcon}
+            isActive={false}
+            onClick={openLinkDialog}
+            label="Link"
+          />
+          <Dialog open={showLinkDialog} onOpenChange={setShowLinkDialog}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Create Link</DialogTitle>
+                <DialogDescription>
+                  Create a link to a web page or file.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-3">
+                <div className="grid w-full items-center gap-1.5">
+                  <Label htmlFor="link-text" className="text-xs">
+                    Text (Optional)
+                  </Label>
+                  <Input
+                    id="link-text"
+                    value={linkText}
+                    onChange={(e) => setLinkText(e.target.value)}
+                    className="h-8 text-sm"
+                    placeholder="Clickable text"
+                  />
+                </div>
+                <div className="grid w-full items-center gap-1.5">
+                  <Label htmlFor="link-url" className="text-xs">
+                    URL
+                  </Label>
+                  <Input
+                    id="link-url"
+                    value={linkUrl}
+                    onChange={(e) => setLinkUrl(e.target.value)}
+                    className="h-8 text-sm"
+                    placeholder="https://example.com"
+                    autoFocus
+                  />
+                </div>
+                <DialogFooter className="flex justify-end gap-2">
+                  <DialogClose>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setShowLinkDialog(false)}
+                    >
+                      Cancel
+                    </Button>
+                  </DialogClose>
+                  <Button size="sm" onClick={confirmLink}>
+                    Insert
+                  </Button>
+                </DialogFooter>
+              </div>
+            </DialogContent>
+          </Dialog>
 
-          {enabledTools?.includes("list") && (
-            <ToolbarButton
-              isActive={activeStyles.includes("list")}
-              onClick={() => toggleList("ul")}
-              icon={List}
-              label="Bullet List"
-            />
-          )}
-          {enabledTools?.includes("orderedList") && (
-            <ToolbarButton
-              icon={ListOrdered}
-              isActive={activeStyles.includes("orderedList")}
-              onClick={() => toggleList("ol")}
-              label="Ordered List"
-            />
-          )}
+          <ToolbarButton
+            isActive={activeStyles.includes("list")}
+            onClick={() => toggleList("ul")}
+            icon={List}
+            label="Bullet List"
+          />
+          <ToolbarButton
+            icon={ListOrdered}
+            isActive={activeStyles.includes("orderedList")}
+            onClick={() => toggleList("ol")}
+            label="Ordered List"
+          />
         </div>
       )}
 
@@ -486,119 +470,132 @@ export default function MessageInput({
           {enabledTools.includes("files") && (
             <Button
               variant="ghost"
-              size="icon"
-              className="h-8 w-8 rounded-full bg-muted/40 hover:bg-muted text-muted-foreground hover:text-foreground"
+              size="sm"
+              className=" rounded-full bg-muted/40 text-base-content"
+              library="daisy"
+              type="button"
             >
               <Plus size={18} />
             </Button>
           )}
 
-          {enabledTools.includes("emoji") && <div className="relative" ref={emojiTriggerRef}>
+          {enabledTools.includes("emoji") && (
+            <div className="relative" ref={emojiTriggerRef}>
+              <Button
+                variant="ghost"
+                size="sm"
+                library="daisy"
+                className={cn(showEmojiPicker && "bg-accent")}
+                onClick={() => setShowEmojiPicker((s) => !s)}
+                aria-expanded={showEmojiPicker}
+                aria-haspopup="dialog"
+              >
+                <Smile size={20} />
+              </Button>
+
+              {showEmojiPicker && (
+                <div
+                  ref={pickerContainerRef}
+                  className="absolute bottom-12 left-0 z-50 rounded-xl shadow-1xl border bg-background overflow-hidden animate-in fade-in"
+                >
+                  {/* React Picker; pass `data` for offline support */}
+                  <Picker
+                    data={data}
+                    onEmojiSelect={insertEmoji}
+                    theme="auto"
+                    previewPosition="none"
+                    skinTonePosition="preview"
+                    searchPosition="static"
+                    // do not style the picker aggressively; let it inherit
+                  />
+                </div>
+              )}
+            </div>
+          )}
+
+          {enabledTools.includes("toolbar") && (
             <Button
               variant="ghost"
-              size="icon"
+              size="sm"
               className={cn(
-                "h-8 w-8 text-muted-foreground",
-                showEmojiPicker && "bg-accent text-accent-foreground",
+                "h-8 px-2  font-medium transition-colors hover:bg-muted",
+                showToolbar && "bg-accent",
               )}
-              onClick={() => setShowEmojiPicker((s) => !s)}
-              aria-expanded={showEmojiPicker}
-              aria-haspopup="dialog"
+              onClick={() => setShowToolbar((s) => !s)}
             >
-              <Smile size={20} />
+              <Type size={16} className="mr-1" />
+              <span className="text-xs font-bold">Aa</span>
             </Button>
+          )}
 
-            {showEmojiPicker && (
-              <div
-                ref={pickerContainerRef}
-                className="absolute bottom-12 left-0 z-50 rounded-xl shadow-1xl border bg-background overflow-hidden animate-in fade-in"
-              >
-                {/* React Picker; pass `data` for offline support */}
-                <Picker
-                  data={data}
-                  onEmojiSelect={insertEmoji}
-                  theme="auto"
-                  previewPosition="none"
-                  skinTonePosition="preview"
-                  searchPosition="static"
-                  // do not style the picker aggressively; let it inherit
-                />
-              </div>
-            )}
-          </div>}
-
-         {enabledTools.includes("toolbar") && <Button
-            variant="ghost"
-            size="sm"
-            className={cn(
-              "h-8 px-2 text-muted-foreground font-medium transition-colors hover:bg-muted",
-              showToolbar && "bg-accent text-accent-foreground",
-            )}
-            onClick={() => setShowToolbar((s) => !s)}
-          >
-            <Type size={16} className="mr-1" />
-            <span className="text-xs font-bold">Aa</span>
-          </Button>}
-
-         {enabledTools.includes("metion") && <div className="relative" ref={userTriggerRef}>
-            <Popover open={showUserPicker} onOpenChange={setShowUserPicker}>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className={cn(
-                    "h-8 w-8 text-muted-foreground",
-                    showUserPicker && "bg-accent text-accent-foreground",
-                  )}
-                  onClick={() => setShowUserPicker((s) => !s)}
-                  aria-expanded={showUserPicker}
-                >
-                  <AtSign size={18} />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent>
-                <span className="text-xs font-semibold text-muted-foreground">
-                  Mention someone
-                </span>
-                <div className="max-h-[200px] overflow-y-auto p-1">
-                  {mentionableUsers?.map((user) => (
-                    <button
-                      type="button"
-                      key={user.id}
-                      className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground text-left transition-colors group"
-                      onClick={() => insertMention(user.name)}
-                    >
-                      <div className="relative">
-                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-xs">
-                          {user.name.substring(0, 2).toUpperCase()}
+          {enabledTools.includes("metion") && (
+            <div className="relative" ref={userTriggerRef}>
+              <Popover open={showUserPicker} onOpenChange={setShowUserPicker}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={cn(
+                      "h-8 w-8 text-muted-foreground",
+                      showUserPicker && "bg-accent text-accent-foreground",
+                    )}
+                    onClick={() => setShowUserPicker((s) => !s)}
+                    aria-expanded={showUserPicker}
+                  >
+                    <AtSign size={18} />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <span className="text-xs font-semibold text-muted-foreground">
+                    Mention someone
+                  </span>
+                  <div className="max-h-[200px] overflow-y-auto p-1">
+                    {mentionableUsers?.map((user) => (
+                      <button
+                        type="button"
+                        key={user.id}
+                        className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground text-left transition-colors group"
+                        onClick={() => insertMention(user.name)}
+                      >
+                        <div className="relative">
+                          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-xs">
+                            {user.name.substring(0, 2).toUpperCase()}
+                          </div>
+                          <span
+                            className={cn(
+                              "absolute bottom-0 right-0 w-2.5 h-2.5 border-2 border-background rounded-full",
+                              user.status === "online"
+                                ? "bg-green-500"
+                                : user.status === "busy"
+                                  ? "bg-red-500"
+                                  : "bg-gray-400",
+                            )}
+                          />
                         </div>
-                        <span
-                          className={cn(
-                            "absolute bottom-0 right-0 w-2.5 h-2.5 border-2 border-background rounded-full",
-                            user.status === "online"
-                              ? "bg-green-500"
-                              : user.status === "busy"
-                                ? "bg-red-500"
-                                : "bg-gray-400",
-                          )}
+                        <span className="flex-1 font-medium">{user.name}</span>
+                        <Check
+                          size={14}
+                          className="invisible group-hover:visible text-primary"
                         />
-                      </div>
-                      <span className="flex-1 font-medium">{user.name}</span>
-                      <Check
-                        size={14}
-                        className="invisible group-hover:visible text-primary"
-                      />
-                    </button>
-                  ))}
-                </div>
-              </PopoverContent>
-            </Popover>
-         </div>}
+                      </button>
+                    ))}
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
+          )}
         </div>
 
-      {enabledTools.includes("send") && <Button onClick={onSend} variant={value ? "primary" :"ghost"} aria-label="Send message" library="daisy">
-          <SendHorizontal size={18} />
-      </Button>}
+        {enabledTools.includes("send") && (
+          <Button
+            onClick={onSend}
+            variant={value ? "primary" : "ghost"}
+            aria-label="Send message"
+            library="daisy"
+          >
+            <SendHorizontal size={18} />
+          </Button>
+        )}
       </div>
     </div>
   );

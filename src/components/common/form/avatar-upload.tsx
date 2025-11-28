@@ -174,7 +174,7 @@ export function UploadAvatar({
 
       {error && <p className="text-sm text-error">{error}</p>}
 
-      <p className="text-xs text-neutral">
+      <p className="text-xs text-base-content/50">
         Recommended: Square image, max {(maxSize / (1024 * 1024)).toFixed(1)}MB.
       </p>
 

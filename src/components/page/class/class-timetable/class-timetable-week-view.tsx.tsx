@@ -142,7 +142,7 @@ export default function ClassTimetableWeekView({
   /* ---------------------------------------------------------------------- */
 
   return (
-    <div className="">
+    <div className=" relative">
       {/* Sticky Header */}
       <div className="sticky border-b border-b-base-content/50 top-0 z-30 grid grid-cols-8  bg-background/80 backdrop-blur-md">
         <div className="py-2 text-center text-sm text-muted-foreground/70">

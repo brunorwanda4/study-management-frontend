@@ -5,6 +5,7 @@ import {
   CertificationOrTrainings,
   ClassLevels,
   ClassTypes,
+  ClassworkTypes,
   CommunicationMethods,
   Departments,
   EducationLevels,
@@ -365,3 +366,7 @@ export type TradeType = z.infer<typeof TradeTypeSchema>;
 // class
 export const ClassLevelSchema = z.enum(ClassLevels);
 export type ClassLevel = z.infer<typeof ClassLevelSchema>;
+
+// classwork
+export const ClassworkTypeSchema = z.enum(ClassworkTypes);
+export type ClassworkType = z.infer<typeof ClassworkTypeSchema>;

@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
+import DateStringInput from "@/components/common/form/date-input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import type { Control, FieldPath, FieldValues } from "react-hook-form";
@@ -36,7 +37,14 @@ interface CommonFormFieldProps<T extends FieldValues> {
   className?: string;
   classname?: string;
 
-  fieldType?: "input" | "select" | "textarea" | "image" | "avatar" | "checkbox";
+  fieldType?:
+    | "input"
+    | "select"
+    | "textarea"
+    | "image"
+    | "avatar"
+    | "checkbox"
+    | "date";
   selectOptions?: { value: string; label: string }[];
 
   // components props
@@ -142,6 +150,14 @@ export function CommonFormField<T extends FieldValues>({
                 />
               );
 
+            case "date":
+              return (
+                <DateStringInput
+                  value={stringValue}
+                  onChange={field.onChange}
+                  disabled={disabled}
+                />
+              );
             default:
               return (
                 <Input

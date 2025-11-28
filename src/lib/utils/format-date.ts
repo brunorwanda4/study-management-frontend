@@ -98,3 +98,16 @@ export function minutesToTimeString(start: string, offset: number) {
   const m = date.getMinutes().toString().padStart(2, "0");
   return `${h}:${m} ${ampm}`;
 }
+
+export function formatToMicroISOString(d: Date) {
+  const pad = (n: number, width = 2) => String(n).padStart(width, "0");
+  const YYYY = d.getUTCFullYear();
+  const MM = pad(d.getUTCMonth() + 1);
+  const DD = pad(d.getUTCDate());
+  const hh = pad(d.getUTCHours());
+  const mm = pad(d.getUTCMinutes());
+  const ss = pad(d.getUTCSeconds());
+  const ms = String(d.getUTCMilliseconds()).padStart(3, "0");
+  const micro = ms + "000"; // append three zeros to get microsecond precision
+  return `${YYYY}-${MM}-${DD}T${hh}:${mm}:${ss}.${micro}Z`;
+}

@@ -1,50 +1,30 @@
 "use client";
 
-import { Label } from "@/components/ui/label";
+import { Calendar } from "@/components/ui/calendar-rac";
+import { DateField, DateInput } from "@/components/ui/datefield-rac";
 import { cn } from "@/lib/utils";
-import { getLocalTimeZone, today, toZoned } from "@internationalized/date";
-import { CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
-import { useMemo } from "react";
+import { formatToMicroISOString } from "@/lib/utils/format-date";
+// 1. Import CalendarDate class
+import { CalendarDate } from "@internationalized/date";
+import { CalendarIcon } from "lucide-react";
 import {
-  Button as ButtonDate,
-  Calendar,
-  CalendarCell,
-  CalendarGrid,
-  CalendarGridBody,
-  CalendarGridHeader,
-  CalendarHeaderCell,
-  DateInput,
+  Button,
   DatePicker,
-  DateSegment,
   Dialog,
   Group,
-  Heading,
+  Label,
   Popover,
 } from "react-aria-components";
 
 interface DateStringInputProps {
-  /** ISO string (e.g. "2025-10-30T19:58:03.179441Z") */
   value?: string | null;
   onChange?: (value?: string | null) => void;
   label?: string;
   disabled?: boolean;
   error?: string;
   className?: string;
-}
-
-// Format a JS Date to ISO with *microsecond* precision like: 2025-10-30T19:58:03.179441Z
-// We take the millisecond precision from Date and append three zeros to make microseconds.
-function formatToMicroISOString(d: Date) {
-  const pad = (n: number, width = 2) => String(n).padStart(width, "0");
-  const YYYY = d.getUTCFullYear();
-  const MM = pad(d.getUTCMonth() + 1);
-  const DD = pad(d.getUTCDate());
-  const hh = pad(d.getUTCHours());
-  const mm = pad(d.getUTCMinutes());
-  const ss = pad(d.getUTCSeconds());
-  const ms = String(d.getUTCMilliseconds()).padStart(3, "0");
-  const micro = ms + "000"; // append three zeros to get microsecond precision
-  return `${YYYY}-${MM}-${DD}T${hh}:${mm}:${ss}.${micro}Z`;
+  calendar?: boolean;
+  isIOS?: boolean;
 }
 
 export default function DateStringInput({
@@ -54,175 +34,119 @@ export default function DateStringInput({
   disabled,
   error,
   className,
+  isIOS = true,
+  calendar = true,
 }: DateStringInputProps) {
-  const tz = getLocalTimeZone();
-  const todayCal = today(tz);
+  // Format output date (keep year EXACTLY as user typed)
+  const formatOutputDate = (calendarDate: any) => {
+    if (!calendarDate) return null;
 
-  // allowed range: Jan 1, 1965 up to today
-  const minYear = new Date(1965, 0, 1);
-  const minValue = toZoned(
-    todayCal.set({
-      year: minYear.getFullYear(),
-      month: minYear.getMonth() + 1,
-      day: minYear.getDate(),
-    }),
-    tz,
-  );
-  const maxValue = todayCal;
+    const y = calendarDate.year;
+    const m = String(calendarDate.month).padStart(2, "0");
+    const d = String(calendarDate.day).padStart(2, "0");
 
-  // convert incoming ISO string to Date (or null)
-  const valueToDate = (v?: string | null): Date | null => {
-    if (!v) return null;
-    const d = new Date(v);
-    if (Number.isNaN(d.getTime())) return null;
-    return d;
+    // If a normal 4-digit year, keep micro-ISO (compatible with your backend)
+    if (String(y).length === 4) {
+      try {
+        // Convert to JS Date for formatting utility
+        const js = calendarDate.toDate("UTC");
+        return formatToMicroISOString(js);
+      } catch {
+        return `${y}-${m}-${d}`;
+      }
+    }
+
+    // Otherwise return raw exact numeric year
+    return `${y}-${m}-${d}`;
   };
 
-  const internalDate = valueToDate(value);
+  // Convert incoming string → CalendarDate object
+  const toCalendarDate = (isoString?: string | null) => {
+    if (!isoString) return undefined;
 
-  // Display a user-friendly preview of chosen date/time (local)
-  const display = useMemo(() => {
-    if (!internalDate) return "";
+    const dateOnly = isoString.split("T")[0].trim();
+    if (!dateOnly) return undefined;
 
-    const now = new Date();
-    let years = now.getFullYear() - internalDate.getFullYear();
-    let months = now.getMonth() - internalDate.getMonth();
-    let days = now.getDate() - internalDate.getDate();
+    // Accept ANY numeric year
+    const match = dateOnly.match(/^(\d+)-(\d{1,2})-(\d{1,2})$/);
+    if (!match) return undefined;
 
-    if (days < 0) {
-      months -= 1;
-      const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
-      days += prevMonth.getDate();
+    const [, yStr, mStr, dStr] = match;
+
+    const y = Number(yStr);
+    const m = Number(mStr);
+    const d = Number(dStr);
+
+    if (m < 1 || m > 12 || d < 1 || d > 31) return undefined;
+
+    // 2. THE FIX: Always return a CalendarDate instance
+    // Even if the year is weird (e.g. 5 digits or 2 digits), CalendarDate handles it.
+    try {
+      return new CalendarDate(y, m, d);
+    } catch (e) {
+      console.error("Invalid date construction", e);
+      return undefined;
     }
+  };
 
-    if (months < 0) {
-      years -= 1;
-      months += 12;
-    }
-
-    const parts: string[] = [];
-    if (years > 0) parts.push(`${years} year${years > 1 ? "s" : ""}`);
-    if (months > 0) parts.push(`${months} month${months > 1 ? "s" : ""}`);
-    if (days > 0) parts.push(`${days} day${days > 1 ? "s" : ""}`);
-
-    return parts.length > 0 ? `${parts.join(" and ")} ago` : "Today";
-  }, [internalDate]);
-
-  // DatePicker delivers a calendar date object with .toDate(). Convert and emit ISO micro string.
   const handleChange = (selectedDate: any) => {
-    const d: Date | null = selectedDate ? selectedDate.toDate() : null;
-    if (!d) {
+    if (!selectedDate) {
       onChange?.(null);
       return;
     }
-    const iso = formatToMicroISOString(d);
-    onChange?.(iso);
+
+    const output = formatOutputDate(selectedDate);
+    onChange?.(output);
   };
 
-  return (
-    <div className={cn("space-y-2 w-full", className)}>
-      {label && <Label>{label}</Label>}
-
+  // Calendar picker UI
+  if (calendar) {
+    return (
       <DatePicker
         onChange={handleChange}
-        value={
-          internalDate
-            ? toZoned(
-                todayCal.set({
-                  year: internalDate.getFullYear(),
-                  month: internalDate.getMonth() + 1,
-                  day: internalDate.getDate(),
-                }),
-                tz,
-              )
-            : null
-        }
-        minValue={minValue}
-        maxValue={maxValue}
+        value={toCalendarDate(value)}
+        className={cn("*:not-first:mt-2", className)}
         isDisabled={disabled}
-        className="space-y-2"
       >
+        {label && <Label className="font-medium text-sm">{label}</Label>}
+
         <div className="flex">
-          <Group className="inline-flex h-10 w-full rounded-md bg-base-100 px-3 py-2 text-base ring-offset-background items-center shadow-sm shadow-black/5 transition-shadow data-focus-within:border-ring data-disabled:opacity-50 border border-base-content/50">
-            <DateInput>
-              {(segment) => (
-                <>
-                  {(segment.type === "year" ||
-                    segment.type === "month" ||
-                    segment.type === "day") && (
-                    <>
-                      <DateSegment
-                        segment={segment}
-                        className="inline rounded p-0.5 caret-transparent outline-none data-focused:bg-accent data-invalid:text-destructive"
-                      />
-                      {segment.type !== "year" && <span>/</span>}
-                    </>
-                  )}
-                </>
-              )}
-            </DateInput>
+          <Group className="w-full">
+            <DateInput className="pe-9" />
           </Group>
 
-          <ButtonDate className="z-10 -me-px -ms-9 flex w-9 items-center justify-center rounded-e-lg hover:text-info">
-            <CalendarIcon size={16} strokeWidth={2} />
-          </ButtonDate>
+          <Button
+            isDisabled={disabled}
+            className="-ms-9 -me-px z-10 flex w-9 items-center justify-center rounded-e-md text-muted-foreground/80 outline-none"
+          >
+            <CalendarIcon size={16} />
+          </Button>
         </div>
 
         <Popover
+          className="data-entering:fade-in-0 data-entering:zoom-in-95 data-exiting:fade-out-0 data-exiting:zoom-out-95
+            z-50 card bg-base-100 border-base-300"
           offset={4}
-          className="z-50 rounded-lg border border-base-300 bg-base-200 shadow-lg outline-none"
         >
           <Dialog className="max-h-[inherit] overflow-auto p-2">
-            <Calendar className="w-fit">
-              <header className="flex w-full items-center gap-1 pb-1">
-                <ButtonDate
-                  slot="previous"
-                  className="flex size-9 items-center justify-center rounded-lg hover:bg-accent"
-                >
-                  <ChevronLeft size={16} strokeWidth={2} />
-                </ButtonDate>
-                <Heading className="grow text-center text-sm font-medium" />
-                <ButtonDate
-                  slot="next"
-                  className="flex size-9 items-center justify-center rounded-lg hover:bg-accent"
-                >
-                  <ChevronRight size={16} strokeWidth={2} />
-                </ButtonDate>
-              </header>
-              <CalendarGrid>
-                <CalendarGridHeader>
-                  {(day) => (
-                    <CalendarHeaderCell className="size-9 rounded-lg text-xs font-medium text-muted-foreground/80">
-                      {day}
-                    </CalendarHeaderCell>
-                  )}
-                </CalendarGridHeader>
-                <CalendarGridBody>
-                  {(date) => {
-                    const disabledDate =
-                      date.compare(minValue) < 0 || date.compare(maxValue) > 0;
-                    return (
-                      <CalendarCell
-                        date={date}
-                        className={cn(
-                          "relative flex size-9 items-center justify-center rounded-lg transition-colors data-selected:bg-info data-selected:text-primary-foreground data-hovered:bg-accent",
-                          date.compare(todayCal) === 0 &&
-                            "after:absolute after:bottom-1 after:start-1/2 after:size-[3px] after:rounded-full after:bg-info",
-                          disabledDate && "opacity-40 cursor-not-allowed",
-                        )}
-                      />
-                    );
-                  }}
-                </CalendarGridBody>
-              </CalendarGrid>
-            </Calendar>
+            <Calendar isDisabled={disabled} />
           </Dialog>
         </Popover>
       </DatePicker>
+    );
+  }
 
-      {display && <p className="text-xs text-muted-foreground">{display}</p>}
-
-      {error && <p className="text-destructive text-sm">{error}</p>}
-    </div>
+  // DateInput only
+  return (
+    <DateField
+      onChange={handleChange}
+      className={cn("*:not-first:mt-2", className)}
+      hourCycle={24}
+      isDisabled={disabled}
+      value={toCalendarDate(value)}
+    >
+      {label && <Label>{label}</Label>}
+      <DateInput />
+    </DateField>
   );
 }

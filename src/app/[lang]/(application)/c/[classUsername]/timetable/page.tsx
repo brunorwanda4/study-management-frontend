@@ -5,8 +5,8 @@ const ClassTimetablePage = async (
 ) => {
   const params = await props.params;
   return (
-    <div className=" flex  flex-col">
-      <h1 className=" h-3 mt-2">Class Time table</h1>
+    <div className=" flex gap-4 flex-col">
+      <h1 className=" mt-2 h3">Class Time table</h1>
       <TestCalendar />
     </div>
   );
