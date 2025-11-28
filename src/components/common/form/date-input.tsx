@@ -4,9 +4,7 @@ import { Calendar } from "@/components/ui/calendar-rac";
 import { DateField, DateInput } from "@/components/ui/datefield-rac";
 import { cn } from "@/lib/utils";
 import { formatToMicroISOString } from "@/lib/utils/format-date";
-// 1. Import CalendarDate class
-import { CalendarDate } from "@internationalized/date";
-import { CalendarIcon } from "lucide-react";
+
 import {
   Button,
   DatePicker,
@@ -16,15 +14,94 @@ import {
   Popover,
 } from "react-aria-components";
 
-interface DateStringInputProps {
+import {
+  CalendarDate,
+  CalendarDateTime,
+  type DateValue,
+} from "@internationalized/date";
+
+import { CalendarIcon } from "lucide-react";
+
+// -----------------------------------------------------
+// TIME POPOVER COMPONENT
+// -----------------------------------------------------
+interface TimePopoverProps {
+  date: CalendarDateTime;
+  onTimeChange: (t: { hour?: number; minute?: number }) => void;
+}
+
+function TimePopover({ date, onTimeChange }: TimePopoverProps) {
+  const hours = Array.from({ length: 24 }, (_, i) => i);
+  const minutes = Array.from({ length: 60 }, (_, i) => i);
+
+  return (
+    <Popover className="card bg-base-100 border border-base-300 p-2 z-50">
+      <Dialog className="p-2">
+        <div className="flex gap-6">
+          {/* HOURS */}
+          <div className="flex-1">
+            <div className="font-medium mb-1">Hour</div>
+            <div className="max-h-48 overflow-auto border rounded p-1">
+              {hours.map((h) => (
+                <button
+                  key={h}
+                  className="w-full text-left px-2 py-1 rounded hover:bg-base-200"
+                  onClick={() => onTimeChange({ hour: h })}
+                  type="button"
+                >
+                  {String(h).padStart(2, "0")}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* MINUTES */}
+          <div className="flex-1">
+            <div className="font-medium mb-1">Minute</div>
+            <div className="max-h-48 overflow-auto border rounded p-1">
+              {minutes.map((m) => (
+                <button
+                  key={m}
+                  type="button"
+                  className="w-full text-left px-2 py-1 rounded hover:bg-base-200"
+                  onClick={() => onTimeChange({ minute: m })}
+                >
+                  {String(m).padStart(2, "0")}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </Dialog>
+    </Popover>
+  );
+}
+
+// -----------------------------------------------------
+// UTIL: Convert CalendarDate → CalendarDateTime
+// -----------------------------------------------------
+function ensureDateTime(
+  date: CalendarDate | null | undefined,
+): CalendarDateTime | null {
+  if (!date) return null;
+
+  // Already CalendarDateTime
+  if (date instanceof CalendarDateTime) return date;
+
+  return new CalendarDateTime(date.year, date.month, date.day, 0, 0);
+}
+
+// -----------------------------------------------------
+// MAIN COMPONENT
+// -----------------------------------------------------
+export interface DateStringInputProps {
   value?: string | null;
   onChange?: (value?: string | null) => void;
   label?: string;
   disabled?: boolean;
   error?: string;
   className?: string;
-  calendar?: boolean;
-  isIOS?: boolean;
+  inputType?: "input" | "calendar" | "date-time";
 }
 
 export default function DateStringInput({
@@ -34,40 +111,17 @@ export default function DateStringInput({
   disabled,
   error,
   className,
-  isIOS = true,
-  calendar = true,
+  inputType = "calendar",
 }: DateStringInputProps) {
-  // Format output date (keep year EXACTLY as user typed)
-  const formatOutputDate = (calendarDate: any) => {
-    if (!calendarDate) return null;
-
-    const y = calendarDate.year;
-    const m = String(calendarDate.month).padStart(2, "0");
-    const d = String(calendarDate.day).padStart(2, "0");
-
-    // If a normal 4-digit year, keep micro-ISO (compatible with your backend)
-    if (String(y).length === 4) {
-      try {
-        // Convert to JS Date for formatting utility
-        const js = calendarDate.toDate("UTC");
-        return formatToMicroISOString(js);
-      } catch {
-        return `${y}-${m}-${d}`;
-      }
-    }
-
-    // Otherwise return raw exact numeric year
-    return `${y}-${m}-${d}`;
-  };
-
-  // Convert incoming string → CalendarDate object
-  const toCalendarDate = (isoString?: string | null) => {
+  // Convert ISO → CalendarDate
+  const toCalendarDate = (
+    isoString?: string | null,
+  ): CalendarDate | undefined => {
     if (!isoString) return undefined;
 
-    const dateOnly = isoString.split("T")[0].trim();
+    const dateOnly = isoString.split("T")[0]?.trim();
     if (!dateOnly) return undefined;
 
-    // Accept ANY numeric year
     const match = dateOnly.match(/^(\d+)-(\d{1,2})-(\d{1,2})$/);
     if (!match) return undefined;
 
@@ -79,28 +133,46 @@ export default function DateStringInput({
 
     if (m < 1 || m > 12 || d < 1 || d > 31) return undefined;
 
-    // 2. THE FIX: Always return a CalendarDate instance
-    // Even if the year is weird (e.g. 5 digits or 2 digits), CalendarDate handles it.
     try {
       return new CalendarDate(y, m, d);
-    } catch (e) {
-      console.error("Invalid date construction", e);
+    } catch {
       return undefined;
     }
   };
 
-  const handleChange = (selectedDate: any) => {
-    if (!selectedDate) {
-      onChange?.(null);
-      return;
+  // Format output to ISO / custom year
+  const formatOutputDate = (dateObj: DateValue | null): string | null => {
+    if (!dateObj) return null;
+
+    const y = dateObj.year;
+    const m = String(dateObj.month).padStart(2, "0");
+    const d = String(dateObj.day).padStart(2, "0");
+
+    if ("hour" in dateObj) {
+      try {
+        return formatToMicroISOString(dateObj.toDate("UTC"));
+      } catch {}
     }
 
-    const output = formatOutputDate(selectedDate);
-    onChange?.(output);
+    if (String(y).length === 4) {
+      try {
+        return formatToMicroISOString(dateObj.toDate("UTC"));
+      } catch {}
+    }
+
+    return `${y}-${m}-${d}`;
   };
 
-  // Calendar picker UI
-  if (calendar) {
+  // Wrap onChange
+  const handleChange = (selected: DateValue | null) => {
+    if (!selected) return onChange?.(null);
+    onChange?.(formatOutputDate(selected));
+  };
+
+  // -----------------------------------------------------
+  // 1) DATE PICKER WITH CALENDAR
+  // -----------------------------------------------------
+  if (inputType === "calendar") {
     return (
       <DatePicker
         onChange={handleChange}
@@ -117,18 +189,18 @@ export default function DateStringInput({
 
           <Button
             isDisabled={disabled}
-            className="-ms-9 -me-px z-10 flex w-9 items-center justify-center rounded-e-md text-muted-foreground/80 outline-none"
+            className="-ms-9 -me-px z-10 flex w-9 items-center justify-center
+              rounded-e-md text-muted-foreground/80"
           >
             <CalendarIcon size={16} />
           </Button>
         </div>
 
         <Popover
-          className="data-entering:fade-in-0 data-entering:zoom-in-95 data-exiting:fade-out-0 data-exiting:zoom-out-95
-            z-50 card bg-base-100 border-base-300"
+          className="card bg-base-100 border border-base-300 z-50"
           offset={4}
         >
-          <Dialog className="max-h-[inherit] overflow-auto p-2">
+          <Dialog className="p-2 max-h-[inherit] overflow-auto">
             <Calendar isDisabled={disabled} />
           </Dialog>
         </Popover>
@@ -136,17 +208,91 @@ export default function DateStringInput({
     );
   }
 
-  // DateInput only
+  // -----------------------------------------------------
+  // 2) DATE-TIME PICKER (Calendar + Time)
+  // -----------------------------------------------------
+  if (inputType === "date-time") {
+    return (
+      <DatePicker
+        onChange={(d) => handleChange(d)}
+        value={ensureDateTime(toCalendarDate(value))}
+        className={cn("*:not-first:mt-2", className)}
+        isDisabled={disabled}
+        granularity="minute"
+      >
+        {label && <Label className="font-medium text-sm">{label}</Label>}
+
+        <div className="flex">
+          <Group className="w-full">
+            <DateInput className="pe-9" />
+          </Group>
+
+          <Button
+            className="-ms-9 -me-px z-10 flex w-9 items-center justify-center
+            rounded-e-md text-muted-foreground/80"
+          >
+            <CalendarIcon size={16} />
+          </Button>
+        </div>
+
+        <Popover
+          className="card bg-base-100 border border-base-300 z-50"
+          offset={4}
+        >
+          <Dialog className="p-2 max-h-[inherit] overflow-auto">
+            <Calendar isDisabled={disabled} />
+          </Dialog>
+        </Popover>
+      </DatePicker>
+    );
+  }
+
+  // -----------------------------------------------------
+  // 3) INPUT-ONLY MODE WITH TIME POPOVER
+  // -----------------------------------------------------
+  const currentDate = ensureDateTime(toCalendarDate(value));
+
   return (
     <DateField
+      value={currentDate ?? undefined}
       onChange={handleChange}
       className={cn("*:not-first:mt-2", className)}
       hourCycle={24}
+      granularity="minute"
       isDisabled={disabled}
-      value={toCalendarDate(value)}
     >
-      {label && <Label>{label}</Label>}
-      <DateInput />
+      {label && <Label className="font-medium text-sm">{label}</Label>}
+
+      <div className="relative flex items-center">
+        <DateInput className="pe-9" />
+
+        {/* OPEN TIME POPOVER BUTTON */}
+        <Button
+          className="-ms-9 -me-px z-10 flex w-9 items-center justify-center
+          rounded-e-md text-muted-foreground/80"
+        >
+          <CalendarIcon size={16} />
+        </Button>
+
+        {currentDate && (
+          <TimePopover
+            date={currentDate}
+            onTimeChange={({ hour, minute }) => {
+              if (!currentDate) return;
+
+              const updated = new CalendarDateTime(
+                currentDate.year,
+                currentDate.month,
+                currentDate.day,
+                hour ?? currentDate.hour,
+                minute ?? currentDate.minute,
+              );
+
+              handleChange(updated);
+            }}
+          />
+        )}
+      </div>
     </DateField>
   );
 }

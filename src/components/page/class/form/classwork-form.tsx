@@ -160,6 +160,7 @@ function ClassWorkForm() {
               }}
               required
               control={form.control}
+              dateProps={{ inputType: "date-time" }}
             />
           </div>
         </div>
