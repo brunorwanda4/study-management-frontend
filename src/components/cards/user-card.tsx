@@ -7,7 +7,7 @@ export interface UserSmCardProps {
   name: string;
   image?: string;
   link?: string;
-  gender?: Gender;
+  gender?: Gender | null;
   role?: string;
   date?: string;
   subjects?: string[];

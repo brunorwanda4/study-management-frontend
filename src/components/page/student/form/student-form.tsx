@@ -16,8 +16,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState, useTransition } from "react";
 import { Controller, useForm } from "react-hook-form";
 
-import UploadImage from "@/components/common/cards/form/upload-image";
 import { FormError, FormSuccess } from "@/components/common/form-message";
+import { CommonFormField } from "@/components/common/form/common-form-field";
 import {
   CountrySelect,
   FlagComponent,
@@ -33,9 +33,9 @@ import { useToast } from "@/lib/context/toast/ToastContext";
 import type { Class } from "@/lib/schema/class/class-schema";
 import type { PaginatedClasses } from "@/lib/schema/relations-schema";
 import {
+  StudentBaseSchema,
   type Student,
   type StudentBase,
-  StudentBaseSchema,
 } from "@/lib/schema/school/student-schema";
 import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
@@ -186,23 +186,12 @@ const StudentForm = ({ auth, student, isSchool, cls }: Props) => {
           {/* Left Column */}
           <div className="w-full flex flex-col gap-2">
             {/* Image Upload */}
-            <FormField
+            <CommonFormField
               control={form.control}
               name="image"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Profile Image</FormLabel>
-                  <FormControl>
-                    <UploadImage
-                      onChange={field.onChange}
-                      value={field.value?.toString() ?? null}
-                      disabled={isPending}
-                      description="Drop student's image here"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              fieldType="avatar"
+              label="Profile image"
+              avatarProps={{ avatarProps: { size: "3xl" } }}
             />
 
             {/* Name */}

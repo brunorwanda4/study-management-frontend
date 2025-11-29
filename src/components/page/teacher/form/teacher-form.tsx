@@ -31,9 +31,9 @@ import {
 } from "@/lib/const/common-details-const";
 import { useToast } from "@/lib/context/toast/ToastContext";
 import {
+  TeacherBaseSchema,
   type Teacher,
   type TeacherBase,
-  TeacherBaseSchema,
 } from "@/lib/schema/school/teacher-schema";
 import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
@@ -139,7 +139,7 @@ const TeacherForm = ({ auth, teacher, isSchool }: Props) => {
               name="image"
               fieldType="avatar"
               label="Profile image"
-              avatarProps={{ avatarProps: { size: "2xl" } }}
+              avatarProps={{ avatarProps: { size: "3xl" } }}
             />
             {/* Name */}
             <FormField
