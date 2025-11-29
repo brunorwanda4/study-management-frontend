@@ -1,4 +1,4 @@
-import MessageCard from "@/components/cards/message-card";
+import ConversationBody from "@/components/page/messages/conversation-body";
 import MessageFooter from "@/components/page/messages/message-footer";
 import type { Locale } from "@/i18n";
 import { authContext } from "@/lib/utils/auth-context";
@@ -18,19 +18,9 @@ const MessageConversationPage = async (props: props) => {
   }
 
   return (
-    // 1. Parent: Fix height to viewport, prevent outer window scrolling
-    <main className="flex flex-col h-[80dvh] w-full overflow-hidden bg-background">
-      {/* 2. Scrollable Area: flex-1 takes remaining space, overflow-y-auto enables scroll */}
-      <div className="flex-1 overflow-y-auto min-h-0 space-y-2 p-4">
-        <MessageCard sender />
-        <MessageCard sender />
-        <MessageCard />
-        <MessageCard />
-        <MessageCard sender />
-        <MessageCard />
-        <MessageCard sender />
-        <MessageCard sender />
-        <MessageCard />
+    <main className="flex flex-col h-[85dvh] w-full overflow-hidden bg-background">
+      <div className="flex-1 overflow-y-auto min-h-0">
+        <ConversationBody />
       </div>
 
       {/* 3. Footer: Stays fixed because it is not in the scrollable div */}

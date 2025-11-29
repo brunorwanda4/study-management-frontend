@@ -9,7 +9,7 @@ const AppFooter = ({ className }: props) => {
   return (
     <footer
       className={cn(
-        "footer footer-center text-base-content p-4 border-t border-t-base-300 bg-base-100 bottom-0",
+        "footer m-0 mt-0 footer-center text-base-content p-4 border-t border-t-base-300 bg-base-100 bottom-0",
         className,
       )}
     >
