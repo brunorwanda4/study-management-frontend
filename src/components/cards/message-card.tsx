@@ -19,7 +19,7 @@ const MessageCard = ({ sender, messageCardType = "group" }: props) => {
         <div
           className={cn(
             `chat-bubble before:top-0 before:bottom-auto before:mask-[1px_0px] `,
-            "max-w-full bg-base-100 flex flex-col gap-2",
+            "max-w-full bg-base-100 flex flex-col gap-2 var(--radius-field) rounded-(--radius-field)",
           )}
         >
           <div className=" flex justify-between w-full items-center">
@@ -68,7 +68,7 @@ const MessageCard = ({ sender, messageCardType = "group" }: props) => {
   }
   return (
     <div className={cn("chat group", sender ? "chat-end" : "chat-start")}>
-      <div className="chat-bubble items-center bg-base-100  before:top-0 before:bottom-auto before:mask-[1px_0px] ">
+      <div className="chat-bubble items-center bg-base-100  before:top-0 before:bottom-auto before:mask-[1px_0px] rounded-(--radius-field)">
         <p className="text-base-content/95">You were the Chosen One!</p>
 
         <div className="  flex justify-between items-center">

@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { BsSearch } from "react-icons/bs";
 
@@ -16,6 +17,7 @@ interface SearchBoxProps {
   live?: boolean;
   /** Whether search is loading */
   loading?: boolean;
+  className?: string;
 }
 
 /**
@@ -31,6 +33,7 @@ const SearchBox = ({
   debounceMs = 400,
   live = false,
   loading = false,
+  className,
 }: SearchBoxProps) => {
   const [query, setQuery] = useState("");
   const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(
@@ -63,7 +66,7 @@ const SearchBox = ({
   }, [query]);
 
   return (
-    <div className="flex flex-row gap-0">
+    <div className={cn("flex flex-row gap-0", className)}>
       <Input
         type="text"
         placeholder={placeholder}

@@ -29,7 +29,7 @@ const AppNav = async ({ lang, auth }: AppNavProps) => {
       <div className="mr-4 flex items-center gap-2">
         {/* <NavMessageDropDown lang={lang}/> */}
         <div className="btn btn-circle btn-ghost">
-          <MyImage className="size-8" src="/icons/bell.png" />
+          <MyImage className="size-6" src="/icons/bell.png" />
         </div>
         <NavMessageDropDown />
         <Suspense fallback={<div className="skeleton size-8" />}>

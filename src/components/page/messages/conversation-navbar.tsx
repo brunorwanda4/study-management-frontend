@@ -1,3 +1,4 @@
+"use client";
 import MyAvatar from "@/components/common/image/my-avatar";
 import MyLink from "@/components/common/myLink";
 import type { Locale } from "@/i18n";
@@ -21,7 +22,7 @@ const ConversationNavbar = ({ lang }: props) => {
       </div>
       <div>
         <MyLink
-          href={""}
+          href={"/en/messages/student"}
           loading
           button={{
             variant: "ghost",
