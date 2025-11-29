@@ -53,7 +53,7 @@ export default async function ApplicationLayout(props: Props) {
           </div>
           {children}
         </main>
-        <AppFooter />
+        <AppFooter lang={lang as Locale} />
       </div>
     </SidebarProvider>
   );

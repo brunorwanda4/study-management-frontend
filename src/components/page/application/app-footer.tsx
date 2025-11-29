@@ -1,11 +1,17 @@
+"use client";
+import type { Locale } from "@/i18n";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface props {
   className?: string;
+  lang: Locale;
 }
 
-const AppFooter = ({ className }: props) => {
+const AppFooter = ({ className, lang }: props) => {
+  const pathname = usePathname();
+  if (pathname.startsWith(`/${lang}/messages`)) return null;
   return (
     <footer
       className={cn(

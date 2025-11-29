@@ -11,7 +11,7 @@ interface props {
   messageType?: "icon" | "image";
 }
 
-const MessageCard = ({ sender, messageCardType = "direct" }: props) => {
+const MessageCard = ({ sender, messageCardType = "group" }: props) => {
   if (messageCardType === "group") {
     return (
       <div className={cn("chat", "chat-start", " w-full max-w-full")}>
