@@ -69,14 +69,18 @@ const MyLink = ({
           {loading ? (
             <LoadingIndicatorText className=" flex flex-row items-center gap-2">
               {roleTag && (
-                <span className={"text-neutral text-sm"}>{roleTag}/ </span>
+                <span className={"text-base-content/50 text-sm"}>
+                  {roleTag}/{" "}
+                </span>
               )}
               {children}
             </LoadingIndicatorText>
           ) : (
             <div className=" flex flex-row items-center gap-2">
               {roleTag && (
-                <span className={"text-neutral text-sm"}>{roleTag}/ </span>
+                <span className={"text-base-content/50 text-sm"}>
+                  {roleTag}/{" "}
+                </span>
               )}
               {children}
             </div>
@@ -94,14 +98,14 @@ const MyLink = ({
       {loading ? (
         <LoadingIndicatorText className=" flex flex-row items-center gap-2">
           {roleTag && (
-            <span className={"text-neutral text-sm"}>{roleTag}/ </span>
+            <span className={"text-base-content/50 text-sm"}>{roleTag}/ </span>
           )}
           {children} {loading}
         </LoadingIndicatorText>
       ) : (
         <div className=" flex flex-row items-center gap-2">
           {roleTag && (
-            <span className={"text-neutral text-sm"}>{roleTag}/ </span>
+            <span className={"text-base-content/50 text-sm"}>{roleTag}/ </span>
           )}
           {children} {loading}
         </div>

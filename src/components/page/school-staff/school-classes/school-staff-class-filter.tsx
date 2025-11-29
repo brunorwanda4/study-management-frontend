@@ -111,7 +111,7 @@ const SchoolStaffClassFilter = ({ auth }: Props) => {
             onSearch={(value) => setFilter(value)} // ✅ update filter state only
             placeholder="Search class..."
             loading={loading}
-            live={false}
+            live={true}
           />
 
           <div>

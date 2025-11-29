@@ -1,6 +1,7 @@
 "use client";
 import MyAvatar from "@/components/common/image/my-avatar";
 import MyImage from "@/components/common/myImage";
+import MyLink from "@/components/common/myLink";
 import ClassModifySheet from "@/components/page/class/class-modify-sheet";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -106,7 +107,7 @@ const ClassCard = ({
                 src={cls?.class_teacher?.image}
                 alt={cls.class_teacher.name}
                 type="squircle"
-                size="xs"
+                size="2xs"
               />
               <Tooltip>
                 <TooltipTrigger>
@@ -120,14 +121,11 @@ const ClassCard = ({
         {/* ands and teachers */}
         <div className=" px-4 flex flex-wrap gap-4">
           {/* students */}
-          <Tooltip>
-            <TooltipTrigger>
-              <Badge variant={"outline"} library="daisy">
-                <PiStudentLight /> <span>34</span>
-              </Badge>
-            </TooltipTrigger>
-            <TooltipContent>Students</TooltipContent>
-          </Tooltip>
+          <MyLink href={`/${lang}/c/${cls?.username}/people#students`}>
+            <div className=" flex gap-1 items-center" title="Students ">
+              <PiStudentLight /> <span>34</span>
+            </div>
+          </MyLink>
           {/* subject */}
           <Tooltip>
             <TooltipTrigger>

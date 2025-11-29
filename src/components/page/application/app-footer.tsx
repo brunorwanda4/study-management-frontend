@@ -15,7 +15,7 @@ const AppFooter = ({ className, lang }: props) => {
   return (
     <footer
       className={cn(
-        "footer m-0 mt-0 footer-center text-base-content p-4 border-t border-t-base-300 bg-base-100 bottom-0",
+        "footer mt-4 footer-center text-base-content p-4 border-t border-t-base-300 bg-base-100 bottom-0",
         className,
       )}
     >

@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
 
 // ✅ New: helper for safe revalidation
 async function safeRevalidate(path: string) {
@@ -44,21 +44,10 @@ export interface APIResponse<T = unknown> {
 export interface ApiRequestOptions {
   token?: string;
   role?: string;
-  /**
-   * Enable real-time updates for this request
-   */
+
   realtime?: boolean | string;
-  /**
-   * Callback for real-time events
-   */
   onRealtimeEvent?: (event: any) => void;
-  /**
-   * Automatically revalidate this path after success
-   */
   revalidatePath?: string | string[];
-  /**
-   * School Token
-   */
   schoolToken?: string | string[] | null;
 }
 

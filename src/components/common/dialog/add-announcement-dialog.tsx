@@ -13,6 +13,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import { CgAttachment } from "react-icons/cg";
 import { FiSend } from "react-icons/fi";
 
@@ -20,9 +21,10 @@ interface props {
   className?: string;
   button?: ShadcnButtonProps | DaisyButtonProps;
   name?: string;
+  auth: AuthContext;
 }
 
-const AddAnnouncementDialog = ({ button, name, className }: props) => {
+const AddAnnouncementDialog = ({ button, name, className, auth }: props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -32,7 +34,7 @@ const AddAnnouncementDialog = ({ button, name, className }: props) => {
           </Button>
         ) : (
           <div className=" flex gap-2 card bg-base-100 flex-row border-sm p-2 ">
-            <MyAvatar size="sm" />
+            <MyAvatar src={auth?.user.image} alt={auth.user.name} size="sm" />
             <div className=" bg-base-content/20 w-full p-2 card ">
               <span>New announcement..</span>
             </div>

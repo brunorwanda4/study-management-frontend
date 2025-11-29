@@ -17,8 +17,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import UploadImage from "@/components/common/cards/form/upload-image";
 import { FormError, FormSuccess } from "@/components/common/form-message";
+import { CommonFormField } from "@/components/common/form/common-form-field";
 import {
   CountrySelect,
   FlagComponent,
@@ -134,23 +134,12 @@ const TeacherForm = ({ auth, teacher, isSchool }: Props) => {
         <div className=" flex flex-col lg:flex-row gap-2">
           {/* Image Upload */}
           <div className=" w-full flex flex-col gap-2">
-            <FormField
+            <CommonFormField
               control={form.control}
               name="image"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Profile Image</FormLabel>
-                  <FormControl>
-                    <UploadImage
-                      onChange={field.onChange}
-                      value={field.value?.toString() ?? null}
-                      disabled={isPending}
-                      description="Drop your profile image here"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              fieldType="avatar"
+              label="Profile image"
+              avatarProps={{ avatarProps: { size: "2xl" } }}
             />
             {/* Name */}
             <FormField
