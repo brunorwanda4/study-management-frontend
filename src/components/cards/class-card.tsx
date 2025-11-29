@@ -58,13 +58,14 @@ const ClassCard = ({
           className="h-32 w-full"
           classname=" card rounded-b-none border-b border-base-content/50"
         />
-        <div className="absolute -bottom-18 flex items-center gap-2 p-4">
+        <div className="absolute -bottom-15 flex items-center gap-2 p-4">
           <MyAvatar
             size="lg"
             type="cycle"
             src={cls?.image}
             isSubClass
             alt={cls?.name}
+            className=" border-2 border-base-100"
           />
           <div className="mt-6 space-x-1 overflow-hidden">
             <span
