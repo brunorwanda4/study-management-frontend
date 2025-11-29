@@ -49,6 +49,7 @@ interface MessageInputProps {
   placeholder?: string;
   enabledTools?: EditorTool[];
   mentionableUsers?: { id: string; name: string; status?: string }[];
+  classname?: string;
 }
 
 const ToolbarButton = ({
@@ -98,6 +99,7 @@ export default function MessageInput({
     { id: "4", name: "David", status: "online" },
     { id: "5", name: "Eve", status: "busy" },
   ],
+  classname,
 }: MessageInputProps) {
   const [showToolbar, setShowToolbar] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -440,7 +442,10 @@ export default function MessageInput({
       )}
 
       <div
-        className="relative flex-1 min-h-[80px] max-h-[400px] overflow-y-auto cursor-text p-3"
+        className={cn(
+          "relative flex-1 min-h-[80px] max-h-[400px] overflow-y-auto cursor-text p-3",
+          classname,
+        )}
         onClick={() => editorRef.current?.focus()}
       >
         {/* placeholder */}

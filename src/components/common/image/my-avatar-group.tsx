@@ -1,6 +1,4 @@
-import React from "react";
 import { cn } from "@/lib/utils";
-import type { Gender, userRole } from "@/lib/schema/common-details-schema"; // Adjust imports as needed
 import MyAvatar, { type MyAvatarProps } from "./my-avatar";
 
 // Define the shape of a single avatar item based on your existing props

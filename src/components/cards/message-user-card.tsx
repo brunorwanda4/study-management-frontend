@@ -4,7 +4,6 @@ import MyAvatarGroup from "@/components/common/image/my-avatar-group";
 import MyLink from "@/components/common/myLink";
 import type { Locale } from "@/i18n";
 import { cn } from "@/lib/utils";
-import { useTheme } from "next-themes";
 import Link from "next/link";
 
 interface props {
@@ -13,7 +12,6 @@ interface props {
 }
 
 const MessageUserCard = ({ lang, messageCardType = "direct" }: props) => {
-  const { theme } = useTheme();
   return (
     <div
       className={cn(
@@ -28,9 +26,9 @@ const MessageUserCard = ({ lang, messageCardType = "direct" }: props) => {
           <div>
             <MyAvatarGroup
               items={[
-                { src: "", alt: "Bruno" },
-                { src: "", alt: "Bruno" },
-                { src: "", alt: "Bruno" },
+                { src: "", alt: "" },
+                { src: "", alt: "" },
+                { src: "", alt: "" },
               ]}
               limit={1}
               size="xs"

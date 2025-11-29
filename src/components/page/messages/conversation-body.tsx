@@ -2,7 +2,7 @@ import MessageCard from "@/components/cards/message-card";
 
 const ConversationBody = () => {
   return (
-    <div className=" max-h-[72%] min-h-[72%] overflow-y-auto px-4 py-4 pb-10">
+    <div className=" px-2 py-4">
       <MessageCard sender />
       <MessageCard sender />
       <MessageCard sender />
@@ -11,6 +11,9 @@ const ConversationBody = () => {
       <MessageCard />
       <MessageCard sender />
       <MessageCard sender />
+      <MessageCard />
+      <MessageCard />
+      <MessageCard />
       <MessageCard />
       <MessageCard sender />
       <MessageCard sender />
