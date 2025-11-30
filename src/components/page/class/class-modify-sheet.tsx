@@ -147,10 +147,11 @@ const ClassModifySheet = ({ cls, auth, isTable, lang, isSchool }: props) => {
                 {cls?.username && (
                   <MyLink
                     className="line-clamp-1 flex space-x-1 link link-hover"
-                    href={`/class`}
+                    href={`/${lang}/c/${cls?.username}`}
+                    roleTag="c"
                   >
                     <span title={cls?.username} className="">
-                      @ {getInitialsUsername(cls?.name, true)}
+                      {getInitialsUsername(cls?.name, true)}
                     </span>
                   </MyLink>
                 )}

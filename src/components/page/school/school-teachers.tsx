@@ -43,20 +43,24 @@ const SchoolTeachers = ({ lang, onThePage, auth, teachers }: props) => {
       <div className="">
         <h3 className="font-semibold capitalize">Teachers </h3>
       </div>
-      {teachers.map((item) => {
-        return (
-          <UserCardSmall
-            key={item._id || item.id}
-            id={item.id}
-            role="t"
-            lang={lang}
-            userRole="TEACHER"
-            name={item.name}
-            image={item.image}
-            userId={item.user_id || ""}
-          />
-        );
-      })}
+      {teachers && (
+        <div>
+          {teachers.teachers.map((item) => {
+            return (
+              <UserCardSmall
+                key={item._id || item.id}
+                id={item.id}
+                role="t"
+                lang={lang}
+                userRole="TEACHER"
+                name={item.name}
+                image={item.image}
+                userId={item.user_id || ""}
+              />
+            );
+          })}
+        </div>
+      )}
       {!onThePage && (
         <Link
           href={`/${lang}/school/peoples`}

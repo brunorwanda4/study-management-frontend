@@ -1,3 +1,4 @@
+import type { Subject } from "@/lib/schema/subject/subject-schema";
 import { BsClock } from "react-icons/bs";
 import MyLink from "../common/myLink";
 import {
@@ -10,7 +11,7 @@ import {
 import { UserSmCard } from "./user-card";
 
 interface SubjectCardProps {
-  subject?: any;
+  subject?: Subject;
   isOnSubjectPage?: boolean;
   showModify?: boolean;
 }

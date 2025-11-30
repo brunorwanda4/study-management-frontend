@@ -1,6 +1,9 @@
 "use client";
 
-import { LoadingIndicator } from "@/components/common/myLink";
+import MyLink, {
+  LoadingIndicator,
+  LoadingIndicatorText,
+} from "@/components/common/myLink";
 import {
   Accordion,
   AccordionContent,
@@ -26,7 +29,6 @@ import { isActivePath } from "@/lib/helpers/link-is-active";
 import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
 import Image from "next/image";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { sidebarGroupsProps } from "./app-side-content";
 
@@ -83,7 +85,7 @@ export function AppSidebar({ items, lang }: AppSidebarProps) {
                             <LoadingIndicator />
                           </AccordionTrigger>
 
-                          <AccordionContent>
+                          <AccordionContent className=" pb-0">
                             <SidebarMenuSub>
                               {item.children.map((subItem) => (
                                 <SidebarMenuSubItem
@@ -95,10 +97,10 @@ export function AppSidebar({ items, lang }: AppSidebarProps) {
                                     }),
                                     isActivePath(path, subItem.url, lang) &&
                                       "bg-base-300",
-                                    "hover:bg-base-200 ml-6 justify-start rounded-l-none",
+                                    "hover:bg-base-200 ml-0  justify-start rounded-l-none",
                                   )}
                                 >
-                                  <Link
+                                  <MyLink
                                     href={subItem.url || "/"}
                                     className="flex w-full items-center justify-between"
                                   >
@@ -112,12 +114,13 @@ export function AppSidebar({ items, lang }: AppSidebarProps) {
                                           className="h-5 min-h-5 w-5 min-w-5"
                                         />
                                       )}
-                                      <span className="text-base-content">
+                                      <LoadingIndicatorText
+                                        title={subItem.title}
+                                      >
                                         {subItem.title}
-                                      </span>
+                                      </LoadingIndicatorText>
                                     </div>
-                                    <LoadingIndicator />
-                                  </Link>
+                                  </MyLink>
                                 </SidebarMenuSubItem>
                               ))}
                             </SidebarMenuSub>
@@ -126,7 +129,7 @@ export function AppSidebar({ items, lang }: AppSidebarProps) {
                       </Accordion>
                     ) : (
                       <SidebarMenuButton asChild>
-                        <Link
+                        <MyLink
                           className={cn(
                             buttonVariants({ variant: "ghost" }),
                             isActivePath(path, item.url, lang) &&
@@ -145,12 +148,11 @@ export function AppSidebar({ items, lang }: AppSidebarProps) {
                                 className="h-5 min-h-5 w-5 min-w-5"
                               />
                             )}
-                            <span className="text-base-content">
+                            <LoadingIndicatorText title={item.title}>
                               {item.title}
-                            </span>
+                            </LoadingIndicatorText>
                           </div>
-                          <LoadingIndicator />
-                        </Link>
+                        </MyLink>
                       </SidebarMenuButton>
                     )}
                   </SidebarMenuItem>

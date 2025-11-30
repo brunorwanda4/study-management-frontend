@@ -154,70 +154,71 @@ export const schoolStaffSidebarGroups: sidebarGroupsProps[] = [
   },
 
   {
-    label: "Members",
+    label: "Application",
     items: [
       {
-        title: "Students",
-        icon: "/icons/student.png",
-        url: "/s-t/students",
+        title: "People",
+        icon: "/icons/people.png",
+        children: [
+          {
+            title: "Students",
+            icon: "/icons/student.png",
+            url: "/s-t/students",
+          },
+          {
+            title: "Teachers",
+            icon: "/icons/teacher.png",
+            url: "/s-t/teachers",
+          },
+          {
+            title: "Staff",
+            icon: "/icons/staff.png",
+            url: "/s-t/staffs",
+          },
+        ],
       },
       {
-        title: "Teachers",
-        icon: "/icons/teacher.png",
-        url: "/s-t/teachers",
+        title: "Academics",
+        icon: "/icons/academic.png",
+        children: [
+          {
+            title: "Classes",
+            icon: "/icons/classroom.png",
+            url: "/s-t/classes",
+          },
+          {
+            title: "Timetable & Schedule",
+            icon: "/icons/timetable.png",
+            url: "/s-t/timetable",
+          },
+          {
+            title: "Performance & Exams",
+            icon: "/icons/performance.png",
+            url: "/s-t/performance",
+          },
+          {
+            title: "Attendance",
+            icon: "/icons/attendance/manual.png",
+            url: "/s-t/attendance",
+          },
+        ],
       },
       {
-        title: "Staff",
-        icon: "/icons/staff.png",
-        url: "/s-t/staffs",
+        title: "Communications",
+        icon: "/icons/communication.png",
+        children: [
+          {
+            title: "Announcements",
+            icon: "/icons/announcement.png",
+            url: "/s-t/announcements",
+          },
+          {
+            title: "Join School Requests",
+            icon: "/icons/request.png",
+            url: "/s-t/join-school-requests",
+          },
+        ],
       },
-    ],
-  },
-
-  {
-    label: "Academics",
-    items: [
-      {
-        title: "Classes",
-        icon: "/icons/classroom.png",
-        url: "/s-t/classes",
-      },
-      {
-        title: "Timetable & Schedule",
-        icon: "/icons/timetable.png",
-        url: "/s-t/timetable",
-      },
-      {
-        title: "Performance & Exams",
-        icon: "/icons/performance.png",
-        url: "/s-t/performance",
-      },
-      {
-        title: "Attendance",
-        icon: "/icons/attendance/manual.png",
-        url: "/s-t/attendance",
-      },
-    ],
-  },
-
-  {
-    label: "Communication",
-    items: [
-      {
-        title: "Announcements",
-        icon: "/icons/announcement.png",
-        url: "/s-t/announcements",
-      },
-      {
-        title: "Join School Requests",
-        icon: "/icons/request.png",
-        url: "/s-t/join-school-requests",
-      },
-    ],
-  },
-  {
-    label: "Management",
-    items: [
       {
         title: "School Settings",
         icon: "/icons/settings.png",

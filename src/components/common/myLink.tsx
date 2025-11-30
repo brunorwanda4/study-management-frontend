@@ -12,15 +12,20 @@ import {
 interface LoadingIndicatorTextProps {
   children: React.ReactNode;
   className?: string;
+  title?: string;
 }
 
 export const LoadingIndicatorText = ({
   children,
   className,
+  title,
 }: LoadingIndicatorTextProps) => {
   const { pending } = useLinkStatus();
   return (
-    <div className={cn(className, pending && "skeleton skeleton-text")}>
+    <div
+      title={title}
+      className={cn(className, pending && "skeleton skeleton-text")}
+    >
       {children}
     </div>
   );
