@@ -1,5 +1,6 @@
 import SubjectCard from "@/components/cards/subject-card";
 import SubjectDialog from "@/components/page/class/dialog/subject-dialog";
+import EmptySubjects from "@/components/page/class/subjects/empty-subjects";
 import NotFoundPage from "@/components/page/not-found";
 import { Separator } from "@/components/ui/separator";
 import type { Class } from "@/lib/schema/class/class-schema";
@@ -54,12 +55,14 @@ const ClassSubjectPage = async (
         <SubjectDialog />
       </div>
       <Separator />
-      {subjectsRes.data && (
+      {subjectsRes.data && subjectsRes.data.length > 0 ? (
         <main className=" grid grid-cols-1 gap-4 lg:grid-cols-2">
           {subjectsRes.data.map((subject) => (
             <SubjectCard key={subject._id || subject.id} subject={subject} />
           ))}
         </main>
+      ) : (
+        <EmptySubjects auth={auth} />
       )}
     </div>
   );
