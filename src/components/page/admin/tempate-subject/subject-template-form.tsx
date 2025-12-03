@@ -6,10 +6,15 @@ import { TopicsInput } from "@/components/page/admin/subjects/topics-input";
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
+import { SubjectCategories } from "@/lib/const/common-details-const";
 import { useToast } from "@/lib/context/toast/ToastContext";
 import type { MainClassModel } from "@/lib/schema/admin/main-classes-schema";
-import { TemplateSubjectSchema } from "@/lib/schema/subject/template-schema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import {
+  type TemplateSubject,
+  TemplateSubjectSchema,
+  TemplateTopic,
+} from "@/lib/schema/subject/template-schema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState, useTransition } from "react";
@@ -33,7 +38,7 @@ export type createTemplateSubject = z.infer<typeof createTemplateSubjectSchema>;
 
 interface props {
   mainClass?: MainClassModel;
-  auth: AuthContext
+  auth: AuthContext;
 }
 
 const SubjectTemplateForm = ({ mainClass, auth }: props) => {
@@ -48,7 +53,7 @@ const SubjectTemplateForm = ({ mainClass, auth }: props) => {
   useEffect(() => {
     const fetchMainClasses = async () => {
       try {
-        const [classes,] = await Promise.all([
+        const [classes] = await Promise.all([
           !mainClass
             ? apiRequest<void, MainClassModel[]>(
                 "get",
@@ -62,7 +67,6 @@ const SubjectTemplateForm = ({ mainClass, auth }: props) => {
         if (classes.data) {
           setMainClasses(classes.data);
         }
-
       } catch (error) {
         showToast({
           title: "Error to get main class or main subjects",
@@ -86,11 +90,69 @@ const SubjectTemplateForm = ({ mainClass, auth }: props) => {
       estimated_hours: "",
       category: undefined,
       topics: [],
+      created_by: auth.user.id,
+      credits: "60",
     },
     mode: "onChange",
   });
 
-  const onSubject = (values: createTemplateSubject) => {};
+ const onSubject = (values: createTemplateSubject) => {
+  setError("");
+  setSuccess("");
+
+  const transformTopic = (topic: TemplateTopic): any => {
+    return {
+      order: topic.order,
+      title: topic.title,
+
+      estimated_hours: topic.estimated_hours
+        ? Number(topic.estimated_hours)
+        : undefined,
+
+      credits: topic.credits
+        ? Number(topic.credits)
+        : undefined,
+
+      subtopics: topic.subtopics?.length
+        ? topic.subtopics.map(transformTopic)
+        : undefined,
+    };
+  };
+
+  startTransition(async () => {
+    const apiData = {
+      ...values,
+
+      prerequisites: values.prerequisites?.map((p) => p.value),
+
+      estimated_hours: Number(values.estimated_hours),
+      credits: values.credits ? Number(values.credits) : undefined,
+
+      topics: values.topics?.map(transformTopic),
+    };
+
+    const res = await apiRequest<typeof apiData, TemplateSubject>(
+      "post",
+      "/template-subjects",
+      apiData,
+      {
+        token: auth.token,
+      }
+    );
+
+    if (!res.data) {
+      setError(res.message);
+      showToast({
+        title: "Error",
+        description: res.message,
+        type: "error",
+      });
+    } else {
+      setSuccess("Subject created successfully");
+    }
+  });
+};
+
 
   return (
     <Form {...form}>
@@ -130,6 +192,17 @@ const SubjectTemplateForm = ({ mainClass, auth }: props) => {
               required
             />
             <CommonFormField
+              label="Category"
+              name="category"
+              fieldType="select"
+              placeholder="Select subject category"
+              control={form.control}
+              selectOptions={SubjectCategories.map((item) => ({
+                value: item,
+                label: item,
+              }))}
+            />
+            <CommonFormField
               label="Hours"
               name="estimated_hours"
               type="number"
@@ -146,23 +219,42 @@ const SubjectTemplateForm = ({ mainClass, auth }: props) => {
               disabled={isPending}
               required
             />
+            <CommonFormField
+              label="Credits"
+              name="credits"
+              type="number"
+              fieldType="input"
+              inputProps={{
+                min: 1,
+                max: 1000,
+                defaultValue: 60,
+                numberMode: "percent",
+              }}
+              placeholder="e.g., 120"
+              className=""
+              control={form.control}
+              disabled={isPending}
+              required
+            />
           </div>
-           <div className=" flex flex-col gap-4 lg:w-1/2">
-          {loadingOptions ? <div className="skeleton h-12 rounded-md" /> :
-           <CommonFormField
-            label="Prerequisites (main classes)"
-            name="prerequisites"
-            fieldType="multipleSelect"
-            placeholder="Select classes"
-            control={form.control}
-            selectOptions={mainClasses.map((item) => ({
-              value: item._id || "",
-              label: `${item.name} `,
-              disable: item.disable,
-            }))}
-          />}
-          <TopicsInput control={form.control} name="topics" />
-
+          <div className=" flex flex-col gap-4 lg:w-1/2">
+            {loadingOptions ? (
+              <div className="skeleton h-12 rounded-md" />
+            ) : (
+              <CommonFormField
+                label="Prerequisites (main classes)"
+                name="prerequisites"
+                fieldType="multipleSelect"
+                placeholder="Select classes"
+                control={form.control}
+                selectOptions={mainClasses.map((item) => ({
+                  value: item._id || "",
+                  label: `${item.name} `,
+                  disable: item.disable,
+                }))}
+              />
+            )}
+            <TopicsInput control={form.control} name="topics" />
           </div>
         </div>
 

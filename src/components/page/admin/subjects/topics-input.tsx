@@ -78,7 +78,7 @@ function TopicItem<T extends FieldValues>({
   });
 
   return (
-    <div className="border-l card border-base-content/50 p-2 bg-base-200">
+    <div className="border-l rounded-l-none border-base-content/20 p-2 bg-base-200">
       {/* Header */}
       <div className="flex items-center justify-between">
         <button
@@ -130,6 +130,12 @@ function TopicItem<T extends FieldValues>({
             type="number"
             placeholder="10"
             fieldType="input"
+             inputProps={{
+                min: 1,
+                max: 1000,
+                defaultValue: 60,
+                numberMode: "hours",
+              }}
           />
 
           <CommonFormField
@@ -137,6 +143,12 @@ function TopicItem<T extends FieldValues>({
             name={`${name}.credits` as FieldPath<T>}
             label="Credits"
             type="number"
+            inputProps={{
+            min: 1,
+            max: 1000,
+            defaultValue: 60,
+            numberMode: "percent",
+            }}
             placeholder="3"
             fieldType="input"
           />
@@ -158,8 +170,9 @@ function TopicItem<T extends FieldValues>({
                     subtopics: [],
                   } as any)
                 }
+                role="create"
               >
-                <Plus className="h-4 w-4 mr-1" /> Add Subtopic
+               Add Subtopic
               </Button>
             </div>
 

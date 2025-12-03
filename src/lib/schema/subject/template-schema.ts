@@ -4,8 +4,8 @@ import { z } from "zod";
 export type TemplateTopic = {
   order: string;
   title: string;
-  estimated_hours?: string | null;
-  credits?: string | null;
+  estimated_hours?: string | null | number;
+  credits?: string | null | number;
   subtopics?: TemplateTopic[];
 };
 
