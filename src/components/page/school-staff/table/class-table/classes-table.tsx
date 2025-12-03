@@ -35,8 +35,7 @@ export default function ClassesTable({
   auth,
   realtimeEnabled = true,
 }: ClassTableProps) {
-  const { data: initialClasses, isConnected } =
-    useRealtimeData<ClassWithOthers>("class");
+  const { data: initialClasses } = useRealtimeData<ClassWithOthers>("class");
   const [displayClasses, setDisplayClasses] =
     useState<ClassWithOthers[]>(classes);
 

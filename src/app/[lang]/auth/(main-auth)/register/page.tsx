@@ -26,12 +26,12 @@ const RegisterPage = async (props: props) => {
       </div>
       <div className=" mt-4 w-full space-y-3">
         <RegisterForm lang={lang} />
-        <p>
-          {diction.auth.register.page.paragraph}{" "}
+        <div>
+          <p>{diction.auth.register.page.paragraph}</p>
           <MyLink href={`/${lang}/auth/login`} className=" link link-info">
             {diction.auth.register.page.login}
           </MyLink>
-        </p>
+        </div>
         <AuthProviders />
       </div>
     </div>

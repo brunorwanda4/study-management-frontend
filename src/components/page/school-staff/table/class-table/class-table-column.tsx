@@ -23,7 +23,12 @@ export const ClassTableColumn = (lang: Locale, auth: AuthContext) => {
       accessorKey: "name",
       cell: ({ row }) => (
         <div className=" items-center cursor-pointer">
-          <ClassModifySheet auth={auth} cls={row.original} isTable />
+          <ClassModifySheet
+            lang={lang}
+            auth={auth}
+            cls={row.original}
+            isTable
+          />
         </div>
       ),
       meta: {
@@ -91,7 +96,7 @@ export const ClassTableColumn = (lang: Locale, auth: AuthContext) => {
             <MyAvatar
               src={row.original.class_teacher.image}
               alt={row.original.class_teacher.name}
-              size="xs"
+              size="2xs"
             />
             {row.original.class_teacher.name}
           </div>

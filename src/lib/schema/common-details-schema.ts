@@ -317,10 +317,7 @@ export type JobTitle = z.infer<typeof JobTitleSchema>;
 // Subject
 
 // Subject Category
-export const SubjectCategorySchema = z
-  .enum(SubjectCategories)
-  .or(z.string())
-  .transform((val) => val as any);
+export const SubjectCategorySchema = z.enum(SubjectCategories);
 
 export type SubjectCategory = z.infer<typeof SubjectCategorySchema>;
 

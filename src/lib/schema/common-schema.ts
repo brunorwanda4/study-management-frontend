@@ -13,3 +13,18 @@ export const SocialAndCommunicationSchema = z.object({
 export type SocialAndCommunication = z.infer<
   typeof SocialAndCommunicationSchema
 >;
+
+export const PaginatedSchema = <T extends z.ZodTypeAny>(itemSchema: T) =>
+  z.object({
+    data: z.array(itemSchema),
+    total: z.number().int(),
+    total_pages: z.number().int(),
+    current_page: z.number().int(),
+  });
+
+export interface Paginated<T> {
+  data: T[];
+  total: number;
+  total_pages: number;
+  current_page: number;
+}

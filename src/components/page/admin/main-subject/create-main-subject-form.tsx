@@ -3,13 +3,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, Trash2 } from "lucide-react";
 import {
-  Dispatch,
-  SetStateAction,
+  type Dispatch,
+  type SetStateAction,
   useEffect,
   useState,
   useTransition,
 } from "react";
-import { useFieldArray, useForm, type Resolver } from "react-hook-form";
+import { type Resolver, useFieldArray, useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -35,13 +35,13 @@ import {
   SubjectLevels,
 } from "@/lib/const/subject-const";
 import { useToast } from "@/lib/context/toast/ToastContext";
-import { MainClassModel } from "@/lib/schema/admin/main-classes-schema";
+import type { MainClassModel } from "@/lib/schema/admin/main-classes-schema";
 import {
-  CreateMainSubjectFormData,
+  type CreateMainSubjectFormData,
   CreateMainSubjectFormSchema,
 } from "@/lib/schema/admin/subjects/main-subject-schema/create-main-subject-schema";
-import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 
 interface Props {
@@ -194,7 +194,7 @@ const CreateMainSubjectForm = ({
             description: `Created: ${request.data.name}`,
             type: "success",
           });
-          if (!!setSubject) setSubject(request.data);
+          if (setSubject) setSubject(request.data);
           form.reset(defaultValues);
         }
       } catch (err) {

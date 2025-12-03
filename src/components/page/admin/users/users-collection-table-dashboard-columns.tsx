@@ -1,9 +1,9 @@
 "use client";
 
-import MyImage from "@/components/common/myImage";
+import MyAvatar from "@/components/common/image/my-avatar";
+import MyLink from "@/components/common/myLink";
 import type { UserModel } from "@/lib/schema/user/user-schema";
 import { cn } from "@/lib/utils";
-import { generateImageProfile } from "@/lib/utils/generate-profile-image";
 import type { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 
@@ -15,7 +15,7 @@ export const getUsersTableCollectionDashboardColumns =
       meta: { filterVariant: "text" },
       cell: ({ row }) => {
         return (
-          <Link
+          <MyLink
             href={`/a/collections/users/${row.original.username}`}
             className={cn(
               "flex flex-row items-center gap-2",
@@ -23,19 +23,21 @@ export const getUsersTableCollectionDashboardColumns =
             )}
             data-tip={cn(row.original.disable && "Disabled user")}
           >
-            <MyImage
-              role="AVATAR"
-              className="size-12"
-              src={
-                row.original.image ||
-                generateImageProfile(row.original.name, row.original.gender)
-              }
+            <MyAvatar
+              alt={row.original.name}
+              size="sm"
+              src={row.original.image}
             />
             <div className="flex flex-col gap-1">
-              <span className="font-medium">{row.original.name}</span>
-              <span className="text-sm">{row.original.gender}</span>
+              <span
+                title={row.original.name}
+                className="font-medium line-clamp-1"
+              >
+                {row.original.name}
+              </span>
+              <span className="text-xs">{row.original.gender}</span>
             </div>
-          </Link>
+          </MyLink>
         );
       },
     },

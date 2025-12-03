@@ -1,7 +1,7 @@
 "use client";
 import MyImage from "@/components/common/myImage";
 import { CommonDataTable } from "@/components/common/table/common-data-table";
-import { getUsersTableCollectionDashboardColumns } from "@/components/page/admin/users/users-collection-table-dashboard-columns";
+import { getUsersTableCollectionColumns } from "@/components/page/admin/users/users_table_collection_columns";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
@@ -46,7 +46,7 @@ const UsersCollectionTableDashboard = ({
     }
   }, [users, realtimeEnabled, initialUsers]);
 
-  const columns = getUsersTableCollectionDashboardColumns();
+  const columns = getUsersTableCollectionColumns();
 
   const table = useReactTable<UserModel>({
     data: displayUsers,

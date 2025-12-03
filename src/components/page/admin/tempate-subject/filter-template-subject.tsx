@@ -3,12 +3,11 @@
 import SearchBox from "@/components/common/form/search-box";
 import SmartPagination from "@/components/common/smart-pagination";
 import ChangeDisplay from "@/components/display/change-diplay";
-import CreateNewUserDialog from "@/components/page/admin/users/createNewUserDialog";
 import { Separator } from "@/components/ui/separator";
 import { LIMIT } from "@/lib/env";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
-import type { PaginatedUsers } from "@/lib/schema/relations-schema";
-import type { UserModel } from "@/lib/schema/user/user-schema";
+import type { Paginated } from "@/lib/schema/common-schema";
+import type { TemplateSubject } from "@/lib/schema/subject/template-schema";
 import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { useEffect, useState } from "react";
@@ -17,7 +16,7 @@ interface Props {
   auth: AuthContext;
 }
 
-const UsersFilter = ({ auth }: Props) => {
+const FilterTemplateSubject = ({ auth }: Props) => {
   const [loading, setLoading] = useState(false);
   const [filter, setFilter] = useState<string>("");
   const [pagination, setPagination] = useState({
@@ -25,9 +24,10 @@ const UsersFilter = ({ auth }: Props) => {
     current_page: 1,
   });
 
-  const { data, addItem, deleteItem } = useRealtimeData<UserModel>("user");
+  const { data, addItem, deleteItem } =
+    useRealtimeData<TemplateSubject>("template_subject");
 
-  async function fetchUsers(page = 1, filterValue = filter) {
+  async function fetchSub(page = 1, filterValue = filter) {
     setLoading(true);
     try {
       const skip = (page - 1) * LIMIT;
@@ -39,21 +39,24 @@ const UsersFilter = ({ auth }: Props) => {
 
       if (filterValue) params.set("filter", filterValue);
 
-      const res = await apiRequest<void, PaginatedUsers>(
+      const res = await apiRequest<void, Paginated<TemplateSubject>>(
         "get",
-        `/users?${params.toString()}`,
+        "/template-subjects?limit=9",
         undefined,
         {
           token: auth.token,
-          schoolToken: auth.schoolToken,
           realtime: "user",
         },
       );
 
       if (res?.data) {
+        const items = res.data.data; // <-- array of subjects
+
         // Clear old data
-        data.forEach((s) => deleteItem(s._id || s.id || ""));
-        res.data.users.forEach((s) => addItem(s));
+        data.forEach((s) => deleteItem(s.id || s._id || ""));
+
+        // Add new subjects
+        items.forEach((s) => addItem(s));
 
         setPagination({
           total_pages: res.data.total_pages,
@@ -61,7 +64,7 @@ const UsersFilter = ({ auth }: Props) => {
         });
       }
     } catch (err) {
-      console.error("Failed to fetch users:", err);
+      console.error("Failed to fetch students:", err);
     } finally {
       setLoading(false);
     }
@@ -69,7 +72,7 @@ const UsersFilter = ({ auth }: Props) => {
 
   // 🔁 Refetch whenever filter changes
   useEffect(() => {
-    fetchUsers(1);
+    fetchSub(1);
   }, [filter]);
 
   return (
@@ -80,25 +83,24 @@ const UsersFilter = ({ auth }: Props) => {
 
           <SearchBox
             onSearch={(value) => setFilter(value)}
-            placeholder="Search user..."
+            placeholder="Search subject..."
             loading={loading}
-            live={true}
+            live={false}
           />
         </div>
-
         <div className="flex gap-4 items-center">
           <SmartPagination
             totalPages={pagination.total_pages}
             currentPage={pagination.current_page}
-            onPageChange={(page) => fetchUsers(page)}
+            onPageChange={(page) => fetchSub(page)}
             loading={loading}
             maxVisible={7}
             showNextPrev
             variant="outline"
             size="sm"
           />
-          <CreateNewUserDialog auth={auth} />
         </div>
+        bruno
       </div>
 
       <Separator />
@@ -106,4 +108,4 @@ const UsersFilter = ({ auth }: Props) => {
   );
 };
 
-export default UsersFilter;
+export default FilterTemplateSubject;

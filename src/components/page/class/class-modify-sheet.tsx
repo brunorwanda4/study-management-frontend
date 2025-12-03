@@ -36,7 +36,7 @@ interface props {
   cls?: ClassWithOthers;
   auth: AuthContext;
   isTable?: boolean;
-  lang?: Locale;
+  lang: Locale;
   isSchool?: boolean;
 }
 

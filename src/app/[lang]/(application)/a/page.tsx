@@ -4,13 +4,14 @@ import MainCollectionsCard from "@/components/page/admin/dashboard/main-collecti
 import UsersCollectionTableDashboard from "@/components/page/admin/users/users-collection-table-dashboard";
 import ErrorPage from "@/components/page/error-page";
 import PermissionPage from "@/components/page/permission-page";
-import { Locale } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
-import { UserModel } from "@/lib/schema/user/user-schema";
-import { DatabaseStats } from "@/lib/types/databaseStatus";
+import type { PaginatedUsers } from "@/lib/schema/relations-schema";
+import type { UserModel } from "@/lib/schema/user/user-schema";
+import type { DatabaseStats } from "@/lib/types/databaseStatus";
 import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
@@ -30,16 +31,15 @@ const AdminDashboardPage = async (props: props) => {
     return <PermissionPage lang={lang} role={auth.user.role} />;
   }
   const [usersResponse, dbStatusRes] = await Promise.all([
-    apiRequest<void, UserModel[]>("get", "/users?limit=5", undefined, {
+    apiRequest<void, PaginatedUsers[]>("get", "/users?limit=5", undefined, {
       token: auth.token,
-      realtime: "user",
     }),
     apiRequest<void, DatabaseStats>("get", "/database/status", undefined, {
       token: auth.token,
     }),
   ]);
 
-  if (!usersResponse.data || !dbStatusRes.data) {
+  if (!dbStatusRes.data) {
     return (
       <ErrorPage
         message={usersResponse.message || dbStatusRes.message}
@@ -49,7 +49,9 @@ const AdminDashboardPage = async (props: props) => {
   }
   return (
     <RealtimeProvider<UserModel>
-      channels={[{ name: "user", initialData: usersResponse.data }]}
+      channels={[
+        { name: "user", initialData: usersResponse?.data?.users ?? [] },
+      ]}
     >
       <div className="space-y-4">
         <AdminUserData auth={auth} />
@@ -60,7 +62,7 @@ const AdminDashboardPage = async (props: props) => {
           </div>
           <div className="lg:w-1/2">
             <UsersCollectionTableDashboard
-              initialUsers={usersResponse.data}
+              initialUsers={usersResponse?.data?.users}
               realtimeEnabled
             />
           </div>
