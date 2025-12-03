@@ -22,6 +22,7 @@ import DateStringInput, {
   type DateStringInputProps,
 } from "@/components/common/form/date-input";
 import { Checkbox } from "@/components/ui/checkbox";
+import MultipleSelector from "@/components/ui/multiselect";
 import { cn } from "@/lib/utils";
 import type { Control, FieldPath, FieldValues } from "react-hook-form";
 import UploadImage, { type updateImageProps } from "../cards/form/upload-image";
@@ -46,8 +47,9 @@ interface CommonFormFieldProps<T extends FieldValues> {
     | "image"
     | "avatar"
     | "checkbox"
-    | "date";
-  selectOptions?: { value: string; label: string }[];
+    | "date"
+    | "multipleSelect";
+  selectOptions?: { value: string; label: string; disable ?: boolean}[];
 
   // components props
   imageProps?: updateImageProps;
@@ -102,6 +104,7 @@ export function CommonFormField<T extends FieldValues>({
                   disabled={disabled}
                   onChange={field.onChange}
                   description={imageProps?.description}
+                  className={className}
                   {...imageProps}
                 />
               );
@@ -112,6 +115,7 @@ export function CommonFormField<T extends FieldValues>({
                   value={stringValue}
                   disabled={disabled}
                   onChange={field.onChange}
+                  className={className}
                   description={description}
                   {...avatarProps}
                 />
@@ -163,6 +167,22 @@ export function CommonFormField<T extends FieldValues>({
                   {...dateProps}
                 />
               );
+
+              case "multipleSelect":
+               return (
+                <MultipleSelector
+                  value={field.value ?? []}
+                  onChange={field.onChange}
+                  defaultOptions={selectOptions.map((item) => ({
+                    value: item.value,
+                    label: item.label,
+                    disable: item.disable,
+                  }))}
+                  placeholder={placeholder}
+                  hidePlaceholderWhenSelected
+                />
+              );
+
             default:
               return (
                 <Input

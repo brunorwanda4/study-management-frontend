@@ -1,7 +1,6 @@
-import { SubjectCategorySchema } from "@/lib/schema/common-details-schema";
+import { OptionSchema, SubjectCategorySchema } from "@/lib/schema/common-details-schema";
 import { z } from "zod";
 
-// 1) Define the type separately (forward declaration)
 export type TemplateTopic = {
   order: string;
   title: string;
@@ -20,7 +19,6 @@ export const TemplateTopicSchema: z.ZodType<TemplateTopic> = z.lazy(() =>
   }),
 );
 
-// Type inference for TypeScript
 
 export const TemplateSubjectSchema = z.object({
   id: z.string().optional(),
@@ -35,7 +33,7 @@ export const TemplateSubjectSchema = z.object({
   estimated_hours: z.string(),
   credits: z.string().optional(),
 
-  prerequisites: z.array(z.string()).optional(),
+  prerequisites: z.array(OptionSchema).optional(),
 
   topics: TemplateTopicSchema.array().optional(),
 

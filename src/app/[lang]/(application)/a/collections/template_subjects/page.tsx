@@ -43,7 +43,6 @@ async function TemplateSubjectsPage(
           description="Main subject which is connected to class subjects."
         />
         <FilterTemplateSubject auth={auth} />
-        <div>Bruno Rwanda</div>
       </div>
     </RealtimeProvider>
   );

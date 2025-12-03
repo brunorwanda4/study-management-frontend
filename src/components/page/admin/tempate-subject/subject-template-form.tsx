@@ -2,13 +2,19 @@
 
 import { FormError, FormSuccess } from "@/components/common/form-message";
 import { CommonFormField } from "@/components/common/form/common-form-field";
+import { TopicsInput } from "@/components/page/admin/subjects/topics-input";
 import { Button } from "@/components/ui/button";
+import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { useToast } from "@/lib/context/toast/ToastContext";
+import type { MainClassModel } from "@/lib/schema/admin/main-classes-schema";
 import { TemplateSubjectSchema } from "@/lib/schema/subject/template-schema";
+import { AuthContext } from "@/lib/utils/auth-context";
+import apiRequest from "@/service/api-client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
+
 import type { z } from "zod";
 
 export const createTemplateSubjectSchema = TemplateSubjectSchema.pick({
@@ -25,11 +31,51 @@ export const createTemplateSubjectSchema = TemplateSubjectSchema.pick({
 
 export type createTemplateSubject = z.infer<typeof createTemplateSubjectSchema>;
 
-const SubjectTemplateForm = () => {
+interface props {
+  mainClass?: MainClassModel;
+  auth: AuthContext
+}
+
+const SubjectTemplateForm = ({ mainClass, auth }: props) => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
   const { showToast } = useToast();
+
+  const [mainClasses, setMainClasses] = useState<MainClassModel[]>([]);
+  const [loadingOptions, setLoadingOptions] = useState(true);
+
+  useEffect(() => {
+    const fetchMainClasses = async () => {
+      try {
+        const [classes,] = await Promise.all([
+          !mainClass
+            ? apiRequest<void, MainClassModel[]>(
+                "get",
+                "/main-classes",
+                undefined,
+                { token: auth.token },
+              )
+            : { data: [] },
+        ]);
+
+        if (classes.data) {
+          setMainClasses(classes.data);
+        }
+
+      } catch (error) {
+        showToast({
+          title: "Error to get main class or main subjects",
+          description: `"Failed to fetch main classes:", ${error}`,
+          type: "error",
+        });
+      } finally {
+        setLoadingOptions(false);
+      }
+    };
+
+    fetchMainClasses();
+  }, [auth.token, showToast, mainClass]);
 
   const form = useForm<createTemplateSubject>({
     resolver: zodResolver(createTemplateSubjectSchema),
@@ -41,14 +87,19 @@ const SubjectTemplateForm = () => {
       category: undefined,
       topics: [],
     },
+    mode: "onChange",
   });
 
   const onSubject = (values: createTemplateSubject) => {};
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubject)}>
-        <div className="flex flex-col lg:flex-row gap-4">
-          <div className=" flex flex-col gap-4">
+      <form
+        onSubmit={form.handleSubmit(onSubject)}
+        className=" w-full flex flex-col gap-4"
+      >
+        <div className="flex flex-col lg:flex-row gap-4 w-full">
+          <div className=" flex flex-col gap-4 lg:w-1/2">
             <CommonFormField
               label="Name"
               name="name"
@@ -65,21 +116,80 @@ const SubjectTemplateForm = () => {
               fieldType="textarea"
               placeholder="Description..."
               control={form.control}
+              disabled={isPending}
+            />
+            <CommonFormField
+              label="Subject code"
+              name="code"
+              type="text"
+              fieldType="input"
+              placeholder="MATH101, SCI201"
+              className="uppercase"
+              control={form.control}
+              disabled={isPending}
+              required
+            />
+            <CommonFormField
+              label="Hours"
+              name="estimated_hours"
+              type="number"
+              fieldType="input"
+              inputProps={{
+                min: 1,
+                max: 1000,
+                defaultValue: 60,
+                numberMode: "hours",
+              }}
+              placeholder="e.g., 120"
+              className=""
+              control={form.control}
+              disabled={isPending}
+              required
             />
           </div>
+           <div className=" flex flex-col gap-4 lg:w-1/2">
+          {loadingOptions ? <div className="skeleton h-12 rounded-md" /> :
+           <CommonFormField
+            label="Prerequisites (main classes)"
+            name="prerequisites"
+            fieldType="multipleSelect"
+            placeholder="Select classes"
+            control={form.control}
+            selectOptions={mainClasses.map((item) => ({
+              value: item._id || "",
+              label: `${item.name} `,
+              disable: item.disable,
+            }))}
+          />}
+          <TopicsInput control={form.control} name="topics" />
+
+          </div>
         </div>
+
         <FormError message={error} />
         <FormSuccess message={success} />
-        <Button
-          variant={"info"}
-          type="submit"
-          disabled={isPending}
-          className="w-full sm:w-auto"
-          library={"daisy"}
-          role={isPending ? "loading" : undefined}
-        >
-          Create template subject
-        </Button>
+        <DialogFooter>
+          <DialogClose>
+            <Button
+              variant={"outline"}
+              type="button"
+              className=""
+              library={"daisy"}
+            >
+              Cancel
+            </Button>
+          </DialogClose>
+          <Button
+            variant={"info"}
+            type="submit"
+            disabled={isPending}
+            className="w-full sm:w-auto"
+            library={"daisy"}
+            role={isPending ? "loading" : undefined}
+          >
+            Create template subject
+          </Button>
+        </DialogFooter>
       </form>
     </Form>
   );

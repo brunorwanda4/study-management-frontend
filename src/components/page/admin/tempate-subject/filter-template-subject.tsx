@@ -11,6 +11,7 @@ import type { TemplateSubject } from "@/lib/schema/subject/template-schema";
 import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { useEffect, useState } from "react";
+import DialogTemplateSubject from "./dialog-template-subject";
 
 interface Props {
   auth: AuthContext;
@@ -100,7 +101,7 @@ const FilterTemplateSubject = ({ auth }: Props) => {
             size="sm"
           />
         </div>
-        bruno
+        <DialogTemplateSubject auth={auth}/>
       </div>
 
       <Separator />
