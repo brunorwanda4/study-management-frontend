@@ -4,8 +4,8 @@ import UpdateMainSubjectDialog from "@/components/page/admin/main-subject/update
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
-import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import { formatReadableDate } from "@/lib/utils/format-date";
 import { BookOpen, Calendar, Clock, LinkIcon, Users } from "lucide-react";
 import { useEffect, useState } from "react";

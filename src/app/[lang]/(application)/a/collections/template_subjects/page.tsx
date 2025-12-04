@@ -1,6 +1,8 @@
 import CommonEmpty from "@/components/common/common-empty";
+import DisplaySwitcher from "@/components/display/display-switcher";
 import DialogTemplateSubject from "@/components/page/admin/tempate-subject/dialog-template-subject";
 import FilterTemplateSubject from "@/components/page/admin/tempate-subject/filter-template-subject";
+import TemplateSubjectCardContents from "@/components/page/admin/tempate-subject/template-subject-card-contents";
 import TemplateSubjectTable from "@/components/page/admin/tempate-subject/template-subject-table";
 import AppPageHeader from "@/components/page/common/app-page-header";
 import type { Locale } from "@/i18n";
@@ -47,10 +49,24 @@ async function TemplateSubjectsPage(
         <FilterTemplateSubject auth={auth} />
 
         {templateRes.data && templateRes.data?.data.length >= 0 ? (
-          <TemplateSubjectTable
-            auth={auth}
-            currentSubjects={templateRes.data.data ?? []}
-            lang={params.lang as Locale}
+          <DisplaySwitcher
+            table={
+              <TemplateSubjectTable
+                auth={auth}
+                currentSubjects={templateRes.data.data ?? []}
+                lang={params.lang as Locale}
+              />
+            }
+            cards={
+              <TemplateSubjectCardContents
+                cardProps={{
+                  lang: lang as Locale,
+                  auth: auth,
+                  isOnSubjectPage: false,
+                }}
+                data={templateRes.data.data ?? []}
+              />
+            }
           />
         ) : (
           <CommonEmpty

@@ -3,6 +3,7 @@ import SubjectDialog from "@/components/page/class/dialog/subject-dialog";
 import EmptySubjects from "@/components/page/class/subjects/empty-subjects";
 import NotFoundPage from "@/components/page/not-found";
 import { Separator } from "@/components/ui/separator";
+import type { Locale } from "@/i18n";
 import type { Class } from "@/lib/schema/class/class-schema";
 import type { Subject } from "@/lib/schema/subject/subject-schema";
 import { authContext } from "@/lib/utils/auth-context";
@@ -58,7 +59,12 @@ const ClassSubjectPage = async (
       {subjectsRes.data && subjectsRes.data.length > 0 ? (
         <main className=" grid grid-cols-1 gap-4 lg:grid-cols-2">
           {subjectsRes.data.map((subject) => (
-            <SubjectCard key={subject._id || subject.id} subject={subject} />
+            <SubjectCard
+              lang={lang as Locale}
+              auth={auth}
+              key={subject._id || subject.id}
+              subject={subject}
+            />
           ))}
         </main>
       ) : (

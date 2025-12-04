@@ -6,6 +6,11 @@ const ClassSettingsSubjectsPage = async (
   props: PageProps<"/[lang]/c/[classUsername]/settings/subjects">,
 ) => {
   const params = await props.params;
+  const { lang } = params;
+  const auth = await authContext();
+  if (!auth) {
+    redirect(`/${lang}/auth/login`);
+  }
   return (
     <div className=" w-full flex flex-col gap-4">
       <div>
@@ -23,7 +28,7 @@ const ClassSettingsSubjectsPage = async (
         <Separator />
         <main className=" grid grid-cols-1 gap-4 lg:grid-cols-2">
           {[...Array(9).keys()].map((_, i) => (
-            <SubjectCard showModify key={i} />
+            <SubjectCard auth={auth} lang={lang as Locale} showModify key={i} />
           ))}
         </main>
       </div>

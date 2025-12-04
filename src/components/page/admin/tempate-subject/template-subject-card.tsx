@@ -7,7 +7,7 @@ import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
 import type { TemplateSubjectWithOther } from "@/lib/schema/subject/template-schema";
 import { useEffect, useState } from "react";
 
-type TemplateSubjectCardProps = Pick<
+export type TemplateSubjectCardProps = Pick<
   SubjectCardProps,
   "isOnSubjectPage" | "templateSubject" | "lang" | "auth"
 >;

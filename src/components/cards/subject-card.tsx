@@ -5,6 +5,7 @@ import type {
   TemplateTopic,
 } from "@/lib/schema/subject/template-schema";
 import type { AuthContext } from "@/lib/utils/auth-context";
+import { Layers } from "lucide-react";
 import { BsClock } from "react-icons/bs";
 import MyLink, { LoadingIndicatorText } from "../common/myLink";
 import DialogTemplateSubject from "../page/admin/tempate-subject/dialog-template-subject";
@@ -59,12 +60,15 @@ const SubjectCard = ({
           >
             #{templateSubject ? templateSubject.code : "CODE123"}
           </MyLink>
-          <span className=" text-base-content/">
-            {templateSubject ? templateSubject.category : "Category"}
-          </span>
+          <div className=" text-base-content/90 flex gap-1 items-center">
+            <Layers className="h-4 w-4" />{" "}
+            <span>
+              {templateSubject ? templateSubject.category : "Category"}
+            </span>
+          </div>
         </div>
         <div>
-          {templateSubject && auth && (
+          {templateSubject && auth && isOnSubjectPage && (
             <DialogTemplateSubject auth={auth} sub={templateSubject} />
           )}
           {!templateSubject && (

@@ -6,13 +6,13 @@ import ErrorPage from "@/components/page/error-page";
 import NotFoundPage from "@/components/page/not-found";
 
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
-import { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
-import { SubjectGrading } from "@/lib/schema/admin/subjects/subject-grading-schema/subject-grading-schema";
-import { LearningOutcome } from "@/lib/schema/admin/subjects/subject-learning-outcome-schema/learning-outcome-schema";
-import { SubjectProgressTrackingConfig } from "@/lib/schema/admin/subjects/subject-progress-tracking-config-schema/subject-progress-tracking-config-schema";
+import type { MainSubject } from "@/lib/schema/admin/subjects/main-subject-schema/main-subject-schema";
+import type { SubjectGrading } from "@/lib/schema/admin/subjects/subject-grading-schema/subject-grading-schema";
+import type { LearningOutcome } from "@/lib/schema/admin/subjects/subject-learning-outcome-schema/learning-outcome-schema";
+import type { SubjectProgressTrackingConfig } from "@/lib/schema/admin/subjects/subject-progress-tracking-config-schema/subject-progress-tracking-config-schema";
 import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 export async function generateMetadata({
