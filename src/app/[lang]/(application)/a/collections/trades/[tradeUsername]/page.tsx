@@ -3,14 +3,14 @@ import TradeMainClassesCard from "@/components/page/admin/trades/trade-main-clas
 import ErrorPage from "@/components/page/error-page";
 import NotFoundPage from "@/components/page/not-found";
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
-import { MainClassModel } from "@/lib/schema/admin/main-classes-schema";
-import {
+import type { MainClassModel } from "@/lib/schema/admin/main-classes-schema";
+import type {
   TradeModelWithOthers,
   TradeModule,
 } from "@/lib/schema/admin/tradeSchema";
 import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 export async function generateMetadata({

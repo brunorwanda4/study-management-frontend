@@ -7,7 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { LIMIT } from "@/lib/env";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
 import type { Paginated } from "@/lib/schema/common-schema";
-import type { TemplateSubject } from "@/lib/schema/subject/template-schema";
+import type { TemplateSubjectWithOther } from "@/lib/schema/subject/template-schema";
 import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { useEffect, useState } from "react";
@@ -26,7 +26,7 @@ const FilterTemplateSubject = ({ auth }: Props) => {
   });
 
   const { data, addItem, deleteItem } =
-    useRealtimeData<TemplateSubject>("template_subject");
+    useRealtimeData<TemplateSubjectWithOther>("template_subject");
 
   async function fetchSub(page = 1, filterValue = filter) {
     setLoading(true);
@@ -38,26 +38,27 @@ const FilterTemplateSubject = ({ auth }: Props) => {
         skip: skip.toString(),
       });
 
-      if (filterValue) params.set("filter", filterValue);
+      if (filterValue) {
+        params.set("filter", filterValue);
+      }
 
-      const res = await apiRequest<void, Paginated<TemplateSubject>>(
+      const res = await apiRequest<void, Paginated<TemplateSubjectWithOther>>(
         "get",
-        "/template-subjects?limit=9",
+        `/template-subjects/others?${params.toString()}`,
         undefined,
         {
           token: auth.token,
-          realtime: "user",
+          schoolToken: auth.schoolToken,
+          realtime: "template_subject",
         },
       );
 
       if (res?.data) {
-        const items = res.data.data; // <-- array of subjects
+        // Clear existing data
+        data.forEach((s) => deleteItem(s._id || s.id || ""));
 
-        // Clear old data
-        data.forEach((s) => deleteItem(s.id || s._id || ""));
-
-        // Add new subjects
-        items.forEach((s) => addItem(s));
+        // Add new data
+        res.data.data.forEach((s) => addItem(s));
 
         setPagination({
           total_pages: res.data.total_pages,
@@ -65,13 +66,12 @@ const FilterTemplateSubject = ({ auth }: Props) => {
         });
       }
     } catch (err) {
-      console.error("Failed to fetch students:", err);
+      console.error("Failed to fetch template subjects:", err);
     } finally {
       setLoading(false);
     }
   }
 
-  // 🔁 Refetch whenever filter changes
   useEffect(() => {
     fetchSub(1);
   }, [filter]);
@@ -86,7 +86,7 @@ const FilterTemplateSubject = ({ auth }: Props) => {
             onSearch={(value) => setFilter(value)}
             placeholder="Search subject..."
             loading={loading}
-            live={false}
+            live={true}
           />
         </div>
         <div className="flex gap-4 items-center">
@@ -100,8 +100,8 @@ const FilterTemplateSubject = ({ auth }: Props) => {
             variant="outline"
             size="sm"
           />
+          <DialogTemplateSubject auth={auth} />
         </div>
-        <DialogTemplateSubject auth={auth}/>
       </div>
 
       <Separator />

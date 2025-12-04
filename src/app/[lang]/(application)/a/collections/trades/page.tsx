@@ -2,11 +2,11 @@ import TradeCollectionDetails from "@/components/page/admin/trades/trade-collect
 import TradesTableCollection from "@/components/page/admin/trades/trade-trable-collection";
 import ErrorPage from "@/components/page/error-page";
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
-import { TradeModelWithOthers } from "@/lib/schema/admin/tradeSchema";
-import { TradeWithNonNullableId } from "@/lib/types/tradeModel";
+import type { TradeModelWithOthers } from "@/lib/schema/admin/tradeSchema";
+import type { TradeWithNonNullableId } from "@/lib/types/tradeModel";
 import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {

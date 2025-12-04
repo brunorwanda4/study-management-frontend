@@ -8,12 +8,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import type { TemplateSubject } from "@/lib/schema/subject/template-schema";
-import { AuthContext } from "@/lib/utils/auth-context";
+import type { AuthContext } from "@/lib/utils/auth-context";
 import SubjectTemplateForm from "./subject-template-form";
 
 interface props {
   sub?: TemplateSubject;
-  auth: AuthContext
+  auth: AuthContext;
 }
 
 function DialogTemplateSubject({ sub, auth }: props) {
@@ -26,7 +26,7 @@ function DialogTemplateSubject({ sub, auth }: props) {
           variant={sub ? "outline" : "primary"}
           size={"sm"}
         >
-          Create template subject
+          {sub ? "Edit template subject" : "Create template subject"}
         </Button>
       </DialogTrigger>
       <DialogContent className="max- max-h-[95vh] overflow-y-auto sm:max-w-4xl">
@@ -40,7 +40,7 @@ function DialogTemplateSubject({ sub, auth }: props) {
               : "Create a new template subject."}
           </DialogDescription>
         </DialogHeader>
-        <SubjectTemplateForm auth={auth}/>
+        <SubjectTemplateForm auth={auth} sub={sub} />
       </DialogContent>
     </Dialog>
   );

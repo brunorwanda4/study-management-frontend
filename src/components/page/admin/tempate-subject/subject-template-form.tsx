@@ -12,7 +12,7 @@ import type { MainClassModel } from "@/lib/schema/admin/main-classes-schema";
 import {
   type TemplateSubject,
   TemplateSubjectSchema,
-  TemplateTopic,
+  type TemplateTopic,
 } from "@/lib/schema/subject/template-schema";
 import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
@@ -39,9 +39,10 @@ export type createTemplateSubject = z.infer<typeof createTemplateSubjectSchema>;
 interface props {
   mainClass?: MainClassModel;
   auth: AuthContext;
+  sub?: TemplateSubject;
 }
 
-const SubjectTemplateForm = ({ mainClass, auth }: props) => {
+const SubjectTemplateForm = ({ mainClass, auth, sub }: props) => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
@@ -84,75 +85,76 @@ const SubjectTemplateForm = ({ mainClass, auth }: props) => {
   const form = useForm<createTemplateSubject>({
     resolver: zodResolver(createTemplateSubjectSchema),
     defaultValues: {
-      name: "",
-      description: "",
-      code: "",
-      estimated_hours: "",
-      category: undefined,
-      topics: [],
+      name: sub?.name ? sub.name : "",
+      description: sub?.description ? sub.description : "",
+      code: sub?.code ? sub.code : "",
+      estimated_hours: sub?.estimated_hours ? sub.estimated_hours : "",
+      category: sub?.category ? sub.category : undefined,
+      topics: sub?.topics ? sub.topics : [],
       created_by: auth.user.id,
-      credits: "60",
+      credits: sub?.credits ? sub.credits : "60",
+      prerequisites: sub?.prerequisites ? sub.prerequisites : [],
     },
     mode: "onChange",
   });
 
- const onSubject = (values: createTemplateSubject) => {
-  setError("");
-  setSuccess("");
+  const onSubject = (values: createTemplateSubject) => {
+    setError("");
+    setSuccess("");
 
-  const transformTopic = (topic: TemplateTopic): any => {
-    return {
-      order: topic.order,
-      title: topic.title,
+    const transformTopic = (topic: TemplateTopic): any => {
+      return {
+        order: topic.order,
+        title: topic.title,
 
-      estimated_hours: topic.estimated_hours
-        ? Number(topic.estimated_hours)
-        : undefined,
+        estimated_hours: topic.estimated_hours
+          ? Number(topic.estimated_hours)
+          : undefined,
 
-      credits: topic.credits
-        ? Number(topic.credits)
-        : undefined,
+        credits: topic.credits ? Number(topic.credits) : undefined,
+        description: topic.description ? topic.description : "",
 
-      subtopics: topic.subtopics?.length
-        ? topic.subtopics.map(transformTopic)
-        : undefined,
-    };
-  };
-
-  startTransition(async () => {
-    const apiData = {
-      ...values,
-
-      prerequisites: values.prerequisites?.map((p) => p.value),
-
-      estimated_hours: Number(values.estimated_hours),
-      credits: values.credits ? Number(values.credits) : undefined,
-
-      topics: values.topics?.map(transformTopic),
+        subtopics: topic.subtopics?.length
+          ? topic.subtopics.map(transformTopic)
+          : undefined,
+      };
     };
 
-    const res = await apiRequest<typeof apiData, TemplateSubject>(
-      "post",
-      "/template-subjects",
-      apiData,
-      {
-        token: auth.token,
+    startTransition(async () => {
+      const apiData = {
+        ...values,
+
+        prerequisites: values.prerequisites?.map((p) => p.value),
+
+        estimated_hours: Number(values.estimated_hours),
+        credits: values.credits ? Number(values.credits) : undefined,
+
+        topics: values.topics?.map(transformTopic),
+      };
+
+      const res = await apiRequest<typeof apiData, TemplateSubject>(
+        sub ? "put" : "post",
+        sub ? `/template-subjects/${sub._id || sub.id}` : "/template-subjects",
+        apiData,
+        {
+          token: auth.token,
+        },
+      );
+
+      if (!res.data) {
+        setError(res.message);
+        showToast({
+          title: "Error",
+          description: res.message,
+          type: "error",
+        });
+      } else {
+        setSuccess(
+          sub ? "Subject updated successfully" : "Subject created successfully",
+        );
       }
-    );
-
-    if (!res.data) {
-      setError(res.message);
-      showToast({
-        title: "Error",
-        description: res.message,
-        type: "error",
-      });
-    } else {
-      setSuccess("Subject created successfully");
-    }
-  });
-};
-
+    });
+  };
 
   return (
     <Form {...form}>
@@ -261,7 +263,7 @@ const SubjectTemplateForm = ({ mainClass, auth }: props) => {
         <FormError message={error} />
         <FormSuccess message={success} />
         <DialogFooter>
-          <DialogClose>
+          <DialogClose asChild>
             <Button
               variant={"outline"}
               type="button"
@@ -279,7 +281,7 @@ const SubjectTemplateForm = ({ mainClass, auth }: props) => {
             library={"daisy"}
             role={isPending ? "loading" : undefined}
           >
-            Create template subject
+            {sub ? "Edit template subject" : "Create template subject"}
           </Button>
         </DialogFooter>
       </form>

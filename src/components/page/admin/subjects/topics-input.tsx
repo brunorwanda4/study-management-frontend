@@ -12,7 +12,6 @@ interface TopicsInputProps<T extends FieldValues> {
   name: FieldPath<T>;
 }
 
-
 export function TopicsInput<T extends FieldValues>({
   control,
   name,
@@ -125,17 +124,25 @@ function TopicItem<T extends FieldValues>({
 
           <CommonFormField
             control={control}
+            name={`${name}.description` as FieldPath<T>}
+            label="Description"
+            placeholder="Introduction..."
+            fieldType="textarea"
+          />
+
+          <CommonFormField
+            control={control}
             name={`${name}.estimated_hours` as FieldPath<T>}
             label="Estimated Hours"
             type="number"
             placeholder="10"
             fieldType="input"
-             inputProps={{
-                min: 1,
-                max: 1000,
-                defaultValue: 60,
-                numberMode: "hours",
-              }}
+            inputProps={{
+              min: 1,
+              max: 1000,
+              defaultValue: 60,
+              numberMode: "hours",
+            }}
           />
 
           <CommonFormField
@@ -144,10 +151,10 @@ function TopicItem<T extends FieldValues>({
             label="Credits"
             type="number"
             inputProps={{
-            min: 1,
-            max: 1000,
-            defaultValue: 60,
-            numberMode: "percent",
+              min: 1,
+              max: 1000,
+              defaultValue: 60,
+              numberMode: "percent",
             }}
             placeholder="3"
             fieldType="input"
@@ -172,7 +179,7 @@ function TopicItem<T extends FieldValues>({
                 }
                 role="create"
               >
-               Add Subtopic
+                Add Subtopic
               </Button>
             </div>
 

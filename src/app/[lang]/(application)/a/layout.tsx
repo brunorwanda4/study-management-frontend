@@ -5,7 +5,7 @@ interface props {
 }
 
 const AdminLayout = ({ children }: props) => {
-  return <div className=" px-4">{children}</div>;
+  return <div className=" px-4 py-4">{children}</div>;
 };
 
 export default AdminLayout;

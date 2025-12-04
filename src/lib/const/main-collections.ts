@@ -33,6 +33,6 @@ export const mainCollections = [
     name: "template_subjects",
     href: "/a/collections/template_subjects",
     label: "Template subjects",
-    icon: "/icons/book-stack.png",
+    icon: "/icons/book.png",
   },
 ];

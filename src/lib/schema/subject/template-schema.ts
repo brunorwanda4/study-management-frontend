@@ -1,9 +1,15 @@
-import { OptionSchema, SubjectCategorySchema } from "@/lib/schema/common-details-schema";
+import {
+  OptionSchema,
+  SubjectCategorySchema,
+} from "@/lib/schema/common-details-schema";
 import { z } from "zod";
+import { UserModelSchema } from "../user/user-schema";
+import { mainClassSchema } from "../admin/main-classes-schema";
 
 export type TemplateTopic = {
   order: string;
   title: string;
+  description?: string | null;
   estimated_hours?: string | null | number;
   credits?: string | null | number;
   subtopics?: TemplateTopic[];
@@ -13,12 +19,12 @@ export const TemplateTopicSchema: z.ZodType<TemplateTopic> = z.lazy(() =>
   z.object({
     order: z.string(),
     title: z.string(),
-    estimated_hours: z.string().optional(),
-    credits: z.string().optional(),
+    description: z.string().optional().nullable(),
+    estimated_hours: z.union([z.string(), z.number()]).optional().nullable(),
+    credits: z.union([z.string(), z.number()]).optional().nullable(),
     subtopics: z.array(TemplateTopicSchema).optional(),
   }),
 );
-
 
 export const TemplateSubjectSchema = z.object({
   id: z.string().optional(),
@@ -30,8 +36,8 @@ export const TemplateSubjectSchema = z.object({
 
   category: SubjectCategorySchema,
 
-  estimated_hours: z.string(),
-  credits: z.string().optional(),
+  estimated_hours: z.union([z.string(), z.number()]).optional().nullable(),
+  credits: z.union([z.string(), z.number()]).optional().nullable(),
 
   prerequisites: z.array(OptionSchema).optional(),
 
@@ -46,3 +52,13 @@ export const TemplateSubjectSchema = z.object({
 export type TemplateSubject = z.infer<typeof TemplateSubjectSchema>;
 
 export const TemplateSubjectPartialSchema = TemplateSubjectSchema.partial();
+
+export const TemplateSubjectWithOtherSchema = z.object({
+  ...TemplateSubjectSchema.shape,
+  creator_user: UserModelSchema.optional(),
+  prerequisite_classes: z.array(mainClassSchema).optional(),
+});
+
+export type TemplateSubjectWithOther = z.infer<
+  typeof TemplateSubjectWithOtherSchema
+>;

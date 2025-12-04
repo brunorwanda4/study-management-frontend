@@ -1,8 +1,12 @@
+import CommonEmpty from "@/components/common/common-empty";
+import DialogTemplateSubject from "@/components/page/admin/tempate-subject/dialog-template-subject";
 import FilterTemplateSubject from "@/components/page/admin/tempate-subject/filter-template-subject";
+import TemplateSubjectTable from "@/components/page/admin/tempate-subject/template-subject-table";
 import AppPageHeader from "@/components/page/common/app-page-header";
+import type { Locale } from "@/i18n";
 import { RealtimeProvider } from "@/lib/providers/RealtimeProvider";
 import type { Paginated } from "@/lib/schema/common-schema";
-import type { TemplateSubject } from "@/lib/schema/subject/template-schema";
+import type { TemplateSubjectWithOther } from "@/lib/schema/subject/template-schema";
 import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { redirect } from "next/navigation";
@@ -18,18 +22,16 @@ async function TemplateSubjectsPage(
     redirect(`/${lang}/auth/login`);
   }
 
-  const templateRes = await apiRequest<void, Paginated<TemplateSubject>>(
-    "get",
-    "/template-subjects?limit=9",
-    undefined,
-    {
-      token: auth.token,
-      realtime: "user",
-    },
-  );
+  const templateRes = await apiRequest<
+    void,
+    Paginated<TemplateSubjectWithOther>
+  >("get", "/template-subjects/others?limit=9", undefined, {
+    token: auth.token,
+    realtime: "user",
+  });
 
   return (
-    <RealtimeProvider<TemplateSubject>
+    <RealtimeProvider<TemplateSubjectWithOther>
       channels={[
         {
           name: "template_subject",
@@ -43,6 +45,23 @@ async function TemplateSubjectsPage(
           description="Main subject which is connected to class subjects."
         />
         <FilterTemplateSubject auth={auth} />
+
+        {templateRes.data && templateRes.data?.data.length >= 0 ? (
+          <TemplateSubjectTable
+            auth={auth}
+            currentSubjects={templateRes.data.data ?? []}
+            lang={params.lang as Locale}
+          />
+        ) : (
+          <CommonEmpty
+            auth={auth}
+            icon="/icons/book.png"
+            title="Template subjects not found"
+            description="They are currently no template subjects found, please create one. If you are an admin, you can create a new template subject."
+          >
+            <DialogTemplateSubject auth={auth} />
+          </CommonEmpty>
+        )}
       </div>
     </RealtimeProvider>
   );
