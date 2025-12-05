@@ -17,6 +17,7 @@ import {
   CardTitle,
 } from "../ui/card";
 import { UserSmCard } from "./user-card";
+import { cn } from "@/lib/utils";
 
 export interface SubjectCardProps {
   subject?: Subject;
@@ -145,7 +146,7 @@ const SubjectCard = ({
           )}
           {!isOnSubjectPage && (
             <MyLink
-              href="/en/c/classname/subjects/subjectname"
+              href={cn(templateSubject ?  `/${lang}/a/collections/template_subjects/${templateSubject.code}` : "/en/c/classname/subjects/subjectname")}
               button={{ role: "page", size: "sm" }}
             >
               View subject

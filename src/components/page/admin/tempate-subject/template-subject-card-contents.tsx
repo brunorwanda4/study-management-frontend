@@ -1,6 +1,7 @@
 "use client";
 import { useRealtimeData } from "@/lib/providers/RealtimeProvider";
 import type { TemplateSubjectWithOther } from "@/lib/schema/subject/template-schema";
+import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import type { TemplateSubjectCardProps } from "./template-subject-card";
 import TemplateSubjectCard from "./template-subject-card";
@@ -8,11 +9,13 @@ import TemplateSubjectCard from "./template-subject-card";
 interface TemplateSubjectCardContentsProps {
   cardProps: TemplateSubjectCardProps;
   data: TemplateSubjectWithOther[];
+  className?: string;
 }
 
 const TemplateSubjectCardContents = ({
   cardProps,
   data,
+  className,
 }: TemplateSubjectCardContentsProps) => {
   const { data: currentSubjects } =
     useRealtimeData<TemplateSubjectWithOther>("template_subject");
@@ -26,7 +29,7 @@ const TemplateSubjectCardContents = ({
   }, [currentSubjects]);
 
   return (
-    <main className=" grid grid-cols-1 gap-4 lg:grid-cols-2">
+    <main className={cn(" grid grid-cols-1 gap-4 lg:grid-cols-2", className)}>
       {displaySubject.map((sub) => {
         return (
           <TemplateSubjectCard

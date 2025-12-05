@@ -50,7 +50,6 @@ const SubjectTemplateForm = ({ mainClass, auth, sub }: props) => {
 
   const [mainClasses, setMainClasses] = useState<MainClassModel[]>([]);
   const [loadingOptions, setLoadingOptions] = useState(true);
-
   useEffect(() => {
     const fetchMainClasses = async () => {
       try {
@@ -121,10 +120,13 @@ const SubjectTemplateForm = ({ mainClass, auth, sub }: props) => {
     };
 
     startTransition(async () => {
+      // GPT can you help me change
       const apiData = {
         ...values,
 
-        prerequisites: values.prerequisites?.map((p) => p.value),
+        prerequisites: mainClass?._id
+          ? [mainClass._id]
+          : values.prerequisites?.map((p) => p.value),
 
         estimated_hours: Number(values.estimated_hours),
         credits: values.credits ? Number(values.credits) : undefined,
@@ -240,21 +242,25 @@ const SubjectTemplateForm = ({ mainClass, auth, sub }: props) => {
             />
           </div>
           <div className=" flex flex-col gap-4 lg:w-1/2">
-            {loadingOptions ? (
-              <div className="skeleton h-12 rounded-md" />
-            ) : (
-              <CommonFormField
-                label="Prerequisites (main classes)"
-                name="prerequisites"
-                fieldType="multipleSelect"
-                placeholder="Select classes"
-                control={form.control}
-                selectOptions={mainClasses.map((item) => ({
-                  value: item._id || "",
-                  label: `${item.name} `,
-                  disable: item.disable,
-                }))}
-              />
+            {!mainClass && (
+              <div className=" w-fill">
+                {loadingOptions ? (
+                  <div className="skeleton h-12 rounded-md" />
+                ) : (
+                  <CommonFormField
+                    label="Prerequisites (main classes)"
+                    name="prerequisites"
+                    fieldType="multipleSelect"
+                    placeholder="Select classes"
+                    control={form.control}
+                    selectOptions={mainClasses.map((item) => ({
+                      value: item._id || "",
+                      label: `${item.name} `,
+                      disable: item.disable,
+                    }))}
+                  />
+                )}
+              </div>
             )}
             <TopicsInput control={form.control} name="topics" />
           </div>

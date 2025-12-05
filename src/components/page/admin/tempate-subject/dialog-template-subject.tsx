@@ -7,6 +7,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import type { MainClassModel } from "@/lib/schema/admin/main-classes-schema";
 import type { TemplateSubject } from "@/lib/schema/subject/template-schema";
 import type { AuthContext } from "@/lib/utils/auth-context";
 import SubjectTemplateForm from "./subject-template-form";
@@ -14,9 +15,10 @@ import SubjectTemplateForm from "./subject-template-form";
 interface props {
   sub?: TemplateSubject;
   auth: AuthContext;
+  mainClass?: MainClassModel;
 }
 
-function DialogTemplateSubject({ sub, auth }: props) {
+function DialogTemplateSubject({ sub, auth, mainClass }: props) {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -40,7 +42,7 @@ function DialogTemplateSubject({ sub, auth }: props) {
               : "Create a new template subject."}
           </DialogDescription>
         </DialogHeader>
-        <SubjectTemplateForm auth={auth} sub={sub} />
+        <SubjectTemplateForm auth={auth} sub={sub} mainClass={mainClass} />
       </DialogContent>
     </Dialog>
   );
