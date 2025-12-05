@@ -120,7 +120,6 @@ const SubjectTemplateForm = ({ mainClass, auth, sub }: props) => {
     };
 
     startTransition(async () => {
-      // GPT can you help me change
       const apiData = {
         ...values,
 
@@ -151,6 +150,7 @@ const SubjectTemplateForm = ({ mainClass, auth, sub }: props) => {
           type: "error",
         });
       } else {
+        form.reset();
         setSuccess(
           sub ? "Subject updated successfully" : "Subject created successfully",
         );

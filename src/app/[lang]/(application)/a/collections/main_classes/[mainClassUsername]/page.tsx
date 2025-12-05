@@ -1,4 +1,3 @@
-import { ChildrenWrapper } from "@/components/common/children-wrapper";
 import MainClassInformationCard from "@/components/page/admin/main-class/main-class-information-card";
 import DialogTemplateSubject from "@/components/page/admin/tempate-subject/dialog-template-subject";
 import TemplateSubjectCardContents from "@/components/page/admin/tempate-subject/template-subject-card-contents";
@@ -91,9 +90,7 @@ const MainClassUsernamePage = async (
           <div className="w-full flex flex-col gap-4">
             <div className=" flex justify-between items-center">
               <h4 className=" h5">All templates subjects</h4>
-              <ChildrenWrapper>
-                <DialogTemplateSubject mainClass={request.data} auth={auth} />
-              </ChildrenWrapper>
+              <DialogTemplateSubject mainClass={request.data} auth={auth} />
             </div>
             <TemplateSubjectCardContents
               cardProps={{
