@@ -1,14 +1,16 @@
+"use client";
+
 import type { Locale } from "@/i18n";
 import type { ClassSubjectWithRelations } from "@/lib/schema/subject/class-subject-schema";
 import type {
   TemplateSubjectWithOther,
   TemplateTopic,
 } from "@/lib/schema/subject/template-schema";
-import { cn } from "@/lib/utils";
 import type { AuthContext } from "@/lib/utils/auth-context";
 import { getInitialsUsername } from "@/lib/utils/generate-username";
 import { Layers } from "lucide-react";
 import { BsClock } from "react-icons/bs";
+
 import MyLink, { LoadingIndicatorText } from "../common/myLink";
 import DialogTemplateSubject from "../page/admin/tempate-subject/dialog-template-subject";
 import {
@@ -19,6 +21,35 @@ import {
   CardTitle,
 } from "../ui/card";
 import { UserSmCard } from "./user-card";
+
+/* ----------------------------------------------------
+   Helpers
+-----------------------------------------------------*/
+
+// get subject or template value
+function pick<T>(
+  subjectVal: T | undefined,
+  templateVal: T | undefined,
+  fallback: T,
+) {
+  return subjectVal ?? templateVal ?? fallback;
+}
+
+function buildSubjectLink(
+  lang: Locale,
+  subject?: ClassSubjectWithRelations,
+  template?: TemplateSubjectWithOther,
+) {
+  if (subject?.class)
+    return `/${lang}/c/${subject.class.username}/subjects/${subject.code}`;
+  if (template)
+    return `/${lang}/a/collections/template_subjects/${template.code}`;
+  return "/en/c/classname/subjects/subjectname";
+}
+
+/* ----------------------------------------------------
+   Component
+-----------------------------------------------------*/
 
 export interface SubjectCardProps {
   subject?: ClassSubjectWithRelations;
@@ -37,130 +68,112 @@ const SubjectCard = ({
   auth,
   templateSubject,
 }: SubjectCardProps) => {
+  const link = buildSubjectLink(lang, subject, templateSubject);
+
+  const name = pick(subject?.name, templateSubject?.name, "Subject name");
+  const code = pick(subject?.code, templateSubject?.code, "CODE123");
+  const category = pick(
+    subject?.category,
+    templateSubject?.category,
+    "Category",
+  );
+  const description = pick(
+    subject?.description,
+    templateSubject?.description,
+    "lorem ipsum dolor sit amet consectetur adipisicing elit...",
+  );
+
+  const estimatedHours = pick(
+    subject?.estimated_hours,
+    templateSubject?.estimated_hours,
+    "123",
+  );
+
+  const credits = pick(subject?.credits, templateSubject?.credits, "85");
+
+  const topics = subject?.topics ?? templateSubject?.topics ?? [];
+
   return (
     <Card>
+      {/* ----------------------------------------------------
+         Header
+      ----------------------------------------------------- */}
       <CardHeader className=" flex flex-row justify-between w-full">
         <div className=" flex gap-4 items-start">
           <CardTitle className=" h5">
             <div className=" flex flex-col gap-1">
-              <MyLink
-                href={
-                  subject?.class
-                    ? `/${lang}/c/${subject.class.username}/subjects/${subject.code}`
-                    : templateSubject
-                      ? `/${lang}/a/collections/template_subjects/${templateSubject.code}`
-                      : "/en/c/classname/subjects/subjectname"
-                }
-              >
-                {subject
-                  ? subject.name
-                  : templateSubject
-                    ? templateSubject.name
-                    : " Subject name"}
-              </MyLink>
+              <MyLink href={link}>{name}</MyLink>
 
               <MyLink
-                href={
-                  subject?.class
-                    ? `/${lang}/c/${subject.class.username}/subjects/${subject.code}`
-                    : templateSubject
-                      ? `/${lang}/a/collections/template_subjects/${templateSubject.code}`
-                      : "/en/c/classname/subjects/subjectname"
-                }
+                href={link}
                 className=" text-base-content/50 text-sm font-normal"
               >
-                #
-                {subject?.code
-                  ? subject.code
-                  : templateSubject
-                    ? templateSubject.code
-                    : "CODE123"}
+                #{code}
               </MyLink>
             </div>
           </CardTitle>
+
           <div className=" text-base-content/90 flex gap-1 items-center">
-            <Layers className="h-3 w-3" />{" "}
-            <span className=" text-base-content/90 test-sm">
-              {subject?.category
-                ? subject.category
-                : templateSubject
-                  ? templateSubject.category
-                  : "Category"}
-            </span>
+            <Layers className="h-3 w-3" />
+            <span className=" text-base-content/90 test-sm">{category}</span>
           </div>
         </div>
+
         <div>
           {templateSubject && auth && isOnSubjectPage && (
             <DialogTemplateSubject auth={auth} sub={templateSubject} />
           )}
+
           {!templateSubject && (
             <UserSmCard
               role="Teacher"
-              name={subject?.teacher ? subject?.teacher.name : "Teacher name"}
+              name={subject?.teacher?.name ?? "Teacher name"}
               image={subject?.teacher?.image}
             />
           )}
         </div>
       </CardHeader>
+
+      {/* ----------------------------------------------------
+         Content
+      ----------------------------------------------------- */}
       <CardContent className=" flex flex-col gap-2">
-        <p className=" ">
-          {subject?.description
-            ? subject.description
-            : templateSubject
-              ? templateSubject.description
-              : "lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum."}
-        </p>
+        <p>{description}</p>
+
+        {/* Info Row */}
         <div className="flex flex-row gap-4">
-          <div className=" flex items-centers gap-1  ">
+          <div className=" flex items-centers gap-1">
             <BsClock size={14} className=" mt-1" />
-            <span className=" text-sm">
-              {subject?.estimated_hours
-                ? subject.estimated_hours
-                : templateSubject
-                  ? templateSubject.estimated_hours
-                  : "123"}{" "}
-              hours
-            </span>
+            <span className=" text-sm">{estimatedHours} hours</span>
           </div>
-          <div className=" flex items-centers gap-2  ">
-            <span className=" text-sm">
-              {subject?.credits
-                ? subject.credits
-                : templateSubject
-                  ? templateSubject.credits
-                  : "85"}{" "}
-              Grades
-            </span>
+
+          <div className=" flex items-centers gap-2">
+            <span className=" text-sm">{credits} Grades</span>
           </div>
+
           {!templateSubject && subject?.class && (
             <MyLink
-              href={`/${lang}/c/${subject?.class?.username}`}
-              className=" flex items-centers gap-2  "
+              href={`/${lang}/c/${subject.class.username}`}
+              className=" flex items-centers gap-2"
             >
               <span className=" text-sm" title={subject.class.name}>
-                {subject?.class
-                  ? getInitialsUsername(subject.class.name)
-                  : "L4 SOD"}
+                {getInitialsUsername(subject.class.name)}
               </span>
             </MyLink>
           )}
-          <div className=" flex items-centers gap-2  ">
-            <span className=" text-sm">
-              {subject?.topics
-                ? subject.topics.length
-                : templateSubject
-                  ? templateSubject.topics?.length
-                  : "3"}{" "}
-              Learning outcomes
-            </span>
+
+          <div className=" flex items-centers gap-2">
+            <span className=" text-sm">{topics.length} Learning outcomes</span>
           </div>
         </div>
-        {/*template subject main classes*/}
-        {templateSubject && (
-          <div className=" flex flex-col gap-2">
-            <h5 className="font-medium">Main classes:</h5>
-            {templateSubject.prerequisite_classes?.map((cls) => {
-              return (
+
+        {/* Template Subject → Prerequisite classes */}
+        {templateSubject &&
+          templateSubject?.prerequisite_classes?.length > 0 && (
+            <div className=" flex flex-col gap-2">
+              <h5 className="font-medium">Main classes:</h5>
+
+              {templateSubject?.prerequisite_classes.map((cls) => (
                 <MyLink
                   key={cls._id || cls.username}
                   href={`/${lang}/a/collections/main_classes/${cls.username}`}
@@ -170,13 +183,17 @@ const SubjectCard = ({
                     {cls.name}
                   </LoadingIndicatorText>
                 </MyLink>
-              );
-            })}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
       </CardContent>
+
+      {/* ----------------------------------------------------
+         Footer
+      ----------------------------------------------------- */}
       <CardFooter className=" flex flex-col space-y-4 items-start [.border-t]:pt-2">
-        <div className=" flex flex-row gap-2 ">
+        {/* Buttons */}
+        <div className=" flex flex-row gap-2">
           {showModify && (
             <MyLink
               href="/en/c/classname/subjects/subjectname"
@@ -185,82 +202,72 @@ const SubjectCard = ({
               Modify
             </MyLink>
           )}
+
           {!isOnSubjectPage && (
-            <MyLink
-              href={cn(
-                subject?.class
-                  ? `/${lang}/c/${subject.class.username}/subjects/${subject.code}`
-                  : templateSubject
-                    ? `/${lang}/a/collections/template_subjects/${templateSubject.code}`
-                    : "/en/c/classname/subjects/subjectname",
-              )}
-              button={{ role: "page", size: "sm" }}
-            >
+            <MyLink href={link} button={{ role: "page", size: "sm" }}>
               View subject
             </MyLink>
           )}
 
           {!showModify && (
-            <MyLink
-              href="/en/c/classname/subjects/subjectname"
-              button={{ role: "page", size: "sm" }}
-            >
-              Notes
-            </MyLink>
-          )}
-          {!showModify && (
-            <MyLink
-              href="/en/c/classname/subjects/subjectname"
-              button={{ role: "page", size: "sm" }}
-            >
-              Classwork
-            </MyLink>
+            <>
+              <MyLink
+                href="/en/c/classname/subjects/subjectname"
+                button={{ role: "page", size: "sm" }}
+              >
+                Notes
+              </MyLink>
+
+              <MyLink
+                href="/en/c/classname/subjects/subjectname"
+                button={{ role: "page", size: "sm" }}
+              >
+                Classwork
+              </MyLink>
+            </>
           )}
         </div>
+
+        {/* Learning outcomes */}
         {isOnSubjectPage && (
           <div className=" w-full ">
             <h4 className="h6">Learning Outcomes</h4>
-            {/*all learning outcomes*/}
-            {templateSubject?.topics ? (
+
+            {topics.length > 0 ? (
               <ul className="list bg-base-100 gap-0 space-y-0 w-full">
-                {templateSubject.topics?.map((topic) => (
+                {topics.map((topic) => (
                   <li key={topic.order} className=" w-full">
                     <TopicItem topic={topic} level={0} />
                   </li>
                 ))}
               </ul>
             ) : (
-              <ul className="list bg-base-100 gap-0 space-y-0 ">
-                {[...Array(3)].map((_, t) => {
-                  return (
-                    <li key={t} className="list-row">
-                      <span className=" h5">{t + 1}.</span>
-                      <div className=" text-base">
-                        <div className=" flex flex-row justify-between  items-center">
-                          <h5 className="h5">Learning outcome name</h5>
-                          <div className=" flex items-centers gap-2  ">
-                            <BsClock size={18} className=" mt-0.5" />
-                            <span className=" text-base">20 hours</span>
-                          </div>
-                        </div>
-                        <p className="">
-                          lorem ipsum dolor sit amet consectetur adipisicing
-                          elit. Quisquam, lorem ipsum dolor sit amet consectetur
-                          adipisicing elit.
-                        </p>
-                        <div className=" mt-2 space-y-2 flex flex-col">
-                          {[...Array(4)].map((_, i) => {
-                            return (
-                              <span key={i}>
-                                {t + 1}.{i + 1} Topic introduction
-                              </span>
-                            );
-                          })}
+              // Demo state
+              <ul className="list bg-base-100 gap-0 space-y-0">
+                {[...Array(3)].map((_, t) => (
+                  <li key={t} className="list-row">
+                    <span className=" h5">{t + 1}.</span>
+                    <div className=" text-base">
+                      <div className=" flex flex-row justify-between  items-center">
+                        <h5 className="h5">Learning outcome name</h5>
+                        <div className=" flex items-centers gap-2">
+                          <BsClock size={18} className=" mt-0.5" />
+                          <span className=" text-base">20 hours</span>
                         </div>
                       </div>
-                    </li>
-                  );
-                })}
+                      <p>
+                        lorem ipsum dolor sit amet consectetur adipisicing elit.
+                      </p>
+                      <div className=" mt-2 space-y-2 flex flex-col">
+                        {[...Array(4)].map((_, i) => (
+                          <span key={i}>
+                            {t + 1}.{i + 1} Topic introduction
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </li>
+                ))}
               </ul>
             )}
           </div>
@@ -272,13 +279,17 @@ const SubjectCard = ({
 
 export default SubjectCard;
 
+/* ----------------------------------------------------
+   Recursive TopicItem
+-----------------------------------------------------*/
+
 interface TopicItemProps {
   topic: TemplateTopic;
-  level?: number; // for indentation or styling
+  level?: number;
 }
 
 export const TopicItem = ({ topic, level = 0 }: TopicItemProps) => {
-  const padding = level * 4; // or Tailwind class mapping
+  const padding = level * 16; // px paddingLeft
 
   return (
     <div style={{ paddingLeft: padding }} className="space-y-1 w-full">
@@ -290,7 +301,6 @@ export const TopicItem = ({ topic, level = 0 }: TopicItemProps) => {
 
         {topic.estimated_hours && (
           <div className="flex items-center gap-2">
-            {/*<BsClock size={14} />*/}
             <span>{topic.estimated_hours} hours</span>
           </div>
         )}
@@ -300,7 +310,6 @@ export const TopicItem = ({ topic, level = 0 }: TopicItemProps) => {
         <p className="text-sm text-base-content/80">{topic.description}</p>
       )}
 
-      {/* Recursively render subtopics */}
       {topic.subtopics?.length ? (
         <div className="mt-2 space-y-2">
           {topic.subtopics.map((sub) => (
