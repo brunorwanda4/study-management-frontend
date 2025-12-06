@@ -1,10 +1,12 @@
 import type { Locale } from "@/i18n";
-import type { Subject } from "@/lib/schema/subject/subject-schema";
+import type { ClassSubjectWithRelations } from "@/lib/schema/subject/class-subject-schema";
 import type {
   TemplateSubjectWithOther,
   TemplateTopic,
 } from "@/lib/schema/subject/template-schema";
+import { cn } from "@/lib/utils";
 import type { AuthContext } from "@/lib/utils/auth-context";
+import { getInitialsUsername } from "@/lib/utils/generate-username";
 import { Layers } from "lucide-react";
 import { BsClock } from "react-icons/bs";
 import MyLink, { LoadingIndicatorText } from "../common/myLink";
@@ -17,10 +19,9 @@ import {
   CardTitle,
 } from "../ui/card";
 import { UserSmCard } from "./user-card";
-import { cn } from "@/lib/utils";
 
 export interface SubjectCardProps {
-  subject?: Subject;
+  subject?: ClassSubjectWithRelations;
   isOnSubjectPage?: boolean;
   showModify?: boolean;
   templateSubject?: TemplateSubjectWithOther;
@@ -39,32 +40,52 @@ const SubjectCard = ({
   return (
     <Card>
       <CardHeader className=" flex flex-row justify-between w-full">
-        <div className=" flex gap-4">
+        <div className=" flex gap-4 items-start">
           <CardTitle className=" h5">
-            <MyLink
-              href={
-                templateSubject
-                  ? `/${lang}/a/collections/template_subjects/${templateSubject.code}`
-                  : "/en/c/classname/subjects/subjectname"
-              }
-            >
-              {templateSubject ? templateSubject.name : " Subject name"}
-            </MyLink>
+            <div className=" flex flex-col gap-1">
+              <MyLink
+                href={
+                  subject?.class
+                    ? `/${lang}/c/${subject.class.username}/subjects/${subject.code}`
+                    : templateSubject
+                      ? `/${lang}/a/collections/template_subjects/${templateSubject.code}`
+                      : "/en/c/classname/subjects/subjectname"
+                }
+              >
+                {subject
+                  ? subject.name
+                  : templateSubject
+                    ? templateSubject.name
+                    : " Subject name"}
+              </MyLink>
+
+              <MyLink
+                href={
+                  subject?.class
+                    ? `/${lang}/c/${subject.class.username}/subjects/${subject.code}`
+                    : templateSubject
+                      ? `/${lang}/a/collections/template_subjects/${templateSubject.code}`
+                      : "/en/c/classname/subjects/subjectname"
+                }
+                className=" text-base-content/50 text-sm font-normal"
+              >
+                #
+                {subject?.code
+                  ? subject.code
+                  : templateSubject
+                    ? templateSubject.code
+                    : "CODE123"}
+              </MyLink>
+            </div>
           </CardTitle>
-          <MyLink
-            href={
-              templateSubject
-                ? `/${lang}/a/collections/template_subjects/${templateSubject.code}`
-                : "/en/c/classname/subjects/subjectname"
-            }
-            className=" text-base-content/50"
-          >
-            #{templateSubject ? templateSubject.code : "CODE123"}
-          </MyLink>
           <div className=" text-base-content/90 flex gap-1 items-center">
-            <Layers className="h-4 w-4" />{" "}
-            <span>
-              {templateSubject ? templateSubject.category : "Category"}
+            <Layers className="h-3 w-3" />{" "}
+            <span className=" text-base-content/90 test-sm">
+              {subject?.category
+                ? subject.category
+                : templateSubject
+                  ? templateSubject.category
+                  : "Category"}
             </span>
           </div>
         </div>
@@ -73,44 +94,64 @@ const SubjectCard = ({
             <DialogTemplateSubject auth={auth} sub={templateSubject} />
           )}
           {!templateSubject && (
-            <UserSmCard role="Teacher" name="Teacher name" />
+            <UserSmCard
+              role="Teacher"
+              name={subject?.teacher ? subject?.teacher.name : "Teacher name"}
+              image={subject?.teacher?.image}
+            />
           )}
         </div>
       </CardHeader>
       <CardContent className=" flex flex-col gap-2">
-        {!templateSubject && (
-          <MyLink roleTag="sub" href="">
-            main subject name
-          </MyLink>
-        )}
-        <p>
-          {templateSubject
-            ? templateSubject.description
-            : "lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum."}
+        <p className=" ">
+          {subject?.description
+            ? subject.description
+            : templateSubject
+              ? templateSubject.description
+              : "lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum."}
         </p>
         <div className="flex flex-row gap-4">
-          <div className=" flex items-centers gap-2  ">
-            <BsClock size={18} className=" mt-0.5" />
-            <span className=" text-base">
-              {templateSubject ? templateSubject.estimated_hours : "123"} hours
+          <div className=" flex items-centers gap-1  ">
+            <BsClock size={14} className=" mt-1" />
+            <span className=" text-sm">
+              {subject?.estimated_hours
+                ? subject.estimated_hours
+                : templateSubject
+                  ? templateSubject.estimated_hours
+                  : "123"}{" "}
+              hours
             </span>
           </div>
           <div className=" flex items-centers gap-2  ">
-            <span className=" text-base">
-              {templateSubject ? templateSubject.credits : "85"} Grades
+            <span className=" text-sm">
+              {subject?.credits
+                ? subject.credits
+                : templateSubject
+                  ? templateSubject.credits
+                  : "85"}{" "}
+              Grades
             </span>
           </div>
-          {!templateSubject && (
-            <div className=" flex items-centers gap-2  ">
-              <span className=" text-base" title="main class">
-                L4 SOD
+          {!templateSubject && subject?.class && (
+            <MyLink
+              href={`/${lang}/c/${subject?.class?.username}`}
+              className=" flex items-centers gap-2  "
+            >
+              <span className=" text-sm" title={subject.class.name}>
+                {subject?.class
+                  ? getInitialsUsername(subject.class.name)
+                  : "L4 SOD"}
               </span>
-            </div>
+            </MyLink>
           )}
           <div className=" flex items-centers gap-2  ">
-            <span className=" text-base" title="main class">
-              {templateSubject ? templateSubject.topics?.length : "3"} Learning
-              outcomes
+            <span className=" text-sm">
+              {subject?.topics
+                ? subject.topics.length
+                : templateSubject
+                  ? templateSubject.topics?.length
+                  : "3"}{" "}
+              Learning outcomes
             </span>
           </div>
         </div>
@@ -146,7 +187,13 @@ const SubjectCard = ({
           )}
           {!isOnSubjectPage && (
             <MyLink
-              href={cn(templateSubject ?  `/${lang}/a/collections/template_subjects/${templateSubject.code}` : "/en/c/classname/subjects/subjectname")}
+              href={cn(
+                subject?.class
+                  ? `/${lang}/c/${subject.class.username}/subjects/${subject.code}`
+                  : templateSubject
+                    ? `/${lang}/a/collections/template_subjects/${templateSubject.code}`
+                    : "/en/c/classname/subjects/subjectname",
+              )}
               button={{ role: "page", size: "sm" }}
             >
               View subject

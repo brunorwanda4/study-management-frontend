@@ -5,7 +5,8 @@ import NotFoundPage from "@/components/page/not-found";
 import { Separator } from "@/components/ui/separator";
 import type { Locale } from "@/i18n";
 import type { Class } from "@/lib/schema/class/class-schema";
-import type { Subject } from "@/lib/schema/subject/subject-schema";
+import type { Paginated } from "@/lib/schema/common-schema";
+import type { ClassSubjectWithRelations } from "@/lib/schema/subject/class-subject-schema";
 import { authContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 import { redirect } from "next/navigation";
@@ -36,9 +37,9 @@ const ClassSubjectPage = async (
   if (!clsRes.data) return <NotFoundPage message="Class not found" />;
 
   const [subjectsRes] = await Promise.all([
-    apiRequest<void, Subject[]>(
+    apiRequest<void, Paginated<ClassSubjectWithRelations>>(
       "get",
-      `/school/class-subjects/class/${clsRes.data._id || clsRes.data.id}`,
+      `/school/class-subjects/class/${clsRes.data._id || clsRes.data.id}/others`,
       undefined,
       {
         token: auth.token,
@@ -51,14 +52,14 @@ const ClassSubjectPage = async (
     <div className=" flex  flex-col">
       <div className=" flex flex-row justify-between w-full mt-2">
         <h3 className=" h3">
-          {subjectsRes.data ? subjectsRes.data.length : 0} Subjects
+          {subjectsRes.data ? subjectsRes.data.data.length : 0} Subjects
         </h3>
         <SubjectDialog auth={auth} />
       </div>
       <Separator />
-      {subjectsRes.data && subjectsRes.data.length > 0 ? (
+      {subjectsRes.data && subjectsRes.data.data.length > 0 ? (
         <main className=" grid grid-cols-1 gap-4 lg:grid-cols-2">
-          {subjectsRes.data.map((subject) => (
+          {subjectsRes.data.data.map((subject) => (
             <SubjectCard
               lang={lang as Locale}
               auth={auth}
