@@ -1,6 +1,6 @@
 import SubjectCard from "@/components/cards/subject-card";
+import CommonEmpty from "@/components/common/common-empty";
 import SubjectDialog from "@/components/page/class/dialog/subject-dialog";
-import EmptySubjects from "@/components/page/class/subjects/empty-subjects";
 import NotFoundPage from "@/components/page/not-found";
 import { Separator } from "@/components/ui/separator";
 import type { Locale } from "@/i18n";
@@ -38,7 +38,7 @@ const ClassSubjectPage = async (
   const [subjectsRes] = await Promise.all([
     apiRequest<void, Subject[]>(
       "get",
-      `/school/subjects/class/${clsRes.data._id || clsRes.data.id}`,
+      `/school/class-subjects/class/${clsRes.data._id || clsRes.data.id}`,
       undefined,
       {
         token: auth.token,
@@ -53,7 +53,7 @@ const ClassSubjectPage = async (
         <h3 className=" h3">
           {subjectsRes.data ? subjectsRes.data.length : 0} Subjects
         </h3>
-        <SubjectDialog />
+        <SubjectDialog auth={auth} />
       </div>
       <Separator />
       {subjectsRes.data && subjectsRes.data.length > 0 ? (
@@ -68,7 +68,14 @@ const ClassSubjectPage = async (
           ))}
         </main>
       ) : (
-        <EmptySubjects auth={auth} />
+        <CommonEmpty
+          auth={auth}
+          icon="/icons/book.png"
+          title="Class subjects not found"
+          description="They are currently no class subjects found, please create one. If you are an admin, you can create a new class subject."
+        >
+          <SubjectDialog auth={auth} />
+        </CommonEmpty>
       )}
     </div>
   );

@@ -26,6 +26,7 @@ import MultipleSelector from "@/components/ui/multiselect";
 import { cn } from "@/lib/utils";
 import type { Control, FieldPath, FieldValues } from "react-hook-form";
 import UploadImage, { type updateImageProps } from "../cards/form/upload-image";
+import SelectWithSearch from "../select-with-search";
 import { UploadAvatar, type UploadAvatarProps } from "./avatar-upload";
 
 interface CommonFormFieldProps<T extends FieldValues> {
@@ -48,8 +49,9 @@ interface CommonFormFieldProps<T extends FieldValues> {
     | "avatar"
     | "checkbox"
     | "date"
+    | "searchSelect"
     | "multipleSelect";
-  selectOptions?: { value: string; label: string; disable ?: boolean}[];
+  selectOptions?: { value: string; label: string; disable?: boolean }[];
 
   // components props
   imageProps?: updateImageProps;
@@ -168,8 +170,8 @@ export function CommonFormField<T extends FieldValues>({
                 />
               );
 
-              case "multipleSelect":
-               return (
+            case "multipleSelect":
+              return (
                 <MultipleSelector
                   value={field.value ?? []}
                   onChange={field.onChange}
@@ -180,6 +182,20 @@ export function CommonFormField<T extends FieldValues>({
                   }))}
                   placeholder={placeholder}
                   hidePlaceholderWhenSelected
+                />
+              );
+            case "searchSelect":
+              return (
+                <SelectWithSearch
+                  value={field.value ?? ""}
+                  onChange={field.onChange}
+                  options={selectOptions.map((item) => ({
+                    value: item.value,
+                    label: item.label,
+                    disable: item.disable,
+                  }))}
+                  placeholder={placeholder}
+                  disabled={disabled}
                 />
               );
 

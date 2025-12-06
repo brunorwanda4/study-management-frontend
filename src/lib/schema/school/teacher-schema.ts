@@ -80,17 +80,17 @@ export const TeacherWithRelationsSchema = z.object({
 export type TeacherWithRelations = z.infer<typeof TeacherWithRelationsSchema>;
 // Bulk operations
 export const BulkTeacherIdsSchema = z.object({
-  ids: z.array(z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid ObjectId")),
+  ids: z.array(z.string()),
 });
 export type BulkTeacherIds = z.infer<typeof BulkTeacherIdsSchema>;
 
 export const BulkUpdateTeacherActiveSchema = z.object({
-  ids: z.array(z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid ObjectId")),
+  ids: z.array(z.string()),
   is_active: z.boolean(),
 });
 
 export const BulkTeacherTagsSchema = z.object({
-  ids: z.array(z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid ObjectId")),
+  ids: z.array(z.string()),
   tags: z.array(z.string()),
 });
 
@@ -105,4 +105,11 @@ export const PrepareTeacherRequestSchema = z.object({
 
 export type PrepareTeacherRequest = z.infer<typeof PrepareTeacherRequestSchema>;
 
-// create teacher
+export const PaginatedTeacherSchema = z.object({
+  teachers: z.array(TeacherSchema),
+  total: z.number().int(),
+  total_pages: z.number().int(),
+  current_page: z.number().int(),
+});
+
+export type PaginatedTeacher = z.infer<typeof PaginatedTeacherSchema>;

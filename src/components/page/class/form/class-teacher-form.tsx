@@ -24,7 +24,11 @@ import {
   type Class,
 } from "@/lib/schema/class/class-schema";
 import type { PaginatedClasses } from "@/lib/schema/relations-schema";
-import type { Teacher, TeacherBase } from "@/lib/schema/school/teacher-schema";
+import type {
+  PaginatedTeacher,
+  Teacher,
+  TeacherBase,
+} from "@/lib/schema/school/teacher-schema";
 import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
 
@@ -51,11 +55,16 @@ const ClassTeacherForm = ({ auth, teacher, cls }: Props) => {
     const fetchOptions = async () => {
       try {
         const teacherRequest = teacher
-          ? Promise.resolve({ data: [] as Teacher[] })
-          : apiRequest<void, Teacher[]>("get", "/school/teachers", undefined, {
-              token: auth.token,
-              schoolToken: auth.schoolToken,
-            });
+          ? Promise.resolve({ data: { teachers: [] } as Teacher[] })
+          : apiRequest<void, PaginatedTeacher>(
+              "get",
+              "/school/teachers",
+              undefined,
+              {
+                token: auth.token,
+                schoolToken: auth.schoolToken,
+              },
+            );
 
         const classRequest = apiRequest<void, PaginatedClasses>(
           "get",
@@ -68,14 +77,14 @@ const ClassTeacherForm = ({ auth, teacher, cls }: Props) => {
         );
 
         const [teachersRes, classesRes] = await Promise.all([
-          teacher ? { data: [] } : teacherRequest,
+          teacher ? { data: { teachers: [] } } : teacherRequest,
           cls ? { data: { classes: [] } } : classRequest,
         ]);
 
         if (teachersRes.data) {
           // const activeTeachers = teachersRes.data.filter((t) => !t.is_active);
           // setTeachers(activeTeachers);
-          setTeachers(teachersRes.data);
+          setTeachers(teachersRes.data.teachers);
         }
 
         if (classesRes.data) {
