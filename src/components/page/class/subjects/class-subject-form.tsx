@@ -10,12 +10,12 @@ import { transformTopic } from "@/lib/helpers/subject-topic";
 import type { Class } from "@/lib/schema/class/class-schema";
 import type { PaginatedClasses } from "@/lib/schema/relations-schema";
 import type {
-  PaginatedTeacher,
-  Teacher,
+    PaginatedTeacher,
+    Teacher,
 } from "@/lib/schema/school/teacher-schema";
 import {
-  ClassSubjectSchema,
-  type ClassSubject,
+    ClassSubjectSchema,
+    type ClassSubject,
 } from "@/lib/schema/subject/class-subject-schema";
 import type { AuthContext } from "@/lib/utils/auth-context";
 import apiRequest from "@/service/api-client";
@@ -259,7 +259,7 @@ const ClassSubjectForm = ({ sub, cls, auth }: ClassSubjectFormProps) => {
                 placeholder="Select teacher"
                 control={form.control}
                 selectOptions={teachers.map((t) => ({
-                  value: String(t.id ?? t._id),
+                  value: t._id,
                   label: t.name,
                 }))}
               />
